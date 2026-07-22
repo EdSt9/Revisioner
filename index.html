@@ -759,12 +759,7 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 .prog-track{max-width:600px;margin:0 auto;height:5px;border-radius:5px;background:var(--accent-soft);overflow:hidden;}
 .prog-fill{height:100%;border-radius:5px;background:var(--accent);transition:width .5s var(--ease-spring);}
 .sess-body{position:relative;z-index:1;width:100%;max-width:600px;box-sizing:border-box;
-  margin:0 auto;padding:22px 18px calc(env(safe-area-inset-bottom) + 40px);
-  /* le contenu (flashcard, QCM, question ouverte) est centré verticalement
-     dans l'espace restant, au lieu d'être collé en haut */
-  min-height:calc(100dvh - 92px);
-  display:flex;flex-direction:column;justify-content:center;}
-.sess-body > *{flex-shrink:0;}
+  margin:0 auto;padding:36px 18px calc(env(safe-area-inset-bottom) + 40px);}
 .motiv{background:var(--accent-soft);border-radius:14px;padding:11px 16px;font-size:13.5px;color:var(--accent);margin-bottom:16px;font-style:italic;animation:rise .4s var(--ease-spring) both;}
 .fc-scene{perspective:1400px;margin-bottom:16px;position:relative;}
 /* retour visuel pendant le glissement d'une flashcard : juste un liseré coloré */
