@@ -3,10 +3,11 @@
 // afin que tu aies toujours la dernière version quand tu as du réseau,
 // mais que le site reste utilisable sans connexion.
 
-const CACHE = "revision-v2";
+const CACHE = "revision-v3";
 const ASSETS = [
   "./",
   "./index.html",
+  "./data.js",
 ];
 
 // À l'installation : on met la page en cache.
