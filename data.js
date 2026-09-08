@@ -26,81 +26,62 @@ const SUBJECTS = [
   { id:"e191", ue:"UE19", ects:4, ecue:"19.1", title:"Formation tout au long de la vie", cm:[], td:[], fc:[], qcm:[], oq:[], auteurs:[] },
   { id:"e192", ue:"UE19", ects:4, ecue:"19.2", title:"Sociologie de l'éducation", cm:[], td:[], fc:[], qcm:[], oq:[], auteurs:[] },
   { id:"e193", ue:"UE19", ects:2, ecue:"19.3", title:"Introduction à la démarche de recherche 2", cm:[], td:[], fc:[], qcm:[], oq:[], auteurs:[] },
-  { id:"e201", ue:"UE20", ects:3, ecue:"20.1", title:"Culture numérique", cm:[], td:[], fc:[], qcm:[], oq:[], auteurs:[] },
-  { id:"e202", ue:"UE20", ects:2, ecue:"20.2", title:"Langue vivante", bilingue:true,
-    byLang:{
-      en:{
-        cm:[
-          { label:"Chapter 1", sections:[
-            { title:"Present tenses", body:"The <span class='chunk-highlight'>present simple</span> describes habits and general truths. The <span class='chunk-highlight'>present continuous</span> (be + -ing) describes actions happening now.", list:["Simple: I <b>work</b> every day.","Continuous: I <b>am working</b> right now.","Signal words: usually, always, at the moment."] },
-            { title:"Question forms", body:"Questions in the present simple use the auxiliary <span class='chunk-highlight'>do / does</span>. The main verb goes back to its base form.", list:["Do you like tea?","Does she live here?","Never: <i>Does she lives?</i>"] }
-          ], recap:["Present simple = habits.","Present continuous = now.","Questions use do/does + base verb."] },
-          { label:"Chapter 2", sections:[
-            { title:"The past simple", body:"The <span class='chunk-highlight'>past simple</span> describes finished actions at a specific past time. Regular verbs take <b>-ed</b>; irregular verbs change form.", list:["Regular: work → worked","Irregular: go → went, see → saw","Markers: yesterday, last week, in 2020."] }
-          ], recap:["Past simple = finished past action.","Regular verbs: -ed.","Learn irregular verbs by heart."] }
-        ],
-        td:[
-          { label:"TD 1", sections:[ { title:"Present simple vs continuous", body:"Choose the right tense. Look at the <span class='chunk-highlight'>signal words</span>.", list:["She ___ (watch) TV every evening.","Listen! The baby ___ (cry).","Water ___ (boil) at 100°C."] } ], recap:["Habits → simple.","Actions now → continuous."] },
-          { label:"TD 2", sections:[ { title:"Irregular verbs", body:"Give the <span class='chunk-highlight'>past simple</span> of these irregular verbs.", list:["go → ___","buy → ___","think → ___"] } ], recap:["No -ed for irregular verbs.","Memorise the three columns."] },
-          { label:"TD 3", sections:[ { title:"Speaking: your week", body:"Use a mix of tenses to talk about your routine and last weekend. Focus on <span class='chunk-highlight'>fluency</span>.", list:["Every day I…","Right now I…","Last weekend I…"] } ], recap:["Mix tenses naturally.","Fluency first."] }
-        ],
-        fc:[
-          { q:"How do you form the present continuous?", a:"be (am/is/are) + verb-ing. Example: She is reading." },
-          { q:"When do we use the present simple?", a:"For habits, routines and general truths. Example: I work every day." },
-          { q:"Past simple of 'to go'?", a:"went (irregular verb)." },
-          { q:"Which auxiliary for present simple questions?", a:"do / does, followed by the base form of the verb." },
-          { q:"Past simple of 'to buy'?", a:"bought (irregular)." }
-        ],
-        qcm:[
-          { q:"Choose the correct sentence.", opts:["She work here.","She works here.","She working here.","She is work here."], c:1, e:"Third person singular takes -s: she works." },
-          { q:"'Listen! Someone ___ at the door.'", opts:["knocks","is knocking","knock","knocked"], c:1, e:"Action happening now → present continuous." },
-          { q:"Past simple of 'see'?", opts:["seed","saw","seen","sawed"], c:1, e:"Irregular: see → saw → seen." }
-        ],
-        oq:[
-          { q:"Explain the difference between present simple and present continuous, with an example each.", a:"Present simple = habits and general truths (I drink coffee every morning). Present continuous = actions happening now (I am drinking coffee right now)." },
-          { q:"Why are irregular verbs difficult, and how can you memorise them?", a:"They don't follow the -ed rule, so each must be learned. Learn them in three columns (base/past/participle) and practise in context." }
-        ],
-        auteurs:[
-          { nom:"Michael Swan", courant:"English grammar reference", periode:"XXe–XXIe", these:"Author of 'Practical English Usage', a key reference for learners and teachers.", concepts:["Usage","Common mistakes","Learner English"], retenir:"The go-to reference when a grammar rule is unclear." }
-        ]
-      },
-      es:{
-        cm:[
-          { label:"Capítulo 1", sections:[
-            { title:"El presente", body:"El <span class='chunk-highlight'>presente de indicativo</span> expresa hábitos y verdades generales. Los verbos regulares se agrupan en <span class='chunk-highlight'>-ar, -er, -ir</span>.", list:["hablar: yo hablo, tú hablas…","comer: yo como, tú comes…","vivir: yo vivo, tú vives…"] },
-            { title:"Ser y estar", body:"Dos verbos para « être » : <span class='chunk-highlight'>ser</span> (identidad, características) y <span class='chunk-highlight'>estar</span> (estado, lugar).", list:["Soy estudiante. (ser)","Estoy cansada. (estar)","Madrid está en España. (estar)"] }
-          ], recap:["Presente = hábitos.","Ser = identidad.","Estar = estado y lugar."] },
-          { label:"Capítulo 2", sections:[
-            { title:"El pretérito indefinido", body:"El <span class='chunk-highlight'>pretérito indefinido</span> expresa acciones terminadas en el pasado. Cuidado con los verbos <b>irregulares</b>.", list:["hablar → hablé, hablaste…","ir → fui, fuiste… (irregular)","tener → tuve, tuviste… (irregular)"] }
-          ], recap:["Indefinido = acción terminada.","Muchos irregulares frecuentes.","Aprender de memoria."] }
-        ],
-        td:[
-          { label:"TD 1", sections:[ { title:"Ser o estar", body:"Elige entre <span class='chunk-highlight'>ser</span> y <span class='chunk-highlight'>estar</span> según el contexto.", list:["Ella ___ profesora.","Nosotros ___ en clase.","La sopa ___ caliente."] } ], recap:["Ser = qué/quién.","Estar = cómo/dónde."] },
-          { label:"TD 2", sections:[ { title:"Verbos irregulares", body:"Da el <span class='chunk-highlight'>pretérito indefinido</span> de estos verbos.", list:["ir (yo) → ___","tener (tú) → ___","hacer (él) → ___"] } ], recap:["Los irregulares no siguen la regla.","Practicar a menudo."] },
-          { label:"TD 3", sections:[ { title:"Expresión: tu semana", body:"Habla de tu rutina y de tu fin de semana usando presente e indefinido. Prioriza la <span class='chunk-highlight'>fluidez</span>.", list:["Todos los días…","Ahora mismo…","El fin de semana pasado…"] } ], recap:["Mezcla los tiempos.","Fluidez antes que perfección."] }
-        ],
-        fc:[
-          { q:"¿Diferencia entre ser y estar?", a:"Ser = identidad y características permanentes. Estar = estado, lugar y situación temporal." },
-          { q:"Presente de « yo » del verbo tener", a:"tengo (irregular en la primera persona)." },
-          { q:"Pretérito indefinido de « ir » (yo)", a:"fui (irregular, igual que el verbo ser)." },
-          { q:"¿Cómo se conjuga « vivir » en presente (yo)?", a:"vivo. Verbo regular en -ir." },
-          { q:"Pretérito indefinido de « hacer » (él)", a:"hizo (irregular)." }
-        ],
-        qcm:[
-          { q:"Elige la frase correcta.", opts:["Yo soy en casa.","Yo estoy en casa.","Yo estar en casa.","Yo es en casa."], c:1, e:"El lugar se expresa con estar: estoy en casa." },
-          { q:"« Ella ___ médica. »", opts:["está","es","estar","son"], c:1, e:"La profesión (identidad) se expresa con ser: es médica." },
-          { q:"Pretérito indefinido de « tener » (yo)", opts:["tené","tuve","tení","tuvé"], c:1, e:"Irregular: tener → tuve." }
-        ],
-        oq:[
-          { q:"Explica la diferencia entre ser y estar con un ejemplo de cada uno.", a:"Ser expresa identidad y características (Soy francesa). Estar expresa estado o lugar (Estoy en París, estoy cansada)." },
-          { q:"¿Por qué son difíciles los verbos irregulares y cómo memorizarlos?", a:"No siguen las terminaciones regulares. Conviene aprenderlos en contexto y repasarlos con frecuencia mediante ejercicios." }
-        ],
-        auteurs:[
-          { nom:"Real Academia Española (RAE)", courant:"Norma del español", periode:"desde 1713", these:"Institución que fija la norma del español a través de su gramática y su diccionario.", concepts:["Gramática","Ortografía","Diccionario"], retenir:"La referencia oficial para las dudas de español." }
-        ]
-      }
-    },
-    cm:[], td:[], fc:[], qcm:[], oq:[], auteurs:[] },
+  { id:"e201", ue:"UE20", ects:3, ecue:"20.1", title:"Culture numérique",
+    cm:[
+      { label:"CM1 · 03/09", sections:[
+        { title:"Le numérique dans la société", body:"Le numérique est un <span class='chunk-highlight'>mot valise</span> : hardware (le matériel : souris, écran, clavier) et software (les logiciels). Ce n'est pas l'écran le problème, mais <span class='chunk-highlight'>l'usage</span> qu'on en fait. On distingue l'écran passif (télé) et l'écran actif (jeux vidéo), avec des effets différents : le support papier reste meilleur pour la compréhension d'un texte (mémoire géographique).", list:["Hardware = matériel, software = logiciel.","Le problème n'est pas l'écran, c'est l'usage.","Papier > écran pour la compréhension d'un texte."] },
+        { title:"5 grandes phases du numérique", body:"On parle d'une <span class='chunk-highlight'>révolution</span> numérique, avec 5 phases contemporaines identifiées.", list:["1980 : ordinateurs personnels","1989 : boom d'internet","2007 : essor de la technologie mobile","2010 : ère des médias sociaux et du big data","2022 : IA et automatisation"] },
+        { title:"Les générations face au numérique", body:"Chaque génération a un rapport différent au numérique, selon l'âge auquel elle l'a rencontré.", list:["<b>Baby-boomers</b> (60-80 ans) : arrivée tardive, non choisie, besoin d'accompagnement.","<b>Génération X</b> (45-60 ans) : ont commencé sans, s'adaptent selon la profession.","<b>Génération Y</b> (30-45 ans) : ont toujours connu, usage surtout professionnel.","<b>Génération Z</b> (13-30 ans) : le numérique a toujours été là (« complexe d'Obélix »).","<b>Génération Alpha</b> (- de 13 ans) : tout numérique, trop tôt exposée."] },
+        { title:"Usages et compétences numériques", body:"Deux organismes régulent le numérique en France : <span class='chunk-highlight'>ARCEP</span> (infrastructures et réseaux) et <span class='chunk-highlight'>ARCOM</span> (contenus et médias). Les compétences numériques doivent être <span class='chunk-highlight'>adaptatives</span> pour suivre les évolutions.", list:["ARCEP : régule l'accès au réseau.","ARCOM : régule ce qui circule sur le réseau.","5 domaines de compétences : information et données, protection et sécurité, communication et collaboration, création de contenus, environnement numérique."] },
+        { title:"La fracture numérique", body:"La fracture numérique a évolué dans le temps : d'abord un problème d'accès, puis de compétence, aujourd'hui multifactoriel.", list:["Années 90 : inégalité d'accès au réseau.","Années 2000-2010 : incapacité à utiliser efficacement.","Années 2020 : facteurs multiples (âge, éducation, revenu, COVID, IA).","4 dimensions : culturelle, économique, sociale, professionnelle."] },
+        { title:"Les grands débats actuels", body:"Plusieurs enjeux traversent le débat sur le numérique aujourd'hui.", list:["<b>Usage problématique des écrans</b> : impact sur sommeil, anxiété, estime de soi, cyberviolence.","<b>Obésité informationnelle</b> : trop d'informations, difficulté à distinguer le vrai du faux.","<b>Manipulation</b> : biais de confirmation → bulles de filtres → chambre d'écho.","<b>Écrans et santé</b> : lumière bleue, sédentarité, troubles cognitifs (lien encore débattu)."] }
+      ], recap:["Le problème, c'est l'usage, pas l'écran en lui-même.","5 phases : 1980, 1989, 2007, 2010, 2022.","Chaque génération a un rapport différent au numérique.","ARCEP régule le réseau, ARCOM régule les contenus.","La fracture numérique est aujourd'hui multifactorielle."] },
+      { label:"CM2 · 04/09", sections:[
+        { title:"Réglementation européenne : le DSA", body:"Le <span class='chunk-highlight'>Digital Service Act</span> (DSA) est entré en vigueur en 2023, application au 17 février 2024. Il vise à obliger les grandes plateformes (les <span class='chunk-highlight'>GAFAM</span>) à agir contre les contenus illicites.", list:["Signalement des contenus illicites.","Coopération avec les autorités judiciaires.","Suspension des comptes déviants.","Interdiction du ciblage publicitaire sur les mineurs et données sensibles.","Interdiction des <b>dark patterns</b> (stratégies pour influencer le comportement).","Sanctions : amendes jusqu'à 6% du CA, voire blocage en Europe en cas de récidive."] },
+        { title:"DSA vs RGPD", body:"Deux réglementations différentes mais complémentaires.", list:["<b>DSA</b> : fonctionnement des plateformes et services en ligne.","<b>RGPD</b> : traitement des données personnelles, pour toute organisation publique ou privée.","RGPD s'applique dès qu'on cible des résidents européens, même hors UE."] },
+        { title:"Lexique du RGPD", body:"Quelques notions clés à connaître pour le RGPD.", list:["<b>Données personnelles</b> : ce qui permet d'identifier une personne, directement ou indirectement.","<b>Identification</b> : possible via une seule donnée ou le croisement de plusieurs.","<b>Traitement</b> : toute opération sur des données, qui doit avoir un but légal et légitime.","3 principes clés : responsabilité, transparence, confiance."] },
+        { title:"Réglementation en éducation", body:"Chaque établissement doit avoir une <span class='chunk-highlight'>charte d'usage du numérique</span>, annexée au règlement intérieur et signée par les parents et élèves.", list:["Règles d'utilisation d'internet et des services numériques.","Protection des données et de la vie privée.","Usage pédagogique ou administratif uniquement.","Respect du droit à l'image et à la voix."] },
+        { title:"Promouvoir un numérique raisonné", body:"4 grands piliers à connaître pour l'école.", list:["1. Former à un usage raisonné des outils numériques.","2. Suspendre les mises à jour (ENT, vie scolaire) le soir et le week-end.","3. Déployer le dispositif « Portable en pause ».","4. Accompagnement des familles."] },
+        { title:"Les rapports de référence", body:"Deux rapports importants pour comprendre les effets des écrans sur les jeunes.", list:["<b>« À la recherche du temps perdu »</b> (Élysée, avril 2024) : effets négatifs identifiés mais non tranchés, impact possible sur le neurodéveloppement.","<b>ANSES</b> (décembre 2025) : usages des réseaux sociaux et santé des adolescents.","90% des 12-17 ans utilisent le téléphone comme accès principal à internet ; 42% y passent 2 à 5h/jour.","Une définition légale des réseaux sociaux existe depuis la <b>loi n°2023-566</b> du 7 juillet 2023, qui vise à instaurer une majorité numérique et à lutter contre la haine en ligne."] },
+        { title:"Le modèle économique des réseaux sociaux", body:"Le fonctionnement des RSN pose un problème de fond : leur modèle économique repose sur l'utilisateur lui-même.", list:["<b>Monétisation des données personnelles</b> : l'utilisateur devient le produit.","<b>Stratégies de captation de l'attention</b> : conçues pour maximiser le temps passé sur la plateforme."] },
+        { title:"Utilisation, usage, pratique : 3 notions à distinguer", body:"Trois mots proches mais différents pour analyser le rapport au numérique.", list:["<b>Utilisation</b> : usage fonctionnel ou technique d'un outil, sans explorer les intentions sous-jacentes.","<b>Usage</b> : la manière dont l'objet est approprié par les individus ou groupes, selon leurs valeurs et besoins (dimension sociale et culturelle).","<b>Pratique</b> : intègre des routines et habitudes stabilisées dans le quotidien, qui témoignent d'un rapport subjectif ou collectif à l'outil."] },
+        { title:"Les 7 effets constatés des RSN sur les ados", body:"Le rapport ANSES identifie 7 effets, avec les filles plus touchées sur le bien-être et la santé mentale.", list:["1. Usage problématique et addiction aux RSN.","2. Manque de sommeil.","3. Image de soi et perception du corps.","4. Troubles anxiodépressifs, en lien avec le contexte familial.","5. Conduites à risque : consommation de substances, défis, sexting non consenti, cyberviolence et cyberharcèlement.","6. Impact sur les résultats scolaires.","7. Lumière bleue et sédentarité."] }
+      ], recap:["Le DSA encadre les plateformes, le RGPD protège les données personnelles.","Sanctions DSA : jusqu'à 6% du CA.","Le modèle économique des RSN repose sur les données et l'attention.","Utilisation ≠ usage ≠ pratique : trois niveaux d'analyse différents.","7 effets constatés des RSN sur les ados, les filles étant plus touchées.","À venir : CM3 (16/10, numérique et ingénierie pédagogique) et CM4 (22/10, la révolution IA)."] }
+    ],
+    td:[],
+    fc:[
+      { q:"Quelle est la différence entre hardware et software ?", a:"Hardware = le matériel (souris, écran, clavier). Software = les logiciels, la partie non matérielle." },
+      { q:"Quelles sont les 5 grandes phases du numérique ?", a:"1980 (ordinateurs personnels), 1989 (boom d'internet), 2007 (mobile), 2010 (réseaux sociaux et big data), 2022 (IA)." },
+      { q:"Que régule l'ARCEP ? Et l'ARCOM ?", a:"ARCEP régule les infrastructures et l'accès au réseau. ARCOM régule les contenus et les médias qui y circulent." },
+      { q:"Quelles sont les 4 dimensions de la fracture numérique ?", a:"Culturelle, économique, sociale et professionnelle." },
+      { q:"Qu'est-ce que le Digital Service Act (DSA) ?", a:"Une réglementation européenne (2023-2024) qui oblige les grandes plateformes à agir contre les contenus illicites, sous peine de sanctions." },
+      { q:"Quelle est la différence entre le DSA et le RGPD ?", a:"Le DSA encadre le fonctionnement des plateformes en ligne. Le RGPD protège les données personnelles, pour toute organisation." },
+      { q:"Qu'est-ce qu'une donnée personnelle selon le RGPD ?", a:"Toute information qui permet d'identifier une personne, directement ou par croisement de plusieurs données." },
+      { q:"Que doit contenir la charte d'usage du numérique d'un établissement ?", a:"Les règles d'utilisation d'internet, les comportements attendus en ligne, la protection des données et de la vie privée." },
+      { q:"Quels sont les 4 piliers pour un numérique raisonné à l'école ?", a:"Former à un usage raisonné, suspendre les mises à jour le soir/week-end, déployer le dispositif « Portable en pause », accompagner les familles." },
+      { q:"Quel pourcentage des 12-17 ans utilise le téléphone comme accès principal à internet ?", a:"90%, avec 42% qui y passent entre 2 et 5h par jour." },
+      { q:"Sur quoi repose le modèle économique des réseaux sociaux ?", a:"La monétisation des données personnelles (l'utilisateur devient le produit) et des stratégies de captation de l'attention." },
+      { q:"Quelle est la différence entre utilisation et usage ?", a:"L'utilisation est fonctionnelle et technique, sans explorer les intentions. L'usage intègre les valeurs, normes et besoins des individus ou groupes (dimension sociale et culturelle)." },
+      { q:"Qu'est-ce qu'une pratique, au sens de ce cours ?", a:"Des routines et habitudes stabilisées dans le quotidien, qui témoignent d'un rapport subjectif ou collectif à l'outil numérique." },
+      { q:"Cite 3 des 7 effets des RSN constatés chez les adolescents.", a:"Par exemple : manque de sommeil, troubles anxiodépressifs, conduites à risque (cyberharcèlement, sexting non consenti)." }
+    ],
+    qcm:[
+      { q:"Que désigne le terme « hardware » ?", opts:["Un réseau social","Une application mobile","Le matériel physique","Un logiciel"], c:2, e:"Hardware = tout ce qui est matériel : souris, écran, clavier." },
+      { q:"En quelle année situe-t-on l'essor de la technologie mobile ?", opts:["2022","2007","1989","2010"], c:1, e:"2007 marque l'essor de la technologie mobile (smartphones)." },
+      { q:"Qui régule les contenus et les médias en France ?", opts:["RGPD","DSA","ARCEP","ARCOM"], c:3, e:"ARCOM régule les contenus et médias ; ARCEP régule les infrastructures et réseaux." },
+      { q:"Le Digital Service Act (DSA) est entré en application le :", opts:["7 juillet 2023","25 août 2003","17 février 2024","1er janvier 2024"], c:2, e:"Le DSA est entré en vigueur en 2023 et en application le 17 février 2024." },
+      { q:"Jusqu'à combien peuvent s'élever les sanctions du DSA ?", opts:["Aucune sanction","1% du CA","10 000€ fixes","6% du CA"], c:3, e:"Les sanctions peuvent aller jusqu'à 6% du chiffre d'affaires, voire un blocage en Europe en cas de récidive." },
+      { q:"Le RGPD s'applique à :", opts:["Seulement aux réseaux sociaux","Seulement aux mineurs","Toute organisation publique ou privée ciblant des résidents européens","Seulement aux entreprises françaises"], c:2, e:"Le RGPD s'applique dès qu'une organisation traite des données de résidents européens, où qu'elle soit basée." },
+      { q:"Quel est l'un des 4 piliers pour un numérique raisonné à l'école ?", opts:["Ignorer les mises à jour","Ne pas informer les familles","Interdire totalement les écrans","Le dispositif « Portable en pause »"], c:3, e:"Les 4 piliers sont : usage raisonné, suspension des mises à jour, portable en pause, accompagnement des familles." }
+    ],
+    oq:[
+      { q:"Explique pourquoi on dit que le problème n'est pas l'écran mais l'usage.", a:"Un écran passif (télé) et un écran actif (jeu vidéo) n'ont pas le même effet. C'est la manière dont on utilise l'outil, pas l'outil en lui-même, qui détermine son impact positif ou négatif." },
+      { q:"Compare les objectifs du DSA et du RGPD.", a:"Le DSA encadre le fonctionnement des plateformes en ligne (contenus, modération, transparence). Le RGPD protège les données personnelles des individus, pour toute organisation publique ou privée. Ce sont deux réglementations complémentaires mais distinctes." },
+      { q:"Pourquoi la fracture numérique est-elle devenue plus complexe au fil du temps ?", a:"Dans les années 90, c'était un problème d'accès au réseau. Dans les années 2000-2010, un problème de compétence d'usage. Aujourd'hui, elle dépend de multiples facteurs combinés : âge, éducation, revenu, contexte sanitaire (COVID), et désormais l'IA." }
+    ],
+    auteurs:[]
+  },
+  { id:"e202", ue:"UE20", ects:2, ecue:"20.2", title:"Langue vivante", bilingue:true, cm:[], td:[], fc:[], qcm:[], oq:[], auteurs:[] },
   { id:"e203", ue:"UE20", ects:2, ecue:"20.3", title:"Enquêtes", cm:[], td:[], fc:[], qcm:[], oq:[], auteurs:[] },
   { id:"e211", ue:"UE21", ects:1, ecue:"21.1", title:"Stage", cm:[], td:[], fc:[], qcm:[], oq:[], auteurs:[] },
   { id:"e221", ue:"UE22", ects:3, ecue:"22.1", title:"Éducation populaire et animation", cm:[], td:[], fc:[], qcm:[], oq:[], auteurs:[] },
