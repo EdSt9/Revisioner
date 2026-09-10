@@ -41,7 +41,7 @@ html[data-theme="girly"]{--accent:#e0356e;--accent-2:#ff7eb3;
   --hl-bg:rgba(224,53,110,.14);--hl-text:#a01248;
   --chip-bg:rgba(224,53,110,.10);--chip-text:#8a6b78;
   --seg-bg:rgba(224,53,110,.08);--seg-thumb:#fff;
-  --ok:#2e9e6b;--ok-soft:rgba(46,158,107,.14);--ok-border:rgba(46,158,107,.4);--danger:#d6455a;--danger-soft:rgba(214,69,90,.14);--info:#2f7fd4;--info-soft:rgba(47,127,212,.14);
+  --ok:#2e9e6b;--ok-soft:rgba(46,158,107,.14);--ok-border:rgba(46,158,107,.4);--danger:#d6455a;--danger-soft:rgba(214,69,90,.14);--new:#e0356e;--info:#2f7fd4;--info-soft:rgba(47,127,212,.14);
   --ko:#d64562;--ko-soft:rgba(214,69,98,.10);--ko-border:rgba(214,69,98,.35);
   --warn:#c98a1a;--warn-soft:rgba(201,138,26,.12);
   --halo1:rgba(224,53,110,.14);--halo2:rgba(255,126,179,.16);--halo-op:1;}
@@ -54,7 +54,7 @@ html[data-theme="girly"]{--accent:#e0356e;--accent-2:#ff7eb3;
   --hl-bg:rgba(255,126,179,.18);--hl-text:#ffc2d9;
   --chip-bg:rgba(255,126,179,.12);--chip-text:#f0b8ce;
   --seg-bg:rgba(0,0,0,.25);--seg-thumb:rgba(255,126,179,.22);
-  --ok:#5fd6a0;--ok-soft:rgba(95,214,160,.14);--ok-border:rgba(95,214,160,.4);--danger:#ff6b7d;--danger-soft:rgba(255,107,125,.16);--info:#5aa9ff;--info-soft:rgba(90,169,255,.16);
+  --ok:#5fd6a0;--ok-soft:rgba(95,214,160,.14);--ok-border:rgba(95,214,160,.4);--danger:#ff6b7d;--danger-soft:rgba(255,107,125,.16);--new:#ff6ea8;--info:#5aa9ff;--info-soft:rgba(90,169,255,.16);
   --ko:#ff7a95;--ko-soft:rgba(255,122,149,.12);--ko-border:rgba(255,122,149,.38);
   --warn:#f0b84a;--warn-soft:rgba(240,184,74,.14);
   --halo1:rgba(224,53,110,.23);--halo2:rgba(255,126,179,.17);--halo-op:1;}}
@@ -68,7 +68,7 @@ html[data-theme="purple"]{--accent:#6c4cdc;--accent-2:#a78bff;
   --hl-bg:rgba(108,76,220,.14);--hl-text:#5334b0;
   --chip-bg:rgba(108,76,220,.10);--chip-text:#6d6486;
   --seg-bg:rgba(108,76,220,.08);--seg-thumb:#fff;
-  --ok:#2e9e6b;--ok-soft:rgba(46,158,107,.14);--ok-border:rgba(46,158,107,.4);--danger:#d6455a;--danger-soft:rgba(214,69,90,.14);--info:#2f7fd4;--info-soft:rgba(47,127,212,.14);
+  --ok:#2e9e6b;--ok-soft:rgba(46,158,107,.14);--ok-border:rgba(46,158,107,.4);--danger:#d6455a;--danger-soft:rgba(214,69,90,.14);--new:#e0356e;--info:#2f7fd4;--info-soft:rgba(47,127,212,.14);
   --ko:#d6456e;--ko-soft:rgba(214,69,110,.10);--ko-border:rgba(214,69,110,.35);
   --warn:#c98a1a;--warn-soft:rgba(201,138,26,.12);
   --halo1:rgba(108,76,220,.13);--halo2:rgba(167,139,255,.16);--halo-op:1;}
@@ -81,7 +81,7 @@ html[data-theme="purple"]{--accent:#6c4cdc;--accent-2:#a78bff;
   --hl-bg:rgba(167,139,255,.18);--hl-text:#d0c2ff;
   --chip-bg:rgba(167,139,255,.12);--chip-text:#c9bcf0;
   --seg-bg:rgba(0,0,0,.25);--seg-thumb:rgba(167,139,255,.22);
-  --ok:#5fd6a0;--ok-soft:rgba(95,214,160,.14);--ok-border:rgba(95,214,160,.4);--danger:#ff6b7d;--danger-soft:rgba(255,107,125,.16);--info:#5aa9ff;--info-soft:rgba(90,169,255,.16);
+  --ok:#5fd6a0;--ok-soft:rgba(95,214,160,.14);--ok-border:rgba(95,214,160,.4);--danger:#ff6b7d;--danger-soft:rgba(255,107,125,.16);--new:#ff6ea8;--info:#5aa9ff;--info-soft:rgba(90,169,255,.16);
   --ko:#ff7a9d;--ko-soft:rgba(255,122,157,.12);--ko-border:rgba(255,122,157,.38);
   --warn:#f0b84a;--warn-soft:rgba(240,184,74,.14);
   --halo1:rgba(124,92,255,.23);--halo2:rgba(167,139,255,.17);--halo-op:1;}}
@@ -480,6 +480,56 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
   border-radius:8px;background:var(--accent);color:#fff;font-size:9.5px;font-weight:800;
   display:grid;place-items:center;box-shadow:0 0 0 2px var(--surface-solid,#14102a);}
 .icon-badge[hidden]{display:none;}
+
+/* Bloc A savoir : nouveaux cours + echeances */
+.know-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--text-mute);margin:0 0 11px 3px;}
+.know-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);
+  overflow:hidden;box-shadow:0 4px 18px var(--shadow);margin-bottom:26px;}
+.know-row{display:flex;align-items:center;gap:12px;width:100%;cursor:pointer;
+  background:none;border:none;border-top:.5px solid var(--border);
+  padding:14px 16px;font-family:var(--font-text);text-align:left;color:var(--text);
+  transition:background .2s;}
+.know-row:first-child{border-top:none;}
+.know-row:active{background:rgba(255,255,255,.04);}
+.know-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.know-dot.new{background:var(--new);}
+.know-dot.controle{background:var(--warn);}
+.know-dot.devoir{background:var(--danger);}
+.know-dot.note{background:var(--info);}
+.know-txt{flex:1;min-width:0;}
+.know-tag{display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;}
+.know-tag.new{color:var(--new);}
+.know-tag.controle{color:var(--warn);}
+.know-tag.devoir{color:var(--danger);}
+.know-tag.note{color:var(--info);}
+.know-name{display:block;font-size:14.5px;font-weight:600;margin-top:2px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.know-when{font-size:11.5px;color:var(--text-mute);flex-shrink:0;}
+
+/* Accueil vide : l'entree Semestres se centre verticalement */
+#screen-semestres .wrap.home-empty{display:flex;flex-direction:column;
+  min-height:calc(100dvh - 90px);}
+#screen-semestres .wrap.home-empty .sem-entry{margin-top:auto;margin-bottom:auto;}
+
+/* Tuile Projet Psycho : meme forme que les semestres, teinte violette */
+.psy-tile{background:linear-gradient(150deg,var(--accent-soft),rgba(167,139,255,.03));
+  border-color:var(--border-strong);}
+.psy-tile .sem-badge{background:rgba(255,255,255,.08);}
+
+/* Entree unique vers les semestres */
+.sem-entry{display:flex;align-items:center;gap:14px;width:100%;cursor:pointer;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:18px;font-family:var(--font-text);text-align:left;color:var(--text);
+  box-shadow:0 4px 18px var(--shadow);
+  transition:transform .18s var(--ease-spring),border-color .2s;}
+.sem-entry:active{transform:scale(.98);}
+.sem-entry-ic{width:48px;height:48px;border-radius:14px;flex-shrink:0;
+  background:rgba(255,255,255,.05);display:grid;place-items:center;font-size:22px;}
+.sem-entry-txt{flex:1;min-width:0;}
+.sem-entry-t{font-family:var(--font-display);font-size:20px;}
+.sem-entry-s{font-size:12px;color:var(--text-mute);margin-top:2px;}
+.sem-entry-arrow{color:var(--text-soft);font-size:17px;}
 
 .home-hero{margin-bottom:4px;}
 .home-kicker{font-size:13.5px;color:var(--text-mute);font-weight:500;letter-spacing:.01em;
@@ -1057,29 +1107,40 @@ textarea::placeholder{color:var(--text-mute);}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11h6M9 15h4M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/></svg>
         <span class="icon-badge" id="memo-badge" hidden></span>
       </button>
-      <button class="icon-btn" id="btn-psycho-entry" aria-label="Projet Psycho">
-        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.4 2 5 5.3 5c2 0 3.3 1.1 4.2 2.3C10.4 6.1 11.7 5 13.7 5 17 5 18.6 8.4 17 11.7 14.5 16.4 12 21 12 21z"/></svg>
-      </button>
       <button class="icon-btn" id="btn-search" aria-label="Rechercher">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
       </button>
     </div>
 
-    <div class="home-hero rise" style="animation-delay:.04s">
-      <div class="home-kicker" id="home-date"></div>
-      <h1 class="home-hero-title" id="home-greet">Bonsoir</h1>
-    </div>
+    <!-- « À savoir » : nouveaux cours + échéances annotées, dans un seul bloc -->
+    <div id="home-know" class="rise" style="animation-delay:.04s"></div>
 
-    <div class="home-spark rise" id="home-spark" style="animation-delay:.1s"></div>
+    <!-- Un seul point d'entrée vers les semestres -->
+    <button class="sem-entry rise" id="sem-entry" style="animation-delay:.1s">
+      <div class="sem-entry-ic">📚</div>
+      <div class="sem-entry-txt">
+        <div class="sem-entry-t">Mes semestres</div>
+        <div class="sem-entry-s" id="sem-entry-sub"></div>
+      </div>
+      <span class="sem-entry-arrow">→</span>
+    </button>
 
-    <div class="sec-label" style="margin-top:64px">Semestres</div>
-    <div class="sem-grid" id="sem-inner"></div>
     <div id="today-courses" hidden></div>
     <div id="dashboard" hidden></div>
+    <div id="sem-inner" hidden></div>
   </div>
 </div>
 
 <!-- MATIÈRES -->
+<!-- CHOIX DU SEMESTRE -->
+<div id="screen-semchoice" class="screen">
+  <div class="wrap">
+    <button class="back-btn rise" id="btn-semchoice-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
+    <h1 class="page-title rise" style="animation-delay:.04s">Quel semestre&nbsp;?</h1>
+    <div class="sem-grid rise" id="semchoice-inner" style="animation-delay:.08s"></div>
+  </div>
+</div>
+
 <div id="screen-subjects" class="screen">
   <div class="wrap">
     <button class="back-btn rise" id="btn-sem-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Semestres</button>
@@ -1238,7 +1299,7 @@ let syncOn = false;
 // 📅 CONFIG EMPLOI DU TEMPS (liens iCal U-PEC)
 // ══════════════════════════════════════════════════
 const EDT_URLS = {
-  purple: "https://mon-edt.u-pec.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?data=8af2d3acaab2e3f8f7ecc482dce660b1599d09a9810a48832611823d9bee9931470de3789da5cc78c5ea70a36fb595daa5c5a6ab0267359a0b57b31037e12d3611503a7e92842fe7406f9470d8017754,1",
+  purple: "https://mon-edt.u-pec.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?data=8af2d3acaab2e3f8f7ecc482dce660b1599d09a9810a48832611823d9bee9931470de3789da5cc78c5ea70a36fb595da1ba3b83632f13b929ebcbb79a6eca9bb11503a7e92842fe7406f9470d8017754,1",
   girly:  "https://mon-edt.u-pec.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?data=8e11890a9d1ec9ee2ec3316296f2ea28dc699bd03883ae0d3f47cb21b108f1527a22d5f9af0404d29c35144f94851de110150945a1cad8715352c2d7c46ba0d618f1d101d03012f832d1cd77261c806415aef6e62da593145b09edad16903aac,1"
 };
 const EDT_CACHE_KEY = "revision_edt_v1";
@@ -2197,40 +2258,94 @@ function renderExamAlerts(box, pool){
 }
 
 // ── En-tête d'accueil : salutation + date ──
-function renderHomeHeader(){
-  const g = document.getElementById("home-greet");
-  const d = document.getElementById("home-date");
-  if(!g || !d) return;
-  const now = new Date();
-  const h = now.getHours();
-  const hello = h < 5 ? "Bonne nuit" : h < 12 ? "Bonjour" : h < 18 ? "Bon après-midi" : "Bonsoir";
-  const name = PSEUDO ? PSEUDO.charAt(0).toUpperCase() + PSEUDO.slice(1) : "";
-  g.innerHTML = name
-    ? `${hello},<br><span class="home-accent">${esc(name)}</span>`
-    : hello;
-  d.textContent = JOURS[now.getDay()] + " " + now.getDate() + " " + MOIS[now.getMonth()];
-  renderHomeSpark();
+// ══════════════════════════════════════════════════
+// ACCUEIL : bloc « À savoir » + entrée semestres
+// ══════════════════════════════════════════════════
+
+// Un cours est "nouveau" tant qu'aucune de ses cartes n'a été révisée.
+const SEEN_KEY = "revision_seen_subjects_v1";
+function seenSubjects(){
+  try{ return JSON.parse(localStorage.getItem(SEEN_KEY) || "[]"); }catch(e){ return []; }
+}
+function markSubjectSeen(id){
+  const list = seenSubjects();
+  if(!list.includes(id)){ list.push(id); try{ localStorage.setItem(SEEN_KEY, JSON.stringify(list)); }catch(e){} }
+}
+// matières avec du contenu, jamais ouvertes en révision
+function newSubjects(){
+  const seen = seenSubjects();
+  return SUBJECTS.filter(s => totalCards(s) > 0 && !seen.includes(s.id));
 }
 
-// La phrase d'accroche + le bouton principal : une seule action, choisie
-// selon ce qui compte le plus à cet instant (réviser, ou tout est fait).
-function renderHomeSpark(){
-  const box = document.getElementById("home-spark");
+// Le bloc « À savoir » : nouveaux cours + échéances annotées, une ligne chacun.
+// Il apparaît quand il y a quelque chose, disparaît quand il n'y a rien.
+function renderKnowBlock(){
+  const box = document.getElementById("home-know");
   if(!box) return;
-  const withContent = SUBJECTS.filter(s => totalCards(s) > 0);
-  const totalDue = withContent.reduce((n,s)=>n+dueCount(s), 0);
+  box.innerHTML = "";
 
-  if(totalDue > 0){
-    box.innerHTML = `
-      <div class="spark-line">Il te reste <b>${totalDue} carte${totalDue>1?"s":""}</b> pour être à jour aujourd'hui.</div>
-      <button class="spark-go" id="spark-go">Réviser maintenant →</button>`;
-    box.querySelector("#spark-go").addEventListener("click",()=>{ haptic(); startGlobalSession(); });
-  } else {
-    box.innerHTML = `
-      <div class="spark-line spark-done">Tout est à jour. ${isPink()?"🌸":"✨"}<br>
-        <span class="spark-soft">Reviens demain, ou prends de l'avance.</span></div>`;
-  }
+  const news   = newSubjects();
+  const alerts = pendingAlerts();
+  const wrap = document.querySelector("#screen-semestres .wrap");
+  // rien à signaler → le bloc disparaît et l'entrée Semestres se centre
+  if(wrap) wrap.classList.toggle("home-empty", !news.length && !alerts.length);
+  if(!news.length && !alerts.length) return;
+
+  const lbl = el("div","know-label");
+  lbl.textContent = "À savoir";
+  box.appendChild(lbl);
+
+  const card = el("div","know-card");
+  const now = new Date();
+
+  // 1) échéances annotées (contrôle / à rendre / note)
+  alerts.slice(0,4).forEach(e=>{
+    const n = evNote(e) || {};
+    const kind = n.type || "note";
+    const label = kind==="controle" ? "Contrôle" : kind==="devoir" ? "À rendre" : "Note";
+    const days = Math.max(0, Math.ceil((e.start - now) / 86400000));
+    const when = days === 0 ? "auj." : days === 1 ? "demain" : days + " j";
+    const row = el("button","know-row");
+    row.innerHTML = `
+      <span class="know-dot ${kind}"></span>
+      <span class="know-txt">
+        <span class="know-tag ${kind}">${label}</span>
+        <span class="know-name">${esc(e.title || "Cours")}</span>
+      </span>
+      <span class="know-when">${when}</span>`;
+    row.addEventListener("click",()=>{ haptic(); openEDT(); });
+    card.appendChild(row);
+  });
+
+  // 2) cours nouvellement ajoutés
+  news.slice(0,4).forEach(sub=>{
+    const row = el("button","know-row");
+    row.innerHTML = `
+      <span class="know-dot new"></span>
+      <span class="know-txt">
+        <span class="know-tag new">Nouveau</span>
+        <span class="know-name">${esc(sub.title)}</span>
+      </span>
+      <span class="know-when">→</span>`;
+    row.addEventListener("click",()=>{
+      haptic();
+      curSemestre = SEMESTRES[sub.id];
+      openSubject(sub.id);
+    });
+    card.appendChild(row);
+  });
+
+  box.appendChild(card);
 }
+
+// sous-titre du bouton « Mes semestres »
+function renderSemEntry(){
+  const sub = document.getElementById("sem-entry-sub");
+  if(!sub) return;
+  const n = SUBJECTS.length;
+  sub.textContent = n + " matières · S5 & S6";
+}
+
 
 // ── Feuille Mémo (ouverte depuis l'icône du haut) ──
 function openMemoSheet(){
@@ -2507,9 +2622,10 @@ function makeEcueCard(s){
   return card;
 }
 function renderSemestres(){
-  renderHomeHeader();
+  renderKnowBlock();
+  renderSemEntry();
   updateMemoBadge();
-  const wrap=document.getElementById("sem-inner"); wrap.innerHTML="";
+  const wrap=document.getElementById("semchoice-inner"); wrap.innerHTML="";
   [5,6].forEach((sem,si)=>{
     const list=SUBJECTS.filter(s=>(SEMESTRES[s.id]||5)===sem);
     if(!list.length) return;
@@ -2539,6 +2655,28 @@ function renderSemestres(){
     card.addEventListener("click",()=>{ curSemestre=sem; renderSubjectCards(sem); showScreen("subjects"); });
     wrap.appendChild(card);
   });
+
+  // Projet Psycho : même tuile carrée que les semestres
+  const psy = el("button","sem-tile psy-tile rise");
+  psy.style.animationDelay = ".22s";
+  psy.innerHTML = `
+    <div class="sem-tile-top"><div class="sem-badge">💜</div></div>
+    <div class="sem-name">${psyTitle()}</div>
+    <div class="sem-meta">Passerelles · masters</div>
+    <div class="sem-bar"><div class="sem-bar-fill" style="width:${psyProgress()}%"></div></div>
+    <div class="sem-pct">${psyProgress()} %</div>`;
+  psy.addEventListener("click",()=>{ haptic(); renderPsycho(); });
+  wrap.appendChild(psy);
+}
+
+// avancement du Projet Psycho : étapes cochées / total
+function psyProgress(){
+  try{
+    if(!PSYCHO_STEPS.length) return 0;
+    const saved = JSON.parse(localStorage.getItem(PSYCHO_STEPS_KEY) || "{}");
+    const done = PSYCHO_STEPS.filter(st => saved[st.id]).length;
+    return Math.round(done / PSYCHO_STEPS.length * 100);
+  }catch(e){ return 0; }
 }
 
 // mémoire des UE dépliées (par UE, conservée d'une visite à l'autre)
@@ -2621,6 +2759,7 @@ function resolveAllLangs(){
   SUBJECTS.forEach(s=>{ if(s.bilingue) resolveLang(s); });
 }
 function openSubject(id){
+  markSubjectSeen(id);   // le cours n'est plus « nouveau »
   curSubj=SUBJECTS.find(s=>s.id===id);
   resolveLang(curSubj);
   curCmIdx=0; curTdIdx=0; curTab=0;
@@ -3228,19 +3367,21 @@ function renderPsychoSpecialite(){
 document.getElementById("pick-girly").addEventListener("click",()=>chooseTheme("girly"));
 document.getElementById("pick-purple").addEventListener("click",()=>chooseTheme("purple"));
 document.getElementById("btn-start").addEventListener("click",()=>{ renderSemestres(); showScreen("semestres"); });
-document.getElementById("btn-sem-back").addEventListener("click",()=>{ renderSemestres(); showScreen("semestres"); });
+document.getElementById("btn-sem-back").addEventListener("click",()=>{ renderSemestres(); showScreen("semchoice"); });
 document.getElementById("btn-split-back").addEventListener("click",()=>{ renderSubjectCards(curSemestre); showScreen("subjects"); });
 // feuille de changement rapide de matière
 document.getElementById("split-chip").addEventListener("click",openSubjSheet);
 document.getElementById("subj-sheet").addEventListener("click",e=>{ if(e.target.id==="subj-sheet") closeSubjSheet(); });
 document.getElementById("btn-session-back").addEventListener("click",()=>{ clearInterval(timerInt); if(globalSession){ renderSemestres(); showScreen("semestres"); } else { showScreen("split"); } });
 document.getElementById("btn-auteurs-back").addEventListener("click",()=>{ setTab(2); showScreen("split"); });
-document.getElementById("btn-psycho-entry").addEventListener("click",renderPsycho);
 // recherche
 document.getElementById("btn-search").addEventListener("click",openSearch);
 // sections repliables de l'accueil
 // le bouton Mémo ouvre la feuille mémo
 document.getElementById("btn-edt").addEventListener("click",()=>{ haptic(); openEDT(); });
+// entrée unique vers les semestres
+document.getElementById("sem-entry").addEventListener("click",()=>{ haptic(); showScreen("semchoice"); });
+document.getElementById("btn-semchoice-back").addEventListener("click",()=>{ renderSemestres(); showScreen("semestres"); });
 document.getElementById("btn-memo").addEventListener("click",()=>{ haptic(); openMemoSheet(); });
 document.getElementById("memo-overlay").addEventListener("click", e=>{
   if(e.target.id === "memo-overlay") closeMemoSheet();
