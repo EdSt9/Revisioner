@@ -1083,10 +1083,12 @@ textarea::placeholder{color:var(--text-mute);}
   <div class="pick-inner">
     <div class="pick-mark">✿</div>
     <h1 class="pick-title">Qui es-tu&nbsp;?</h1>
-    <p class="pick-sub">Ton pseudo retrouve tes cours et ta progression, sur n'importe quel appareil.</p>
+    <p class="pick-sub">Ton pseudo et ton code retrouvent tes cours et ta progression, sur n'importe quel appareil.</p>
     <div class="login-box">
       <input type="text" id="login-input" placeholder="ton pseudo" autocomplete="off"
              autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="24"/>
+      <input type="password" id="login-code" placeholder="ton code secret" autocomplete="off"
+             autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="64"/>
       <button class="btn-primary" id="login-go">Continuer</button>
       <div class="login-msg" id="login-msg"></div>
     </div>
@@ -1331,6 +1333,11 @@ const EDT_URLS = {
 const EDT_CACHE_KEY = "revision_edt_v1";
 // nom exact de ta fonction Supabase (Edge Functions)
 const EDT_FN_NAME = "smooth-responder";
+// fonction qui garde la table users : seul chemin vers la base
+const API_FN_NAME = "revision-api";
+
+// Réglages de l'utilisateur connecté : { edt_url, news_url }
+let USER_SETTINGS = {};
 
 // ══════════════════════════════════════════════════
 // DATA
@@ -1845,8 +1852,10 @@ async function loadEDT(force){
   // L'emploi du temps appartient à une personne (pseudo), pas à un thème :
   // quelqu'un d'autre qui choisit le rose ne doit pas voir le planning de Nana.
   const who   = isCiva() ? "purple" : isNana() ? "girly" : null;
-  const theme = who || "none";
-  const url   = who ? (EDT_URLS[who] || "") : "";
+  // chacun peut coller son propre lien iCal : il l'emporte sur les liens en dur
+  const perso = (USER_SETTINGS && USER_SETTINGS.edt_url) ? String(USER_SETTINGS.edt_url).trim() : "";
+  const theme = perso ? ("u:" + (whoAmI()||"?")) : (who || "none");
+  const url   = perso || (who ? (EDT_URLS[who] || "") : "");
   if(!url){ edtState = "none"; EDT = []; return; }
 
   // cache : on affiche IMMÉDIATEMENT ce qu'on a (même ancien), pour ne jamais faire attendre.
@@ -3551,25 +3560,49 @@ if("serviceWorker" in navigator){
 // ══════════════════════════════════════════════════
 function supaReady(){ return !!(SUPA_URL && SUPA_KEY); }
 
-async function supaGet(pseudo){
-  const url = `${SUPA_URL}/rest/v1/users?pseudo=eq.${encodeURIComponent(pseudo)}&select=*`;
-  const r = await fetch(url, { headers:{ apikey:SUPA_KEY, Authorization:"Bearer "+SUPA_KEY } });
-  if(!r.ok) throw new Error("get "+r.status);
-  const rows = await r.json();
-  return rows[0] || null;
-}
-async function supaUpsert(row){
-  const url = `${SUPA_URL}/rest/v1/users`;
-  const r = await fetch(url, {
+const CODE_KEY = "revision_code_v1";
+let CODE = null;
+try{ CODE = localStorage.getItem(CODE_KEY); }catch(e){}
+
+// Tout passe par la fonction Edge : elle seule connaît la clé service.
+async function api(action, extra){
+  const r = await fetch(`${SUPA_URL}/functions/v1/${API_FN_NAME}`, {
     method:"POST",
-    headers:{
-      apikey:SUPA_KEY, Authorization:"Bearer "+SUPA_KEY,
-      "Content-Type":"application/json",
-      Prefer:"resolution=merge-duplicates,return=minimal"
-    },
-    body: JSON.stringify(row)
+    headers:{ apikey:SUPA_KEY, Authorization:"Bearer "+SUPA_KEY, "Content-Type":"application/json" },
+    body: JSON.stringify(Object.assign({ action, pseudo:PSEUDO, code:CODE }, extra||{}))
   });
-  if(!r.ok) throw new Error("upsert "+r.status);
+  const out = await r.json().catch(()=>({}));
+  if(!r.ok) throw Object.assign(new Error(out.error||("http "+r.status)), { code: out.error });
+  return out;
+}
+
+// ── Contenu : data.js appartient à Civa, les autres ont le leur sur Supabase ──
+const DATA_UES      = Object.assign({}, UES);
+const DATA_SUBJECTS = SUBJECTS.slice();
+
+// Une matière venue du serveur peut être incomplète : on garantit les tableaux.
+function normSubject(s){
+  const o = Object.assign({}, s||{});
+  ["cm","td","fc","qcm","oq","auteurs"].forEach(k=>{ if(!Array.isArray(o[k])) o[k]=[]; });
+  return o;
+}
+
+// Remplace UES / SUBJECTS / SEMESTRES sur place (le reste de l'app pointe dessus).
+function applyContent(row){
+  let ues, subs;
+  if(isCiva()){
+    ues = DATA_UES; subs = DATA_SUBJECTS;
+  }else{
+    const c = (row && row.content) || {};
+    ues  = (c.ues && typeof c.ues === "object") ? c.ues : {};
+    subs = Array.isArray(c.subjects) ? c.subjects : [];
+  }
+  Object.keys(UES).forEach(k=>delete UES[k]);
+  Object.assign(UES, ues);
+  SUBJECTS.length = 0;
+  subs.forEach(x=>SUBJECTS.push(normSubject(x)));
+  Object.keys(SEMESTRES).forEach(k=>delete SEMESTRES[k]);
+  SUBJECTS.forEach(x=>{ if(UES[x.ue]) SEMESTRES[x.id] = UES[x.ue].sem; });
 }
 
 // Sauvegarde (locale toujours, distante si dispo). Groupée pour ne pas spammer.
@@ -3584,13 +3617,15 @@ async function pushState(){
   try{
     const psy = {};
     PSYCHO_STEPS.forEach(s=>{ psy[s.id] = !!s.done; });
-    await supaUpsert({
-      pseudo: PSEUDO,
+    const patch = {
       theme: document.documentElement.getAttribute("data-theme") || "girly",
       srs: Object.assign({}, SRS, { __edtnotes: EDTNOTES, __memo: MEMO }),
       psycho: psy,
-      updated_at: new Date().toISOString()
-    });
+      settings: USER_SETTINGS
+    };
+    // Civa garde ses cours dans data.js : rien à renvoyer au serveur.
+    if(!isCiva()) patch.content = { ues: UES, subjects: SUBJECTS };
+    await api("save", { patch });
     setSyncBadge("ok");
   }catch(e){ setSyncBadge("off"); }
 }
@@ -3621,50 +3656,65 @@ function applyRemote(row){
     applyTheme(row.theme);
     try{ localStorage.setItem(THEME_KEY, row.theme); }catch(e){}
   }
+  USER_SETTINGS = (row.settings && typeof row.settings === "object") ? row.settings : {};
+  applyContent(row);
 }
 // synchro silencieuse : plus aucun badge affiché
 function setSyncBadge(state){ /* volontairement vide */ }
 
 // ── Connexion par pseudo ──
 async function doLogin(){
-  const inp = document.getElementById("login-input");
-  const msg = document.getElementById("login-msg");
+  const inp  = document.getElementById("login-input");
+  const cinp = document.getElementById("login-code");
+  const msg  = document.getElementById("login-msg");
   // on translittère les accents (é → e) avant de nettoyer,
   // sinon "Nawäl" deviendrait "nawl" au lieu de "nawal"
   const raw = (inp.value || "").trim().toLowerCase()
                 .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   const p   = raw.replace(/[^a-z0-9_-]/g, "");
+  const c   = (cinp.value || "").trim();
   if(p.length < 2){ msg.textContent = "Choisis un pseudo (2 lettres minimum)."; return; }
+  if(c.length < 4){ msg.textContent = "Choisis un code d'au moins 4 caractères."; return; }
 
-  PSEUDO = p;
-  try{ localStorage.setItem(PSEUDO_KEY, p); }catch(e){}
+  PSEUDO = p; CODE = c;
 
   // Pas de Supabase configuré : on reste en local, ça marche quand même.
   if(!supaReady()){
     syncOn = false;
+    try{ localStorage.setItem(PSEUDO_KEY, p); localStorage.setItem(CODE_KEY, c); }catch(e){}
+    applyContent(null);
     afterLogin(null);
     return;
   }
+
   msg.textContent = "Chargement…";
   try{
-    const row = await supaGet(p);
+    const out = await api("login");
     syncOn = true;
-    if(row){
-      afterLogin(row);
-    }else{
-      // pseudo nouveau : on crée tout de suite sa ligne sur Supabase
-      afterLogin(null);
-      await pushState();
-    }
-  }catch(e){
-    // on AFFICHE l'erreur au lieu de la cacher, pour diagnostiquer
-    syncOn = false;
+    try{ localStorage.setItem(PSEUDO_KEY, p); localStorage.setItem(CODE_KEY, c); }catch(e){}
     msg.textContent = "";
-    setTimeout(()=>afterLogin(null), 1800);
+    afterLogin(out.nouveau ? null : out.row);
+    if(out.nouveau) await pushState();
+  }catch(e){
+    PSEUDO = null; CODE = null;
+    if(e.code === "code_faux"){
+      msg.textContent = "Ce pseudo est déjà pris, et le code ne correspond pas.";
+    }else if(e.code === "code_court"){
+      msg.textContent = "Choisis un code d'au moins 4 caractères.";
+    }else{
+      // hors ligne ou serveur muet : on laisse entrer en local
+      syncOn = false;
+      PSEUDO = p; CODE = c;
+      try{ localStorage.setItem(PSEUDO_KEY, p); localStorage.setItem(CODE_KEY, c); }catch(e2){}
+      msg.textContent = "";
+      applyContent(null);
+      setTimeout(()=>afterLogin(null), 600);
+    }
   }
 }
 function afterLogin(row){
   updatePersonalText();   // le pseudo est connu : on ajuste les messages
+  if(!row) applyContent(null);
   if(row){
     applyRemote(row);
     renderSemestres();
@@ -3680,15 +3730,17 @@ function afterLogin(row){
 
 // ── Événements de connexion ──
 document.getElementById("login-go").addEventListener("click",()=>{ haptic(); doLogin(); });
-document.getElementById("login-input").addEventListener("keydown",e=>{ if(e.key==="Enter") doLogin(); });
+document.getElementById("login-input").addEventListener("keydown",e=>{ if(e.key==="Enter") document.getElementById("login-code").focus(); });
+document.getElementById("login-code").addEventListener("keydown",e=>{ if(e.key==="Enter") doLogin(); });
 
 // start
 (async function(){
-  renderSemestres();
   let p=null; try{ p = localStorage.getItem(PSEUDO_KEY); }catch(e){}
 
-  if(!p){
-    // première fois : on demande le pseudo
+  if(!p || !CODE){
+    // première fois (ou code perdu) : on redemande pseudo + code
+    applyContent(null);
+    renderSemestres();
     showScreen("login");
     setTimeout(()=>document.getElementById("login-input").focus(), 350);
     return;
@@ -3699,18 +3751,25 @@ document.getElementById("login-input").addEventListener("keydown",e=>{ if(e.key=
   let saved=null; try{ saved=localStorage.getItem(THEME_KEY); }catch(e){}
   if(saved) applyTheme(saved);
   updatePersonalText();   // pseudo connu dès le départ
+  applyContent(null);     // évite d'afficher le contenu de quelqu'un d'autre le temps du chargement
   renderSemestres();
   showScreen(saved ? "welcome" : "pick");
 
   // puis, en arrière-plan, on récupère la version du serveur si elle est plus récente
   if(supaReady()){
     try{
-      const row = await supaGet(p);
+      const out = await api("login");
       syncOn = true;
-      if(row){ applyRemote(row); renderSemestres(); }
-      else { await pushState(); }        // pseudo pas encore sur le serveur : on l'y met
+      if(out.nouveau){ await pushState(); }   // pseudo pas encore sur le serveur : on l'y met
+      else { applyRemote(out.row); renderSemestres(); }
       setSyncBadge("ok");
-    }catch(e){ syncOn = false; setSyncBadge("off"); }
+    }catch(e){
+      syncOn = false; setSyncBadge("off");
+      if(e.code === "code_faux"){             // code changé ailleurs : on redemande
+        try{ localStorage.removeItem(CODE_KEY); }catch(e2){}
+        CODE = null; showScreen("login");
+      }
+    }
   }
 
   // emploi du temps : chargé en arrière-plan, sans bloquer l'affichage
