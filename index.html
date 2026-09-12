@@ -253,7 +253,8 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 #offline-banner.show{transform:translateX(-50%) translateY(0);opacity:1;}
 
 /* ── EMPLOI DU TEMPS ── */
-.edt-titlerow{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.edt-titlerow{display:flex;align-items:center;gap:8px;}
+.edt-titlerow>.page-title{flex:1;min-width:0;}
 @keyframes edtspin{to{transform:rotate(360deg);}}
 #edt-refresh.spinning svg{animation:edtspin .8s linear infinite;}
 .topline-btns{display:flex;gap:8px;}
@@ -559,7 +560,7 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 .home-accent{color:var(--accent-2);font-style:italic;}
 
 /* semestres en deux colonnes, compacts */
-.sem-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.sem-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px 20px;margin-top:12px;}
 .sem-tile{position:relative;text-align:left;cursor:pointer;font-family:var(--font-text);
   background:var(--surface);border:1px solid var(--border);border-radius:20px;
   padding:16px;box-shadow:0 4px 18px var(--shadow);
@@ -795,6 +796,105 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
   transform:translateY(100%);transition:transform .38s var(--ease-spring);}
 .sheet-overlay.open .sheet{transform:translateY(0);}
 .sheet-grip{width:38px;height:4px;border-radius:4px;background:var(--border-strong);margin:0 auto 12px;flex-shrink:0;}
+/* ── bouton flottant « + » et formulaire de création ── */
+.fab{position:fixed;right:18px;bottom:calc(env(safe-area-inset-bottom) + 24px);z-index:55;
+  width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;
+  background:var(--accent);color:#fff;font-size:30px;line-height:1;font-family:var(--font-text);
+  box-shadow:0 8px 24px var(--accent-glow);display:none;align-items:center;justify-content:center;
+  transition:transform .2s var(--ease-spring);}
+.fab.show{display:flex;}
+.fab:active{transform:scale(.92);}
+/* crayon d'édition, posé sur la zone qu'il modifie */
+.pen{position:absolute;top:6px;right:6px;z-index:3;width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;
+  background:transparent;border:none;color:var(--text-mute);
+  opacity:.55;transition:opacity .2s,transform .15s,background .2s;}
+.pen svg{width:15px;height:15px;display:block;}
+.pen:active{transform:scale(.88);opacity:1;background:var(--accent-soft);}
+.pen-inline{position:static;flex-shrink:0;width:30px;height:30px;
+  border:1px solid var(--border);background:var(--surface);opacity:.8;}
+.edit-wrap{position:relative;display:block;width:100%;}
+.edit-wrap>.sem-tile,.edit-wrap>.ecue-card{width:100%;height:100%;}
+/* ── classes partagées ── */
+.toast{position:fixed;left:50%;transform:translateX(-50%) translateY(20px);
+  bottom:calc(env(safe-area-inset-bottom) + 28px);z-index:90;opacity:0;pointer-events:none;
+  background:var(--surface-solid);border:1px solid var(--border-strong);
+  border-radius:14px;padding:12px 18px;max-width:85%;
+  font-family:var(--font-text);font-size:13.5px;color:var(--text);
+  box-shadow:0 8px 26px rgba(0,0,0,.3);transition:opacity .25s,transform .25s;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.cls-row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;cursor:pointer;
+  background:var(--surface);border:1px solid var(--border);border-radius:18px;
+  padding:15px 16px;margin-bottom:10px;font-family:var(--font-text);}
+.cls-row:active{background:var(--accent-soft);}
+.cls-ic{width:40px;height:40px;border-radius:13px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:19px;
+  background:var(--accent-soft);}
+.cls-txt{flex:1;min-width:0;}
+.cls-name{font-size:15px;font-weight:600;color:var(--text);}
+.cls-sub{font-size:12px;color:var(--text-mute);margin-top:3px;}
+.cls-tag{flex-shrink:0;font-size:10.5px;font-weight:700;letter-spacing:.04em;
+  padding:4px 9px;border-radius:8px;background:var(--accent-soft);color:var(--accent);}
+.cls-code{font-family:var(--font-display);font-size:22px;letter-spacing:.18em;
+  color:var(--accent);text-align:center;padding:14px;margin-bottom:14px;
+  background:var(--accent-soft);border-radius:16px;}
+.kind-head{font-family:var(--font-display);font-size:13px;font-weight:700;
+  color:var(--text-mute);letter-spacing:.05em;text-transform:uppercase;
+  margin:20px 0 9px 4px;}
+.mem-row{display:flex;align-items:center;gap:10px;padding:11px 2px;
+  border-bottom:1px solid var(--border);}
+.mem-name{flex:1;min-width:0;font-size:14px;color:var(--text);}
+.mem-act{flex-shrink:0;border-radius:10px;padding:7px 11px;cursor:pointer;
+  font-family:var(--font-text);font-size:12px;
+  background:var(--surface);border:1px solid var(--border);color:var(--text-soft);}
+.mem-act.go{background:var(--accent);color:#fff;border-color:transparent;}
+.res-group{font-family:var(--font-display);font-size:13px;font-weight:700;
+  color:var(--text-mute);margin:18px 0 8px 4px;}
+.cal-row{display:flex;align-items:center;gap:11px;width:100%;text-align:left;cursor:pointer;
+  background:var(--surface);border:1px solid var(--border);border-radius:16px;
+  padding:13px 14px;margin-bottom:9px;font-family:var(--font-text);}
+.cal-row:active{background:var(--accent-soft);}
+.cal-txt{flex:1;min-width:0;}
+.cal-name{font-size:14.5px;color:var(--text);font-weight:600;}
+.cal-url{font-size:11.5px;color:var(--text-mute);margin-top:3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cal-pen{flex-shrink:0;opacity:.5;color:var(--text-mute);display:flex;}
+.cal-pen svg{width:16px;height:16px;display:block;}
+.sec-head{display:flex;align-items:center;gap:9px;}
+.sec-head>.section-title{flex:1;min-width:0;margin-bottom:0;}
+.chap-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:22px;}
+.chap-row>.chap-seg{flex:1;min-width:0;margin-bottom:0;}
+/* pastille pointillée : même hauteur que les chapitres, pour rester sur la ligne */
+.chap-add{flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  height:40px;min-width:40px;padding:0 12px;border-radius:12px;cursor:pointer;
+  background:transparent;border:1.5px dashed var(--border-strong);color:var(--text-mute);
+  font-family:var(--font-text);font-size:18px;line-height:1;
+  transition:background .2s,color .2s,border-color .2s;}
+.chap-add:active{background:var(--accent-soft);color:var(--accent);border-color:var(--accent);}
+.chap-row>.pen-inline{margin-top:5px;}
+.fs-del{background:transparent;color:#ff6b6b;border-color:rgba(255,107,107,.4);flex:0 0 auto!important;
+  padding-left:18px!important;padding-right:18px!important;}
+.fs-body{overflow-y:auto;padding:0 14px;-webkit-overflow-scrolling:touch;}
+.fs-field{margin-bottom:13px;}
+.fs-label{font-size:12px;color:var(--text-mute);margin:0 4px 6px;}
+.fs-input,.fs-area{width:100%;box-sizing:border-box;background:var(--surface);
+  border:1px solid var(--border);border-radius:14px;padding:12px;
+  color:var(--text);font-family:var(--font-text);font-size:15px;}
+.fs-input:focus,.fs-area:focus{outline:none;border-color:var(--accent);}
+.fs-area{min-height:96px;resize:vertical;line-height:1.5;}
+.fs-hint{font-size:11.5px;color:var(--text-mute);margin:6px 4px 0;line-height:1.45;}
+.fs-actions{display:flex;gap:10px;padding:14px 14px 0;flex-shrink:0;}
+.fs-actions button{flex:1;border-radius:14px;padding:13px;border:1px solid transparent;
+  font-family:var(--font-text);font-size:15px;cursor:pointer;}
+.fs-cancel{background:var(--surface);color:var(--text-soft);border-color:var(--border);}
+.fs-ok{background:var(--accent);color:#fff;}
+.fs-err{font-size:12.5px;color:#ff6b6b;padding:10px 18px 0;min-height:14px;}
+/* petit « + » posé dans une page, pour les chapitres et les sections */
+.add-inline{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  background:transparent;border:1px dashed var(--border-strong);border-radius:16px;
+  padding:14px;margin-top:14px;cursor:pointer;
+  font-family:var(--font-text);font-size:14px;color:var(--text-soft);}
+.add-inline:active{background:var(--accent-soft);}
 .sheet-title{font-family:var(--font-display);font-weight:500;font-size:17px;color:var(--text);text-align:center;margin-bottom:14px;flex-shrink:0;}
 .sheet-list{overflow-y:auto;padding:0 14px;-webkit-overflow-scrolling:touch;}
 .sheet-ue{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-mute);margin:14px 6px 8px;}
@@ -1083,10 +1183,12 @@ textarea::placeholder{color:var(--text-mute);}
   <div class="pick-inner">
     <div class="pick-mark">✿</div>
     <h1 class="pick-title">Qui es-tu&nbsp;?</h1>
-    <p class="pick-sub">Ton pseudo retrouve tes cours et ta progression, sur n'importe quel appareil.</p>
+    <p class="pick-sub">Ton pseudo et ton code retrouvent tes cours et ta progression, sur n'importe quel appareil.</p>
     <div class="login-box">
       <input type="text" id="login-input" placeholder="ton pseudo" autocomplete="off"
              autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="24"/>
+      <input type="password" id="login-code" placeholder="ton code secret" autocomplete="off"
+             autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="64"/>
       <button class="btn-primary" id="login-go">Continuer</button>
       <div class="login-msg" id="login-msg"></div>
     </div>
@@ -1126,6 +1228,9 @@ textarea::placeholder{color:var(--text-mute);}
       </button>
       <button class="icon-btn" id="btn-news" aria-label="Actualités de la licence">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h13a1 1 0 0 1 1 1v12a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2V5z"/><path d="M8 9h6M8 13h6M8 17h3"/></svg>
+      </button>
+      <button class="icon-btn" id="btn-classes" aria-label="Mes classes">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 19v-1.5a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3V19"/><circle cx="9.5" cy="8" r="3"/><path d="M21 19v-1.5a3 3 0 0 0-2.3-2.9"/><path d="M15.5 5.2a3 3 0 0 1 0 5.6"/></svg>
       </button>
       <button class="icon-btn" id="btn-search" aria-label="Rechercher">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
@@ -1199,6 +1304,83 @@ textarea::placeholder{color:var(--text-mute);}
   </div>
 </div>
 
+<!-- BOUTON FLOTTANT « + » (créer un semestre / une matière) -->
+<button class="fab" id="fab-add" aria-label="Ajouter">+</button>
+
+<!-- FORMULAIRE GÉNÉRIQUE (feuille qui monte) -->
+<div id="form-sheet" class="sheet-overlay">
+  <div class="sheet">
+    <div class="sheet-grip"></div>
+    <div class="sheet-title" id="fs-title"></div>
+    <div class="fs-body" id="fs-body"></div>
+    <div class="fs-err" id="fs-err"></div>
+    <div class="fs-actions">
+      <button class="fs-del" id="fs-del" hidden>Supprimer</button>
+      <button class="fs-cancel" id="fs-extra" hidden>Publier</button>
+      <button class="fs-cancel" id="fs-cancel">Annuler</button>
+      <button class="fs-ok" id="fs-ok">Créer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- MES CLASSES -->
+<div id="screen-classes" class="screen">
+  <div class="wrap">
+    <button class="back-btn rise" id="btn-classes-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
+    <div class="edt-titlerow rise" style="animation-delay:.03s">
+      <h1 class="page-title" style="margin:0">Mes classes</h1>
+      <button class="icon-btn" id="btn-class-menu" aria-label="Options">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 14.5a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-2.9-1.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9h-.2a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.3-2.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5v-.2a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+      </button>
+    </div>
+    <p class="page-sub rise" style="animation-delay:.06s">Des dossiers de cours partagés. On y entre avec un code, après validation.</p>
+    <div id="classes-list" class="rise" style="animation-delay:.1s"></div>
+  </div>
+</div>
+
+<!-- UNE CLASSE -->
+<div id="screen-class" class="screen">
+  <div class="wrap">
+    <button class="back-btn rise" id="btn-class-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Mes classes</button>
+    <h1 class="page-title rise" id="class-title" style="animation-delay:.03s"></h1>
+    <div id="class-inner" class="rise" style="animation-delay:.08s"></div>
+  </div>
+</div>
+
+<!-- LECTURE D'UN CHAPITRE PARTAGÉ -->
+<div id="screen-shared" class="screen">
+  <div class="wrap">
+    <button class="back-btn rise" id="btn-shared-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
+    <h1 class="page-title rise" id="shared-title" style="animation-delay:.03s"></h1>
+    <p class="page-sub rise" id="shared-sub" style="animation-delay:.06s"></p>
+    <div id="shared-inner" class="rise" style="animation-delay:.1s"></div>
+  </div>
+</div>
+
+<!-- PICKER GÉNÉRIQUE (choisir une matière, une classe…) -->
+<div id="pick-sheet" class="sheet-overlay">
+  <div class="sheet">
+    <div class="sheet-grip"></div>
+    <div class="sheet-title" id="pick-title"></div>
+    <div class="sheet-list" id="pick-list"></div>
+  </div>
+</div>
+
+<!-- MES CALENDRIERS (feuille qui monte) -->
+<div id="cal-sheet" class="sheet-overlay">
+  <div class="sheet">
+    <div class="sheet-grip"></div>
+    <div class="sheet-title">Mes calendriers</div>
+    <div class="fs-body" id="cal-list"></div>
+    <div class="fs-actions">
+      <button class="fs-cancel" id="cal-close">Fermer</button>
+      <button class="fs-ok" id="cal-add">Ajouter</button>
+    </div>
+  </div>
+</div>
+
 <!-- SÉLECTEUR RAPIDE DE MATIÈRE (feuille qui monte) -->
 <div id="subj-sheet" class="sheet-overlay">
   <div class="sheet">
@@ -1216,6 +1398,9 @@ textarea::placeholder{color:var(--text-mute);}
     <button class="back-btn rise" id="btn-edt-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
     <div class="edt-titlerow rise" style="animation-delay:.03s">
       <h1 class="page-title" style="margin:0">Emploi du temps</h1>
+      <button class="icon-btn" id="edt-link" aria-label="Lien de l'emploi du temps">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>
+      </button>
       <button class="icon-btn" id="edt-refresh" aria-label="Actualiser">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg>
       </button>
@@ -1331,6 +1516,38 @@ const EDT_URLS = {
 const EDT_CACHE_KEY = "revision_edt_v1";
 // nom exact de ta fonction Supabase (Edge Functions)
 const EDT_FN_NAME = "smooth-responder";
+// fonction qui garde la table users : seul chemin vers la base
+const API_FN_NAME = "revision-api";
+
+// Réglages de l'utilisateur connecté : { edt_url, news_url }
+let USER_SETTINGS = {};
+// page d'actualités par défaut : la scolarité L3 SESS de l'UPEC
+const NEWS_URL_DEFAULT = "https://sess-staps.u-pec.fr/scolarite/licence-sess/l3-sess";
+
+// Les calendriers de la personne connectée : [{ id, label, url }].
+// On accepte encore l'ancien réglage à lien unique, pour ne rien perdre.
+function edtCalendars(){
+  const st = USER_SETTINGS || {};
+  if(Array.isArray(st.edt_urls) && st.edt_urls.length){
+    return st.edt_urls.filter(c=>c && c.url);
+  }
+  if(st.edt_url){
+    return [{ id:"main", label:"Mon emploi du temps", url:String(st.edt_url).trim() }];
+  }
+  const who = isCiva() ? "purple" : isNana() ? "girly" : null;
+  if(who && EDT_URLS[who]) return [{ id:"theme", label:"Mon emploi du temps", url:EDT_URLS[who] }];
+  return [];
+}
+// Passe au format liste dès la première modification.
+function edtCalendarsWritable(){
+  const st = USER_SETTINGS;
+  if(!Array.isArray(st.edt_urls)){
+    st.edt_urls = edtCalendars().map(c=>({ id:c.id==="theme" ? newId() : c.id, label:c.label, url:c.url }));
+    delete st.edt_url;
+  }
+  return st.edt_urls;
+}
+function newsUrl(){ return (USER_SETTINGS && USER_SETTINGS.news_url) || NEWS_URL_DEFAULT; }
 
 // ══════════════════════════════════════════════════
 // DATA
@@ -1521,11 +1738,792 @@ const chevronR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
 const checkSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
 
 function el(tag, cls){ const e=document.createElement(tag); if(cls) e.className=cls; return e; }
+
+// ══════════════════════════════════════════════════
+// ÉDITION DU CONTENU (réservée aux comptes autres que Civa :
+// le contenu de Civa vit dans data.js, pas sur le serveur)
+// ══════════════════════════════════════════════════
+// Tout le monde peut créer. On ne modifie que ce qu'on a créé soi-même :
+// une matière venue de data.js n'a pas de crayon, sinon mes mises à jour l'écraseraient.
+function canEdit(){ return !!whoAmI(); }
+function isOwn(x){ return !!(x && x._own); }
+function semIsOwn(sem){
+  const keys = Object.keys(UES).filter(k=>UES[k].sem === sem);
+  return keys.length > 0 && keys.every(k=>!(k in DATA_UES));
+}
+
+// Enregistre et rafraîchit. pushState() renvoie UES + SUBJECTS au serveur.
+function saveContent(){ scheduleSync(); }
+
+// Formulaire générique.
+// fields : [{ key, label, type:"text"|"number"|"area", placeholder, hint, value }]
+let fsSubmit = null, fsDelete = null, fsExtra = null, fsDelArmed = false;
+function openForm(title, fields, okLabel, onSubmit, onDelete, extra){
+  const body = document.getElementById("fs-body");
+  const del  = document.getElementById("fs-del");
+  const ex   = document.getElementById("fs-extra");
+  ex.hidden = !extra;
+  if(extra) ex.textContent = extra.label;
+  fsExtra = extra ? () => { closeForm(); extra.fn(); } : null;
+  document.getElementById("fs-title").textContent = title;
+  document.getElementById("fs-ok").textContent = okLabel || "Créer";
+  document.getElementById("fs-err").textContent = "";
+  // La suppression demande deux touches : la première arme, la seconde exécute.
+  fsDelArmed = false;
+  del.textContent = "Supprimer";
+  del.hidden = !onDelete;
+  fsDelete = onDelete ? () => {
+    if(!fsDelArmed){
+      fsDelArmed = true;
+      del.textContent = "Confirmer ?";
+      document.getElementById("fs-err").textContent = "Cette suppression est définitive.";
+      return;
+    }
+    onDelete();
+    closeForm();
+  } : null;
+  body.innerHTML = "";
+  fields.forEach(f=>{
+    const w = el("div","fs-field");
+    const l = el("div","fs-label"); l.textContent = f.label; w.appendChild(l);
+    const inp = f.type === "area" ? el("textarea","fs-area") : el("input","fs-input");
+    if(f.type !== "area") inp.type = f.type || "text";
+    if(f.type === "number"){ inp.inputMode = "numeric"; }
+    inp.id = "fs-f-" + f.key;
+    inp.placeholder = f.placeholder || "";
+    inp.value = f.value || "";
+    w.appendChild(inp);
+    if(f.hint){ const h = el("div","fs-hint"); h.textContent = f.hint; w.appendChild(h); }
+    body.appendChild(w);
+  });
+  fsSubmit = () => {
+    const vals = {};
+    fields.forEach(f=>{ vals[f.key] = (document.getElementById("fs-f-"+f.key).value || "").trim(); });
+    const err = onSubmit(vals);          // une chaîne = message d'erreur, sinon on ferme
+    if(err){ document.getElementById("fs-err").textContent = err; return; }
+    closeForm();
+  };
+  document.getElementById("form-sheet").classList.add("open");
+  setTimeout(()=>{ const first = body.querySelector("input,textarea"); if(first) first.focus(); }, 320);
+}
+function closeForm(){
+  document.getElementById("form-sheet").classList.remove("open");
+  fsSubmit = null; fsDelete = null; fsExtra = null; fsDelArmed = false;
+}
+
+// ── Mes calendriers ──
+function reloadEDT(){
+  try{ localStorage.removeItem(EDT_CACHE_KEY); }catch(e){}
+  renderEDT();
+  loadEDT(true).then(()=>{ renderEDT(); renderTodayCourses(); });
+}
+
+function openCalSheet(){
+  const list = document.getElementById("cal-list");
+  list.innerHTML = "";
+  const cals = edtCalendars();
+  if(!cals.length){
+    const p = el("div","fs-hint");
+    p.textContent = "Aucun calendrier. Touche Ajouter pour coller ton premier lien iCal.";
+    list.appendChild(p);
+  }
+  cals.forEach(c=>{
+    const row = el("button","cal-row");
+    row.type = "button";
+    row.innerHTML = `<div class="cal-txt"><div class="cal-name">${esc(c.label||"Calendrier")}</div>
+      <div class="cal-url">${esc(c.url)}</div></div><span class="cal-pen">${IC_PEN}</span>`;
+    row.addEventListener("click",()=>{ haptic(); editCalendar(c.id); });
+    list.appendChild(row);
+  });
+  document.getElementById("cal-sheet").classList.add("open");
+}
+function closeCalSheet(){ document.getElementById("cal-sheet").classList.remove("open"); }
+
+function editCalendar(id){
+  const arr = edtCalendarsWritable();
+  const i   = arr.findIndex(c=>c.id === id);
+  const c   = i >= 0 ? arr[i] : null;
+  closeCalSheet();
+  openForm(c ? "Modifier le calendrier" : "Nouveau calendrier", [
+    { key:"label", label:"Nom", value:c ? c.label : "",
+      placeholder:"Cours, Langues, Stage…" },
+    { key:"url", label:"Lien iCal", value:c ? c.url : "",
+      placeholder:"https://…/calendar.ics",
+      hint:"Sur l'ENT, cherche « exporter », « s'abonner » ou « iCal ». Le lien finit souvent par .ics." }
+  ], "Enregistrer", v=>{
+    if(!v.url) return "Colle le lien de ton calendrier.";
+    if(!/^https?:\/\//i.test(v.url)) return "Le lien doit commencer par http.";
+    if(arr.some((x,j)=>x.url === v.url && j !== i)) return "Ce calendrier est déjà dans la liste.";
+    const label = v.label || "Calendrier";
+    if(c){ c.label = label; c.url = v.url; }
+    else  { arr.push({ id:newId(), label, url:v.url }); }
+    saveContent();
+    reloadEDT();
+  }, c ? ()=>{
+    arr.splice(i,1);
+    saveContent();
+    reloadEDT();
+  } : null);
+}
+
+// ── Lien de la page d'actualités ──
+function editNewsUrl(){
+  const cur = (USER_SETTINGS && USER_SETTINGS.news_url) || "";
+  openForm("Page d'actualités", [
+    { key:"url", label:"Adresse de la page", value:cur,
+      placeholder:NEWS_URL_DEFAULT,
+      hint:"La page de ta scolarité. Laisse vide pour revenir à celle de la L3 SESS." }
+  ], "Enregistrer", v=>{
+    if(v.url && !/^https?:\/\//i.test(v.url)) return "Le lien doit commencer par http.";
+    if(v.url) USER_SETTINGS.news_url = v.url; else delete USER_SETTINGS.news_url;
+    saveContent();
+  });
+}
+
+// Appui long : sert à ouvrir un réglage sans encombrer l'écran d'un bouton de plus.
+function onLongPress(node, fn){
+  let t = null, moved = false;
+  const start = () => { moved = false; t = setTimeout(()=>{ if(!moved){ haptic(); fn(); } }, 600); };
+  const stop  = () => { if(t) clearTimeout(t); t = null; };
+  node.addEventListener("touchstart", start, { passive:true });
+  node.addEventListener("touchmove", ()=>{ moved = true; stop(); }, { passive:true });
+  node.addEventListener("touchend", stop);
+  node.addEventListener("touchcancel", stop);
+  node.addEventListener("contextmenu", e=>e.preventDefault());
+}
+
+// ══════════════════════════════════════════════════
+// CLASSES ET PARTAGE
+// ══════════════════════════════════════════════════
+let toastTimer = null;
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove("show"), 2600);
+}
+
+let MY_CLASSES = [];      // [{id,name,owner,role,code?}]
+let curClass   = null;
+let SHARED_CACHE = {};    // item_id → payload, rempli à l'ouverture
+
+// Picker générique : une liste de choix dans une feuille qui monte.
+function openPicker(title, options, onPick){
+  const box = document.getElementById("pick-list");
+  document.getElementById("pick-title").textContent = title;
+  box.innerHTML = "";
+  if(!options.length){
+    const p = el("div","fs-hint");
+    p.textContent = "Rien à choisir ici pour l'instant.";
+    box.appendChild(p);
+  }
+  options.forEach(o=>{
+    const b = el("button","cal-row");
+    b.type = "button";
+    b.innerHTML = `<div class="cal-txt"><div class="cal-name">${esc(o.label)}</div>` +
+      (o.sub ? `<div class="cal-url">${esc(o.sub)}</div>` : "") + `</div>`;
+    b.addEventListener("click",()=>{ haptic(); closePicker(); onPick(o.value); });
+    box.appendChild(b);
+  });
+  document.getElementById("pick-sheet").classList.add("open");
+}
+function closePicker(){ document.getElementById("pick-sheet").classList.remove("open"); }
+
+const KIND_LABEL = { cm:"Cours magistraux", td:"Travaux dirigés", devoir:"Devoirs" };
+
+// ── Liste de mes classes ──
+async function openClasses(){
+  showScreen("classes");
+  const box = document.getElementById("classes-list");
+  box.innerHTML = `<div class="empty-note">Chargement…</div>`;
+  try{
+    const out = await api("class_list");
+    MY_CLASSES = out.classes || [];
+  }catch(e){
+    box.innerHTML = `<div class="empty-note">Impossible de charger tes classes.</div>`;
+    return;
+  }
+  box.innerHTML = "";
+  if(!MY_CLASSES.length){
+    box.innerHTML = `<div class="empty-note">Tu n'es dans aucune classe.<br>
+      Crée la tienne, ou demande son code à quelqu'un.</div>`;
+    return;
+  }
+  MY_CLASSES.forEach(c=>{
+    const row = el("button","cls-row");
+    row.type = "button";
+    const tag = c.role === "owner" ? "CRÉATEUR" : c.role === "adjoint" ? "ADJOINT"
+              : c.role === "pending" ? "EN ATTENTE" : "MEMBRE";
+    row.innerHTML = `<div class="cls-ic">📚</div>
+      <div class="cls-txt"><div class="cls-name">${esc(c.name)}</div>
+      <div class="cls-sub">créée par ${esc(c.owner)}</div></div>
+      <span class="cls-tag">${tag}</span>`;
+    row.addEventListener("click",()=>{
+      haptic();
+      if(c.role === "pending"){
+        toast("Ta demande attend la validation du créateur.");
+        return;
+      }
+      openClass(c);
+    });
+    box.appendChild(row);
+  });
+}
+
+function classMenu(){
+  openPicker("Mes classes", [
+    { label:"Créer une classe", sub:"tu en deviens le créateur", value:"new" },
+    { label:"Rejoindre avec un code", sub:"ta demande sera validée", value:"join" }
+  ], v=>{ if(v === "new") createClass(); else joinClass(); });
+}
+
+function createClass(){
+  openForm("Nouvelle classe", [
+    { key:"name", label:"Nom de la classe", placeholder:"L3 SESS 2026" }
+  ], "Créer", v=>{
+    if(v.name.length < 2) return "Donne un nom à la classe.";
+    api("class_create", { name:v.name })
+      .then(()=>openClasses())
+      .catch(()=>toast("Création impossible."));
+  });
+}
+
+function joinClass(){
+  openForm("Rejoindre une classe", [
+    { key:"code", label:"Code de la classe", placeholder:"AB3K7P",
+      hint:"Six caractères, donnés par le créateur. Ta demande devra être validée." }
+  ], "Demander", v=>{
+    if(v.code.length < 4) return "Ce code est trop court.";
+    api("class_request", { code:v.code })
+      .then(out=>{
+        toast(out.statut === "pending" ? "Demande envoyée." : "Tu es déjà dans cette classe.");
+        openClasses();
+      })
+      .catch(e=>toast(e.code === "classe_introuvable" ? "Aucune classe avec ce code." : "Échec."));
+  });
+}
+
+// ── Une classe : ses membres, puis ses cours triés par matière et par type ──
+async function openClass(c){
+  curClass = c;
+  showScreen("class");
+  document.getElementById("class-title").textContent = c.name;
+  const box = document.getElementById("class-inner");
+  box.innerHTML = `<div class="empty-note">Chargement…</div>`;
+
+  let items = [], membres = [], monRole = c.role;
+  try{
+    const a = await api("class_items", { class_id:c.id });
+    items = a.items || [];
+    const b = await api("class_members", { class_id:c.id });
+    membres = b.membres || []; monRole = b.monRole || monRole;
+  }catch(e){
+    box.innerHTML = `<div class="empty-note">Impossible d'ouvrir cette classe.</div>`;
+    return;
+  }
+  box.innerHTML = "";
+
+  // le code, visible du seul créateur : c'est lui qui le distribue
+  if(c.code){
+    const cd = el("div","cls-code");
+    cd.textContent = c.code;
+    box.appendChild(cd);
+    const h = el("div","fs-hint");
+    h.textContent = "Donne ce code à ta classe. Chaque demande devra être validée ici.";
+    h.style.margin = "-8px 4px 4px";
+    box.appendChild(h);
+  }
+
+  // demandes en attente et gestion des rôles
+  const gere = monRole === "owner" || monRole === "adjoint";
+  const attente = membres.filter(m=>m.role === "pending");
+  if(gere && attente.length){
+    const t = el("div","kind-head"); t.textContent = "Demandes en attente";
+    box.appendChild(t);
+    attente.forEach(m=>{
+      const row = el("div","mem-row");
+      const nm = el("div","mem-name"); nm.textContent = m.pseudo;
+      const ok = el("button","mem-act go"); ok.textContent = "Accepter";
+      ok.addEventListener("click",()=>setRole(c, m.pseudo, "membre"));
+      const no = el("button","mem-act"); no.textContent = "Refuser";
+      no.addEventListener("click",()=>setRole(c, m.pseudo, "retire"));
+      row.appendChild(nm); row.appendChild(ok); row.appendChild(no);
+      box.appendChild(row);
+    });
+  }
+  if(monRole === "owner"){
+    const valides = membres.filter(m=>m.role === "membre" || m.role === "adjoint");
+    if(valides.length){
+      const t = el("div","kind-head"); t.textContent = "Membres";
+      box.appendChild(t);
+      valides.forEach(m=>{
+        const row = el("div","mem-row");
+        const nm = el("div","mem-name");
+        nm.textContent = m.pseudo + (m.role === "adjoint" ? "  ·  adjoint" : "");
+        const b = el("button","mem-act" + (m.role === "adjoint" ? "" : " go"));
+        b.textContent = m.role === "adjoint" ? "Retirer l'adjoint" : "Nommer adjoint";
+        b.addEventListener("click",()=>setRole(c, m.pseudo, m.role === "adjoint" ? "membre" : "adjoint"));
+        row.appendChild(nm); row.appendChild(b);
+        box.appendChild(row);
+      });
+    }
+  }
+
+  // publier sans quitter la classe
+  if(gere){
+    const add = el("button","add-inline");
+    add.textContent = "+  Publier un de mes cours";
+    add.style.marginTop = "20px";
+    add.addEventListener("click",()=>{ haptic(); publishFromClass(c); });
+    box.appendChild(add);
+  }
+
+  // les cours, groupés par matière puis séparés CM / TD / Devoirs
+  if(!items.length){
+    const e = el("div","empty-note");
+    e.textContent = gere
+      ? "Aucun cours publié. Ouvre un de tes chapitres et touche « Publier »."
+      : "Aucun cours publié pour l'instant.";
+    e.style.marginTop = "22px";
+    box.appendChild(e);
+    return;
+  }
+  const parMatiere = {};
+  items.forEach(it=>{ (parMatiere[it.subject_title] ||= []).push(it); });
+  Object.keys(parMatiere).sort().forEach(mat=>{
+    const t = el("div","kind-head"); t.textContent = mat;
+    t.style.color = "var(--accent)";
+    box.appendChild(t);
+    ["cm","td","devoir"].forEach(k=>{
+      const list = parMatiere[mat].filter(x=>x.kind === k);
+      if(!list.length) return;
+      const sub = el("div","res-group"); sub.textContent = KIND_LABEL[k];
+      box.appendChild(sub);
+      list.forEach(it=>{
+        const row = el("button","cal-row");
+        row.type = "button";
+        row.innerHTML = `<div class="cal-txt"><div class="cal-name">${esc(it.label)}</div>
+          <div class="cal-url">par ${esc(it.author)}</div></div>`;
+        row.addEventListener("click",()=>{ haptic(); openSharedItem(it); });
+        box.appendChild(row);
+      });
+    });
+  });
+}
+
+function setRole(c, cible, role){
+  haptic();
+  api("class_role", { class_id:c.id, cible, role })
+    .then(()=>openClass(c))
+    .catch(()=>toast("Action refusée."));
+}
+
+// Choisir une matière, puis un de ses chapitres, et le publier ici.
+function publishFromClass(c){
+  const mats = SUBJECTS.filter(s=>((s.cm||[]).concat(s.td||[])).some(ch=>!ch._shared));
+  if(!mats.length){ toast("Aucun chapitre à publier pour l'instant."); return; }
+  openPicker("Quelle matière ?", mats.map(s=>({
+    label: s.title,
+    sub: ((s.cm||[]).filter(x=>!x._shared).length) + " en cours · " +
+         ((s.td||[]).filter(x=>!x._shared).length) + " en TD",
+    value: s.id
+  })), subjId=>{
+    const sj = SUBJECTS.find(x=>x.id === subjId);
+    const opts = [];
+    (sj.cm||[]).forEach((ch,i)=>{ if(!ch._shared) opts.push({ label:ch.label, sub:"Cours", value:"cm:"+i }); });
+    (sj.td||[]).forEach((ch,i)=>{ if(!ch._shared) opts.push({ label:ch.label, sub:"TD", value:"td:"+i }); });
+    setTimeout(()=>openPicker("Quel chapitre ?", opts, val=>{
+      const [type, idx] = val.split(":");
+      const ch = (type === "cm" ? sj.cm : sj.td)[Number(idx)];
+      const payload = { label:ch.label, sections:ch.sections||[], recap:ch.recap||[] };
+      api("item_publish", { class_id:c.id, kind:type, subject_title:sj.title, payload })
+        .then(()=>{ toast("Publié."); openClass(c); })
+        .catch(()=>toast("Publication refusée."));
+    }), 320);   // on laisse la première feuille se refermer
+  });
+}
+
+// ── Lecture d'un chapitre partagé ──
+async function openSharedItem(it){
+  showScreen("shared");
+  document.getElementById("shared-title").textContent = it.label;
+  document.getElementById("shared-sub").textContent =
+    `${it.subject_title} · ${KIND_LABEL[it.kind] || it.kind} · par ${it.author}`;
+  const box = document.getElementById("shared-inner");
+  box.innerHTML = `<div class="empty-note">Chargement…</div>`;
+  let payload = SHARED_CACHE[it.id];
+  if(!payload){
+    try{
+      const out = await api("items_fetch", { ids:[it.id] });
+      payload = (out.items||[])[0]?.payload;
+      if(payload) SHARED_CACHE[it.id] = payload;
+    }catch(e){}
+  }
+  box.innerHTML = "";
+  if(!payload){ box.innerHTML = `<div class="empty-note">Contenu indisponible.</div>`; return; }
+  renderSectionsInto(box, payload);
+
+  const suivre = el("button","add-inline");
+  suivre.textContent = isFollowed(it.id) ? "✓  Déjà dans mes cours" : "+  Ajouter à mes cours";
+  suivre.addEventListener("click",()=>{ haptic(); if(!isFollowed(it.id)) followItem(it); });
+  box.appendChild(suivre);
+}
+
+// Rend les sections d'un chapitre dans n'importe quel conteneur.
+function renderSectionsInto(box, ch){
+  (ch.sections||[]).forEach(sec=>{
+    const block = el("div","section");
+    const title = el("h2","section-title"); title.textContent = sec.title || "";
+    const card  = el("div","card");
+    if(sec.body){ const b = el("p","card-body"); b.innerHTML = sec.body; card.appendChild(b); }
+    if(sec.list && sec.list.length){
+      const ul = el("ul","card-list");
+      sec.list.forEach(x=>{ const li = el("li"); li.innerHTML = `<span class="li-text">${x}</span>`; ul.appendChild(li); });
+      card.appendChild(ul);
+    }
+    block.appendChild(title); block.appendChild(card);
+    box.appendChild(block);
+  });
+  if(ch.recap && ch.recap.length){
+    const r = el("div","recap");
+    r.innerHTML = `<div class="recap-label">📌 À retenir</div>` +
+      ch.recap.map((x,i)=>`<div class="recap-item"><span class="recap-num">${i+1}</span><span>${esc(x)}</span></div>`).join("");
+    box.appendChild(r);
+  }
+}
+
+// Résultats venus des classes. Ajoutés sous les résultats locaux, en asynchrone.
+let sharedSearchSeq = 0;
+function searchShared(q, box){
+  const seq = ++sharedSearchSeq;
+  api("search_shared", { q }).then(out=>{
+    if(seq !== sharedSearchSeq) return;          // une frappe plus récente a pris la main
+    const items = out.items || [];
+    document.querySelectorAll(".shared-results").forEach(n=>n.remove());
+    if(!items.length) return;
+    const wrap = el("div","shared-results");
+    const h = el("div","res-group");
+    h.textContent = "Dans mes classes  ·  " + items.length;
+    wrap.appendChild(h);
+    items.forEach(it=>{
+      const row = el("button","cal-row");
+      row.type = "button";
+      row.innerHTML = `<div class="cal-txt"><div class="cal-name">${esc(it.label)}</div>
+        <div class="cal-url">${esc(it.subject_title)} · ${esc(KIND_LABEL[it.kind]||it.kind)} · ${esc(it.author)}</div></div>`;
+      row.addEventListener("click",()=>{ haptic(); openSharedItem(it); });
+      wrap.appendChild(row);
+    });
+    box.appendChild(wrap);
+  }).catch(()=>{});
+}
+
+// ── Suivre un chapitre partagé : on garde son identifiant, pas une copie ──
+function follows(){
+  if(!Array.isArray(USER_SETTINGS.follows)) USER_SETTINGS.follows = [];
+  return USER_SETTINGS.follows;
+}
+function isFollowed(itemId){ return follows().some(f=>f.item_id === itemId); }
+
+function followItem(it){
+  const cibles = SUBJECTS.map(s=>({
+    label: s.title,
+    sub: (UES[s.ue] && UES[s.ue].title) || "",
+    value: s.id
+  }));
+  if(!cibles.length){ toast("Crée d'abord une matière où le ranger."); return; }
+  openPicker("Le ranger dans quelle matière ?", cibles, subjId=>{
+    follows().push({ item_id:it.id, subject_id:subjId, kind:it.kind, label:it.label });
+    saveContent();
+    syncFollows().then(()=>{
+      toast("Ajouté. Il suivra les corrections de l'auteur.");
+      const sj = SUBJECTS.find(x=>x.id === subjId);
+      if(sj) openSubject(subjId);
+    });
+  });
+}
+
+function unfollowItem(itemId){
+  const arr = follows();
+  const i = arr.findIndex(f=>f.item_id === itemId);
+  if(i >= 0) arr.splice(i,1);
+  delete SHARED_CACHE[itemId];
+  saveContent();
+  injectFollowed();
+}
+
+// Va chercher la version à jour de tous les chapitres suivis, puis les injecte.
+async function syncFollows(){
+  const ids = follows().map(f=>f.item_id);
+  if(!ids.length){ injectFollowed(); return; }
+  try{
+    const out = await api("items_fetch", { ids });
+    const vus = new Set();
+    (out.items||[]).forEach(it=>{ SHARED_CACHE[it.id] = it.payload; vus.add(it.id); });
+    // un chapitre retiré de sa classe, ou une classe quittée : on ne le garde pas
+    USER_SETTINGS.follows = follows().filter(f=>vus.has(f.item_id));
+  }catch(e){}
+  injectFollowed();
+}
+
+// Les chapitres suivis apparaissent dans la matière choisie, en lecture seule.
+function injectFollowed(){
+  SUBJECTS.forEach(sj=>{
+    sj.cm = (sj.cm||[]).filter(ch=>!ch._shared);
+    sj.td = (sj.td||[]).filter(ch=>!ch._shared);
+  });
+  follows().forEach(f=>{
+    const sj = SUBJECTS.find(x=>x.id === f.subject_id);
+    const payload = SHARED_CACHE[f.item_id];
+    if(!sj || !payload) return;
+    const ch = Object.assign({}, payload, {
+      _shared:true, _itemId:f.item_id,
+      label: payload.label || f.label || "Partagé"
+    });
+    (f.kind === "cm" ? sj.cm : sj.td).push(ch);
+  });
+  const scr = document.documentElement.getAttribute("data-screen");
+  if(scr === "split"){ renderCoursePane("cm"); renderCoursePane("td"); }
+}
+
+// ── Publier un de mes chapitres dans une classe ──
+function publishChapitre(type, ch, subjectTitle){
+  const ok = MY_CLASSES.filter(c=>c.role === "owner" || c.role === "adjoint");
+  const go = list=>{
+    if(!list.length){ toast("Tu ne peux publier dans aucune classe."); return; }
+    openPicker("Publier dans quelle classe ?",
+      list.map(c=>({ label:c.name, sub:c.role === "owner" ? "créateur" : "adjoint", value:c.id })),
+      classId=>{
+        const payload = { label:ch.label, sections:ch.sections||[], recap:ch.recap||[] };
+        api("item_publish", { class_id:classId, kind:type === "cm" ? "cm" : "td",
+                              subject_title:subjectTitle, payload })
+          .then(()=>toast("Publié."))
+          .catch(()=>toast("Publication refusée."));
+      });
+  };
+  // la liste des classes peut ne pas encore avoir été chargée
+  if(MY_CLASSES.length) go(ok);
+  else api("class_list").then(out=>{
+    MY_CLASSES = out.classes || [];
+    go(MY_CLASSES.filter(c=>c.role === "owner" || c.role === "adjoint"));
+  }).catch(()=>toast("Impossible de charger tes classes."));
+}
+
+// ══ Crayon d'édition ══
+// Renvoie un petit bouton crayon, ou null si le compte n'édite pas.
+const IC_PEN  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+  stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/>
+  <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>`;
+const IC_DOTS = `<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.9"/>
+  <circle cx="12" cy="12" r="1.9"/><circle cx="19" cy="12" r="1.9"/></svg>`;
+
+function penBtn(label, onClick, inline){
+  if(!canEdit()) return null;
+  const b = el("button", "pen" + (inline ? " pen-inline" : ""));
+  b.type = "button";
+  // trois points dans le coin d'une tuile, crayon quand le bouton est posé en ligne
+  b.innerHTML = inline ? IC_PEN : IC_DOTS;
+  b.setAttribute("aria-label", label);
+  b.addEventListener("click", e=>{ e.stopPropagation(); haptic(); onClick(); });
+  return b;
+}
+// Enveloppe une tuile pour pouvoir poser le crayon dans son coin.
+function withPen(card, label, onClick){
+  const pen = penBtn(label, onClick);
+  if(!pen) return card;
+  const w = el("div","edit-wrap");
+  w.appendChild(card); w.appendChild(pen);
+  return w;
+}
+
+// ── Modifier ou supprimer un semestre ──
+function editSemestre(sem){
+  openForm("Semestre " + sem, [
+    { key:"num", label:"Numéro du semestre", type:"number", value:String(sem) }
+  ], "Enregistrer", v=>{
+    const n = parseInt(v.num, 10);
+    if(!n || n < 1 || n > 12) return "Entre un numéro entre 1 et 12.";
+    if(n !== sem && Object.values(UES).some(u=>u.sem === n)) return "Ce semestre existe déjà.";
+    Object.keys(UES).forEach(k=>{ if(UES[k].sem === sem){ UES[k].sem = n; UES[k].num = String(n); } });
+    SUBJECTS.forEach(x=>{ if(SEMESTRES[x.id] === sem) SEMESTRES[x.id] = n; });
+    curSemestre = n;
+    saveContent(); renderSemestres();
+  }, ()=>{
+    // supprimer un semestre emporte ses UE et toutes ses matières
+    const ueKeys = Object.keys(UES).filter(k=>UES[k].sem === sem);
+    ueKeys.forEach(k=>delete UES[k]);
+    for(let i = SUBJECTS.length - 1; i >= 0; i--){
+      if(ueKeys.includes(SUBJECTS[i].ue)){ delete SEMESTRES[SUBJECTS[i].id]; SUBJECTS.splice(i,1); }
+    }
+    saveContent(); renderSemestres();
+  });
+}
+
+// ── Modifier ou supprimer une matière ──
+function editMatiere(sub){
+  const sem = SEMESTRES[sub.id];
+  openForm("Modifier la matière", [
+    { key:"title", label:"Nom de la matière", value:sub.title },
+    { key:"ecue",  label:"Code (facultatif)", value:sub.ecue || "" },
+    { key:"ue",    label:"UE", value:(UES[sub.ue] && UES[sub.ue].title) || "",
+      hint:"Renommer l'UE ici la renomme pour toutes ses matières." }
+  ], "Enregistrer", v=>{
+    if(!v.title) return "Donne un nom à la matière.";
+    sub.title = v.title;
+    sub.ecue  = v.ecue;
+    if(v.ue && UES[sub.ue]) UES[sub.ue].title = v.ue;
+    saveContent(); renderSubjectCards(sem); renderSemestres();
+  }, ()=>{
+    const i = SUBJECTS.findIndex(x=>x.id === sub.id);
+    if(i >= 0) SUBJECTS.splice(i,1);
+    delete SEMESTRES[sub.id];
+    saveContent(); renderSubjectCards(sem); renderSemestres();
+  });
+}
+
+// ── Modifier ou supprimer un chapitre ──
+function sharedChapMenu(ch){
+  openPicker("Chapitre partagé", [
+    { label:"Le retirer de mes cours", sub:"il reste dans la classe", value:"off" }
+  ], ()=>{ unfollowItem(ch._itemId); toast("Retiré de tes cours."); });
+}
+
+function editChapitre(type, idx){
+  const arr = type === "cm" ? curSubj.cm : curSubj.td;
+  const ch = arr[idx];
+  openForm("Modifier le chapitre", [
+    { key:"label", label:"Nom du chapitre", value:ch.label || "" }
+  ], "Enregistrer", v=>{
+    if(!v.label) return "Donne un nom au chapitre.";
+    ch.label = v.label;
+    saveContent(); renderCoursePane(type);
+  }, ()=>{
+    arr.splice(idx,1);
+    const ni = Math.max(0, Math.min(idx, arr.length - 1));
+    if(type === "cm") curCmIdx = ni; else curTdIdx = ni;
+    saveContent(); renderCoursePane(type);
+  }, { label:"Publier", fn:()=>publishChapitre(type, ch, curSubj.title) });
+}
+
+// ── Modifier ou supprimer une section ──
+function editSection(type, ch, idx){
+  const sec = ch.sections[idx];
+  openForm("Modifier la section", [
+    { key:"title", label:"Titre", value:sec.title || "" },
+    { key:"body",  label:"Texte", type:"area", value:sec.body || "" },
+    { key:"list",  label:"Puces (facultatif)", type:"area",
+      value:(sec.list || []).join("\n"), hint:"Chaque ligne devient une puce." }
+  ], "Enregistrer", v=>{
+    if(!v.title && !v.body) return "Il faut au moins un titre ou un texte.";
+    sec.title = v.title || "";
+    if(v.body) sec.body = v.body; else delete sec.body;
+    const puces = v.list.split("\n").map(x=>x.trim()).filter(Boolean);
+    if(puces.length) sec.list = puces; else delete sec.list;
+    saveContent(); renderCoursePane(type);
+  }, ()=>{
+    ch.sections.splice(idx,1);
+    saveContent(); renderCoursePane(type);
+  });
+}
+
+function newId(){ return "u" + Date.now().toString(36) + Math.floor(Math.random()*999).toString(36); }
+
+// ── Créer un semestre ──
+// Un semestre a besoin d'au moins une UE pour accueillir des matières :
+// on en crée une par défaut, renommable plus tard.
+function addSemestre(){
+  openForm("Nouveau semestre", [
+    { key:"num", label:"Numéro du semestre", type:"number", placeholder:"1" }
+  ], "Créer", v=>{
+    const n = parseInt(v.num, 10);
+    if(!n || n < 1 || n > 12) return "Entre un numéro entre 1 et 12.";
+    if(Object.values(UES).some(u=>u.sem === n)) return "Ce semestre existe déjà.";
+    UES["ue_s" + n] = { num:String(n), sem:n, title:"Mes matières" };
+    saveContent();
+    renderSemestres();
+  });
+}
+
+// ── Créer une matière dans le semestre affiché ──
+function addMatiere(){
+  const sem = curSemestre;
+  if(!sem) return;
+  openForm("Nouvelle matière", [
+    { key:"title", label:"Nom de la matière", placeholder:"Sociologie de l'éducation" },
+    { key:"ecue",  label:"Code (facultatif)", placeholder:"19.2" },
+    { key:"ue",    label:"UE (facultatif)", placeholder:"Mes matières",
+      hint:"Laisse vide pour ranger la matière avec les autres." }
+  ], "Créer", v=>{
+    if(!v.title) return "Donne un nom à la matière.";
+    let ueKey = Object.keys(UES).find(k=>UES[k].sem===sem && (!v.ue || UES[k].title===v.ue));
+    if(v.ue && !ueKey){
+      ueKey = "ue_" + newId();
+      UES[ueKey] = { num:String(sem), sem:sem, title:v.ue };
+    }
+    if(!ueKey){
+      ueKey = "ue_s" + sem;
+      UES[ueKey] = { num:String(sem), sem:sem, title:"Mes matières" };
+    }
+    const id = newId();
+    SUBJECTS.push({ id, ue:ueKey, ects:0, ecue:v.ecue || "", title:v.title, _own:true,
+                    cm:[], td:[], fc:[], qcm:[], oq:[], auteurs:[] });
+    SEMESTRES[id] = sem;
+    saveContent();
+    renderSubjectCards(sem);
+    renderSemestres();
+  });
+}
+
+// ── Créer un chapitre (CM, TD, Devoir… le nom est libre) ──
+function addChapitre(type){
+  if(!curSubj) return;
+  const arr = type === "cm" ? curSubj.cm : curSubj.td;
+  openForm("Nouveau chapitre", [
+    { key:"label", label:"Nom du chapitre", placeholder: type==="cm" ? "CM 1" : "TD 1",
+      hint:"Tu peux écrire ce que tu veux : CM 1, TD 3, Devoir, Révisions…" }
+  ], "Créer", v=>{
+    if(!v.label) return "Donne un nom au chapitre.";
+    arr.push({ label:v.label, sections:[], recap:[], _own:true });
+    if(type === "cm") curCmIdx = arr.length - 1; else curTdIdx = arr.length - 1;
+    saveContent();
+    renderCoursePane(type);
+  });
+}
+
+// ── Ajouter une section à un chapitre ──
+function addSection(type, ch){
+  openForm("Nouvelle section", [
+    { key:"title", label:"Titre", placeholder:"Présentation du cours" },
+    { key:"body",  label:"Texte", type:"area", placeholder:"Le contenu du cours…" },
+    { key:"list",  label:"Puces (facultatif)", type:"area",
+      placeholder:"Une idée par ligne", hint:"Chaque ligne devient une puce." }
+  ], "Ajouter", v=>{
+    if(!v.title && !v.body) return "Il faut au moins un titre ou un texte.";
+    const sec = { title: v.title || "" };
+    if(v.body) sec.body = v.body;
+    const puces = v.list.split("\n").map(x=>x.trim()).filter(Boolean);
+    if(puces.length) sec.list = puces;
+    ch.sections.push(sec);
+    saveContent();
+    renderCoursePane(type);
+  });
+}
+
+// Le « + » flottant n'apparaît que là où il veut dire quelque chose.
+function refreshFab(id){
+  const fab = document.getElementById("fab-add");
+  if(!fab) return;
+  const ok = canEdit() && (id === "semchoice" || id === "subjects");
+  fab.classList.toggle("show", ok);
+  fab.dataset.target = id;
+}
+
 function showScreen(id){
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.getElementById("screen-"+id).classList.add("active");
   // le canvas <html> peint toute la surface (sous les barres Safari + safe areas PWA)
   document.documentElement.setAttribute("data-screen", id);
+  refreshFab(id);
   window.scrollTo(0,0);
 }
 
@@ -1655,8 +2653,9 @@ function doSearch(q){
     });
     hits.push({ it, sc });
   });
+  searchShared(q, box);
   if(!hits.length){
-    box.innerHTML = `<div class="search-hint">Aucun résultat pour « ${esc(q)} ».</div>`;
+    box.innerHTML = `<div class="search-hint">Rien dans tes cours pour « ${esc(q)} ».</div>`;
     return;
   }
   hits.sort((a,b)=>b.sc-a.sc);
@@ -1844,10 +2843,13 @@ function icsText(v){
 async function loadEDT(force){
   // L'emploi du temps appartient à une personne (pseudo), pas à un thème :
   // quelqu'un d'autre qui choisit le rose ne doit pas voir le planning de Nana.
-  const who   = isCiva() ? "purple" : isNana() ? "girly" : null;
-  const theme = who || "none";
-  const url   = who ? (EDT_URLS[who] || "") : "";
-  if(!url){ edtState = "none"; EDT = []; return; }
+  const who  = isCiva() ? "purple" : isNana() ? "girly" : null;
+  const cals = edtCalendars();
+  // la clé de cache suit la liste : ajouter ou retirer un calendrier repart d'une page blanche
+  const theme = cals.length && cals[0].id !== "theme"
+    ? "u:" + (whoAmI()||"?") + "|" + cals.map(c=>c.id).join(",")
+    : (who || "none");
+  if(!cals.length){ edtState = "none"; EDT = []; return; }
 
   // cache : on affiche IMMÉDIATEMENT ce qu'on a (même ancien), pour ne jamais faire attendre.
   // S'il date de plus de 6 h, on rafraîchit discrètement en arrière-plan.
@@ -1875,28 +2877,32 @@ async function loadEDT(force){
 
   edtState = "loading";
   try{
-    // La période d'export est encodée dans le jeton du lien (choisie sur le site U-PEC).
-    const variants = [url];
-    let txt = null, allDiags = [];
-    for(const u of variants){
+    // Chaque calendrier est chargé séparément, puis tout est fusionné.
+    // Un calendrier en panne ne doit pas faire tomber les autres.
+    let merged = [], allDiags = [], okCount = 0;
+    for(const c of cals){
       try{
-        const t = await fetchICS(u);
-        allDiags.push("["+(u.match(/,\d+$/)||["?"])[0]+"] "+edtDiag);
-        const n = (t.match(/BEGIN:VEVENT/gi)||[]).length;
-        if(n > 0){ txt = t; break; }        // des cours ! on garde celle-ci
-        if(txt === null) txt = t;           // sinon on retient au moins un calendrier valide
-      }catch(e){ allDiags.push("["+(u.match(/,\d+$/)||["?"])[0]+"] "+edtDiag); }
+        const t = await fetchICS(c.url);
+        const evs = parseICS(t);
+        evs.forEach(e=>{ e.cal = c.id; e.calLabel = c.label; });
+        merged = merged.concat(evs);
+        okCount++;
+        allDiags.push(c.label + ": " + evs.length + " cours");
+      }catch(e){
+        allDiags.push(c.label + ": échec (" + edtDiag + ")");
+      }
     }
     edtDiag = "[" + theme + "] " + allDiags.join(" ‖ ");
-    if(txt === null) throw new Error("aucune source disponible");
-    EDT = parseICS(txt);
-    edtDiag += " | VEVENT:" + (txt.match(/BEGIN:VEVENT/gi)||[]).length + " → lus:" + EDT.length;
-    // si rien n'est lu alors que le fichier a du contenu : montrer un échantillon brut
-    if(!EDT.length){
-      const at = txt.search(/BEGIN:VEVENT/i);
-      const sample = at >= 0 ? txt.slice(at, at+300) : txt.slice(0, 300);
-      edtDiag += " ⟦" + sample.replace(/[\r\n]+/g,"¶") + "⟧";
-    }
+    if(!okCount) throw new Error("aucune source disponible");
+
+    // Deux calendriers peuvent contenir le même créneau : on ne le garde qu'une fois.
+    const vus = new Set();
+    EDT = merged.filter(e=>{
+      const k = (e.start ? e.start.getTime() : 0) + "|" + (e.title||"");
+      if(vus.has(k)) return false;
+      vus.add(k); return true;
+    }).sort((a,b)=>a.start - b.start);
+    edtDiag += " | total lus:" + EDT.length;
     edtState = "ok";
     try{
       if(EDT.length) localStorage.setItem(EDT_CACHE_KEY, JSON.stringify({
@@ -2012,7 +3018,10 @@ function renderEDT(){
 
   if(edtState === "none"){
     label.textContent = "";
-    body.innerHTML = `<div class="edt-empty">Aucun emploi du temps configuré pour cet espace.</div>`;
+    body.innerHTML = `<div class="edt-empty">Aucun calendrier pour l'instant.<br>
+      Colle le lien iCal fourni par ton université pour voir tes cours ici.
+      <button class="btn ghost edt-retry" id="edt-import">Ajouter un calendrier</button></div>`;
+    document.getElementById("edt-import").addEventListener("click",()=>{ haptic(); openCalSheet(); });
     return;
   }
   if(edtState === "error"){
@@ -2674,16 +3683,20 @@ function makeEcueCard(s){
       <span class="ecue-arrow">→</span>
     </div>`;
   card.addEventListener("click",()=>openSubject(s.id));
-  return card;
+  return isOwn(s) ? withPen(card, "Modifier "+s.title, ()=>editMatiere(s)) : card;
 }
 function renderSemestres(){
   renderKnowBlock();
   renderSemEntry();
   updateMemoBadge();
   const wrap=document.getElementById("semchoice-inner"); wrap.innerHTML="";
-  [5,6].forEach((sem,si)=>{
-    const list=SUBJECTS.filter(s=>(SEMESTRES[s.id]||5)===sem);
-    if(!list.length) return;
+  // les semestres ne sont plus figés à 5 et 6 : chacun crée les siens
+  const sems = [...new Set(Object.values(UES).map(u=>u.sem))].filter(n=>n).sort((a,b)=>a-b);
+  if(!sems.length && canEdit()){
+    wrap.innerHTML = `<div class="empty-note">Aucun semestre pour l'instant.<br>Touche le + pour en créer un.</div>`;
+  }
+  sems.forEach((sem,si)=>{
+    const list=SUBJECTS.filter(s=>(SEMESTRES[s.id]||0)===sem);
     const ueCount=new Set(list.map(s=>s.ue)).size;
     // progression réelle : notions acquises / notions totales
     const tot   = list.reduce((n,s)=>n+totalCards(s),0);
@@ -2700,7 +3713,7 @@ function renderSemestres(){
     card.style.animationDelay=(0.14+si*0.04)+"s";
     card.innerHTML=`
       <div class="sem-tile-top">
-        <div class="sem-badge">${sem===5?"📚":"🧠"}</div>
+        <div class="sem-badge">${sem%2 ? "📚" : "🧠"}</div>
         ${due>0 ? `<span class="sem-due">${due}</span>` : ``}
       </div>
       <div class="sem-name">Semestre ${sem}</div>
@@ -2708,10 +3721,13 @@ function renderSemestres(){
       <div class="sem-bar"><div class="sem-bar-fill" style="width:${pct}%"></div></div>
       <div class="sem-pct">${tot ? pct+" %" : "vide"}</div>`;
     card.addEventListener("click",()=>{ curSemestre=sem; renderSubjectCards(sem); showScreen("subjects"); });
-    wrap.appendChild(card);
+    wrap.appendChild(semIsOwn(sem)
+      ? withPen(card, "Modifier le semestre "+sem, ()=>editSemestre(sem))
+      : card);
   });
 
-  // Projet Psycho : même tuile carrée que les semestres
+  // Projet Psycho : personnel, il n'apparaît que sur le compte de Civa
+  if(!isCiva()) return;
   const psy = el("button","sem-tile psy-tile rise");
   psy.style.animationDelay = ".22s";
   psy.innerHTML = `
@@ -2892,7 +3908,16 @@ function renderCoursePane(type){
   const chapters = type==="cm" ? (curSubj.cm||[]) : (curSubj.td||[]);
   const pane = document.getElementById(type==="cm"?"pane-0":"pane-1");
   pane.innerHTML="";
-  if(!chapters.length){ pane.innerHTML=`<div class="empty-note">Rien ici pour cette matière.</div>`; return; }
+  if(!chapters.length){
+    pane.innerHTML=`<div class="empty-note">Rien ici pour cette matière.</div>`;
+    if(canEdit()){
+      const add=el("button","add-inline");
+      add.textContent = "+  Ajouter un chapitre";
+      add.addEventListener("click",()=>{ haptic(); addChapitre(type); });
+      pane.appendChild(add);
+    }
+    return;
+  }
   const chIdx = type==="cm"?curCmIdx:curTdIdx;
   // chapter pills
   const n = chapters.length;
@@ -2908,7 +3933,22 @@ function renderCoursePane(type){
     opt.addEventListener("click",()=>{ if(type==="cm")curCmIdx=i; else curTdIdx=i; renderCoursePane(type); });
     sel.appendChild(opt);
   });
-  pane.appendChild(sel);
+  const cur = chapters[chIdx];
+  const chPen = cur && cur._shared
+    ? penBtn("Chapitre partagé", ()=>sharedChapMenu(cur), true)
+    : (isOwn(cur) ? penBtn("Modifier le chapitre", ()=>editChapitre(type, chIdx), true) : null);
+  const row = el("div","chap-row");
+  row.appendChild(sel);
+  if(canEdit()){
+    const addPill = el("button","chap-add");
+    addPill.type = "button";
+    addPill.textContent = "+";
+    addPill.setAttribute("aria-label","Ajouter un chapitre");
+    addPill.addEventListener("click",()=>{ haptic(); addChapitre(type); });
+    row.appendChild(addPill);
+  }
+  if(chPen) row.appendChild(chPen);
+  pane.appendChild(row);
   const ch=chapters[chIdx];
   (ch.sections||[]).forEach(sec=>{
     const block=el("div","section");
@@ -2916,12 +3956,28 @@ function renderCoursePane(type){
     const card=el("div","card");
     if(sec.body){ const b=el("div","card-body"); b.innerHTML=sec.body; card.appendChild(b); }
     if(sec.list&&sec.list.length){ const ul=el("ul","card-list"); sec.list.forEach(it=>{const li=el("li"); li.innerHTML='<span class="li-text">'+it+'</span>'; ul.appendChild(li);}); card.appendChild(ul); }
-    block.appendChild(title); block.appendChild(card); pane.appendChild(block);
+    const secPen = isOwn(ch)
+      ? penBtn("Modifier la section", ()=>editSection(type, ch, ch.sections.indexOf(sec)), true) : null;
+    if(secPen){
+      const head = el("div","sec-head");
+      head.appendChild(title); head.appendChild(secPen);
+      block.appendChild(head);
+    }else{
+      block.appendChild(title);
+    }
+    block.appendChild(card);
+    pane.appendChild(block);
   });
   if(ch.recap&&ch.recap.length){
     const r=el("div","recap");
     r.innerHTML=`<div class="recap-label">📌 À retenir</div>`+ch.recap.map((x,i)=>`<div class="recap-item"><span class="recap-num">${i+1}</span><span>${esc(x)}</span></div>`).join("");
     pane.appendChild(r);
+  }
+  if(canEdit() && isOwn(ch)){
+    const addSec=el("button","add-inline");
+    addSec.textContent = "+  Ajouter une section";
+    addSec.addEventListener("click",()=>{ haptic(); addSection(type, ch); });
+    pane.appendChild(addSec);
   }
 }
 function renderTrainPane(){
@@ -3427,6 +4483,26 @@ document.getElementById("btn-split-back").addEventListener("click",()=>{ renderS
 // feuille de changement rapide de matière
 document.getElementById("split-chip").addEventListener("click",openSubjSheet);
 document.getElementById("subj-sheet").addEventListener("click",e=>{ if(e.target.id==="subj-sheet") closeSubjSheet(); });
+document.getElementById("edt-link").addEventListener("click",()=>{ haptic(); openCalSheet(); });
+document.getElementById("cal-close").addEventListener("click",()=>{ haptic(); closeCalSheet(); });
+document.getElementById("cal-add").addEventListener("click",()=>{ haptic(); editCalendar(null); });
+document.getElementById("cal-sheet").addEventListener("click",e=>{ if(e.target.id==="cal-sheet") closeCalSheet(); });
+document.getElementById("fab-add").addEventListener("click",()=>{
+  haptic();
+  if(document.getElementById("fab-add").dataset.target === "subjects") addMatiere();
+  else addSemestre();
+});
+document.getElementById("fs-del").addEventListener("click",()=>{ haptic(); if(fsDelete) fsDelete(); });
+document.getElementById("fs-extra").addEventListener("click",()=>{ haptic(); if(fsExtra) fsExtra(); });
+document.getElementById("fs-cancel").addEventListener("click",()=>{ haptic(); closeForm(); });
+document.getElementById("btn-classes").addEventListener("click",()=>{ haptic(); openClasses(); });
+document.getElementById("btn-classes-back").addEventListener("click",()=>{ showScreen("semestres"); });
+document.getElementById("btn-class-back").addEventListener("click",()=>{ openClasses(); });
+document.getElementById("btn-shared-back").addEventListener("click",()=>{ if(curClass) openClass(curClass); else showScreen("search"); });
+document.getElementById("btn-class-menu").addEventListener("click",()=>{ haptic(); classMenu(); });
+document.getElementById("pick-sheet").addEventListener("click",e=>{ if(e.target.id==="pick-sheet") closePicker(); });
+document.getElementById("fs-ok").addEventListener("click",()=>{ haptic(); if(fsSubmit) fsSubmit(); });
+document.getElementById("form-sheet").addEventListener("click",e=>{ if(e.target.id==="form-sheet") closeForm(); });
 document.getElementById("btn-session-back").addEventListener("click",()=>{ clearInterval(timerInt); if(globalSession){ renderSemestres(); showScreen("semestres"); } else { showScreen("split"); } });
 document.getElementById("btn-auteurs-back").addEventListener("click",()=>{ setTab(2); showScreen("split"); });
 // recherche
@@ -3434,11 +4510,13 @@ document.getElementById("btn-search").addEventListener("click",openSearch);
 // sections repliables de l'accueil
 // le bouton Mémo ouvre la feuille mémo
 document.getElementById("btn-edt").addEventListener("click",()=>{ haptic(); openEDT(); });
-// actualités de la licence : ouvre le site de la fac dans le navigateur
+// actualités de la licence : ouvre la page de scolarité dans le navigateur.
+// Appui long pour la remplacer par celle de sa propre formation.
 document.getElementById("btn-news").addEventListener("click",()=>{
   haptic();
-  window.open("https://sess-staps.u-pec.fr/", "_blank", "noopener");
+  window.open(newsUrl(), "_blank", "noopener");
 });
+onLongPress(document.getElementById("btn-news"), editNewsUrl);
 // entrée unique vers les semestres
 document.getElementById("sem-entry").addEventListener("click",()=>{ haptic(); showScreen("semchoice"); });
 document.getElementById("btn-semchoice-back").addEventListener("click",()=>{ renderSemestres(); showScreen("semestres"); });
@@ -3551,25 +4629,70 @@ if("serviceWorker" in navigator){
 // ══════════════════════════════════════════════════
 function supaReady(){ return !!(SUPA_URL && SUPA_KEY); }
 
-async function supaGet(pseudo){
-  const url = `${SUPA_URL}/rest/v1/users?pseudo=eq.${encodeURIComponent(pseudo)}&select=*`;
-  const r = await fetch(url, { headers:{ apikey:SUPA_KEY, Authorization:"Bearer "+SUPA_KEY } });
-  if(!r.ok) throw new Error("get "+r.status);
-  const rows = await r.json();
-  return rows[0] || null;
-}
-async function supaUpsert(row){
-  const url = `${SUPA_URL}/rest/v1/users`;
-  const r = await fetch(url, {
+const CODE_KEY = "revision_code_v1";
+let CODE = null;
+try{ CODE = localStorage.getItem(CODE_KEY); }catch(e){}
+
+// Tout passe par la fonction Edge : elle seule connaît la clé service.
+async function api(action, extra){
+  const r = await fetch(`${SUPA_URL}/functions/v1/${API_FN_NAME}`, {
     method:"POST",
-    headers:{
-      apikey:SUPA_KEY, Authorization:"Bearer "+SUPA_KEY,
-      "Content-Type":"application/json",
-      Prefer:"resolution=merge-duplicates,return=minimal"
-    },
-    body: JSON.stringify(row)
+    headers:{ apikey:SUPA_KEY, Authorization:"Bearer "+SUPA_KEY, "Content-Type":"application/json" },
+    body: JSON.stringify(Object.assign({ action, pseudo:PSEUDO, code:CODE }, extra||{}))
   });
-  if(!r.ok) throw new Error("upsert "+r.status);
+  const out = await r.json().catch(()=>({}));
+  if(!r.ok) throw Object.assign(new Error(out.error||("http "+r.status)), { code: out.error });
+  return out;
+}
+
+// ── Contenu : data.js appartient à Civa, les autres ont le leur sur Supabase ──
+const DATA_UES      = Object.assign({}, UES);
+const DATA_SUBJECTS = SUBJECTS.slice();
+
+// Une matière venue du serveur peut être incomplète : on garantit les tableaux.
+function normSubject(s){
+  const o = Object.assign({}, s||{});
+  ["cm","td","fc","qcm","oq","auteurs"].forEach(k=>{ if(!Array.isArray(o[k])) o[k]=[]; });
+  return o;
+}
+
+// Remplace UES / SUBJECTS / SEMESTRES sur place (le reste de l'app pointe dessus).
+// Tout ce qui porte _own a été créé dans l'app et vit sur Supabase.
+// Le reste vient de data.js : lecture seule, je le régénère de mon côté.
+function applyContent(row){
+  const c = (row && row.content) || {};
+  let ues, subs;
+  if(isCiva()){
+    // copie : sans ça, les ajouts pollueraient data.js et s'empileraient à chaque rechargement
+    ues  = JSON.parse(JSON.stringify(DATA_UES));
+    subs = JSON.parse(JSON.stringify(DATA_SUBJECTS)).map(normSubject);
+    Object.assign(ues, (c.ues && typeof c.ues === "object") ? c.ues : {});
+    (Array.isArray(c.subjects) ? c.subjects : []).forEach(x=>{
+      const o = normSubject(x); o._own = true;
+      o.cm.forEach(ch=>ch._own = true); o.td.forEach(ch=>ch._own = true);
+      subs.push(o);
+    });
+    // chapitres ajoutés dans l'app à une matière de data.js
+    const extra = (c.extra && typeof c.extra === "object") ? c.extra : {};
+    subs.forEach(sj=>{
+      const e = extra[sj.id]; if(!e) return;
+      (e.cm||[]).forEach(ch=>sj.cm.push(Object.assign({}, ch, { _own:true })));
+      (e.td||[]).forEach(ch=>sj.td.push(Object.assign({}, ch, { _own:true })));
+    });
+  }else{
+    ues  = (c.ues && typeof c.ues === "object") ? c.ues : {};
+    subs = (Array.isArray(c.subjects) ? c.subjects : []).map(x=>{
+      const o = normSubject(x); o._own = true;
+      o.cm.forEach(ch=>ch._own = true); o.td.forEach(ch=>ch._own = true);
+      return o;
+    });
+  }
+  Object.keys(UES).forEach(k=>delete UES[k]);
+  Object.assign(UES, ues);
+  SUBJECTS.length = 0;
+  subs.forEach(x=>SUBJECTS.push(x));
+  Object.keys(SEMESTRES).forEach(k=>delete SEMESTRES[k]);
+  SUBJECTS.forEach(x=>{ if(UES[x.ue]) SEMESTRES[x.id] = UES[x.ue].sem; });
 }
 
 // Sauvegarde (locale toujours, distante si dispo). Groupée pour ne pas spammer.
@@ -3584,13 +4707,27 @@ async function pushState(){
   try{
     const psy = {};
     PSYCHO_STEPS.forEach(s=>{ psy[s.id] = !!s.done; });
-    await supaUpsert({
-      pseudo: PSEUDO,
+    const patch = {
       theme: document.documentElement.getAttribute("data-theme") || "girly",
       srs: Object.assign({}, SRS, { __edtnotes: EDTNOTES, __memo: MEMO }),
       psycho: psy,
-      updated_at: new Date().toISOString()
-    });
+      settings: USER_SETTINGS
+    };
+    if(isCiva()){
+      // on ne renvoie QUE les ajouts : data.js reste ma source, jamais écrasée
+      const ownUes = {};
+      Object.keys(UES).forEach(k=>{ if(!(k in DATA_UES)) ownUes[k] = UES[k]; });
+      const extra = {};
+      SUBJECTS.forEach(sj=>{
+        if(sj._own) return;
+        const cm = sj.cm.filter(ch=>ch._own), td = sj.td.filter(ch=>ch._own);
+        if(cm.length || td.length) extra[sj.id] = { cm, td };
+      });
+      patch.content = { ues: ownUes, subjects: SUBJECTS.filter(x=>x._own), extra };
+    }else{
+      patch.content = { ues: UES, subjects: SUBJECTS };
+    }
+    await api("save", { patch });
     setSyncBadge("ok");
   }catch(e){ setSyncBadge("off"); }
 }
@@ -3621,50 +4758,67 @@ function applyRemote(row){
     applyTheme(row.theme);
     try{ localStorage.setItem(THEME_KEY, row.theme); }catch(e){}
   }
+  USER_SETTINGS = (row.settings && typeof row.settings === "object") ? row.settings : {};
+  applyContent(row);
+  // les chapitres suivis sont rechargés depuis leur classe : c'est le lien vivant
+  if(syncOn) syncFollows().then(()=>renderSemestres());
 }
 // synchro silencieuse : plus aucun badge affiché
 function setSyncBadge(state){ /* volontairement vide */ }
 
 // ── Connexion par pseudo ──
 async function doLogin(){
-  const inp = document.getElementById("login-input");
-  const msg = document.getElementById("login-msg");
+  const inp  = document.getElementById("login-input");
+  const cinp = document.getElementById("login-code");
+  const msg  = document.getElementById("login-msg");
   // on translittère les accents (é → e) avant de nettoyer,
   // sinon "Nawäl" deviendrait "nawl" au lieu de "nawal"
   const raw = (inp.value || "").trim().toLowerCase()
                 .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   const p   = raw.replace(/[^a-z0-9_-]/g, "");
+  const c   = (cinp.value || "").trim();
   if(p.length < 2){ msg.textContent = "Choisis un pseudo (2 lettres minimum)."; return; }
+  if(c.length < 4){ msg.textContent = "Choisis un code d'au moins 4 caractères."; return; }
 
-  PSEUDO = p;
-  try{ localStorage.setItem(PSEUDO_KEY, p); }catch(e){}
+  PSEUDO = p; CODE = c;
 
   // Pas de Supabase configuré : on reste en local, ça marche quand même.
   if(!supaReady()){
     syncOn = false;
+    try{ localStorage.setItem(PSEUDO_KEY, p); localStorage.setItem(CODE_KEY, c); }catch(e){}
+    applyContent(null);
     afterLogin(null);
     return;
   }
+
   msg.textContent = "Chargement…";
   try{
-    const row = await supaGet(p);
+    const out = await api("login");
     syncOn = true;
-    if(row){
-      afterLogin(row);
-    }else{
-      // pseudo nouveau : on crée tout de suite sa ligne sur Supabase
-      afterLogin(null);
-      await pushState();
-    }
-  }catch(e){
-    // on AFFICHE l'erreur au lieu de la cacher, pour diagnostiquer
-    syncOn = false;
+    try{ localStorage.setItem(PSEUDO_KEY, p); localStorage.setItem(CODE_KEY, c); }catch(e){}
     msg.textContent = "";
-    setTimeout(()=>afterLogin(null), 1800);
+    afterLogin(out.nouveau ? null : out.row);
+    if(out.nouveau) await pushState();
+  }catch(e){
+    PSEUDO = null; CODE = null;
+    if(e.code === "code_faux"){
+      msg.textContent = "Ce pseudo est déjà pris, et le code ne correspond pas.";
+    }else if(e.code === "code_court"){
+      msg.textContent = "Choisis un code d'au moins 4 caractères.";
+    }else{
+      // hors ligne ou serveur muet : on laisse entrer en local
+      syncOn = false;
+      PSEUDO = p; CODE = c;
+      try{ localStorage.setItem(PSEUDO_KEY, p); localStorage.setItem(CODE_KEY, c); }catch(e2){}
+      msg.textContent = "";
+      applyContent(null);
+      setTimeout(()=>afterLogin(null), 600);
+    }
   }
 }
 function afterLogin(row){
   updatePersonalText();   // le pseudo est connu : on ajuste les messages
+  if(!row) applyContent(null);
   if(row){
     applyRemote(row);
     renderSemestres();
@@ -3680,15 +4834,17 @@ function afterLogin(row){
 
 // ── Événements de connexion ──
 document.getElementById("login-go").addEventListener("click",()=>{ haptic(); doLogin(); });
-document.getElementById("login-input").addEventListener("keydown",e=>{ if(e.key==="Enter") doLogin(); });
+document.getElementById("login-input").addEventListener("keydown",e=>{ if(e.key==="Enter") document.getElementById("login-code").focus(); });
+document.getElementById("login-code").addEventListener("keydown",e=>{ if(e.key==="Enter") doLogin(); });
 
 // start
 (async function(){
-  renderSemestres();
   let p=null; try{ p = localStorage.getItem(PSEUDO_KEY); }catch(e){}
 
-  if(!p){
-    // première fois : on demande le pseudo
+  if(!p || !CODE){
+    // première fois (ou code perdu) : on redemande pseudo + code
+    applyContent(null);
+    renderSemestres();
     showScreen("login");
     setTimeout(()=>document.getElementById("login-input").focus(), 350);
     return;
@@ -3699,18 +4855,25 @@ document.getElementById("login-input").addEventListener("keydown",e=>{ if(e.key=
   let saved=null; try{ saved=localStorage.getItem(THEME_KEY); }catch(e){}
   if(saved) applyTheme(saved);
   updatePersonalText();   // pseudo connu dès le départ
+  applyContent(null);     // évite d'afficher le contenu de quelqu'un d'autre le temps du chargement
   renderSemestres();
   showScreen(saved ? "welcome" : "pick");
 
   // puis, en arrière-plan, on récupère la version du serveur si elle est plus récente
   if(supaReady()){
     try{
-      const row = await supaGet(p);
+      const out = await api("login");
       syncOn = true;
-      if(row){ applyRemote(row); renderSemestres(); }
-      else { await pushState(); }        // pseudo pas encore sur le serveur : on l'y met
+      if(out.nouveau){ await pushState(); }   // pseudo pas encore sur le serveur : on l'y met
+      else { applyRemote(out.row); renderSemestres(); }
       setSyncBadge("ok");
-    }catch(e){ syncOn = false; setSyncBadge("off"); }
+    }catch(e){
+      syncOn = false; setSyncBadge("off");
+      if(e.code === "code_faux"){             // code changé ailleurs : on redemande
+        try{ localStorage.removeItem(CODE_KEY); }catch(e2){}
+        CODE = null; showScreen("login");
+      }
+    }
   }
 
   // emploi du temps : chargé en arrière-plan, sans bloquer l'affichage
