@@ -68,12 +68,35 @@ const SUBJECTS = [
       { q:"Comment une personne déjà en poste peut-elle continuer à se former ?", a:"Quatre modalités sont distinguées : la formation organisée, l'apprentissage en situation de travail, l'apprentissage avec les autres, et l'apprentissage de manière autonome. L'activité du TD invite à les articuler en construisant le parcours d'un professionnel : comment il apprend (situations et ressources), dans quels dispositifs, avec qui, qui organise et à qui s'adresser (institutions et acteurs), et ce qui rend cette formation possible (organisation, temps, financement, droit)." },
       { q:"Comment le corpus de textes du TD est-il organisé ?", a:"En trois axes. L'axe 1 porte sur l'histoire, les réformes et les politiques de la FTLV des enseignants (Ferrière ; Lessard et Bourdoncle ; Étienne). L'axe 2 porte sur le développement professionnel, la posture réflexive et le travail collectif (Fortuna-Carillat ; Marcel). L'axe 3 porte sur les nouveaux dispositifs et l'hybridation de la formation (Ravez)." }
     ], auteurs:[
-      { nom:"Ferrière", contrib:"Texte du corpus, axe 1 : histoire, réformes et politiques de la FTLV des enseignants." },
-      { nom:"Lessard et Bourdoncle", contrib:"Texte du corpus, axe 1 : histoire, réformes et politiques de la FTLV des enseignants." },
-      { nom:"Étienne", contrib:"Texte du corpus, axe 1 : histoire, réformes et politiques de la FTLV des enseignants." },
-      { nom:"Fortuna-Carillat", contrib:"Texte du corpus, axe 2 : développement professionnel, posture réflexive et travail collectif." },
-      { nom:"Marcel", contrib:"Texte du corpus, axe 2 : développement professionnel, posture réflexive et travail collectif." },
-      { nom:"Ravez", contrib:"Texte du corpus, axe 3 : nouveaux dispositifs et hybridation de la formation." }
+      { nom:"Ferrière", courant:"Axe 1 du corpus", periode:"à vérifier",
+        these:"Texte de l'axe 1, sur l'histoire, les réformes et les politiques de la FTLV des enseignants. L'auteur n'est désigné que par son nom dans le diaporama : reporte-toi à la bibliographie du cours pour la référence exacte.",
+        concepts:["histoire","réformes","politiques éducatives"],
+        retenir:"Référence à compléter depuis la bibliographie du TD." },
+
+      { nom:"Lessard et Bourdoncle", courant:"Sociologie de l'éducation, professionnalisation", periode:"Travaux des années 1990 et 2000",
+        these:"Raymond Bourdoncle a introduit en France les analyses anglo-saxonnes de la professionnalisation enseignante, d'abord dans une note de synthèse de 1991, puis dans une seconde de 1993 où il en discute les limites, parlant d'un mythe qu'il juge malgré tout utile. Claude Lessard travaille l'évolution du métier d'enseignant et les nouvelles formes de régulation de l'éducation. Ensemble, ils signent dans la Revue française de pédagogie une réflexion sur ce qu'est une formation professionnelle universitaire.",
+        concepts:["professionnalisation","professionnalité","universitarisation","semi-profession","régulation"],
+        retenir:"Bourdoncle distingue plusieurs sens du mot professionnalisation : l'amélioration des compétences, la stratégie d'un groupe pour faire reconnaître son métier, et l'universitarisation de sa formation." },
+
+      { nom:"Richard Étienne", courant:"Analyse des pratiques, approche clinique", periode:"Professeur émérite, université Paul-Valéry Montpellier 3",
+        these:"Membre du LIRDEF, il travaille le changement en éducation, l'organisation du travail enseignant et l'éducation prioritaire. Il a créé un master de formation de formateurs et défend l'analyse des situations éducatives comme levier de formation, notamment à travers le GEASE, groupe d'entraînement à l'analyse de situations éducatives.",
+        concepts:["analyse de pratiques","GEASE","posture réflexive","changement en éducation"],
+        retenir:"Pour lui, on se forme en analysant collectivement des situations vécues, pas en appliquant des recettes." },
+
+      { nom:"Véronique Fortun-Carillat", courant:"Numérique et formation professionnelle", periode:"Inspé de Créteil, UPEC",
+        these:"Rattachée au LIRTES, elle étudie les effets des environnements numériques sur les façons de se former et d'aborder une nouvelle situation professionnelle : communautés virtuelles, échanges entre pairs, ressources en ligne.",
+        concepts:["environnements numériques","communautés virtuelles","formation continue"],
+        retenir:"Le diaporama écrit « Fortuna-Carillat » ; l'orthographe retenue par l'UPEC est Fortun-Carillat." },
+
+      { nom:"Jean-François Marcel", courant:"Approche sociocognitive du développement professionnel", periode:"Université Toulouse Jean Jaurès, UMR EFTS",
+        these:"Il défend l'idée qu'on apprend en travaillant : le développement professionnel naît de l'évolution des pratiques elles-mêmes, et non d'une formation extérieure. Il a beaucoup travaillé le collectif d'enseignants comme acteur à part entière, en distinguant des degrés dans le travail partagé, de la simple coordination jusqu'à la coélaboration.",
+        concepts:["développement professionnel","travail collectif","coordination, collaboration, coopération","apprentissage social"],
+        retenir:"Le travail collectif n'est pas un bloc : coordination, collaboration et coopération n'engagent pas les enseignants de la même façon." },
+
+      { nom:"Claire Ravez", courant:"Veille scientifique en éducation", periode:"Institut français de l'éducation, ENS de Lyon",
+        these:"Chargée d'études dans l'équipe Veille et Analyses de l'IFÉ, elle rédige les Dossiers de veille, synthèses de recherches destinées aux professionnels de l'éducation. Son dossier n° 143 de mai 2023, « Former à enseigner : activité(s), mutations, tensions », porte sur le travail des formateurs d'enseignants, pris entre attentes du terrain, cadre institutionnel et apports de la recherche.",
+        concepts:["veille scientifique","formateurs d'enseignants","identité professionnelle","tensions"],
+        retenir:"Un Dossier de veille n'est pas une recherche originale mais une synthèse problématisée de travaux existants." }
     ] },
   { id:"e192", ue:"UE19", ects:4, ecue:"19.2", title:"Sociologie de l'éducation",
     cm:[
