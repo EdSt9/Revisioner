@@ -3529,6 +3529,8 @@ function titreCours(t){
     .trim() || String(t || "Cours");
 }
 
+let NEXT_EV_KEY = null;   // le créneau déjà mis en avant, pour ne pas le répéter dessous
+
 function prochainCours(){
   if(edtState !== "ok" && edtState !== "stale") return null;
   const now = new Date();
@@ -3544,9 +3546,11 @@ function renderNextCourse(){
   const box = document.getElementById("next-course");
   if(!box) return;
   box.innerHTML = ""; box.hidden = true;
+  NEXT_EV_KEY = null;
   const trouve = prochainCours();
   if(!trouve) return;
   box.hidden = false;
+  NEXT_EV_KEY = evKey(trouve.ev);
 
   const { ev, jours } = trouve;
   const now  = new Date();
@@ -3627,6 +3631,9 @@ function renderTodayCourses(){
     if(next.length){ evs = next; label = "Demain"; }
   }
   if(!evs.length) return;
+  // un seul cours à venir, déjà affiché en grand juste au-dessus : on ne le répète pas
+  const restants = evs.filter(e=>(e.end||e.start) >= now);
+  if(restants.length <= 1 && evs.every(e=>evKey(e) === NEXT_EV_KEY || (e.end||e.start) < now)) return;
 
   box.hidden = false;
   const card = el("div","today-card rise");
