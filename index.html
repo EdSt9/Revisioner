@@ -887,6 +887,10 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
   100%{background:transparent;}
 }
 .section.vise{animation:flashSection 2.2s ease-out;border-radius:16px;}
+a.lien{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent);
+  padding-bottom:1px;word-break:break-word;}
+a.lien::after{content:" ↗";font-size:.8em;opacity:.7;border:none;}
+a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .trou{display:inline-block;min-width:88px;text-align:center;
   padding:2px 12px;margin:0 3px;border-radius:8px;
   background:var(--accent-soft);color:var(--accent);font-weight:700;
@@ -1869,6 +1873,35 @@ const chevronL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
 const chevronR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
 const checkSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
 
+// ══════════════════════════════════════════════════
+// TEXTE DE COURS : nettoyage puis liens cliquables
+// Le contenu peut venir d'une classe partagée : on ne fait
+// confiance à personne, on retire ce qui peut exécuter du code.
+// ══════════════════════════════════════════════════
+function nettoyerHtml(t){
+  return String(t || "")
+    .replace(/<\s*\/?\s*(script|iframe|object|embed|link|meta|style|form|input)\b[^>]*>/gi, "")
+    .replace(/\son\w+\s*=\s*"[^"]*"/gi, "")
+    .replace(/\son\w+\s*=\s*'[^']*'/gi, "")
+    .replace(/\son\w+\s*=\s*[^\s>]+/gi, "")
+    .replace(/javascript\s*:/gi, "");
+}
+
+// [texte](adresse) et adresses collées telles quelles deviennent cliquables.
+function liensCliquables(t){
+  let out = String(t || "");
+  out = out.replace(/\[([^\]]{1,120})\]\((https?:\/\/[^\s)]+)\)/g,
+    (m, label, url) => `<a class="lien" href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`);
+  // adresses nues : on saute celles déjà dans un attribut ou déjà balisées
+  out = out.replace(/(^|[\s(>])((https?:\/\/)[^\s<)]+)/g, (m, avant, url) => {
+    const court = url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+    return `${avant}<a class="lien" href="${url}" target="_blank" rel="noopener noreferrer">${court.length > 42 ? court.slice(0,40) + "…" : court}</a>`;
+  });
+  return out;
+}
+
+function texteCours(t){ return liensCliquables(nettoyerHtml(t)); }
+
 function el(tag, cls){ const e=document.createElement(tag); if(cls) e.className=cls; return e; }
 
 // ══════════════════════════════════════════════════
@@ -2511,10 +2544,10 @@ function renderSectionsInto(box, ch){
     const block = el("div","section");
     const title = el("h2","section-title"); title.textContent = sec.title || "";
     const card  = el("div","card");
-    if(sec.body){ const b = el("p","card-body"); b.innerHTML = sec.body; card.appendChild(b); }
+    if(sec.body){ const b = el("p","card-body"); b.innerHTML = texteCours(sec.body); card.appendChild(b); }
     if(sec.list && sec.list.length){
       const ul = el("ul","card-list");
-      sec.list.forEach(x=>{ const li = el("li"); li.innerHTML = `<span class="li-text">${x}</span>`; ul.appendChild(li); });
+      sec.list.forEach(x=>{ const li = el("li"); li.innerHTML = `<span class="li-text">${texteCours(x)}</span>`; ul.appendChild(li); });
       card.appendChild(ul);
     }
     block.appendChild(title); block.appendChild(card);
@@ -2857,7 +2890,8 @@ function editSection(type, ch, idx){
   const sec = ch.sections[idx];
   openForm("Modifier la section", [
     { key:"title", label:"Titre", value:sec.title || "" },
-    { key:"body",  label:"Texte", type:"area", value:sec.body || "" },
+    { key:"body",  label:"Texte", type:"area", value:sec.body || "",
+      hint:"Colle une adresse, elle devient cliquable. Pour un lien nommé : [le texte de Marcel](https://…)" },
     { key:"list",  label:"Puces (facultatif)", type:"area",
       value:(sec.list || []).join("\n"), hint:"Chaque ligne devient une puce." }
   ], "Enregistrer", v=>{
@@ -2947,7 +2981,8 @@ function addChapitre(type){
 function addSection(type, ch){
   openForm("Nouvelle section", [
     { key:"title", label:"Titre", placeholder:"Présentation du cours" },
-    { key:"body",  label:"Texte", type:"area", placeholder:"Le contenu du cours…" },
+    { key:"body",  label:"Texte", type:"area", placeholder:"Le contenu du cours…",
+      hint:"Colle une adresse, elle devient cliquable. Pour un lien nommé : [le texte de Marcel](https://…)" },
     { key:"list",  label:"Puces (facultatif)", type:"area",
       placeholder:"Une idée par ligne", hint:"Chaque ligne devient une puce." }
   ], "Ajouter", v=>{
@@ -4615,8 +4650,8 @@ function renderCoursePane(type){
     block.dataset.sec = si;
     const title=el("h2","section-title"); title.textContent=sec.title;
     const card=el("div","card");
-    if(sec.body){ const b=el("div","card-body"); b.innerHTML=sec.body; card.appendChild(b); }
-    if(sec.list&&sec.list.length){ const ul=el("ul","card-list"); sec.list.forEach(it=>{const li=el("li"); li.innerHTML='<span class="li-text">'+it+'</span>'; ul.appendChild(li);}); card.appendChild(ul); }
+    if(sec.body){ const b=el("div","card-body"); b.innerHTML=texteCours(sec.body); card.appendChild(b); }
+    if(sec.list&&sec.list.length){ const ul=el("ul","card-list"); sec.list.forEach(it=>{const li=el("li"); li.innerHTML='<span class="li-text">'+texteCours(it)+'</span>'; ul.appendChild(li);}); card.appendChild(ul); }
     block.appendChild(title);
     block.appendChild(card);
     if(modifiable(ch)) onLongPress(block, ()=>editSection(type, ch, ch.sections.indexOf(sec)));
