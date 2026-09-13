@@ -887,6 +887,10 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
   100%{background:transparent;}
 }
 .section.vise{animation:flashSection 2.2s ease-out;border-radius:16px;}
+a.lien{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent);
+  padding-bottom:1px;word-break:break-word;}
+a.lien::after{content:" ↗";font-size:.8em;opacity:.7;border:none;}
+a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .trou{display:inline-block;min-width:88px;text-align:center;
   padding:2px 12px;margin:0 3px;border-radius:8px;
   background:var(--accent-soft);color:var(--accent);font-weight:700;
@@ -1869,6 +1873,66 @@ const chevronL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
 const chevronR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
 const checkSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
 
+// ══════════════════════════════════════════════════
+// TEXTE DE COURS : nettoyage puis liens cliquables
+// Le contenu peut venir d'une classe partagée : on ne fait
+// confiance à personne, on retire ce qui peut exécuter du code.
+// ══════════════════════════════════════════════════
+function nettoyerHtml(t){
+  return String(t || "")
+    .replace(/<\s*\/?\s*(script|iframe|object|embed|link|meta|style|form|input)\b[^>]*>/gi, "")
+    .replace(/\son\w+\s*=\s*"[^"]*"/gi, "")
+    .replace(/\son\w+\s*=\s*'[^']*'/gi, "")
+    .replace(/\son\w+\s*=\s*[^\s>]+/gi, "")
+    .replace(/javascript\s*:/gi, "");
+}
+
+// [texte](adresse) et adresses collées telles quelles deviennent cliquables.
+// Les liens de PDF et d'ENT contiennent souvent des parenthèses, des accents
+// ou des paramètres : la reconnaissance doit rester large.
+function urlComplete(u){
+  return /^https?:\/\//i.test(u) ? u : "https://" + u.replace(/^\/\//, "");
+}
+function libelleUrl(u){
+  const court = u.replace(/^https?:\/\//i, "").replace(/^www\./i, "").replace(/\/$/, "");
+  try{ return decodeURI(court.length > 44 ? court.slice(0,42) + "…" : court); }
+  catch(e){ return court.length > 44 ? court.slice(0,42) + "…" : court; }
+}
+function balise(url, label){
+  return `<a class="lien" href="${urlComplete(url).replace(/"/g,"%22")}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+}
+
+function liensCliquables(t){
+  let out = String(t || "");
+  // Les liens déjà fabriqués sont mis de côté le temps du traitement,
+  // sinon la passe suivante irait re-transformer l'adresse à l'intérieur.
+  const jetons = [];
+  const garder = html => "\u0000" + (jetons.push(html) - 1) + "\u0000";
+
+  // 0. liens déjà écrits en HTML dans le cours
+  out = out.replace(/<a\b[^>]*>[\s\S]*?<\/a>/gi, m => garder(m));
+
+  // 1. forme nommée : [mon texte](adresse). L'adresse peut contenir des parenthèses,
+  //    la capture gourmande recule jusqu'à la dernière fermante valable.
+  out = out.replace(/\[([^\]\n]{1,140})\]\(\s*(\S+)\s*\)/g,
+    (m, label, url) => garder(balise(url, label)));
+
+  // 2. adresse collée seule, avec ou sans http, y compris les .pdf
+  out = out.replace(/(^|[\s(>«"'])((?:https?:\/\/|www\.)[^\s<>"']+)/gi, (m, avant, url) => {
+    let fin = "", u = url;
+    while(u.length && /[.,;:!?»]$/.test(u)){ fin = u.slice(-1) + fin; u = u.slice(0, -1); }
+    // parenthèse fermante non appariée : elle ferme la phrase, pas l'adresse
+    while(u.endsWith(")") && (u.split("(").length - 1) < (u.split(")").length - 1)){
+      fin = ")" + fin; u = u.slice(0, -1);
+    }
+    return avant + garder(balise(u, libelleUrl(u))) + fin;
+  });
+
+  return out.replace(/\u0000(\d+)\u0000/g, (m, i) => jetons[Number(i)]);
+}
+
+function texteCours(t){ return liensCliquables(nettoyerHtml(t)); }
+
 function el(tag, cls){ const e=document.createElement(tag); if(cls) e.className=cls; return e; }
 
 // ══════════════════════════════════════════════════
@@ -2511,10 +2575,10 @@ function renderSectionsInto(box, ch){
     const block = el("div","section");
     const title = el("h2","section-title"); title.textContent = sec.title || "";
     const card  = el("div","card");
-    if(sec.body){ const b = el("p","card-body"); b.innerHTML = sec.body; card.appendChild(b); }
+    if(sec.body){ const b = el("p","card-body"); b.innerHTML = texteCours(sec.body); card.appendChild(b); }
     if(sec.list && sec.list.length){
       const ul = el("ul","card-list");
-      sec.list.forEach(x=>{ const li = el("li"); li.innerHTML = `<span class="li-text">${x}</span>`; ul.appendChild(li); });
+      sec.list.forEach(x=>{ const li = el("li"); li.innerHTML = `<span class="li-text">${texteCours(x)}</span>`; ul.appendChild(li); });
       card.appendChild(ul);
     }
     block.appendChild(title); block.appendChild(card);
@@ -2819,10 +2883,20 @@ function editMatiere(sub){
     if(!v.title) return "Donne un nom à la matière.";
     sub.title = v.title;
     sub.ecue  = v.ecue;
-    if(UES[sub.ue]){
-      if(v.ue)    UES[sub.ue].title = v.ue;
-      if(v.uenum) UES[sub.ue].num   = v.uenum;
+    const actuelle = UES[sub.ue] || {};
+    const change = (v.ue && v.ue !== actuelle.title) || (v.uenum && v.uenum !== String(actuelle.num));
+    if(change){
+      const seule = SUBJECTS.filter(x=>x.ue === sub.ue).length <= 1;
+      if(seule && !(sub.ue in DATA_UES)){
+        // cette matière est la seule de son UE : on renomme sur place
+        if(v.ue)    UES[sub.ue].title = v.ue;
+        if(v.uenum) UES[sub.ue].num   = v.uenum;
+      }else{
+        // d'autres matières partagent cette UE : on déplace celle-ci ailleurs
+        sub.ue = trouverOuCreerUE(sem, v.ue || actuelle.title, v.uenum || String(actuelle.num));
+      }
     }
+    nettoyerUEsVides();
     saveContent(); renderSubjectCards(sem); renderSemestres();
   }, ()=>{
     const i = SUBJECTS.findIndex(x=>x.id === sub.id);
@@ -2857,7 +2931,8 @@ function editSection(type, ch, idx){
   const sec = ch.sections[idx];
   openForm("Modifier la section", [
     { key:"title", label:"Titre", value:sec.title || "" },
-    { key:"body",  label:"Texte", type:"area", value:sec.body || "" },
+    { key:"body",  label:"Texte", type:"area", value:sec.body || "",
+      hint:"Colle une adresse, elle devient cliquable. Pour un lien nommé : [le texte de Marcel](https://…)" },
     { key:"list",  label:"Puces (facultatif)", type:"area",
       value:(sec.list || []).join("\n"), hint:"Chaque ligne devient une puce." }
   ], "Enregistrer", v=>{
@@ -2893,6 +2968,31 @@ function addSemestre(){
   });
 }
 
+// Retrouve l'UE qui correspond exactement, ou en fabrique une nouvelle.
+// Attraper « une UE du semestre » au hasard revenait à fusionner des UE distinctes.
+function trouverOuCreerUE(sem, titre, num){
+  const t = (titre || "").trim();
+  const n = (num || "").trim();
+  const memes = k => UES[k].sem === sem;
+  let cle = null;
+  if(n && t)      cle = Object.keys(UES).find(k=>memes(k) && String(UES[k].num) === n && UES[k].title === t);
+  else if(n)      cle = Object.keys(UES).find(k=>memes(k) && String(UES[k].num) === n);
+  else if(t)      cle = Object.keys(UES).find(k=>memes(k) && UES[k].title === t);
+  else            cle = Object.keys(UES).find(k=>memes(k) && UES[k].title === "Mes matières" && String(UES[k].num) === String(sem));
+  if(cle) return cle;
+  const neuve = "ue_" + newId();
+  UES[neuve] = { num: n || String(sem), sem, title: t || "Mes matières" };
+  return neuve;
+}
+
+// Une UE que plus aucune matière n'utilise n'a pas à rester dans la liste.
+function nettoyerUEsVides(){
+  Object.keys(UES).forEach(k=>{
+    if(k in DATA_UES) return;                       // les miennes ne bougent pas
+    if(!SUBJECTS.some(s=>s.ue === k)) delete UES[k];
+  });
+}
+
 // ── Créer une matière dans le semestre affiché ──
 function addMatiere(){
   const sem = curSemestre;
@@ -2906,17 +3006,7 @@ function addMatiere(){
       hint:"Sert à ranger les UE dans l'ordre croissant." }
   ], "Créer", v=>{
     if(!v.title) return "Donne un nom à la matière.";
-    let ueKey = Object.keys(UES).find(k=>UES[k].sem===sem && (!v.ue || UES[k].title===v.ue));
-    if(v.ue && !ueKey){
-      ueKey = "ue_" + newId();
-      UES[ueKey] = { num:v.uenum || String(sem), sem:sem, title:v.ue };
-    }else if(ueKey && v.uenum){
-      UES[ueKey].num = v.uenum;
-    }
-    if(!ueKey){
-      ueKey = "ue_s" + sem;
-      UES[ueKey] = { num:String(sem), sem:sem, title:"Mes matières" };
-    }
+    const ueKey = trouverOuCreerUE(sem, v.ue, v.uenum);
     const id = newId();
     SUBJECTS.push({ id, ue:ueKey, ects:0, ecue:v.ecue || "", title:v.title, _own:true,
                     cm:[], td:[], fc:[], qcm:[], oq:[], auteurs:[] });
@@ -2947,7 +3037,8 @@ function addChapitre(type){
 function addSection(type, ch){
   openForm("Nouvelle section", [
     { key:"title", label:"Titre", placeholder:"Présentation du cours" },
-    { key:"body",  label:"Texte", type:"area", placeholder:"Le contenu du cours…" },
+    { key:"body",  label:"Texte", type:"area", placeholder:"Le contenu du cours…",
+      hint:"Colle une adresse, elle devient cliquable. Pour un lien nommé : [le texte de Marcel](https://…)" },
     { key:"list",  label:"Puces (facultatif)", type:"area",
       placeholder:"Une idée par ligne", hint:"Chaque ligne devient une puce." }
   ], "Ajouter", v=>{
@@ -4615,8 +4706,8 @@ function renderCoursePane(type){
     block.dataset.sec = si;
     const title=el("h2","section-title"); title.textContent=sec.title;
     const card=el("div","card");
-    if(sec.body){ const b=el("div","card-body"); b.innerHTML=sec.body; card.appendChild(b); }
-    if(sec.list&&sec.list.length){ const ul=el("ul","card-list"); sec.list.forEach(it=>{const li=el("li"); li.innerHTML='<span class="li-text">'+it+'</span>'; ul.appendChild(li);}); card.appendChild(ul); }
+    if(sec.body){ const b=el("div","card-body"); b.innerHTML=texteCours(sec.body); card.appendChild(b); }
+    if(sec.list&&sec.list.length){ const ul=el("ul","card-list"); sec.list.forEach(it=>{const li=el("li"); li.innerHTML='<span class="li-text">'+texteCours(it)+'</span>'; ul.appendChild(li);}); card.appendChild(ul); }
     block.appendChild(title);
     block.appendChild(card);
     if(modifiable(ch)) onLongPress(block, ()=>editSection(type, ch, ch.sections.indexOf(sec)));
