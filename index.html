@@ -802,6 +802,12 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
   background:var(--accent);color:#fff;font-size:30px;line-height:1;font-family:var(--font-text);
   box-shadow:0 8px 24px var(--accent-glow);display:none;align-items:center;justify-content:center;
   transition:transform .2s var(--ease-spring);}
+.home-btn{flex-shrink:0;width:36px;height:36px;border-radius:12px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;padding:0;
+  background:var(--surface);border:1px solid var(--border);color:var(--text-soft);
+  transition:background .2s,color .2s;}
+.home-btn svg{width:18px;height:18px;}
+.home-btn:active{background:var(--accent-soft);color:var(--accent);}
 .fab.show{display:flex;}
 .fab:active{transform:scale(.92);}
 /* crayon d'édition, posé sur la zone qu'il modifie */
@@ -875,6 +881,43 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
   line-height:1.25;margin-bottom:7px;}
 .next-meta{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:13px;color:var(--text-soft);}
 .next-when{color:var(--accent);font-weight:600;}
+@keyframes flashSection{
+  0%{background:transparent;}
+  18%{background:var(--accent-soft);}
+  100%{background:transparent;}
+}
+.section.vise{animation:flashSection 2.2s ease-out;border-radius:16px;}
+.trou{display:inline-block;min-width:88px;text-align:center;
+  padding:2px 12px;margin:0 3px;border-radius:8px;
+  background:var(--accent-soft);color:var(--accent);font-weight:700;
+  border-bottom:2px solid var(--accent);}
+.trou.vide{color:var(--text-mute);border-bottom-style:dashed;background:transparent;}
+.trou.faux{background:rgba(255,107,107,.16);color:#ff8080;border-bottom-color:#ff6b6b;}
+.plan-day{font-family:var(--font-display);font-size:14px;font-weight:700;
+  color:var(--accent);margin:20px 0 8px 4px;}
+.plan-row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;cursor:pointer;
+  background:var(--surface);border:1px solid var(--border);border-radius:15px;
+  padding:12px 14px;margin-bottom:8px;font-family:var(--font-text);}
+.plan-h{flex-shrink:0;font-size:13px;font-weight:700;color:var(--accent);line-height:1.35;}
+.plan-h span{display:block;font-weight:400;color:var(--text-mute);font-size:12px;}
+.plan-t{flex:1;min-width:0;}
+.plan-n{font-size:14.5px;color:var(--text);font-weight:600;}
+.plan-s{font-size:12px;color:var(--text-mute);margin-top:2px;}
+.plan-ab{flex-shrink:0;font-size:10.5px;font-weight:700;letter-spacing:.05em;
+  padding:3px 8px;border-radius:7px;background:var(--accent-soft);color:var(--accent);}
+.dev-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:17px 18px;margin-bottom:12px;box-shadow:0 4px 16px var(--shadow);}
+.dev-top{display:flex;align-items:center;gap:10px;margin-bottom:11px;}
+.dev-name{flex:1;min-width:0;font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--text);}
+.dev-lbl{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text-mute);margin:14px 0 6px;}
+.dev-txt{font-size:14.5px;line-height:1.65;color:var(--text-soft);white-space:pre-line;}
+.dev-corr{margin-top:14px;padding:14px;border-radius:14px;background:var(--accent-soft);}
+.dev-corr .dev-lbl{color:var(--accent);margin-top:0;}
+.dev-corr .dev-txt{color:var(--text);}
+.dev-show{width:100%;margin-top:14px;border-radius:14px;padding:12px;cursor:pointer;
+  background:var(--accent);color:#fff;border:none;
+  font-family:var(--font-text);font-size:14px;font-weight:600;}
 .know-group{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
   color:var(--text-mute);margin:16px 0 7px 4px;}
 .know-group:first-child{margin-top:0;}
@@ -939,6 +982,11 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 .fs-input{height:46px;}
 .fs-input:focus,.fs-area:focus{outline:none;border-color:var(--accent);}
 .fs-area{min-height:96px;resize:vertical;line-height:1.5;display:block;}
+.fs-choice{display:flex;flex-wrap:wrap;gap:7px;}
+.fs-opt{flex:1;min-width:62px;border-radius:12px;padding:11px 8px;cursor:pointer;
+  background:var(--surface);border:1px solid var(--border);color:var(--text-soft);
+  font-family:var(--font-text);font-size:13.5px;}
+.fs-opt.on{background:var(--accent);color:#fff;border-color:transparent;font-weight:600;}
 .fs-hint{font-size:11.5px;color:var(--text-mute);margin:6px 4px 0;line-height:1.45;}
 .fs-actions{display:flex;gap:10px;padding:14px 14px 0;flex-shrink:0;}
 .fs-actions button{flex:1;border-radius:14px;padding:13px;border:1px solid transparent;
@@ -1347,6 +1395,9 @@ textarea::placeholder{color:var(--text-mute);}
   <div class="split-head">
     <div class="head-row">
       <button class="back-btn" id="btn-split-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Matières</button>
+      <button class="home-btn" id="btn-split-home" aria-label="Accueil">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5"/><path d="M5.5 9.5V20h13V9.5"/><path d="M9.5 20v-6h5v6"/></svg>
+      </button>
       <button class="subj-chip" id="split-chip"></button>
     </div>
     <div class="segment">
@@ -1383,6 +1434,26 @@ textarea::placeholder{color:var(--text-mute);}
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- MON PLANNING (saisi à la main) -->
+<div id="screen-planning" class="screen">
+  <div class="wrap">
+    <button class="back-btn rise" id="btn-plan-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
+    <h1 class="page-title rise" style="animation-delay:.03s">Mon planning</h1>
+    <p class="page-sub rise" style="animation-delay:.06s">Ton emploi du temps saisi à la main, pour qui n'a pas de lien iCal.</p>
+    <div id="plan-inner" class="rise" style="animation-delay:.1s"></div>
+  </div>
+</div>
+
+<!-- DEVOIRS CORRIGÉS -->
+<div id="screen-devoirs" class="screen">
+  <div class="wrap">
+    <button class="back-btn rise" id="btn-dev-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Réviser</button>
+    <h1 class="page-title rise" style="animation-delay:.03s">Devoirs corrigés</h1>
+    <p class="page-sub rise" style="animation-delay:.06s">Le sujet, puis la correction quand tu l'as cherchée.</p>
+    <div id="dev-inner" class="rise" style="animation-delay:.1s"></div>
+  </div>
+</div>
 
 <!-- MES CLASSES -->
 <div id="screen-classes" class="screen">
@@ -1696,7 +1767,9 @@ const DAY = 86400000;
 function today0(){ const d=new Date(); d.setHours(0,0,0,0); return d.getTime(); }
 // clé unique et stable d'une carte
 function cardKey(subjId, mode, item, i){
-  const base = (item && item.q) ? item.q : (item && item.nom) ? item.nom : String(i);
+  const base = (item && item.q) ? item.q
+             : (item && item.texte) ? item.texte
+             : (item && item.nom) ? item.nom : String(i);
   let h=0; for(let k=0;k<base.length;k++){ h=(h*31+base.charCodeAt(k))|0; }
   return subjId+"_"+mode+"_"+h;
 }
@@ -1735,22 +1808,20 @@ function srsIsDue(key){ const c = SRS[key]; return !c || c.due <= today0(); }
 // nombre de cartes dues pour une matière (tous modes confondus)
 function dueCount(subj){
   let n = 0;
-  ["fc","qcm","oq","auteurs"].forEach(m=>{
+  ["fc","qcm","oq","tr"].forEach(m=>{
     (subj[m]||[]).forEach((item,i)=>{ if(srsIsDue(cardKey(subj.id,m,item,i))) n++; });
   });
   return n;
 }
 // nombre total de cartes d'une matière
 function totalCards(subj){
-  return (subj.fc?.length||0)+(subj.qcm?.length||0)+(subj.oq?.length||0)+(subj.auteurs?.length||0);
+  return (subj.fc?.length||0)+(subj.qcm?.length||0)+(subj.oq?.length||0)+(subj.tr?.length||0);
 }
 // notions "en cours d'acquisition" : révisées au moins une fois avec succès.
 // (donne un feedback immédiat ; une notion vraiment ancrée a un intervalle long)
 function learnedCount(subj){
   let n=0;
-  // auteurs compris : ils entrent maintenant dans le total, le pourcentage
-  // baisserait artificiellement si on ne comptait pas aussi leurs réussites
-  ["fc","qcm","oq","auteurs"].forEach(m=>{
+  ["fc","qcm","oq","tr"].forEach(m=>{
     (subj[m]||[]).forEach((item,i)=>{
       const c = SRS[cardKey(subj.id,m,item,i)];
       if(c && c.rep >= 1) n++;      // au moins une réussite enregistrée
@@ -1808,6 +1879,30 @@ function el(tag, cls){ const e=document.createElement(tag); if(cls) e.className=
 // une matière venue de data.js n'a pas de crayon, sinon mes mises à jour l'écraseraient.
 function canEdit(){ return !!whoAmI(); }
 function isOwn(x){ return !!(x && x._own); }
+// Modifiable : tout sauf un chapitre venu d'une classe.
+// Mes cours à moi le sont aussi désormais, sous forme de retouches.
+function modifiable(ch){ return !!ch && !ch._shared && canEdit(); }
+// Note la retouche pour que pushState l'enregistre.
+function marquerRetouche(type){
+  if(!curSubj || curSubj._own) return;
+  curSubj._over = curSubj._over || {};
+  if(!curSubj._over[type]){
+    curSubj["_orig_" + type] = curSubj["_orig_" + type] ||
+      (curSubj[type]||[]).filter(ch=>!ch._own && !ch._shared).map(ch=>JSON.parse(JSON.stringify(ch)));
+    curSubj._over[type] = true;
+  }
+}
+// Rétablit ma version d'origine pour un type de chapitres.
+function retablirOriginal(type){
+  if(!curSubj || !curSubj._over || !curSubj._over[type]) return;
+  const gardes = (curSubj[type]||[]).filter(ch=>ch._own || ch._shared);
+  curSubj[type] = (curSubj["_orig_" + type] || []).map(normChapitre).concat(gardes);
+  delete curSubj._over[type];
+  if(!Object.keys(curSubj._over).length) delete curSubj._over;
+  if(type === "cm") curCmIdx = 0; else curTdIdx = 0;
+  saveContent(); renderCoursePane(type);
+  toast("Version d'origine rétablie.");
+}
 function semIsOwn(sem){
   const keys = Object.keys(UES).filter(k=>UES[k].sem === sem);
   return keys.length > 0 && keys.every(k=>!(k in DATA_UES));
@@ -1847,13 +1942,33 @@ function openForm(title, fields, okLabel, onSubmit, onDelete, extra){
   fields.forEach(f=>{
     const w = el("div","fs-field");
     const l = el("div","fs-label"); l.textContent = f.label; w.appendChild(l);
-    const inp = f.type === "area" ? el("textarea","fs-area") : el("input","fs-input");
-    if(f.type !== "area") inp.type = f.type || "text";
-    if(f.type === "number"){ inp.inputMode = "numeric"; }
+    let inp;
+    if(f.type === "choice"){
+      // rangée de boutons : plus lisible qu'un menu déroulant sur téléphone
+      inp = el("input","fs-input");
+      inp.type = "hidden";
+      inp.value = f.value || (f.options[0] && f.options[0].v) || "";
+      const row = el("div","fs-choice");
+      f.options.forEach(o=>{
+        const b = el("button","fs-opt" + (String(o.v) === String(inp.value) ? " on" : ""));
+        b.type = "button"; b.textContent = o.label;
+        b.addEventListener("click",()=>{
+          inp.value = o.v;
+          row.querySelectorAll(".fs-opt").forEach(x=>x.classList.remove("on"));
+          b.classList.add("on");
+        });
+        row.appendChild(b);
+      });
+      w.appendChild(row);
+    }else{
+      inp = f.type === "area" ? el("textarea","fs-area") : el("input","fs-input");
+      if(f.type !== "area") inp.type = f.type || "text";
+      if(f.type === "number"){ inp.inputMode = "numeric"; }
+      inp.placeholder = f.placeholder || "";
+      inp.value = f.value || "";
+      w.appendChild(inp);
+    }
     inp.id = "fs-f-" + f.key;
-    inp.placeholder = f.placeholder || "";
-    inp.value = f.value || "";
-    w.appendChild(inp);
     if(f.hint){ const h = el("div","fs-hint"); h.textContent = f.hint; w.appendChild(h); }
     body.appendChild(w);
   });
@@ -1882,11 +1997,20 @@ function reloadEDT(){
 function openCalSheet(){
   const list = document.getElementById("cal-list");
   list.innerHTML = "";
+  const nb = planning().cours.length;
+  const perso = el("button","cal-row");
+  perso.type = "button";
+  perso.innerHTML = `<div class="cal-txt"><div class="cal-name">Mon planning</div>
+    <div class="cal-url">${nb ? nb + " créneau" + (nb>1?"x":"") + " saisis à la main" : "saisir mon emploi du temps à la main"}</div></div>
+    <span class="cal-pen">${IC_PEN}</span>`;
+  perso.addEventListener("click",()=>{ haptic(); closeCalSheet(); setTimeout(renderPlanning, 300); });
+  list.appendChild(perso);
   const cals = edtCalendars();
-  if(!cals.length){
-    const p = el("div","fs-hint");
-    p.textContent = "Aucun calendrier. Touche Ajouter pour coller ton premier lien iCal.";
-    list.appendChild(p);
+  if(cals.length){
+    const t = el("div","fs-hint");
+    t.textContent = "Calendriers importés";
+    t.style.margin = "14px 4px 8px";
+    list.appendChild(t);
   }
   cals.forEach(c=>{
     const row = el("button","cal-row");
@@ -2283,9 +2407,10 @@ function publishFromClass(c){
     const nFc  = (sj.fc ||[]).filter(x=>!x._shared).length;
     const nQcm = (sj.qcm||[]).filter(x=>!x._shared).length;
     const nOq  = (sj.oq ||[]).filter(x=>!x._shared).length;
-    if(nFc + nQcm + nOq){
+    const nDev = (sj.dev||[]).filter(x=>!x._shared).length;
+    if(nFc + nQcm + nOq + nDev){
       opts.push({ label:"Exercices de révision",
-        sub:`${nFc} fiches · ${nQcm} QCM · ${nOq} questions`, value:"revision" });
+        sub:`${nFc} fiches · ${nQcm} QCM · ${nOq} questions · ${nDev} devoirs`, value:"revision" });
     }
     setTimeout(()=>openPicker("Quoi publier ?", opts, val=>{
       let payload, kind;
@@ -2296,6 +2421,7 @@ function publishFromClass(c){
           fc:  (sj.fc ||[]).filter(x=>!x._shared),
           qcm: (sj.qcm||[]).filter(x=>!x._shared),
           oq:  (sj.oq ||[]).filter(x=>!x._shared),
+          dev: (sj.dev||[]).filter(x=>!x._shared),
           auteurs: (sj.auteurs||[]).filter(x=>!x._shared)
         };
       }else{
@@ -2332,7 +2458,7 @@ async function openSharedItem(it){
   if(it.kind === "revision"){
     const n = c => (payload[c]||[]).length;
     const d = el("div","empty-note");
-    d.innerHTML = `${n("fc")} fiches · ${n("qcm")} QCM · ${n("oq")} questions ouvertes<br>
+    d.innerHTML = `${n("fc")} fiches · ${n("qcm")} QCM · ${n("oq")} questions · ${n("dev")} devoirs corrigés<br>
       Ajoute-les à une de tes matières pour les réviser.`;
     box.appendChild(d);
   }else{
@@ -2556,7 +2682,7 @@ async function syncFollows(){
 // Les chapitres suivis apparaissent dans la matière choisie, en lecture seule.
 function injectFollowed(){
   SUBJECTS.forEach(sj=>{
-    ["cm","td","fc","qcm","oq","auteurs"].forEach(champ=>{
+    ["cm","td","fc","qcm","oq","auteurs","dev"].forEach(champ=>{
       sj[champ] = (sj[champ]||[]).filter(x=>!x._shared);
     });
   });
@@ -2565,7 +2691,7 @@ function injectFollowed(){
     if(kind === "revision"){
       // les cartes portent une clé calculée sur leur question, pas sur leur rang :
       // les ajouter ne perturbe donc pas la progression existante
-      ["fc","qcm","oq","auteurs"].forEach(champ=>{
+      ["fc","qcm","oq","auteurs","dev"].forEach(champ=>{
         (payload[champ]||[]).forEach(x=>{
           sj[champ] = sj[champ] || [];
           sj[champ].push(Object.assign({}, x, { _shared:true, _itemId:itemId }));
@@ -2715,8 +2841,10 @@ function editChapitre(type, idx){
   ], "Enregistrer", v=>{
     if(!v.label) return "Donne un nom au chapitre.";
     ch.label = v.label;
+    marquerRetouche(type);
     saveContent(); renderCoursePane(type);
   }, ()=>{
+    marquerRetouche(type);
     arr.splice(idx,1);
     const ni = Math.max(0, Math.min(idx, arr.length - 1));
     if(type === "cm") curCmIdx = ni; else curTdIdx = ni;
@@ -2738,9 +2866,11 @@ function editSection(type, ch, idx){
     if(v.body) sec.body = v.body; else delete sec.body;
     const puces = v.list.split("\n").map(x=>x.trim()).filter(Boolean);
     if(puces.length) sec.list = puces; else delete sec.list;
+    marquerRetouche(type);
     saveContent(); renderCoursePane(type);
   }, ()=>{
     ch.sections.splice(idx,1);
+    marquerRetouche(type);
     saveContent(); renderCoursePane(type);
   });
 }
@@ -2827,6 +2957,7 @@ function addSection(type, ch){
     const puces = v.list.split("\n").map(x=>x.trim()).filter(Boolean);
     if(puces.length) sec.list = puces;
     ch.sections.push(sec);
+    marquerRetouche(type);
     saveContent();
     renderCoursePane(type);
   });
@@ -3172,7 +3303,12 @@ async function loadEDT(force){
   const theme = cals.length && cals[0].id !== "theme"
     ? "u:" + (whoAmI()||"?") + "|" + cals.map(c=>c.id).join(",")
     : (who || "none");
-  if(!cals.length){ edtState = "none"; EDT = []; return; }
+  if(!cals.length){
+    EDT = [];
+    // un planning saisi à la main suffit à faire vivre l'écran
+    edtState = planning().cours.length ? "ok" : "none";
+    return;
+  }
 
   // cache : on affiche IMMÉDIATEMENT ce qu'on a (même ancien), pour ne jamais faire attendre.
   // S'il date de plus de 6 h, on rafraîchit discrètement en arrière-plan.
@@ -3249,7 +3385,53 @@ async function loadEDT(force){
 
 // ── Helpers de dates ──
 function sameDay(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
-function eventsOn(date){ return EDT.filter(e=>sameDay(e.start,date)); }
+// ══════════════════════════════════════════════════
+// PLANNING MANUEL : pour qui n'a pas de lien iCal
+// { ab:bool, ancre:"AAAA-MM-JJ", cours:[{id,jour,debut,fin,titre,salle,semaine}] }
+// jour : 1 lundi … 7 dimanche · semaine : "A" | "B" | "AB"
+// ══════════════════════════════════════════════════
+function planning(){
+  if(!USER_SETTINGS.planning || typeof USER_SETTINGS.planning !== "object"){
+    USER_SETTINGS.planning = { ab:false, ancre:null, cours:[] };
+  }
+  if(!Array.isArray(USER_SETTINGS.planning.cours)) USER_SETTINGS.planning.cours = [];
+  return USER_SETTINGS.planning;
+}
+function lundiDe(d){
+  const x = new Date(d); x.setHours(0,0,0,0);
+  const j = x.getDay() === 0 ? 7 : x.getDay();
+  x.setDate(x.getDate() - (j - 1));
+  return x;
+}
+// A ou B, compté en semaines pleines depuis la semaine de référence.
+function semaineDe(date){
+  const p = planning();
+  if(!p.ab || !p.ancre) return "A";
+  const diff = Math.round((lundiDe(date) - lundiDe(new Date(p.ancre))) / 604800000);
+  return (((diff % 2) + 2) % 2) === 0 ? "A" : "B";
+}
+// Les créneaux manuels d'un jour donné, fabriqués à la volée.
+function coursManuelsDu(date){
+  const p = planning();
+  if(!p.cours.length) return [];
+  const jour = date.getDay() === 0 ? 7 : date.getDay();
+  const sem  = semaineDe(date);
+  return p.cours
+    .filter(c=>Number(c.jour) === jour && (c.semaine === "AB" || !p.ab || c.semaine === sem))
+    .map(c=>{
+      const [h1,m1] = String(c.debut||"08:00").split(":").map(Number);
+      const [h2,m2] = String(c.fin||c.debut||"09:00").split(":").map(Number);
+      const s = new Date(date); s.setHours(h1||0, m1||0, 0, 0);
+      const e = new Date(date); e.setHours(h2||0, m2||0, 0, 0);
+      return { title:c.titre || "Cours", place:c.salle || "", start:s, end:e, manuel:true, cid:c.id };
+    });
+}
+
+function eventsOn(date){
+  return EDT.filter(e=>sameDay(e.start,date))
+    .concat(coursManuelsDu(date))
+    .sort((a,b)=>a.start - b.start);
+}
 function hhmm(d){ return d ? String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0") : ""; }
 const JOURS = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
 const MOIS  = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
@@ -4413,19 +4595,31 @@ function renderCoursePane(type){
   // pas de crayon posé sur la page : un appui long sur une pastille ouvre sa fiche.
   // Un chapitre partagé n'est pas modifiable ici, il se retire depuis sa classe.
   sel.querySelectorAll(".chap-opt").forEach((b,i)=>{
-    const c = chapters[i];
-    if(c && !c._shared && isOwn(c)) onLongPress(b, ()=>editChapitre(type, i));
+    if(modifiable(chapters[i])) onLongPress(b, ()=>editChapitre(type, i));
   });
+  // retouché : on le dit, et on propose de revenir à ma version
+  if(curSubj._over && curSubj._over[type]){
+    const r = el("button","add-inline");
+    r.style.marginTop = "0";
+    r.style.fontSize = "12px";
+    r.textContent = "Version modifiée · rétablir l'originale";
+    r.addEventListener("click",()=>{
+      haptic();
+      openForm("Rétablir la version d'origine", [], "Annuler", ()=>{}, ()=>retablirOriginal(type));
+    });
+    pane.appendChild(r);
+  }
   const ch=chapters[chIdx];
-  (ch.sections||[]).forEach(sec=>{
+  (ch.sections||[]).forEach((sec,si)=>{
     const block=el("div","section");
+    block.dataset.sec = si;
     const title=el("h2","section-title"); title.textContent=sec.title;
     const card=el("div","card");
     if(sec.body){ const b=el("div","card-body"); b.innerHTML=sec.body; card.appendChild(b); }
     if(sec.list&&sec.list.length){ const ul=el("ul","card-list"); sec.list.forEach(it=>{const li=el("li"); li.innerHTML='<span class="li-text">'+it+'</span>'; ul.appendChild(li);}); card.appendChild(ul); }
     block.appendChild(title);
     block.appendChild(card);
-    if(isOwn(ch)) onLongPress(block, ()=>editSection(type, ch, ch.sections.indexOf(sec)));
+    if(modifiable(ch)) onLongPress(block, ()=>editSection(type, ch, ch.sections.indexOf(sec)));
     pane.appendChild(block);
   });
   if(ch.recap&&ch.recap.length){
@@ -4433,7 +4627,7 @@ function renderCoursePane(type){
     r.innerHTML=`<div class="recap-label">📌 À retenir</div>`+ch.recap.map((x,i)=>`<div class="recap-item"><span class="recap-num">${i+1}</span><span>${esc(x)}</span></div>`).join("");
     pane.appendChild(r);
   }
-  if(canEdit() && isOwn(ch)){
+  if(modifiable(ch)){
     const addSec=el("button","add-inline");
     addSec.textContent = "+  Ajouter une section";
     addSec.addEventListener("click",()=>{ haptic(); addSection(type, ch); });
@@ -4442,7 +4636,7 @@ function renderCoursePane(type){
 }
 function renderTrainPane(){
   const pane=document.getElementById("pane-2"); pane.innerHTML="";
-  const hasTrain=(curSubj.fc&&curSubj.fc.length)||(curSubj.qcm&&curSubj.qcm.length)||(curSubj.oq&&curSubj.oq.length)||(curSubj.auteurs&&curSubj.auteurs.length);
+  const hasTrain=(curSubj.fc&&curSubj.fc.length)||(curSubj.qcm&&curSubj.qcm.length)||(curSubj.oq&&curSubj.oq.length)||(curSubj.tr&&curSubj.tr.length)||(curSubj.auteurs&&curSubj.auteurs.length);
   if(!hasTrain){ pane.innerHTML=`<div class="empty-note">Rien à réviser ici pour l'instant.<br>Cette matière est encore à remplir.</div>`; return; }
   // Combien de cartes sont à revoir aujourd'hui ?
   const dueTotal = dueCount(curSubj);
@@ -4456,6 +4650,7 @@ function renderTrainPane(){
     {m:"fc",icon:"🃏",title:"Flashcards",desc:"Question → retourne → tu te notes"},
     {m:"qcm",icon:"⏱️",title:"QCM",desc:"4 choix · 20 s · explication après"},
     {m:"oq",icon:"✍️",title:"Questions ouvertes",desc:"Rédige, puis compare au corrigé"},
+    {m:"tr",icon:"🧩",title:"Texte à trous",desc:"Le bon mot · 4 choix · 10 s"},
   ];
   modes.forEach(mo=>{
     const arr=curSubj[mo.m]||[];
@@ -4470,15 +4665,23 @@ function renderTrainPane(){
     card.addEventListener("click",()=>startSession(mo.m));
     grid.appendChild(card);
   });
+  // devoirs corrigés : toujours proposé, même vide, sinon impossible d'en créer un
+  if(canEdit() || (curSubj.dev && curSubj.dev.length)){
+    const n = (curSubj.dev||[]).length;
+    const card=el("button","mode-card");
+    card.innerHTML=`<div class="mode-icon">📄</div>
+      <div class="mode-info"><div class="mode-name">Devoirs corrigés</div>
+      <div class="mode-desc">${n ? "Sujets et corrections" : "Aucun pour l'instant"}</div></div>
+      <span class="mode-count">${n}</span>`;
+    card.addEventListener("click",renderDevoirs);
+    grid.appendChild(card);
+  }
+
   if(curSubj.auteurs && curSubj.auteurs.length){
-    const tot = curSubj.auteurs.length;
-    let d = 0;
-    curSubj.auteurs.forEach((item,i)=>{ if(srsIsDue(cardKey(curSubj.id,"auteurs",item,i))) d++; });
     const card=el("button","mode-card");
     card.innerHTML=`<div class="mode-icon">👤</div>
-      <div class="mode-info"><div class="mode-name">Auteurs</div>
-      <div class="mode-desc">${d>0 ? d+" à revoir · "+tot+" au total" : "Fiches à déplier"}</div></div>
-      <span class="mode-count${d>0?" mode-due":" mode-badge-done"}">${d>0? d : "✓"}</span>`;
+      <div class="mode-info"><div class="mode-name">Auteurs</div><div class="mode-desc">Fiches à déplier</div></div>
+      <span class="mode-count">${curSubj.auteurs.length}</span>`;
     card.addEventListener("click",renderAuteurs);
     grid.appendChild(card);
   }
@@ -4518,16 +4721,223 @@ function chapitresDeLAuteur(nom){
   const trouves = [];
   ["cm","td"].forEach(type=>{
     (curSubj[type]||[]).forEach((ch,i)=>{
-      const t = texteDe(ch);
-      if(termes.some(x=>t.includes(x))) trouves.push({ type, idx:i, label:ch.label || (type==="cm"?"Cours":"TD") });
+      // on cherche section par section, pour pouvoir amener pile au bon endroit
+      let sec = -1;
+      (ch.sections||[]).forEach((sc,si)=>{
+        if(sec >= 0) return;
+        const t = sansAccents((sc.title||"") + " " + (sc.body||"") + " " + (sc.list||[]).join(" "));
+        if(termes.some(x=>t.includes(x))) sec = si;
+      });
+      if(sec < 0 && !termes.some(x=>texteDe(ch).includes(x))) return;
+      trouves.push({ type, idx:i, sec, label:ch.label || (type==="cm"?"Cours":"TD") });
     });
   });
   return trouves;
 }
 
-function ouvrirChapitre(type, idx){
+function ouvrirChapitre(type, idx, sec){
   if(type === "cm"){ curCmIdx = idx; setTab(0); } else { curTdIdx = idx; setTab(1); }
   showScreen("split");
+  if(sec === undefined || sec === null || sec < 0) return;
+  // le panneau vient d'être redessiné : on attend qu'il soit posé avant de viser
+  setTimeout(()=>{
+    const pane = document.getElementById("pane-" + (type === "cm" ? 0 : 1));
+    const bloc = pane && pane.querySelector('.section[data-sec="' + sec + '"]');
+    if(!bloc) return;
+    bloc.scrollIntoView({ behavior:"smooth", block:"center" });
+    bloc.classList.remove("vise");
+    void bloc.offsetWidth;
+    bloc.classList.add("vise");
+  }, 260);
+}
+
+// ══ Planning manuel ══
+const JOURS_COURTS = ["","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
+
+function renderPlanning(){
+  showScreen("planning");
+  const p = planning();
+  const box = document.getElementById("plan-inner");
+  box.innerHTML = "";
+
+  // réglage des semaines alternées
+  const reg = el("button","cal-row");
+  reg.type = "button";
+  const anc = p.ancre ? new Date(p.ancre).toLocaleDateString("fr-FR", { day:"numeric", month:"long" }) : "à définir";
+  reg.innerHTML = `<div class="cal-txt"><div class="cal-name">Semaines A et B</div>
+    <div class="cal-url">${p.ab ? "activées · semaine A à partir du " + esc(anc) : "désactivées · une seule semaine type"}</div></div>
+    <span class="cal-pen">${IC_PEN}</span>`;
+  reg.addEventListener("click",()=>{ haptic(); editPlanningAB(); });
+  box.appendChild(reg);
+
+  if(!p.cours.length){
+    const e = el("div","empty-note");
+    e.textContent = "Aucun cours pour l'instant. Ajoute ton premier créneau.";
+    e.style.marginTop = "18px";
+    box.appendChild(e);
+  }
+
+  for(let j = 1; j <= 7; j++){
+    const list = p.cours.filter(c=>Number(c.jour) === j)
+      .sort((a,b)=>String(a.debut).localeCompare(String(b.debut)));
+    if(!list.length) continue;
+    const t = el("div","plan-day"); t.textContent = JOURS_COURTS[j];
+    box.appendChild(t);
+    list.forEach(c=>{
+      const row = el("button","plan-row");
+      row.type = "button";
+      row.innerHTML = `<div class="plan-h">${esc(c.debut||"")}<span>${esc(c.fin||"")}</span></div>
+        <div class="plan-t"><div class="plan-n">${esc(c.titre||"Cours")}</div>
+        ${c.salle ? `<div class="plan-s">${esc(c.salle)}</div>` : ""}</div>
+        ${p.ab && c.semaine !== "AB" ? `<span class="plan-ab">${esc(c.semaine)}</span>` : ""}`;
+      row.addEventListener("click",()=>{ haptic(); editCoursPlanning(c.id); });
+      box.appendChild(row);
+    });
+  }
+
+  const add = el("button","add-inline");
+  add.textContent = "+  Ajouter un créneau";
+  add.addEventListener("click",()=>{ haptic(); editCoursPlanning(null); });
+  box.appendChild(add);
+}
+
+function editPlanningAB(){
+  const p = planning();
+  const auj = new Date();
+  const parDefaut = p.ancre || lundiDe(auj).toISOString().slice(0,10);
+  openForm("Semaines A et B", [
+    { key:"ab", label:"Alternance", type:"choice", value:p.ab ? "1" : "0",
+      options:[{ v:"0", label:"Une seule semaine" }, { v:"1", label:"Semaines A et B" }] },
+    { key:"ancre", label:"Une date en semaine A", type:"date", value:parDefaut,
+      hint:"N'importe quel jour d'une semaine A. Le calcul se fait de lundi à lundi." }
+  ], "Enregistrer", v=>{
+    p.ab = v.ab === "1";
+    if(p.ab){
+      if(!v.ancre) return "Donne une date en semaine A.";
+      p.ancre = v.ancre;
+    }
+    saveContent(); reloadEDT(); renderPlanning();
+  });
+}
+
+function editCoursPlanning(id){
+  const p = planning();
+  const c = id ? p.cours.find(x=>x.id === id) : null;
+  const champs = [
+    { key:"titre", label:"Matière", value:c ? c.titre : "", placeholder:"Sociologie de l'éducation" },
+    { key:"jour", label:"Jour", type:"choice", value:c ? String(c.jour) : "1",
+      options:[1,2,3,4,5,6,7].map(j=>({ v:String(j), label:JOURS_COURTS[j].slice(0,3) })) },
+    { key:"debut", label:"Début", type:"time", value:c ? c.debut : "08:30" },
+    { key:"fin",   label:"Fin",   type:"time", value:c ? c.fin   : "10:30" },
+    { key:"salle", label:"Salle", value:c ? (c.salle||"") : "", placeholder:"PYR 502" }
+  ];
+  if(p.ab) champs.push({ key:"semaine", label:"Semaine", type:"choice",
+    value:c ? (c.semaine||"AB") : "AB",
+    options:[{ v:"AB", label:"Toutes" }, { v:"A", label:"A" }, { v:"B", label:"B" }] });
+
+  openForm(c ? "Modifier le créneau" : "Nouveau créneau", champs, "Enregistrer", v=>{
+    if(!v.titre) return "Donne un nom à ce cours.";
+    if(!v.debut || !v.fin) return "Indique l'heure de début et de fin.";
+    if(v.fin <= v.debut) return "La fin doit venir après le début.";
+    const data = { jour:Number(v.jour), debut:v.debut, fin:v.fin,
+                   titre:v.titre, salle:v.salle, semaine:p.ab ? (v.semaine||"AB") : "AB" };
+    if(c) Object.assign(c, data);
+    else  p.cours.push(Object.assign({ id:newId() }, data));
+    saveContent(); reloadEDT(); renderPlanning();
+  }, c ? ()=>{
+    p.cours = p.cours.filter(x=>x.id !== id);
+    saveContent(); reloadEDT(); renderPlanning();
+  } : null);
+}
+
+// ══ Devoirs corrigés ══
+function devList(){
+  if(!Array.isArray(curSubj.dev)) curSubj.dev = [];
+  return curSubj.dev;
+}
+function marquerDev(){
+  if(!curSubj || curSubj._own) return;
+  curSubj._over = curSubj._over || {};
+  curSubj._over.dev = true;
+}
+
+function renderDevoirs(){
+  showScreen("devoirs");
+  const box = document.getElementById("dev-inner");
+  box.innerHTML = "";
+  const list = devList();
+
+  if(!list.length){
+    const e = el("div","empty-note");
+    e.textContent = canEdit()
+      ? "Aucun devoir pour l'instant. Ajoute un sujet et sa correction pour les réviser."
+      : "Aucun devoir corrigé dans cette matière.";
+    box.appendChild(e);
+  }
+
+  list.forEach((d,i)=>{
+    const card = el("div","dev-card");
+    const top  = el("div","dev-top");
+    const nom  = el("div","dev-name"); nom.textContent = d.label || "Devoir";
+    top.appendChild(nom);
+    card.appendChild(top);
+
+    if(d.enonce){
+      const l = el("div","dev-lbl"); l.textContent = "Sujet";
+      const t = el("div","dev-txt"); t.textContent = d.enonce;
+      l.style.marginTop = "0";
+      card.appendChild(l); card.appendChild(t);
+    }
+    if(d.correction){
+      const btn = el("button","dev-show");
+      btn.type = "button";
+      btn.textContent = "Voir la correction";
+      const zone = el("div","dev-corr");
+      zone.hidden = true;
+      const l2 = el("div","dev-lbl"); l2.textContent = "Correction";
+      const t2 = el("div","dev-txt"); t2.textContent = d.correction;
+      zone.appendChild(l2); zone.appendChild(t2);
+      btn.addEventListener("click",()=>{
+        haptic();
+        zone.hidden = !zone.hidden;
+        btn.textContent = zone.hidden ? "Voir la correction" : "Masquer la correction";
+      });
+      card.appendChild(btn); card.appendChild(zone);
+    }
+    // appui long pour modifier ou supprimer, comme ailleurs
+    if(canEdit() && !d._shared) onLongPress(card, ()=>editDevoir(i));
+    box.appendChild(card);
+  });
+
+  if(canEdit()){
+    const add = el("button","add-inline");
+    add.textContent = "+  Ajouter un devoir corrigé";
+    add.addEventListener("click",()=>{ haptic(); editDevoir(null); });
+    box.appendChild(add);
+  }
+}
+
+function editDevoir(i){
+  const list = devList();
+  const d = i === null ? null : list[i];
+  openForm(d ? "Modifier le devoir" : "Nouveau devoir corrigé", [
+    { key:"label", label:"Titre", value:d ? d.label : "", placeholder:"Contrôle du 12 novembre" },
+    { key:"enonce", label:"Sujet", type:"area", value:d ? (d.enonce||"") : "",
+      placeholder:"L'énoncé, la consigne, les questions…" },
+    { key:"correction", label:"Correction", type:"area", value:d ? (d.correction||"") : "",
+      placeholder:"La correction, telle qu'elle a été donnée." }
+  ], "Enregistrer", v=>{
+    if(!v.label) return "Donne un titre à ce devoir.";
+    if(!v.enonce && !v.correction) return "Il faut au moins un sujet ou une correction.";
+    if(d){ d.label = v.label; d.enonce = v.enonce; d.correction = v.correction; }
+    else  list.push({ label:v.label, enonce:v.enonce, correction:v.correction });
+    marquerDev();
+    saveContent(); renderDevoirs();
+  }, d ? ()=>{
+    list.splice(i,1);
+    marquerDev();
+    saveContent(); renderDevoirs();
+  } : null);
 }
 
 function renderAuteurs(){
@@ -4560,17 +4970,6 @@ function renderAuteurs(){
         ${a.concepts.length ? `<div class="auteur-concepts">${a.concepts.map(c=>`<span class="auteur-tag">${esc(c)}</span>`).join("")}</div>` : ""}
         ${a.retenir ? `<div class="auteur-retenir"><div class="auteur-retenir-lbl">📌 À retenir</div><div class="auteur-retenir-txt">${esc(a.retenir)}</div></div>` : ""}
       </div></div></div>`;
-    // notation : sans elle, le compteur d'auteurs resterait bloqué au maximum
-    const body0 = card.querySelector(".auteur-body");
-    const key   = cardKey(curSubj.id, "auteurs", a0, i);
-    const note  = el("div","auteur-note");
-    const revoir = el("button","an-due"); revoir.type = "button"; revoir.textContent = "À revoir";
-    const su     = el("button","an-ok");  su.type = "button";     su.textContent = "Je la connais";
-    revoir.addEventListener("click", e=>{ e.stopPropagation(); haptic(); srsReview(key,0); renderAuteurs(); });
-    su.addEventListener("click", e=>{ e.stopPropagation(); haptic(); srsReview(key,2); renderAuteurs(); });
-    note.appendChild(revoir); note.appendChild(su);
-    body0.appendChild(note);
-
     // chapitres où l'auteur est nommé : repérés dans le texte, pas devinés
     const liens = chapitresDeLAuteur(a0.nom);
     if(liens.length){
@@ -4582,7 +4981,7 @@ function renderAuteurs(){
         const b = el("button","auteur-lien");
         b.type = "button";
         b.textContent = (l.type === "cm" ? "📖 " : "📝 ") + l.label;
-        b.addEventListener("click", e=>{ e.stopPropagation(); haptic(); ouvrirChapitre(l.type, l.idx); });
+        b.addEventListener("click", e=>{ e.stopPropagation(); haptic(); ouvrirChapitre(l.type, l.idx, l.sec); });
         box.appendChild(b);
       });
       body.appendChild(lbl); body.appendChild(box);
@@ -4604,13 +5003,30 @@ function renderAuteurs(){
 const MOTIV_OK=["Bien joué !","Tu vois, tu savais.","C'est ça !","Parfait","Continue 🔥"];
 const MOTIV_KO=["Pas grave, retiens l'explication.","C'est en révisant qu'on apprend.","La prochaine fois ça rentrera."];
 
+// Mélange les réponses d'un QCM et recale l'index de la bonne.
+// Copie : on ne touche pas au contenu d'origine.
+function melangerQCM(item){
+  if(!item || !Array.isArray(item.opts)) return item;
+  const ordre = item.opts.map((_,i)=>i);
+  for(let i = ordre.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [ordre[i], ordre[j]] = [ordre[j], ordre[i]];
+  }
+  return Object.assign({}, item, {
+    opts: ordre.map(i=>item.opts[i]),
+    c: ordre.indexOf(item.c)
+  });
+}
+
 function startSession(m){
   curMode=m; idx=0; score=0; answers=[];
   flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv="";
   globalSession = false;
   // Chaque entrée porte sa matière + son mode (permet aussi les sessions multi-matières).
   const all = (curSubj[m]||[]).map((item,i)=>({
-    item, mode:m, subj:curSubj, key: cardKey(curSubj.id,m,item,i)
+    // la clé se calcule sur la question d'origine, le mélange ne la perturbe pas
+    item: (m === "qcm" || m === "tr") ? melangerQCM(item) : item,
+    mode:m, subj:curSubj, key: cardKey(curSubj.id,m,item,i)
   }));
   const due    = shuffle(all.filter(x=>  srsIsDue(x.key) ));
   const notDue = shuffle(all.filter(x=> !srsIsDue(x.key) ));
@@ -4628,10 +5044,10 @@ function startGlobalSession(){
   globalSession = true;
   const all = [];
   SUBJECTS.forEach(s=>{
-    ["fc","qcm","oq"].forEach(m=>{
+    ["fc","qcm","oq","tr"].forEach(m=>{
       (s[m]||[]).forEach((item,i)=>{
         const key = cardKey(s.id,m,item,i);
-        if(srsIsDue(key)) all.push({ item, mode:m, subj:s, key });
+        if(srsIsDue(key)) all.push({ item: (m === "qcm" || m === "tr") ? melangerQCM(item) : item, mode:m, subj:s, key });
       });
     });
   });
@@ -4648,7 +5064,7 @@ function renderSess(){
   const cur   = entry.item;
   const mode  = entry.mode;          // le mode vient de la carte (sessions multi-matières)
   curMode = mode;
-  const icons={fc:"🃏",qcm:"⏱️",oq:"✍️"};
+  const icons={fc:"🃏",qcm:"⏱️",oq:"✍️",tr:"🧩"};
   document.getElementById("sess-pos").textContent=icons[mode]+" "+(idx+1)+" / "+queue.length;
   document.getElementById("sess-score").textContent=mk()+" "+score;
   document.getElementById("sess-prog").style.width=(idx/queue.length*100)+"%";
@@ -4662,6 +5078,7 @@ function renderSess(){
   if(lastMotiv){ const d=el("div","motiv"); d.textContent=lastMotiv; body.appendChild(d); }
   if(mode==="fc") renderFC(cur,body);
   else if(mode==="qcm") renderQCM(cur,body);
+  else if(mode==="tr") renderTR(cur,body);
   else renderOQ(cur,body);
 }
 // libellé du prochain rappel, pour afficher sous les boutons
@@ -4871,6 +5288,69 @@ function doGrade(grade, question){
   if(grade === 0) queue.push(queue[idx]);
   advance();
 }
+// ── Texte à trous : même moteur que le QCM, phrase à compléter et 10 s ──
+function renderTR(cur,body){
+  const wrap=el("div","rise");
+  if(!confirmed){
+    timerVal=10;
+    const tr=el("div","timer-row"); tr.innerHTML=`<span class="timer-lbl" id="tlbl">⏰ 10 s</span>`; wrap.appendChild(tr);
+    const tt=el("div","timer-track"); tt.innerHTML=`<div class="timer-bar" id="tbar" style="width:100%"></div>`; wrap.appendChild(tt);
+    clearInterval(timerInt);
+    timerInt=setInterval(()=>{
+      timerVal--;
+      const l=document.getElementById("tlbl"), b=document.getElementById("tbar");
+      if(l){ l.textContent="⏰ "+timerVal+" s"; l.className="timer-lbl"+(timerVal<=3?" red":""); }
+      if(b){ b.style.width=(timerVal/10*100)+"%"; b.className="timer-bar"+(timerVal<=3?" red":""); }
+      if(timerVal<=0){ clearInterval(timerInt); if(!confirmed) doQCM(-1,cur); }
+    },1000);
+  }
+  // la phrase, avec le trou remplacé au bon endroit
+  const ok = confirmed && selOpt === cur.c;
+  const mot = !confirmed ? `<span class="trou vide">?</span>`
+            : ok ? `<span class="trou">${esc(cur.opts[cur.c])}</span>`
+                 : `<span class="trou faux">${esc(selOpt >= 0 ? cur.opts[selOpt] : "…")}</span>`;
+  const phrase = esc(cur.texte || "").replace(/_{2,}|\.\.\./, mot);
+  const qb=el("div","q-box");
+  qb.innerHTML=`<div class="q-text">${phrase}</div>`;
+  wrap.appendChild(qb);
+
+  const opts=el("div","opts");
+  cur.opts.forEach((o,i)=>{
+    const b=el("button","opt");
+    if(confirmed){ if(i===cur.c)b.classList.add("correct"); else if(i===selOpt)b.classList.add("wrong"); b.disabled=true; }
+    const letter=confirmed&&i===cur.c?"✓":confirmed&&i===selOpt?"✗":String.fromCharCode(65+i);
+    b.innerHTML=`<span class="opt-letter">${letter}</span><span>${esc(o)}</span>`;
+    b.addEventListener("click",()=>{ haptic(); doQCM(i,cur); });
+    opts.appendChild(b);
+  });
+  wrap.appendChild(opts);
+
+  if(confirmed){
+    if(!ok){
+      const bonne=el("div","q-box");
+      bonne.innerHTML=`<div class="q-text">${esc(cur.texte||"").replace(/_{2,}|\.\.\./, `<span class="trou">${esc(cur.opts[cur.c])}</span>`)}</div>`;
+      wrap.appendChild(bonne);
+    }
+    if(cur.e){
+      const exp=el("div","expl "+(ok?"good":"bad"));
+      exp.innerHTML=`<div class="expl-label">${ok?"✨ Bonne réponse":"💡 À retenir"}</div><div class="expl-text">${esc(cur.e)}</div>`;
+      wrap.appendChild(exp);
+    }
+    // même notation que les autres modes, pour que le score et la mémorisation suivent
+    const key = queue[idx].key;
+    const question = cur.texte || "";
+    if(ok){
+      wrap.appendChild(gradeRow(key, g=>doGrade(g, question)));
+    } else {
+      const row=el("div","btn-row");
+      const nb=el("button","btn"); nb.textContent=idx+1>=queue.length?"Voir les résultats":"Suivante →";
+      nb.addEventListener("click",()=>doGrade(0, question));
+      row.appendChild(nb); wrap.appendChild(row);
+    }
+  }
+  body.appendChild(wrap);
+}
+
 function doQCM(i,cur){
   if(confirmed)return;
   clearInterval(timerInt);
@@ -5030,6 +5510,12 @@ document.getElementById("edt-link").addEventListener("click",()=>{ haptic(); ope
 document.getElementById("cal-close").addEventListener("click",()=>{ haptic(); closeCalSheet(); });
 document.getElementById("cal-add").addEventListener("click",()=>{ haptic(); editCalendar(null); });
 document.getElementById("cal-sheet").addEventListener("click",e=>{ if(e.target.id==="cal-sheet") closeCalSheet(); });
+document.getElementById("btn-split-home").addEventListener("click",()=>{
+  haptic();
+  // une feuille ouverte doit se refermer, sinon elle resterait par-dessus l'accueil
+  closeForm(); closePicker(); closeCalSheet(); closeSubjSheet();
+  showScreen("semestres");
+});
 document.getElementById("fab-add").addEventListener("click",()=>{
   haptic();
   if(document.getElementById("fab-add").dataset.target === "subjects") addMatiere();
@@ -5063,6 +5549,8 @@ document.getElementById("fs-ok").addEventListener("click",()=>{ haptic(); if(fsS
 document.getElementById("form-sheet").addEventListener("click",e=>{ if(e.target.id==="form-sheet") closeForm(); });
 document.getElementById("btn-session-back").addEventListener("click",()=>{ clearInterval(timerInt); if(globalSession){ renderSemestres(); showScreen("semestres"); } else { showScreen("split"); } });
 document.getElementById("btn-auteurs-back").addEventListener("click",()=>{ setTab(2); showScreen("split"); });
+document.getElementById("btn-dev-back").addEventListener("click",()=>{ setTab(2); showScreen("split"); });
+document.getElementById("btn-plan-back").addEventListener("click",()=>{ showScreen("edt"); });
 // recherche
 document.getElementById("btn-search").addEventListener("click",openSearch);
 // sections repliables de l'accueil
@@ -5208,6 +5696,13 @@ const DATA_UES      = Object.assign({}, UES);
 const DATA_SUBJECTS = SUBJECTS.slice();
 
 // Une matière venue du serveur peut être incomplète : on garantit les tableaux.
+function normChapitre(ch){
+  const o = Object.assign({}, ch||{});
+  if(!Array.isArray(o.sections)) o.sections = [];
+  if(!Array.isArray(o.recap))    o.recap = [];
+  return o;
+}
+
 function normSubject(s){
   const o = Object.assign({}, s||{});
   ["cm","td","fc","qcm","oq","auteurs"].forEach(k=>{ if(!Array.isArray(o[k])) o[k]=[]; });
@@ -5229,6 +5724,20 @@ function applyContent(row){
       const o = normSubject(x); o._own = true;
       o.cm.forEach(ch=>ch._own = true); o.td.forEach(ch=>ch._own = true);
       subs.push(o);
+    });
+    // retouches sur une matière de data.js : la liste de chapitres retouchée
+    // remplace la mienne, et on garde la trace pour pouvoir revenir en arrière
+    const over = (c.overrides && typeof c.overrides === "object") ? c.overrides : {};
+    subs.forEach(sj=>{
+      const o = over[sj.id]; if(!o) return;
+      sj._over = {};
+      ["cm","td"].forEach(type=>{
+        if(!Array.isArray(o[type])) return;
+        sj["_orig_" + type] = sj[type];          // ma version, conservée pour le rétablissement
+        sj[type] = o[type].map(normChapitre);
+        sj._over[type] = true;
+      });
+      if(Array.isArray(o.dev)){ sj.dev = o.dev; sj._over.dev = true; }
     });
     // chapitres ajoutés dans l'app à une matière de data.js
     const extra = (c.extra && typeof c.extra === "object") ? c.extra : {};
@@ -5275,13 +5784,23 @@ async function pushState(){
       // on ne renvoie QUE les ajouts : data.js reste ma source, jamais écrasée
       const ownUes = {};
       Object.keys(UES).forEach(k=>{ if(!(k in DATA_UES)) ownUes[k] = UES[k]; });
-      const extra = {};
+      const extra = {}, overrides = {};
       SUBJECTS.forEach(sj=>{
         if(sj._own) return;
         const cm = sj.cm.filter(ch=>ch._own), td = sj.td.filter(ch=>ch._own);
         if(cm.length || td.length) extra[sj.id] = { cm, td };
+        // une liste retouchée est enregistrée en entier : elle prendra le pas sur data.js
+        if(sj._over){
+          const o = {};
+          ["cm","td"].forEach(type=>{
+            if(sj._over[type]) o[type] = sj[type].filter(ch=>!ch._own && !ch._shared)
+              .map(ch=>({ label:ch.label, sections:ch.sections||[], recap:ch.recap||[] }));
+          });
+          if(sj._over.dev) o.dev = (sj.dev||[]).filter(x=>!x._shared);
+          if(Object.keys(o).length) overrides[sj.id] = o;
+        }
       });
-      patch.content = { ues: ownUes, subjects: SUBJECTS.filter(x=>x._own), extra };
+      patch.content = { ues: ownUes, subjects: SUBJECTS.filter(x=>x._own), extra, overrides };
     }else{
       patch.content = { ues: UES, subjects: SUBJECTS };
     }
