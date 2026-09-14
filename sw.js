@@ -3,14 +3,14 @@
 // afin que tu aies toujours la dernière version quand tu as du réseau,
 // mais que le site reste utilisable sans connexion.
 
-const CACHE = "revision-v3";
+const CACHE = "revision-v7";
 const ASSETS = [
   "./",
   "./index.html",
   "./data.js",
 ];
 
-// À l'installation : on met la page en cache.
+// À l'installation : on met la page en cache et on prend la main tout de suite.
 self.addEventListener("install", e => {
   e.waitUntil(
     caches.open(CACHE)
