@@ -891,6 +891,16 @@ a.lien{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--ac
   padding-bottom:1px;word-break:break-word;}
 a.lien::after{content:" ↗";font-size:.8em;opacity:.7;border:none;}
 a.lien:active{background:var(--accent-soft);border-radius:4px;}
+.bilan{margin-top:14px;padding:15px 16px;border-radius:16px;
+  background:var(--surface);border:1px solid var(--border);}
+.bilan-titre{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--text-mute);margin-bottom:11px;}
+.bilan-score{font-family:var(--font-display);font-size:15px;color:var(--text);margin-bottom:12px;}
+.bilan-mots{display:flex;flex-wrap:wrap;gap:7px;}
+.bmot{border-radius:9px;padding:5px 11px;font-size:12.5px;font-weight:600;}
+.bmot.vu{background:var(--accent-soft);color:var(--accent);}
+.bmot.rate{background:rgba(255,107,107,.14);color:#ff8080;}
+.bilan-lbl{font-size:11.5px;color:var(--text-mute);margin:12px 0 6px;}
 .trou{display:inline-block;min-width:88px;text-align:center;
   padding:2px 12px;margin:0 3px;border-radius:8px;
   background:var(--accent-soft);color:var(--accent);font-weight:700;
@@ -1842,6 +1852,7 @@ let flipped = false, selOpt = null, confirmed = false;
 let sessionDueOnly = false;
 let globalSession = false;
 let showAns = false, showHint = false, lastMotiv = "";
+let oqEcrit = "";   // ce qui est tapé dans une question ouverte, gardé le temps de la carte
 let timerVal = 20, timerInt = null;
 let _prevScreen = "semestres";
 const stats = {};
@@ -2472,9 +2483,10 @@ function publishFromClass(c){
     const nQcm = (sj.qcm||[]).filter(x=>!x._shared).length;
     const nOq  = (sj.oq ||[]).filter(x=>!x._shared).length;
     const nDev = (sj.dev||[]).filter(x=>!x._shared).length;
-    if(nFc + nQcm + nOq + nDev){
+    const nTr  = (sj.tr ||[]).filter(x=>!x._shared).length;
+    if(nFc + nQcm + nOq + nDev + nTr){
       opts.push({ label:"Exercices de révision",
-        sub:`${nFc} fiches · ${nQcm} QCM · ${nOq} questions · ${nDev} devoirs`, value:"revision" });
+        sub:`${nFc} fiches · ${nQcm} QCM · ${nTr} trous · ${nOq} questions · ${nDev} devoirs`, value:"revision" });
     }
     setTimeout(()=>openPicker("Quoi publier ?", opts, val=>{
       let payload, kind;
@@ -2486,6 +2498,7 @@ function publishFromClass(c){
           qcm: (sj.qcm||[]).filter(x=>!x._shared),
           oq:  (sj.oq ||[]).filter(x=>!x._shared),
           dev: (sj.dev||[]).filter(x=>!x._shared),
+          tr:  (sj.tr ||[]).filter(x=>!x._shared),
           auteurs: (sj.auteurs||[]).filter(x=>!x._shared)
         };
       }else{
@@ -2522,7 +2535,7 @@ async function openSharedItem(it){
   if(it.kind === "revision"){
     const n = c => (payload[c]||[]).length;
     const d = el("div","empty-note");
-    d.innerHTML = `${n("fc")} fiches · ${n("qcm")} QCM · ${n("oq")} questions · ${n("dev")} devoirs corrigés<br>
+    d.innerHTML = `${n("fc")} fiches · ${n("qcm")} QCM · ${n("tr")} textes à trous · ${n("oq")} questions · ${n("dev")} devoirs<br>
       Ajoute-les à une de tes matières pour les réviser.`;
     box.appendChild(d);
   }else{
@@ -2746,7 +2759,7 @@ async function syncFollows(){
 // Les chapitres suivis apparaissent dans la matière choisie, en lecture seule.
 function injectFollowed(){
   SUBJECTS.forEach(sj=>{
-    ["cm","td","fc","qcm","oq","auteurs","dev"].forEach(champ=>{
+    ["cm","td","fc","qcm","oq","auteurs","dev","tr"].forEach(champ=>{
       sj[champ] = (sj[champ]||[]).filter(x=>!x._shared);
     });
   });
@@ -2755,7 +2768,7 @@ function injectFollowed(){
     if(kind === "revision"){
       // les cartes portent une clé calculée sur leur question, pas sur leur rang :
       // les ajouter ne perturbe donc pas la progression existante
-      ["fc","qcm","oq","auteurs","dev"].forEach(champ=>{
+      ["fc","qcm","oq","auteurs","dev","tr"].forEach(champ=>{
         (payload[champ]||[]).forEach(x=>{
           sj[champ] = sj[champ] || [];
           sj[champ].push(Object.assign({}, x, { _shared:true, _itemId:itemId }));
@@ -3892,7 +3905,9 @@ function renderTodayCourses(){
   box.innerHTML = ""; box.hidden = true;
   renderNextCourse();
   demarrerHorlogeCours();
-  if(edtState !== "ok" && edtState !== "stale") return;
+  // la liste du jour a été retirée de l'accueil : le panneau au-dessus suffit,
+  // et « Tout voir » mène à l'emploi du temps complet.
+  return;
 
   const now = new Date();
   let evs = eventsOn(now);
@@ -3904,9 +3919,10 @@ function renderTodayCourses(){
     if(next.length){ evs = next; label = "Demain"; }
   }
   if(!evs.length) return;
-  // un seul cours à venir, déjà affiché en grand juste au-dessus : on ne le répète pas
-  const restants = evs.filter(e=>(e.end||e.start) >= now);
-  if(restants.length <= 1 && evs.every(e=>evKey(e) === NEXT_EV_KEY || (e.end||e.start) < now)) return;
+  // le cours déjà affiché en grand au-dessus sort de la liste, quel que soit
+  // le nombre de créneaux du jour. S'il ne reste rien, la carte disparaît.
+  evs = evs.filter(e=>evKey(e) !== NEXT_EV_KEY);
+  if(!evs.length) return;
 
   box.hidden = false;
   const card = el("div","today-card rise");
@@ -5111,7 +5127,7 @@ function melangerQCM(item){
 
 function startSession(m){
   curMode=m; idx=0; score=0; answers=[];
-  flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv="";
+  flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv=""; oqEcrit="";
   globalSession = false;
   // Chaque entrée porte sa matière + son mode (permet aussi les sessions multi-matières).
   const all = (curSubj[m]||[]).map((item,i)=>({
@@ -5131,7 +5147,7 @@ function startSession(m){
 // ── Session globale : toutes les cartes dues, toutes matières confondues ──
 function startGlobalSession(){
   idx=0; score=0; answers=[];
-  flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv="";
+  flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv=""; oqEcrit="";
   globalSession = true;
   const all = [];
   SUBJECTS.forEach(s=>{
@@ -5308,11 +5324,50 @@ function renderQCM(cur,body){
   }
   body.appendChild(wrap);
 }
+// ══════════════════════════════════════════════════
+// COMPARAISON LOCALE : quelles notions du corrigé se retrouvent
+// dans ce qui a été écrit. Aucun réseau, aucun coût.
+// ══════════════════════════════════════════════════
+const MOTS_VIDES = new Set(("le la les un une des du de d au aux et ou ou mais donc or ni car que qui quoi dont ou " +
+  "a as ai est sont etre etait ete avoir avait ce cet cette ces son sa ses leur leurs il elle ils elles on nous vous " +
+  "je tu me te se lui y en dans sur sous pour par avec sans vers chez entre plus moins tres tout tous toute toutes " +
+  "meme aussi alors ainsi comme quand si ne pas non oui plutot peut peuvent doit doivent fait faire cela ceux celui " +
+  "celle autre autres chaque leur lors apres avant deja encore bien beaucoup").split(" "));
+
+function normMot(m){
+  return m.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9-]/g,"");
+}
+// Racine grossière : « inégalités » et « inégalité » doivent se reconnaître.
+function racine(m){
+  return m.replace(/(aux|ales|elles|ements|ement|ations|ation|ismes|isme|istes|iste|ives|ive|eurs|eur|ees|ee|es|s|x)$/,"");
+}
+function motsClefs(txt){
+  const vus = new Map();
+  String(txt||"").split(/[\s'’,;.:!?()«»"]+/).forEach(m=>{
+    const n = normMot(m);
+    if(n.length < 4 || MOTS_VIDES.has(n)) return;
+    const r = racine(n);
+    if(!vus.has(r)) vus.set(r, m.replace(/[,;.:!?()«»"]/g,""));
+  });
+  return vus;
+}
+
+function comparerReponse(ecrit, modele){
+  const cible = motsClefs(modele);
+  const mien  = new Set([...motsClefs(ecrit).keys()]);
+  const vus = [], rates = [];
+  cible.forEach((mot, r)=>{ (mien.has(r) ? vus : rates).push(mot); });
+  return { vus, rates, total: cible.size };
+}
+
 function renderOQ(cur,body){
   const wrap=el("div","rise");
   const qb=el("div","q-box"); qb.innerHTML=`<div class="q-text">${esc(cur.q)}</div>`; wrap.appendChild(qb);
   if(!showAns){
-    const ta=document.createElement("textarea"); ta.placeholder="Ta réponse ici…"; wrap.appendChild(ta);
+    const ta=document.createElement("textarea"); ta.placeholder="Ta réponse ici…"; ta.id="oq-ta";
+    ta.value = oqEcrit;
+    ta.addEventListener("input",()=>{ oqEcrit = ta.value; });
+    wrap.appendChild(ta);
     const row=el("div","btn-row");
     const hb=el("button","btn ghost"); hb.textContent=showHint?"🙈 Cacher":"💡 Indice"; hb.addEventListener("click",()=>{showHint=!showHint;renderSess();});
     const sb=el("button","btn"); sb.textContent="Voir la correction ✨"; sb.addEventListener("click",()=>{showAns=true;renderSess();});
@@ -5320,6 +5375,33 @@ function renderOQ(cur,body){
     if(showHint){ const h=el("div","hint-box"); h.textContent="💡 "+cur.a.split("\n")[0].substring(0,90)+"…"; wrap.appendChild(h); }
   } else {
     const ab=el("div","ans-box"); ab.innerHTML=`<div class="ans-label">✨ Réponse modèle</div><div class="ans-text">${esc(cur.a)}</div>`; wrap.appendChild(ab);
+
+    // bilan : ce que tu as écrit, confronté au corrigé
+    if(oqEcrit.trim().length > 8){
+      const b = comparerReponse(oqEcrit, cur.a);
+      const box = el("div","bilan");
+      const pct = b.total ? Math.round(b.vus.length / b.total * 100) : 0;
+      box.innerHTML = `<div class="bilan-titre">Ce que tu as couvert</div>
+        <div class="bilan-score">${b.vus.length} notion${b.vus.length>1?"s":""} sur ${b.total} · ${pct} %</div>`;
+      if(b.vus.length){
+        const l = el("div","bilan-lbl"); l.textContent = "Présentes dans ta réponse";
+        l.style.marginTop = "0";
+        const z = el("div","bilan-mots");
+        z.innerHTML = b.vus.slice(0,18).map(m=>`<span class="bmot vu">${esc(m)}</span>`).join("");
+        box.appendChild(l); box.appendChild(z);
+      }
+      if(b.rates.length){
+        const l = el("div","bilan-lbl"); l.textContent = "Absentes du texte que tu as écrit";
+        const z = el("div","bilan-mots");
+        z.innerHTML = b.rates.slice(0,18).map(m=>`<span class="bmot rate">${esc(m)}</span>`).join("");
+        box.appendChild(l); box.appendChild(z);
+      }
+      const note = el("div","bilan-lbl");
+      note.textContent = "Comparaison de mots, pas de sens : à toi de juger si l'idée y était.";
+      box.appendChild(note);
+      wrap.appendChild(box);
+    }
+
     const sq=el("p","self-q"); sq.textContent="Tu t'en sortais comment ?"; wrap.appendChild(sq);
     wrap.appendChild(gradeRow(queue[idx].key, g=>doGrade(g, cur.q)));
   }
@@ -5796,7 +5878,7 @@ function normChapitre(ch){
 
 function normSubject(s){
   const o = Object.assign({}, s||{});
-  ["cm","td","fc","qcm","oq","auteurs"].forEach(k=>{ if(!Array.isArray(o[k])) o[k]=[]; });
+  ["cm","td","fc","qcm","oq","auteurs","dev","tr"].forEach(k=>{ if(!Array.isArray(o[k])) o[k]=[]; });
   return o;
 }
 
