@@ -3,7 +3,7 @@
 // afin que tu aies toujours la dernière version quand tu as du réseau,
 // mais que le site reste utilisable sans connexion.
 
-const CACHE = "revision-v7";
+const CACHE = "revision-v8";
 const ASSETS = [
   "./",
   "./index.html",
