@@ -866,6 +866,28 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 .mem-act.go{background:var(--accent);color:#fff;border-color:transparent;}
 .res-group{font-family:var(--font-display);font-size:13px;font-weight:700;
   color:var(--text-mute);margin:18px 0 8px 4px;}
+.pli{margin-top:10px;}
+.pli-head{width:100%;display:flex;align-items:center;gap:10px;cursor:pointer;text-align:left;
+  background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 16px;
+  color:var(--text);font-family:var(--font-text);font-size:14px;transition:border-color .25s;}
+.pli.open>.pli-head{border-color:var(--border-strong);}
+.pli-title{flex:1;min-width:0;}
+.pli-head.mat .pli-title{font-family:var(--font-display);font-weight:700;font-size:15.5px;}
+.pli-head.kind{background:transparent;border:none;border-radius:10px;padding:10px 6px;}
+.pli-head.kind .pli-title{font-family:var(--font-display);font-size:13.5px;font-weight:700;color:var(--text-soft);}
+.pli-count{flex-shrink:0;font-size:11.5px;font-weight:700;font-variant-numeric:tabular-nums;
+  border-radius:999px;padding:2px 9px;background:var(--accent-soft);color:var(--accent);}
+.pli-tag{flex-shrink:0;font-size:10.5px;font-weight:700;color:var(--text-mute);}
+.pli-chev{width:18px;height:18px;flex-shrink:0;color:var(--text-mute);
+  transition:transform .3s var(--ease-spring),color .25s;}
+.pli-chev svg{width:18px;height:18px;display:block;}
+.pli.open>.pli-head .pli-chev{transform:rotate(90deg);color:var(--accent);}
+.pli-body{display:grid;grid-template-rows:0fr;opacity:0;
+  transition:grid-template-rows .34s var(--ease-spring),opacity .24s ease;}
+.pli.open>.pli-body{grid-template-rows:1fr;opacity:1;}
+.pli-inner{min-height:0;overflow:hidden;padding:4px 0 2px 12px;}
+.pli-inner.flat{padding-left:2px;}
+.pli-follow{display:flex;justify-content:flex-end;padding:8px 2px 2px;}
 /* ── prochain cours ── */
 .next-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);
   padding:16px 18px;margin-bottom:12px;box-shadow:0 4px 18px var(--shadow);
@@ -2200,6 +2222,34 @@ function closePicker(){ document.getElementById("pick-sheet").classList.remove("
 
 const KIND_LABEL = { cm:"Cours magistraux", td:"Travaux dirigés", devoir:"Devoirs", revision:"Révisions" };
 
+// Blocs repliables de l'écran d'une classe. Repliés par défaut ;
+// on se souvient de ceux qu'on a ouverts pour que l'écran ne se referme
+// pas à chaque action (suivre, nommer un adjoint…).
+const PLIS_OUVERTS = new Set();
+function pli(cle, titre, opts = {}){
+  const wrap = el("div","pli" + (PLIS_OUVERTS.has(cle) ? " open" : ""));
+  const head = el("button","pli-head" + (opts.style ? " " + opts.style : ""));
+  head.type = "button";
+  const t = el("span","pli-title");
+  const majTitre = ()=>{ t.textContent = typeof titre === "function" ? titre(wrap.classList.contains("open")) : titre; };
+  majTitre();
+  head.appendChild(t);
+  if(opts.tag){ const g = el("span","pli-tag"); g.textContent = opts.tag; head.appendChild(g); }
+  if(opts.count != null){ const n = el("span","pli-count"); n.textContent = opts.count; head.appendChild(n); }
+  const ch = el("span","pli-chev"); ch.innerHTML = chevronR; head.appendChild(ch);
+  const body = el("div","pli-body");
+  const inner = el("div","pli-inner" + (opts.flat ? " flat" : ""));
+  body.appendChild(inner);
+  head.addEventListener("click",()=>{
+    haptic();
+    const ouvert = wrap.classList.toggle("open");
+    if(ouvert) PLIS_OUVERTS.add(cle); else PLIS_OUVERTS.delete(cle);
+    majTitre();
+  });
+  wrap.appendChild(head); wrap.appendChild(body);
+  return { wrap, inner };
+}
+
 // Emballe une ligne pour qu'un glissement vers la gauche révèle « Retirer ».
 function swipeRow(node, actions, flat){
   const larg  = 116 * actions.length;
@@ -2367,8 +2417,10 @@ async function openClass(c){
   if(monRole === "owner"){
     const valides = membres.filter(m=>m.role === "membre" || m.role === "adjoint");
     if(valides.length){
-      const t = el("div","kind-head"); t.textContent = "Membres";
-      box.appendChild(t);
+      const p = pli(c.id + "|membres", o => o ? "Masquer les membres" : "Voir les membres",
+                    { count: valides.length, flat:true });
+      p.wrap.style.marginTop = "16px";
+      box.appendChild(p.wrap);
       valides.forEach(m=>{
         const row = el("div","mem-row");
         const nm = el("div","mem-name");
@@ -2377,7 +2429,7 @@ async function openClass(c){
         b.textContent = m.role === "adjoint" ? "Retirer l'adjoint" : "Nommer adjoint";
         b.addEventListener("click",()=>setRole(c, m.pseudo, m.role === "adjoint" ? "membre" : "adjoint"));
         row.appendChild(nm); row.appendChild(b);
-        box.appendChild(row);
+        p.inner.appendChild(row);
       });
     }
   }
@@ -2403,24 +2455,27 @@ async function openClass(c){
   }
   const parMatiere = {};
   items.forEach(it=>{ (parMatiere[it.subject_title] ||= []).push(it); });
-  Object.keys(parMatiere).sort().forEach(mat=>{
+  Object.keys(parMatiere)
+    .sort((x,y)=>x.localeCompare(y,"fr",{ sensitivity:"base" }))
+    .forEach(mat=>{
     const suivie = isSubFollowed(c.id, mat);
-    const t = el("div","kind-head");
-    t.style.color = "var(--accent)";
-    t.style.display = "flex";
-    t.style.alignItems = "center";
-    t.style.gap = "10px";
-    const nom = el("span"); nom.textContent = mat; nom.style.flex = "1";
+    const tous = parMatiere[mat];
+    const pm = pli(c.id + "|" + mat, mat, {
+      style:"mat", count: tous.length, tag: suivie ? "Suivie" : ""
+    });
+    box.appendChild(pm.wrap);
+    // suivre toute la matière : dans le bloc, pour garder l'en-tête lisible
+    const fl = el("div","pli-follow");
     const b = el("button","mem-act" + (suivie ? "" : " go"));
     b.textContent = suivie ? "Suivie" : "Tout suivre";
     b.addEventListener("click",()=>{ haptic(); followSubject(c, mat); });
-    t.appendChild(nom); t.appendChild(b);
-    box.appendChild(t);
+    fl.appendChild(b); pm.inner.appendChild(fl);
     ["cm","td","devoir","revision"].forEach(k=>{
-      const list = parMatiere[mat].filter(x=>x.kind === k);
+      const list = tous.filter(x=>x.kind === k);
       if(!list.length) return;
-      const sub = el("div","res-group"); sub.textContent = KIND_LABEL[k];
-      box.appendChild(sub);
+      const pk = pli(c.id + "|" + mat + "|" + k, KIND_LABEL[k], { style:"kind", count: list.length, flat:true });
+      pk.wrap.style.marginTop = "4px";
+      pm.inner.appendChild(pk.wrap);
       list.forEach(it=>{
         const parMatiere = !!subFollowOf(it);
         const dansMesCours = isFollowed(it.id) || parMatiere;
@@ -2442,7 +2497,9 @@ async function openClass(c){
           unfollowItem(it.id); toast("Retiré de tes cours."); openClass(c);
         }});
         if(aMoi) actions.push({ label:"Dépublier", fn:()=>depublier(c, it) });
-        box.appendChild(actions.length ? swipeRow(row, actions) : row);
+        const ligne = actions.length ? swipeRow(row, actions) : row;
+        ligne.style.marginBottom = "8px";
+        pk.inner.appendChild(ligne);
       });
     });
   });
