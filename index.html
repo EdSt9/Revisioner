@@ -888,6 +888,35 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 .pli-inner{min-height:0;overflow:hidden;padding:4px 0 2px 12px;}
 .pli-inner.flat{padding-left:2px;}
 .pli-follow{display:flex;justify-content:flex-end;padding:8px 2px 2px;}
+/* ── lecture à voix haute ── */
+.lec-start{display:inline-flex;align-items:center;gap:8px;margin:4px 0 14px;cursor:pointer;
+  background:var(--accent-soft);color:var(--accent);border:1px solid var(--border);
+  border-radius:999px;padding:9px 16px 9px 13px;font-family:var(--font-text);font-size:13.5px;font-weight:600;}
+.lec-start svg{width:18px;height:18px;flex-shrink:0;}
+.lec-calque{position:absolute;left:0;top:0;width:0;height:0;pointer-events:none;z-index:4;}
+.lec-calque>div{position:absolute;border-radius:5px;}
+.lec-calque.lec-phrase>div{background:var(--accent);opacity:.10;}
+.lec-calque.lec-mot>div{background:var(--accent);opacity:.42;}
+.lec-start:active{transform:scale(.97);}
+.section.tts-on .card,.recap.tts-on{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);
+  transition:border-color .3s,box-shadow .3s;}
+.section.tts-on .section-title{color:var(--accent);}
+.section,.recap{scroll-margin-top:150px;}
+.lec-bar{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 18px);z-index:58;
+  transform:translateX(-50%) translateY(140%);transition:transform .35s var(--ease-spring);
+  display:flex;align-items:center;gap:4px;padding:7px;border-radius:999px;
+  background:var(--surface-solid);border:1px solid var(--border-strong);
+  box-shadow:0 10px 34px rgba(0,0,0,.35),0 0 0 1px var(--border);max-width:calc(100vw - 32px);}
+.lec-bar.show{transform:translateX(-50%) translateY(0);}
+.lec-btn{flex-shrink:0;width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;
+  display:grid;place-items:center;background:transparent;color:var(--text-soft);padding:0;
+  font-family:var(--font-text);font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;}
+.lec-btn svg{width:20px;height:20px;display:block;}
+.lec-btn:active{transform:scale(.9);}
+.lec-btn.lec-play{width:50px;height:50px;background:var(--accent);color:#fff;box-shadow:0 6px 18px var(--accent-glow);}
+.lec-btn.lec-play svg{width:22px;height:22px;}
+.lec-btn.lec-speed{width:auto;min-width:46px;padding:0 8px;border-radius:21px;color:var(--accent);font-size:12.5px;}
+body.lec-on .screen.active::after{content:"";display:block;height:96px;}
 /* ── prochain cours ── */
 .next-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);
   padding:16px 18px;margin-bottom:12px;box-shadow:0 4px 18px var(--shadow);
@@ -2661,8 +2690,441 @@ async function openSharedItem(it){
   box.appendChild(suivre);
 }
 
+// ── LECTURE À VOIX HAUTE ──
+// Utilise les voix déjà installées sur l'appareil (Web Speech API) :
+// gratuit, sans serveur, et ça marche même hors ligne.
+// On lit phrase par phrase : Safari et Chrome coupent les textes trop longs.
+// Chaque mot lu garde un lien vers sa place dans la page : c'est ce qui permet
+// de le surligner, et de reprendre la lecture là où on touche le texte.
+var TTS_OK = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+var HL_OK = typeof Highlight !== "undefined" && typeof CSS !== "undefined" && !!CSS.highlights;
+var LEC = { phrases:[], i:0, depuis:0, blocs:[], racine:null, actif:false, pause:false, jeton:0,
+            voix:null, bar:null, blocCourant:-1, motsSignales:false, minuteur:null, toucheA:0 };
+const LEC_VITESSES = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+function lecLire(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lecEcrire(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+LEC.vitesse = parseFloat(lecLire("lec-vitesse")) || 1;
+if(!LEC_VITESSES.includes(LEC.vitesse))
+  LEC.vitesse = LEC_VITESSES.reduce((a,b)=>Math.abs(b-LEC.vitesse) < Math.abs(a-LEC.vitesse) ? b : a, 1);
+if(TTS_OK && "onvoiceschanged" in speechSynthesis) speechSynthesis.onvoiceschanged = ()=>{ LEC.voix = null; };
+
+function voixFrancaises(){
+  return TTS_OK ? speechSynthesis.getVoices().filter(v=>/^fr/i.test(v.lang)) : [];
+}
+// La qualité se lit dans l'identifiant de la voix (ex. com.apple.voice.enhanced.fr-FR.Thomas).
+function lecQualite(v){
+  const id = ((v.voiceURI || "") + " " + (v.name || "")).toLowerCase();
+  if(/premium/.test(id)) return "premium";
+  if(/enhanced|amélior|neural|natural/.test(id)) return "améliorée";
+  if(/compact|super-?compact/.test(id)) return "compacte";
+  return "";
+}
+function choisirVoix(){
+  const vs = voixFrancaises();
+  if(!vs.length) return null;
+  const memo = lecLire("lec-voix");
+  const rang = v => ({ premium:3, "améliorée":2, "":1, compacte:0 })[lecQualite(v)];
+  // choix mémorisé par identifiant ; sinon par nom, en prenant la meilleure version de cette voix
+  const perso = vs.find(v=>v.voiceURI && v.voiceURI === memo)
+    || vs.filter(v=>v.name === memo).sort((a,b)=>rang(b)-rang(a))[0];
+  if(perso) return perso;
+  // les voix « améliorées » d'iOS sont bien plus naturelles : on les préfère
+  const score = v => (/fr[-_]FR/i.test(v.lang) ? 4 : 0)
+    + (lecQualite(v) === "premium" ? 6 : lecQualite(v) === "améliorée" ? 3 : 0)
+    + (/Amélie|Audrey|Aurélie|Marie|Thomas|Denise|Julie/i.test(v.name) ? 2 : 0)
+    + (v.localService ? 1 : 0);
+  return vs.slice().sort((a,b)=>score(b)-score(a))[0];
+}
+
+const LEC_MOIS = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+// Ce qui s'affiche bien mais se lit mal. Appliqué mot par mot,
+// pour que chaque morceau prononcé corresponde toujours à un mot de la page.
+function motPourLaVoix(m){
+  if(/^https?:\/\//.test(m)) return "";
+  if(m === "→" || m === "⇒") return ", puis,";
+  if(m === "·") return ".";
+  if(m === "+") return "plus";
+  if(m === "p.") return "page";
+  return m
+    .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, "")
+    .replace(/\((?:\.\.\.|…)\)/g, "")
+    .replace(/^CàR/, "conduites à risque")
+    .replace(/^XVIIIe/, "dix-huitième").replace(/^XIXe/, "dix-neuvième")
+    .replace(/^XXIe/, "vingt-et-unième").replace(/^XXe/, "vingtième")
+    .replace(/\b(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?\b/g, (x,j,mo,a)=>{
+      const k = +mo;
+      if(k < 1 || k > 12 || +j < 1 || +j > 31) return x;
+      return (+j === 1 ? "premier" : String(+j)) + " " + LEC_MOIS[k-1] + (a ? " " + (a.length === 2 ? "20" + a : a) : "");
+    })
+    .replace(/(\d)[-–](\d)/g, "$1 à $2")
+    .trim();
+}
+
+// Découpe un élément de la page en mots, en gardant pour chacun sa position exacte.
+function motsDe(elem){
+  const txt = [], pos = [];          // pos[k] = { n: nœud texte, o: décalage } pour chaque caractère
+  const w = document.createTreeWalker(elem, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT);
+  let n;
+  while((n = w.nextNode())){
+    if(n.nodeType === 1){ if(n.tagName === "BR"){ txt.push("\n"); pos.push(null); } continue; }
+    const v = n.nodeValue;
+    for(let k = 0; k < v.length; k++){ txt.push(v[k]); pos.push({ n, o:k }); }
+  }
+  const brut = txt.join("");
+  const mots = [];
+  const re = /\S+/g; let m, fin = 0;
+  while((m = re.exec(brut))){
+    const a = pos[m.index], z = pos[m.index + m[0].length - 1];
+    const ligne = /\n/.test(brut.slice(fin, m.index));   // un <br> avant ce mot : nouvelle phrase
+    fin = m.index + m[0].length;
+    if(!a || !z) continue;
+    mots.push({ brut:m[0], dit:motPourLaVoix(m[0]), n1:a.n, o1:a.o, n2:z.n, o2:z.o + 1, ligne });
+  }
+  return mots;
+}
+// Regroupe les mots en phrases courtes.
+function phrasesDe(mots, b){
+  const out = [];
+  let cur = [], long = 0;
+  const pousser = ()=>{ if(cur.some(t=>t.dit)) out.push({ b, toks:cur }); cur = []; long = 0; };
+  mots.forEach(t=>{
+    if(t.ligne && cur.length) pousser();
+    cur.push(t); long += t.dit.length + 1;
+    if(/[.!?…][»")\]]*$/.test(t.brut) && t.brut !== "p.") pousser();
+    else if(long > 200 && /[,;:]$/.test(t.brut)) pousser();
+  });
+  pousser();
+  return out;
+}
+// On lit ce qui est affiché : titres, textes, listes, puis « À retenir ».
+function construireFile(root){
+  const blocs = [...root.querySelectorAll(".section, .recap")];
+  const phrases = [];
+  blocs.forEach((b,bi)=>{
+    const morceaux = b.classList.contains("recap")
+      ? [b.querySelector(".recap-label"), ...b.querySelectorAll(".recap-item > span:last-child")]
+      : [b.querySelector(".section-title"), b.querySelector(".card-body"), ...b.querySelectorAll(".card-list .li-text")];
+    morceaux.filter(Boolean).forEach(e=>phrasesDe(motsDe(e), bi).forEach(p=>phrases.push(p)));
+  });
+  return { blocs, phrases };
+}
+
+function lecPlage(t1, t2){
+  try{ const r = document.createRange(); r.setStart(t1.n1, t1.o1); r.setEnd(t2.n2, t2.o2); return r; }
+  catch(e){ return null; }
+}
+// Surlignage dessiné par-dessus le texte, avec des rectangles qu'on efface
+// vraiment à chaque mot. (L'API Highlight laissait des traces sur iPhone.)
+const LEC_CALQUES = {};
+function lecSurligner(nom, r){
+  let calque = LEC_CALQUES[nom];
+  if(!r){ if(calque) calque.innerHTML = ""; return; }
+  if(!calque){
+    calque = LEC_CALQUES[nom] = el("div","lec-calque " + nom);
+    document.body.appendChild(calque);
+  }
+  // une boîte par ligne : on fusionne les morceaux d'une même ligne
+  const lignes = [];
+  [...r.getClientRects()].forEach(b=>{
+    if(b.width < 1 || b.height < 1) return;
+    const l = lignes.find(x=>Math.abs(x.top - b.top) < b.height * 0.5);
+    if(l){ l.left = Math.min(l.left, b.left); l.right = Math.max(l.right, b.right);
+           l.top = Math.min(l.top, b.top); l.bottom = Math.max(l.bottom, b.bottom); }
+    else lignes.push({ left:b.left, right:b.right, top:b.top, bottom:b.bottom });
+  });
+  calque.innerHTML = "";
+  lignes.forEach(l=>{
+    const d = document.createElement("div");
+    d.style.cssText = `left:${l.left + scrollX - 2}px;top:${l.top + scrollY}px;` +
+                      `width:${l.right - l.left + 4}px;height:${l.bottom - l.top}px`;
+    calque.appendChild(d);
+  });
+}
+function lecMarquerBloc(bi){
+  if(bi === LEC.blocCourant) return;
+  LEC.blocs.forEach(b=>b.classList.remove("tts-on"));
+  LEC.blocCourant = bi;
+  if(LEC.blocs[bi]) LEC.blocs[bi].classList.add("tts-on");
+}
+// Faire suivre la page, sauf si la personne est en train de faire défiler elle-même.
+function lecSuivre(r){
+  if(!r || Date.now() - LEC.toucheA < 4000) return;
+  const box = r.getBoundingClientRect();
+  if(!box.height) return;
+  if(box.top < 170 || box.bottom > innerHeight - 130)
+    window.scrollBy({ top: box.top - innerHeight * 0.33, behavior:"smooth" });
+}
+function lecMot(p, k){
+  const t = p.toks[k];
+  if(t) lecSurligner("lec-mot", lecPlage(t, t));
+}
+function lecArreterMinuteur(){ if(LEC.minuteur){ clearTimeout(LEC.minuteur); LEC.minuteur = null; } }
+
+function lecDire(){
+  if(!LEC.actif || LEC.pause) return;
+  if(LEC.i >= LEC.phrases.length){ lecteurStop(); toast("Lecture terminée."); return; }
+  const p = LEC.phrases[LEC.i];
+  const depuis = Math.min(LEC.depuis || 0, p.toks.length - 1);
+  LEC.depuis = 0;
+  // le texte prononcé, et où commence chaque mot dedans
+  let texte = "";
+  const debuts = [];
+  for(let k = depuis; k < p.toks.length; k++){
+    const d = p.toks[k].dit;
+    debuts.push({ k, a: texte.length + (texte && d ? 1 : 0) });
+    if(d) texte += (texte ? " " : "") + d;
+  }
+  if(!texte.trim()){ LEC.i++; lecDire(); return; }
+  if(!/[.!?…:;,]$/.test(texte)) texte += ".";
+
+  lecMarquerBloc(p.b);
+  const rPhrase = lecPlage(p.toks[depuis], p.toks[p.toks.length - 1]);
+  lecSurligner("lec-phrase", rPhrase);
+  lecMot(p, debuts.find(x=>p.toks[x.k].dit) ? debuts.find(x=>p.toks[x.k].dit).k : depuis);
+  lecSuivre(rPhrase);
+
+  const u = new SpeechSynthesisUtterance(texte);
+  if(!LEC.voix) LEC.voix = choisirVoix();
+  // la langue doit être celle de la voix : sinon l'iPhone ignore la voix choisie
+  u.lang = LEC.voix ? LEC.voix.lang : "fr-FR";
+  if(LEC.voix) u.voice = LEC.voix;
+  u.rate = LEC.vitesse;
+  const jeton = LEC.jeton;
+  const motA = ci => { let k = debuts[0].k; debuts.forEach(x=>{ if(x.a <= ci && p.toks[x.k].dit) k = x.k; }); return k; };
+  // la voix signale chaque mot : on suit exactement
+  u.onboundary = e=>{
+    if(jeton !== LEC.jeton || (e.name && e.name !== "word")) return;
+    LEC.motsSignales = true; lecArreterMinuteur();
+    lecMot(p, motA(e.charIndex));
+  };
+  // certaines voix ne signalent rien : on avance à l'estimation
+  u.onstart = ()=>{
+    if(jeton !== LEC.jeton || LEC.motsSignales) return;
+    const cps = 14 * LEC.vitesse;          // caractères prononcés par seconde, environ
+    let j = 0;
+    const suite = ()=>{
+      if(jeton !== LEC.jeton || LEC.motsSignales || LEC.pause) return;
+      const x = debuts[j]; if(!x) return;
+      if(p.toks[x.k].dit) lecMot(p, x.k);
+      const nxt = debuts[j + 1];
+      j++;
+      if(nxt) LEC.minuteur = setTimeout(suite, Math.max(90, (nxt.a - x.a) / cps * 1000));
+    };
+    suite();
+  };
+  const apres = ()=>{
+    if(jeton !== LEC.jeton || !LEC.actif || LEC.pause) return;   // interrompu volontairement
+    lecArreterMinuteur();
+    LEC.i++; lecDire();
+  };
+  u.onend = apres;
+  u.onerror = apres;
+  speechSynthesis.speak(u);
+}
+// Couper la phrase en cours sans déclencher la suivante.
+function lecCouper(){ LEC.jeton++; lecArreterMinuteur(); try{ speechSynthesis.cancel(); }catch(e){} }
+function lecRelancer(){
+  lecCouper();
+  // Safari ignore parfois un speak() collé à un cancel()
+  setTimeout(lecDire, 80);
+}
+
+// Toucher un mot pendant la lecture : on reprend à ce mot.
+function lecPositionTouchee(x, y){
+  if(document.caretPositionFromPoint){
+    const c = document.caretPositionFromPoint(x, y);
+    return c ? { n:c.offsetNode, o:c.offset } : null;
+  }
+  if(document.caretRangeFromPoint){
+    const r = document.caretRangeFromPoint(x, y);
+    return r ? { n:r.startContainer, o:r.startOffset } : null;
+  }
+  return null;
+}
+function lecToucher(e){
+  if(!LEC.actif) return;
+  if(e.target.closest("a, button, input, textarea")) return;
+  const bloc = e.target.closest(".section, .recap");
+  if(!bloc || !LEC.racine || !LEC.racine.contains(bloc)) return;
+  const pos = lecPositionTouchee(e.clientX, e.clientY);
+  let pi = -1, ti = 0;
+  if(pos && pos.n && pos.n.nodeType === 3){
+    // le mot touché, ou à défaut le premier mot qui suit dans ce nœud
+    for(let i = 0; i < LEC.phrases.length && pi < 0; i++){
+      const toks = LEC.phrases[i].toks;
+      for(let k = 0; k < toks.length; k++){
+        const t = toks[k];
+        const dedans = (t.n1 === pos.n && t.o1 <= pos.o && (t.n2 !== pos.n || pos.o <= t.o2))
+                    || (t.n2 === pos.n && t.n1 !== pos.n && pos.o <= t.o2);
+        if(dedans || (t.n1 === pos.n && t.o1 >= pos.o)){ pi = i; ti = k; break; }
+      }
+    }
+  }
+  if(pi < 0){
+    const bi = LEC.blocs.indexOf(bloc);
+    pi = LEC.phrases.findIndex(p=>p.b === bi);
+    ti = 0;
+  }
+  if(pi < 0) return;
+  e.preventDefault(); e.stopPropagation();
+  haptic();
+  LEC.i = pi; LEC.depuis = ti; LEC.pause = false; LEC.toucheA = 0;
+  lecMajBarre(); lecGarderEcran();
+  lecCouper();
+  lecDire();                       // dans le geste : Safari laisse parler
+}
+function lecDefilementManuel(){ LEC.toucheA = Date.now(); }
+
+// Garder l'écran allumé pendant la lecture : sinon la mise en veille automatique
+// verrouille le téléphone, et l'iPhone coupe la voix.
+let lecVerrou = null;
+async function lecGarderEcran(){
+  try{
+    if(!("wakeLock" in navigator) || lecVerrou) return;
+    lecVerrou = await navigator.wakeLock.request("screen");
+    lecVerrou.addEventListener("release", ()=>{ lecVerrou = null; });
+  }catch(e){ lecVerrou = null; }
+}
+function lecLibererEcran(){
+  try{ if(lecVerrou) lecVerrou.release(); }catch(e){}
+  lecVerrou = null;
+}
+
+function lecteurStart(root){
+  if(!TTS_OK){ toast("La lecture à voix haute n'est pas disponible sur cet appareil."); return; }
+  lecteurStop();
+  const f = construireFile(root);
+  if(!f.phrases.length){ toast("Rien à lire dans ce chapitre."); return; }
+  Object.assign(LEC, { phrases:f.phrases, blocs:f.blocs, racine:root, i:0, depuis:0,
+                       actif:true, pause:false, blocCourant:-1, toucheA:0 });
+  root.addEventListener("click", lecToucher, true);
+  window.addEventListener("touchmove", lecDefilementManuel, { passive:true });
+  window.addEventListener("wheel", lecDefilementManuel, { passive:true });
+  lecBarre();
+  document.body.classList.add("lec-on");
+  lecDire();                                  // dans le geste : iOS l'exige pour le premier son
+  lecGarderEcran();
+}
+function lecteurStop(){
+  if(!LEC || (!LEC.actif && !LEC.bar)) return;
+  lecCouper();
+  LEC.actif = false; LEC.pause = false;
+  lecLibererEcran();
+  if(LEC.racine) LEC.racine.removeEventListener("click", lecToucher, true);
+  window.removeEventListener("touchmove", lecDefilementManuel);
+  window.removeEventListener("wheel", lecDefilementManuel);
+  lecSurligner("lec-phrase", null); lecSurligner("lec-mot", null);
+  LEC.blocs.forEach(b=>b.classList.remove("tts-on"));
+  LEC.blocs = []; LEC.phrases = []; LEC.blocCourant = -1; LEC.racine = null;
+  if(LEC.bar){ LEC.bar.remove(); LEC.bar = null; }
+  document.body.classList.remove("lec-on");
+}
+function lecPlayPause(){
+  if(LEC.pause){ LEC.pause = false; LEC.toucheA = 0; lecMajBarre(); lecDire(); lecGarderEcran(); }
+  else{ LEC.pause = true; lecCouper(); lecMajBarre(); lecLibererEcran(); }
+}
+function lecAller(sens){
+  const bi = LEC.phrases[LEC.i] ? LEC.phrases[LEC.i].b : 0;
+  const debut = b => LEC.phrases.findIndex(p=>p.b === b);
+  let cible;
+  if(sens > 0){
+    cible = LEC.phrases.findIndex(p=>p.b > bi);
+    if(cible < 0){ lecteurStop(); return; }
+  }else{
+    const d = debut(bi);
+    // en début de section, on remonte à la précédente ; sinon on reprend celle-ci
+    cible = (LEC.i - d > 1 || bi === 0) ? d : debut(LEC.phrases[d - 1].b);
+  }
+  LEC.i = cible; LEC.depuis = 0; LEC.pause = false; LEC.toucheA = 0;
+  lecMajBarre(); lecRelancer();
+}
+// Au-delà de 2×, Safari plafonne : inutile de proposer plus.
+function lecVitesse(){
+  const enCours = !LEC.pause;
+  if(enCours){ LEC.pause = true; lecCouper(); lecMajBarre(); }
+  const fmt = v => String(v).replace(".", ",") + "×";
+  openPicker("Vitesse de lecture", LEC_VITESSES.map(v=>({
+    label: fmt(v) + (v === LEC.vitesse ? "  ✓" : ""),
+    sub: v === 1 ? "vitesse normale" : v < 1 ? "plus lent" : "plus rapide",
+    value: String(v)
+  })), v=>{
+    LEC.vitesse = parseFloat(v);
+    lecEcrire("lec-vitesse", String(LEC.vitesse));
+    if(LEC.actif){ LEC.pause = false; lecMajBarre(); lecRelancer(); }
+  });
+}
+function lecChoixVoix(){
+  const vs = voixFrancaises();
+  if(!vs.length){ toast("Aucune voix française trouvée sur cet appareil."); return; }
+  const cur = LEC.voix || choisirVoix() || {};
+  const actuelle = cur.voiceURI || cur.name;
+  if(!LEC.pause){ LEC.pause = true; lecCouper(); lecMajBarre(); }
+  openPicker("Choisir une voix", vs.map(v=>({
+    label: v.name + ((v.voiceURI || v.name) === actuelle ? "  ✓" : ""),
+    sub: [lecQualite(v) ? "voix " + lecQualite(v) : "", v.lang, v.localService ? "sur l'appareil" : "en ligne"]
+           .filter(Boolean).join(" · "),
+    value: v.voiceURI || v.name
+  })), nom=>{
+    lecEcrire("lec-voix", nom);
+    LEC.voix = vs.find(v=>(v.voiceURI || v.name) === nom) || null;
+    LEC.motsSignales = false;              // la nouvelle voix signale peut-être autrement
+    toast("Voix choisie.");
+    if(LEC.actif){ LEC.pause = false; lecMajBarre(); lecRelancer(); }
+  });
+}
+
+const LEC_ICO = {
+  play:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>',
+  pause:'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6.5" y="5" width="4" height="14" rx="1.2"/><rect x="13.5" y="5" width="4" height="14" rx="1.2"/></svg>',
+  prev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5v14"/><path d="M18 6l-8 6 8 6z" fill="currentColor"/></svg>',
+  next:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 5v14"/><path d="M6 6l8 6-8 6z" fill="currentColor"/></svg>',
+  close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  voix:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>'
+};
+function lecBarre(){
+  if(LEC.bar) LEC.bar.remove();
+  const bar = el("div","lec-bar");
+  const b = (cls, html, label, fn)=>{
+    const x = el("button","lec-btn " + cls);
+    x.type = "button"; x.innerHTML = html; x.setAttribute("aria-label", label);
+    x.addEventListener("click", e=>{ e.stopPropagation(); haptic(); fn(); });
+    bar.appendChild(x); return x;
+  };
+  b("lec-voix", LEC_ICO.voix, "Choisir la voix", lecChoixVoix);
+  b("lec-prev", LEC_ICO.prev, "Section précédente", ()=>lecAller(-1));
+  b("lec-play", LEC_ICO.pause, "Pause", lecPlayPause);
+  b("lec-next", LEC_ICO.next, "Section suivante", ()=>lecAller(1));
+  b("lec-speed", "", "Vitesse", lecVitesse);
+  b("lec-close", LEC_ICO.close, "Arrêter la lecture", lecteurStop);
+  document.body.appendChild(bar);
+  LEC.bar = bar;
+  lecMajBarre();
+  requestAnimationFrame(()=>bar.classList.add("show"));
+}
+function lecMajBarre(){
+  if(!LEC.bar) return;
+  const p = LEC.bar.querySelector(".lec-play");
+  p.innerHTML = LEC.pause ? LEC_ICO.play : LEC_ICO.pause;
+  p.setAttribute("aria-label", LEC.pause ? "Reprendre" : "Pause");
+  LEC.bar.querySelector(".lec-speed").textContent = String(LEC.vitesse).replace(".", ",") + "×";
+}
+// Le bouton posé en haut d'un chapitre.
+function lecteurBouton(root){
+  const x = el("button","lec-start");
+  x.type = "button";
+  x.innerHTML = LEC_ICO.voix + "<span>Écouter ce chapitre</span>";
+  x.addEventListener("click",()=>{ haptic(); lecteurStart(root); });
+  return x;
+}
+// Écran verrouillé ou app en arrière-plan : iOS coupe la voix, on se met en pause.
+document.addEventListener("visibilitychange",()=>{
+  if(document.hidden && LEC.actif && !LEC.pause){ LEC.pause = true; lecCouper(); lecMajBarre(); lecLibererEcran(); }
+});
+
 // Rend les sections d'un chapitre dans n'importe quel conteneur.
 function renderSectionsInto(box, ch){
+  lecteurStop();
+  if(TTS_OK && (ch.sections||[]).length) box.appendChild(lecteurBouton(box));
   (ch.sections||[]).forEach(sec=>{
     const block = el("div","section");
     const title = el("h2","section-title"); title.textContent = sec.title || "";
@@ -3183,6 +3645,7 @@ function refreshFab(id){
 }
 
 function showScreen(id){
+  lecteurStop();
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.getElementById("screen-"+id).classList.add("active");
   // le canvas <html> peint toute la surface (sous les barres Safari + safe areas PWA)
@@ -4823,6 +5286,8 @@ function renderCoursePane(type){
     pane.appendChild(r);
   }
   const ch=chapters[chIdx];
+  lecteurStop();
+  if(TTS_OK && (ch.sections||[]).length) pane.appendChild(lecteurBouton(pane));
   (ch.sections||[]).forEach((sec,si)=>{
     const block=el("div","section");
     block.dataset.sec = si;
