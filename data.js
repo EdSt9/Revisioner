@@ -326,15 +326,140 @@ const SUBJECTS = [
         "Forme scolaire (Guy Vincent), consolidée au XVIIe siècle, en 4 dimensions : savoirs décontextualisés, relation pédagogique, espace-temps propre, règles impersonnelles.",
         "Repères : 1833 Guizot, 1881-82 Ferry, 1936 Jean Zay, 1959 Berthoin, 1963 CES, 1975 Haby, 1985 les 80 %.",
         "Massification n'est pas démocratisation. Merle (2002) : quantitative contre qualitative. La France a surtout connu la première."
+      ] },
+      { label:"CM3 · 22/09", sections:[
+        { title:"6. Les inégalités scolaires et l'égalité des chances (Dupriez & Verhoeven, 2007)", body:"Les inégalités scolaires, ce sont les <span class='chunk-highlight'>différences de parcours, d'orientation ou de réussite entre élèves qui tiennent à leur origine sociale</span>, et non au seul mérite individuel.", list:["<b>Mérite individuel</b> : c'est la méritocratie, ou égalité des chances. L'idée que peu importe le milieu social ou d'où l'on vient, on a tous une chance de réussir. Revers de la médaille : s'il réussit, c'est grâce à lui ; sinon, c'est sa faute."] },
+
+        { title:"Quatre conceptions de l'égalité", body:"Dupriez et Verhoeven distinguent quatre conceptions successives de l'égalité, <b>de plus en plus ambitieuses</b>.", list:["<b>Égalité d'accès</b> : c'est le début de la massification.","<b>+ Égalité de traitement</b> : pas de différence entre les élèves dès le début de l'école.","<b>+ Égalité des résultats ou des acquis</b> : garantir les mêmes connaissances et compétences à tous, c'est la logique des « socles de compétences ».","<b>+ Égalité de respect</b>, transversale (Dupriez & Dumay, 2008) : chaque élève est reconnu comme un individu, et on respecte tout son ensemble.","Ce sont des déclinaisons du principe plus général d'<b>égalité des chances</b> : la place de chacun ne doit pas être déterminée par les ressources héritées."] },
+
+        { title:"Pourquoi les inégalités deviennent-elles visibles ? (Duru-Bellat & van Zanten, 2012)", body:"L'idée que l'école produit et reproduit des inégalités est une <b>idée difficile à entendre</b>. L'école, auparavant largement considérée comme une institution progressiste et libératrice, commence alors à être analysée comme une institution pouvant contribuer à la <b>reproduction de l'ordre social</b>.", list:["<b>Avant la massification</b>, des scolarités différentes selon les classes sociales pouvaient être considérées comme normales.","Le système n'était pas forcément égalitaire, mais il était pensé comme <b>juste</b> : la bourse au mérite déculpabilise et valorise les élèves de milieu populaire. Une forme de justice sociale.","Les difficultés scolaires étaient souvent interprétées comme des <b>problèmes individuels ou psychologiques</b>.","Avec la généralisation de l'accès à l'école, <span class='chunk-highlight'>l'idée d'égalité des chances rend les écarts de réussite plus problématiques</span>. On voit alors que l'origine sociale compte bien plus qu'on ne le pense."] },
+
+        { title:"7. L'échec scolaire devient un problème social (Isambert-Jamati, 2020)", body:"<b>Définition</b> : l'échec scolaire n'est pas une donnée naturelle mais une <span class='chunk-highlight'>catégorie socialement construite</span>. Désigner un phénomène comme « échec » suppose une <b>norme scolaire partagée</b> par rapport à laquelle on juge un parcours insuffisant.", list:["<b>Avant les années 1960</b> : l'école est largement pensée comme progressive et libératrice.","Puis les recherches sociologiques montrent la <b>persistance des inégalités sociales de réussite</b>. L'école peut alors être analysée comme participant à la reproduction des inégalités.","L'échec scolaire cesse d'être seulement un problème individuel : il devient une <b>question sociale et scolaire</b>. Cela se joue dans les années 1970, mais surtout 1980, à partir du moment où la question intéresse l'État ou un responsable politique.","L'échec scolaire se situe <b>en dessous de la norme moyenne</b>. En France, la norme est une norme d'excellence, très culturelle : une norme élitiste, celle des prépas et des grandes écoles.","Il touche davantage les garçons que les filles, mais chez les filles cela se voit plus tard."] },
+
+        { title:"Le paradoxe historique", body:"<b>Chez Durkheim, la question ne se posait même pas</b> : il semblait « normal » que les enfants du peuple quittent l'école tôt. Les inégalités deviennent un problème <span class='chunk-highlight'>parallèlement au développement de l'idée d'égalité des chances</span>.", list:["Isambert-Jamati (2020) : « avant, les difficultés scolaires étaient lues comme relevant de facteurs individuels et psychologiques (catégories comme « débilité légère »), et non comme un problème social. La même réalité (départ précoce sans diplôme) n'était « scandaleuse » que pour une minorité, pas pour la masse des enfants d'ouvriers et de paysans. C'est le regard porté sur les difficultés scolaires qui a changé, pas seulement les difficultés elles-mêmes : l'échec scolaire devient un problème social au moment même où l'égalité devient un objectif légitime de l'école. »"] },
+
+        { title:"Conclusion de la partie", body:"", list:["L'école moderne n'est pas seulement un lieu où l'on transmet des savoirs.","Elle constitue une <b>forme historique particulière de socialisation</b>.","Sa généralisation transforme les rapports entre école et société.","La démocratisation et la massification ne font pas disparaître les inégalités : <span class='chunk-highlight'>elles contribuent aussi à les rendre visibles comme problème social</span>."] },
+
+        { title:"Les 8 notions à connaître pour le partiel", body:"", list:["Socialisation","Éducation","Exo-éducation","Pédagogie","Forme scolaire","Démocratisation scolaire","Massification scolaire","Inégalités scolaires et échec scolaire"] },
+
+        { title:"Comprendre les inégalités scolaires : familles, milieux sociaux et carrières scolaires", body:"<b>Problématique</b> : si l'école est ouverte à tous et que les élèves sont officiellement soumis aux mêmes règles, <span class='chunk-highlight'>pourquoi l'origine sociale continue-t-elle d'être associée aux parcours scolaires ?</span>", list:["<b>I.</b> Massification et démocratisation","<b>II.</b> Comment expliquer les inégalités ?","<b>III.</b> Familles et socialisation","<b>IV.</b> Familles, choix scolaires et carrières"] },
+
+        { title:"I. Massification et démocratisation", body:"L'accès à l'éducation a augmenté, la durée moyenne des études s'est allongée, et l'enseignement secondaire puis supérieur se sont massifiés.", list:["<b>Massification</b> : l'augmentation du nombre et de la proportion d'élèves qui accèdent à un niveau donné d'enseignement.","<b>Démocratisation</b> : les mêmes chances de réussite, peu importe l'origine sociale.","<b>Antoine Prost</b> distingue démocratisation <b>quantitative</b>, l'augmentation générale de l'accès à l'éducation, et <b>qualitative</b>, qui suppose une véritable réduction du lien entre origine sociale et trajectoire scolaire."] },
+
+        { title:"Pierre Merle : la massification peut être inégalitaire", body:"", list:["<b>Massification uniforme</b> : les études s'allongent pour tous, mais les écarts sociaux restent globalement similaires.","<b>Massification inégalitaire</b> : l'accès à l'éducation augmente, mais les différents groupes sociaux <b>ne bénéficient pas de la même manière</b> de cette extension. Les inégalités peuvent alors être déplacées vers le haut du système scolaire.","<b>Démocratisation ségrégative</b> : les nouveaux publics accèdent davantage à l'éducation, mais sont davantage présents dans certaines <b>filières moins valorisées</b>, tandis que les groupes favorisés restent surreprésentés dans les formations les plus sélectives.","<span class='chunk-highlight'>La massification augmente le nombre de diplômés ; elle ne garantit pas l'égalité des carrières scolaires.</span>"] },
+
+        { title:"II. 1) Premier modèle : Bourdieu et Passeron", body:"Ouvrages de référence : <b>Les Héritiers</b> (1964) et <b>La Reproduction</b> (1970).<br><br>Leur question : « <span class='chunk-highlight'>Quelles ressources certains élèves possèdent-ils avant même d'entrer dans la compétition scolaire ?</span> »" },
+
+        { title:"Le capital culturel", body:"Les familles transmettent des <b>ressources culturelles</b>.", list:["Par exemple : le vocabulaire, le rapport à la lecture, la familiarité avec certaines œuvres, les façons de parler, les manières d'argumenter, les connaissances générales.","Bourdieu et Passeron accordent une importance particulière à cet <b>héritage culturel</b>, qui contribue à l'avantage scolaire des enfants des groupes favorisés. C'est la <b>culture légitime</b>.","Il se crée une <b>connivence</b> entre cette culture familiale et l'école.","Le <b>langage</b> est un point important : deux types de langage, le langage légitime, « le beau langage », et le langage jeune, discriminant."] },
+
+        { title:"L'habitus", body:"L'habitus désigne un <b>ensemble de dispositions durables incorporées au cours de la socialisation</b> : les manières de penser, de percevoir, d'agir, de parler, d'évaluer ce qui est possible ou impossible.", list:["Bourdieu et Passeron mettent en évidence une <b>distance variable entre les cultures familiales et la culture scolaire</b>.","Certains élèves arrivent à l'école avec des dispositions <b>proches de celles qu'attend l'institution</b>.","D'autres doivent effectuer un véritable <b>travail d'acculturation</b>.","Il faut correspondre à la fois à la <b>culture juvénile</b> et à la <b>culture légitime</b> : on est pris entre les cultures.","<b>L'homme pluriel</b> (Lahire) : on puise tous dans d'autres cultures que la nôtre."] },
+
+        { title:"L'école est-elle « neutre » ?", body:"C'est un point essentiel chez Bourdieu et Passeron.", list:["L'école traite officiellement les élèves de <b>manière identique</b>.","Mais traiter tout le monde de la même manière ne signifie pas que tout le monde dispose des <b>mêmes ressources</b> pour répondre aux attentes scolaires.","L'école peut ainsi être qualifiée d'« <span class='chunk-highlight'>indifférente aux différences</span> » sociales.","L'<b>égalité formelle</b> peut donc contribuer à <b>masquer</b> les différences initiales entre les élèves."] },
+
+        { title:"Les inégalités de réussite ET d'orientation", body:"Les inégalités ne concernent pas uniquement les résultats : elles interviennent aussi dans les <b>choix d'orientation</b>.", list:["Bourdieu et Passeron mettent en avant un phénomène d'<b>autocensure</b> et d'<b>autosélection</b> : « Cette formation n'est pas pour moi. »","Certaines orientations peuvent donc être écartées <b>avant même qu'une sélection institutionnelle ait lieu</b>.","À performances comparables, les élèves de milieux différents peuvent ne pas envisager les mêmes possibilités. <b>L'orientation est le moment où l'on voit le plus les inégalités.</b>","<b>Attention au déterminisme</b> : il ne s'agit pas de dire « si on vient d'un milieu populaire, on échoue »."] },
+
+        { title:"II. 2) Deuxième modèle : Boudon", body:"Raymond Boudon propose une interprétation différente. Il s'intéresse davantage aux <b>raisons qui conduisent les acteurs à effectuer certains choix</b>.", list:["Les familles doivent prendre des décisions à différents moments : poursuivre ou non les études, choisir une filière, choisir une formation, accepter un coût, prendre un risque.","Pour Boudon, les individus évaluent notamment : les <b>coûts</b>, les <b>bénéfices attendus</b> et les <b>risques</b>."] },
+
+        { title:"III. Familles et socialisation", body:"Les parcours scolaires varient selon l'origine sociale notamment parce que <b>les familles socialisent différemment leurs enfants</b>. Les inégalités résultent de l'interaction entre pratiques familiales et pratiques scolaires.<br><br>La <b>socialisation familiale</b>, tout ce que la famille va inculquer à l'enfant, fonctionne selon deux mécanismes.", list:["<b>Imprégnation</b> : l'enfant est plongé dans un environnement qui contribue progressivement à construire certaines dispositions.","<b>Inculcation</b> : les parents mettent volontairement en œuvre des pratiques éducatives pour transmettre certaines manières de faire.","Les inégalités scolaires commencent quand il y a un <b>décalage ou un désaccord entre la sphère familiale et la sphère scolaire</b> : il faut alors se conformer pour apprendre de nouvelles normes. Pas seulement sur les savoirs, mais aussi sur l'attitude et le comportement."] },
+
+        { title:"Les styles éducatifs différenciés (cf. Lahire)", body:"", list:["Dans les <b>familles populaires</b>, les recherches mettent davantage en évidence l'importance de l'<b>obéissance</b>, une autorité plus directe, une surveillance plus immédiate.","Dans les <b>classes moyennes et supérieures</b> : l'autonomie, l'initiative, l'expressivité, la négociation, l'argumentation, l'intériorisation des règles.","Ces dispositions entrent davantage en <b>connivence avec certaines normes scolaires contemporaines</b>, notamment l'autonomie et la participation.","<span class='chunk-highlight'>Attention à une lecture caricaturale</span> : il s'agit de régularités statistiques, pas de portraits de toutes les familles. Toutes les familles d'une même catégorie sociale ne se ressemblent pas, et il n'existe pas de déterminisme social absolu."] },
+
+        { title:"Repères de vocabulaire", body:"<i>Section ajoutée en complément : ces termes sont employés dans le cours sans y être définis.</i>", list:["<b>Méritocratie</b> : système où la position sociale est censée dépendre du seul mérite, c'est-à-dire du talent et de l'effort, et non de l'origine.","<b>Acculturation</b> : le fait d'avoir à adopter une culture différente de la sienne, ici la culture scolaire.","<b>Autocensure</b> : renoncer soi-même à une possibilité que l'on juge « pas pour soi », avant toute sélection extérieure.","<b>Culture légitime</b> : la culture reconnue et valorisée par l'institution scolaire, historiquement celle des classes moyennes et supérieures.","<b>Connivence</b> : ici, la proximité entre les dispositions apprises en famille et ce que l'école attend, qui avantage sans que cela se voie.","<b>Régularité statistique</b> : une tendance observée sur un grand nombre de cas. Elle ne prédit rien pour un individu donné.","<b>Socle commun de connaissances et de compétences</b> : ce que l'école doit garantir à tous les élèves à la fin de la scolarité obligatoire. C'est la traduction française de l'égalité des acquis."] }
+      ], recap:[
+        "Inégalités scolaires : des différences de parcours, d'orientation ou de réussite qui tiennent à l'origine sociale, pas au seul mérite.",
+        "Dupriez & Verhoeven (2007) : quatre conceptions de l'égalité, accès, traitement, résultats, respect, de plus en plus ambitieuses.",
+        "Duru-Bellat & van Zanten (2012) : l'idée d'égalité des chances rend les écarts de réussite visibles et problématiques.",
+        "Isambert-Jamati (2020) : l'échec scolaire n'est pas naturel, c'est une catégorie socialement construite, qui suppose une norme.",
+        "Paradoxe : chez Durkheim, la question ne se posait pas. L'échec devient un problème social quand l'égalité devient un objectif légitime.",
+        "Prost : démocratisation quantitative contre qualitative. Merle : massification uniforme, inégalitaire, et démocratisation ségrégative.",
+        "Bourdieu et Passeron : capital culturel, habitus, culture légitime. Quelles ressources avant même la compétition scolaire ?",
+        "L'école « indifférente aux différences » : l'égalité formelle masque les différences initiales.",
+        "Les inégalités jouent aussi dans l'orientation, par autocensure et autosélection.",
+        "Boudon : des acteurs qui évaluent coûts, bénéfices attendus et risques à chaque palier.",
+        "Socialisation familiale : imprégnation et inculcation. Styles éducatifs différenciés (Lahire), mais ce sont des régularités statistiques."
       ] }
     ],
     td:[
-      { label:"TD 1", sections:[
-        { title:"Présentation du TD", body:"7 séances de TD au total, à ne pas confondre avec les CM (contenus différents). Chaque séance porte sur un texte à lire <span class='chunk-highlight'>avant</span> le TD.", list:["TD1 : 09/09","TD2 : 23/09","TD3 : 30/09","TD4 : 24/10 (oral)","TD5 : 04/11","TD6 : 18/11","TD7 : 25/11 → DST"] },
+      { label:"TD 1 · 09/09", sections:[
+        { title:"Présentation du TD", body:"7 séances de TD au total, à ne pas confondre avec les CM (contenus différents). Chaque séance porte sur un texte à lire <span class='chunk-highlight'>avant</span> le TD.", list:["TD1 : 09/09","TD2 : 23/09","TD3 : 30/09 (oral ?)","TD4 : 24/10","TD5 : 04/11","TD6 : 18/11","TD7 : 25/11 → DST"] },
         { title:"Évaluation du TD", body:"L'évaluation du TD repose sur deux éléments distincts du CM.", list:["1 DST (devoir surveillé) en fin de semestre (25/11).","1 oral, qui compte pour 10% : à chaque séance, présentation de la synthèse d'un texte + participation orale."] },
         { title:"Le fil du TD", body:"Le TD se concentre sur l'éducation à l'articulation entre le <span class='chunk-highlight'>système scolaire</span> et le <span class='chunk-highlight'>social</span>, avec en toile de fond la question des inégalités. Première notion posée : <span class='chunk-highlight'>l'école comme institution de socialisation</span>." }
-      ], recap:["7 séances, un texte à lire avant chacune.","Évaluation : 1 DST (25/11) + 1 oral (10%, synthèse de texte à chaque séance).","Fil conducteur : éducation, système scolaire, inégalités sociales."] }
+      ], recap:["7 séances, un texte à lire avant chacune.","Évaluation : 1 DST (25/11) + 1 oral (10%, synthèse de texte à chaque séance).","Fil conducteur : éducation, système scolaire, inégalités sociales."] },
+      { label:"TD 2 · 23/09", sections:[
+        { title:"Au programme", body:"<b>Présentation orale : texte 1.</b><br><br>La séance travaille la fiche <b>TD 1, séance d'introduction : l'école comme institution de socialisation</b>." },
+
+        { title:"L'école comme modèle d'évolution", body:"Les quatre textes de la fiche, en une ligne chacun.", list:["<b>Gellner</b> : dans la société industrielle, le système éducatif mord. L'éducation se fait à grande échelle, avec l'<b>exo-éducation</b>.","<b>Durkheim</b> : l'éducation, une action, n'est pas la pédagogie, une réflexion.","<b>Lahire</b> : la <b>forme scolaire</b> s'impose en Europe. Un lieu réservé à l'étude, un temps précis, une règle d'obéissance, une relation maître et élève.","<b>Luc Albarello</b> : apprendre et faire. Apprendre grâce à la pratique, ne pas apprendre seulement en classe mais aussi en dehors.","Le fil : <span class='chunk-highlight'>retracer l'histoire, voir une évolution de l'éducation</span>."] },
+
+        { title:"📄 Texte 1 : Gellner (1989)", body:"<b>Le système éducatif de la société industrielle</b>. Gellner, E. (1989), <i>Nations et nationalisme</i>, Paris, Payot, pp. 47-55." },
+
+        { title:"Texte 1 : les questions", body:"<i>Tes réponses là où tu les as notées. Les autres restent à préparer.</i>", list:["<b>1. Pourquoi l'école est-elle nécessaire dans la société industrielle ?</b> La société est évolutive, donc les personnes doivent faire face à l'adaptation, au changement économique et professionnel, avec la modification des métiers.","<b>2. Qu'est-ce que l'école apprend aux individus ?</b> <i>À compléter.</i>","<b>3. En quoi le texte permet-il de considérer l'école comme une institution de socialisation ?</b> <i>À compléter.</i>","<b>4. En quoi les transformations du travail modifient-elles les fonctions de l'éducation ?</b> Point important : l'éducation est devenue un point clé et essentiel. L'école donne un apprentissage général. Comparaison entre société traditionnelle et société industrielle. La <b>communication explicite</b> devient une composante importante du travail."] },
+
+        { title:"Exo-éducation", body:"<span class='chunk-highlight'>Le faire et apprendre : un apprentissage pris en compte par des spécialistes, autres que familiaux.</span>" },
+
+        { title:"📄 Texte 2 : Durkheim (1911)", body:"<b>Sur la différence entre éducation et pédagogie</b>. Émile Durkheim, 1911 [ES, pp. 45-51]." },
+
+        { title:"Texte 2 : les questions", body:"<i>Tes réponses là où tu les as notées.</i>", list:["<b>1. Quelle différence Durkheim fait-il entre éducation et pédagogie ?</b> L'<b>éducation</b> est l'action que l'on transmet de manière volontaire ou involontaire à l'enfant. La <b>pédagogie</b>, ce sont la réflexion et les théories sur l'éducation.","<b>2. Comment montre-t-il que l'éducation est une forme de socialisation ?</b> L'éducation participe à la formation de l'individu.","<b>3. Pourquoi l'éducation est-elle une action « de tous les instants » ?</b> <i>À compléter.</i>","<b>4. En quoi sa conception permet-elle de comprendre l'éducation comme un processus de socialisation ?</b> <i>À compléter.</i>"] },
+
+        { title:"📄 Texte 3 : Vincent, Lahire et Thin (1994)", body:"<b>La forme scolaire</b>. Vincent, G., Lahire, B. et Thin, D. (1994), « Sur l'histoire et la théorie de la forme scolaire », dans G. Vincent (dir.), <i>L'éducation prisonnière de la forme scolaire ? Scolarisation et socialisation dans les sociétés industrielles</i>, Lyon, PUL, pp. 10-11." },
+
+        { title:"Texte 3 : les questions", body:"", list:["<b>1. Qu'est-ce que l'école apprend en plus des connaissances ?</b> L'école apprend à l'enfant « <b>l'obéissance à des règles</b> ». Elle nous prépare à la vie en société.","<b>2. Comment la forme scolaire permet-elle cette socialisation ?</b> Grâce à un <b>espace et un temps spécialement organisés</b>. L'école est un lieu particulier où chacun doit accomplir ses devoirs et respecter les règles scolaires.","<b>3. Quel est le rôle des règles scolaires dans la socialisation ?</b> Les règles scolaires organisent les comportements de chacun. Elles <span class='chunk-highlight'>s'imposent à tous, y compris aux maîtres</span>. Le texte donne l'exemple du silence, obligatoire même pour les enseignants.","<b>4. Comment l'organisation de l'espace et du temps y participe-t-elle ?</b> L'école crée « un lieu spécifique », distinct des autres lieux où se déroulent les activités sociales. Elle crée aussi « un temps spécifique, le temps scolaire » : une période de la vie, un temps dans l'année, un emploi du temps quotidien. Dans « un espace clos » et un temps « soigneusement réglé », chacun doit respecter les règles qui organisent son activité.","<b>5. En quoi la forme scolaire transforme-t-elle la manière d'apprendre ?</b> Avant l'école, apprendre se faisait « <b>par voir-faire et ouï-dire</b> », en participant aux activités de la famille ou de la maison : « apprendre n'était pas distinct de faire ». Avec l'école, l'apprentissage devient une <b>activité séparée</b> : l'enfant apprend dans un lieu spécifique, avec un maître, selon des règles et un temps précis.","<b>6. En quoi le texte montre-t-il que l'école est une institution de socialisation ?</b> L'école socialise les enfants car elle leur apprend des règles et des comportements. Elle organise leur manière d'agir dans un espace clos et pendant un temps soigneusement réglé. Les enfants apprennent ainsi à soumettre leur activité aux « principes », ou règles, qui organisent la vie scolaire."] },
+
+        { title:"📄 Texte 4 : Albarello (2015)", body:"<b>La forme scolaire questionnée par les évolutions actuelles</b>. Luc Albarello, 2015, « Sens et mutation des apprentissages dans un contexte d'accélération », dans B. Delvaux, L. Albarello et M. Bouhon (dir.), <i>Réfléchir l'École de demain</i>, pp. 48-49, Louvain-la-Neuve, De Boeck Supérieur." },
+
+        { title:"Texte 4 : les questions à préparer", body:"<i>Questions notées en séance, réponses à compléter.</i>", list:["<b>1.</b> Comment la forme scolaire traditionnelle sépare-t-elle « apprendre » et « faire » ?","<b>2.</b> Pourquoi cette séparation est-elle aujourd'hui remise en question ? <i>Trop radical, nouvelles formes de formation.</i>","<b>3.</b> Quelles nouvelles formes d'apprentissage remettent en question la forme scolaire traditionnelle ?","<b>4.</b> En quoi les stages, les formations en alternance et l'immersion rapprochent-ils l'apprentissage et la pratique ?","<b>5.</b> Comment le texte montre-t-il que les apprentissages ne se font plus uniquement à l'école ?"] },
+
+        { title:"Pour le TD 3", body:"<b>Fiche TD 2 : comprendre les inégalités scolaires, classes sociales et genre.</b><br>Texte : Merle, P. (2020), « Les inégalités scolaires (1995-2020). Effets de l'origine sociale et du genre », <i>Agora débats/jeunesses</i>, 86(3), pp. 25-41.", list:["<b>L'oral portera sur le texte 3</b>, mais le <b>texte 2 passe aussi</b>."] },
+
+        { title:"Repères de vocabulaire", body:"<i>Section ajoutée en complément : ces expressions viennent des textes et ne sont pas explicitées dans tes notes.</i>", list:["<b>Voir-faire et ouï-dire</b> : l'expression de Vincent, Lahire et Thin pour l'apprentissage d'avant l'école. On apprend en regardant faire et en écoutant, dans le cours ordinaire de l'activité, sans leçon ni maître.","<b>Forme scolaire</b> : une manière spécifique d'organiser la socialisation et les apprentissages, qui sépare l'école des autres espaces sociaux. Lieu réservé, temps réglé, règles impersonnelles, relation pédagogique.","<b>Espace clos</b> et <b>temps soigneusement réglé</b> : les deux expressions du texte 3 pour décrire ce qui rend la socialisation scolaire possible.","<b>Communication explicite</b> : chez Gellner, le fait que le travail industriel suppose de comprendre et d'émettre des messages compréhensibles hors contexte, entre personnes qui ne se connaissent pas. D'où le besoin d'une instruction générale et standardisée.","<b>Alternance</b> : une formation qui alterne des périodes en établissement et des périodes en milieu professionnel. Elle rapproche apprendre et faire, ce que la forme scolaire avait séparé."] }
+      ], recap:[
+        "Les quatre textes de la fiche : Gellner, Durkheim, Vincent-Lahire-Thin, Albarello.",
+        "Gellner : la société industrielle est évolutive, d'où le besoin d'adaptation et d'une éducation générale à grande échelle.",
+        "Exo-éducation : un apprentissage pris en charge par des spécialistes, hors de la famille.",
+        "Durkheim : l'éducation est une action, volontaire ou involontaire ; la pédagogie est la réflexion et les théories sur cette action.",
+        "Texte 3 : l'école apprend en plus des connaissances l'obéissance à des règles, qui s'imposent à tous, y compris aux maîtres.",
+        "La forme scolaire repose sur un espace clos et un temps soigneusement réglé.",
+        "Avant l'école, on apprenait par voir-faire et ouï-dire : apprendre n'était pas distinct de faire.",
+        "Albarello : stages, alternance et immersion rapprochent à nouveau apprendre et faire.",
+        "Pour le TD 3 : oral sur le texte 3, et le texte 2 passe aussi. Fiche suivante : inégalités scolaires, classes sociales et genre (Merle, 2020)."
+      ] }
     ], fc:[
+      { q:"Selon Gellner, pourquoi l'école est-elle nécessaire dans la société industrielle ?", a:"Parce que la société est évolutive : les personnes doivent faire face à l'adaptation, au changement économique et professionnel, et à la modification des métiers." },
+      { q:"Selon Gellner, comment les transformations du travail modifient-elles les fonctions de l'éducation ?", a:"L'éducation devient un point clé et essentiel. L'école donne un apprentissage général, par comparaison avec la société traditionnelle, et la communication explicite devient une composante importante du travail." },
+      { q:"Qu'est-ce que l'exo-éducation ?", a:"Le faire et apprendre pris en charge par des spécialistes, autres que familiaux." },
+      { q:"Quelle différence Durkheim fait-il entre éducation et pédagogie ?", a:"L'éducation est l'action que l'on transmet de manière volontaire ou involontaire à l'enfant. La pédagogie, ce sont la réflexion et les théories sur l'éducation." },
+      { q:"Comment Durkheim montre-t-il que l'éducation est une forme de socialisation ?", a:"L'éducation participe à la formation de l'individu." },
+      { q:"Selon Vincent, Lahire et Thin, qu'est-ce que l'école apprend en plus des connaissances ?", a:"L'obéissance à des règles. Elle prépare à la vie en société." },
+      { q:"Comment la forme scolaire permet-elle la socialisation ?", a:"Grâce à un espace et un temps spécialement organisés. L'école est un lieu particulier où chacun doit accomplir ses devoirs et respecter les règles scolaires." },
+      { q:"Quel est le rôle des règles scolaires dans la socialisation ?", a:"Elles organisent les comportements de chacun et s'imposent à tous, y compris aux maîtres. Le texte donne l'exemple du silence, obligatoire même pour les enseignants." },
+      { q:"Comment l'organisation de l'espace et du temps participe-t-elle à la socialisation ?", a:"L'école crée un lieu spécifique, distinct des autres lieux d'activité sociale, et un temps spécifique, le temps scolaire : une période de la vie, un temps dans l'année, un emploi du temps quotidien. Dans cet espace clos et ce temps soigneusement réglé, chacun doit respecter les règles qui organisent son activité." },
+      { q:"Comment apprenait-on avant l'école, selon le texte 3 ?", a:"Par voir-faire et ouï-dire, en participant aux activités de la famille ou de la maison : apprendre n'était pas distinct de faire." },
+      { q:"Qu'est-ce que la forme scolaire change à la manière d'apprendre ?", a:"L'apprentissage devient une activité séparée : l'enfant apprend dans un lieu spécifique, avec un maître, selon des règles et un temps précis." },
+      { q:"En quoi le texte 3 montre-t-il que l'école est une institution de socialisation ?", a:"L'école socialise les enfants car elle leur apprend des règles et des comportements, et organise leur manière d'agir dans un espace clos et un temps soigneusement réglé. Les enfants apprennent à soumettre leur activité aux principes qui organisent la vie scolaire." },
+      { q:"Que questionne Albarello (2015) ?", a:"La forme scolaire, au regard des évolutions actuelles : apprendre et faire. Apprendre grâce à la pratique, et pas seulement en classe. Les stages, l'alternance et l'immersion rapprochent l'apprentissage et la pratique." },
+      { q:"Comment définir les inégalités scolaires (Dupriez & Verhoeven, 2007) ?", a:"Des différences de parcours, d'orientation ou de réussite entre élèves qui tiennent à leur origine sociale, et non au seul mérite individuel." },
+      { q:"Qu'est-ce que le mérite individuel, ou méritocratie ?", a:"L'idée que peu importe le milieu social ou d'où l'on vient, tout le monde a une chance de réussir. Son revers : si l'élève réussit c'est grâce à lui, et s'il échoue c'est sa faute." },
+      { q:"Quelles sont les quatre conceptions de l'égalité selon Dupriez et Verhoeven ?", a:"L'égalité d'accès, au début de la massification. Puis l'égalité de traitement, pas de différence entre les élèves dès le début de l'école. Puis l'égalité des résultats ou des acquis, garantir les mêmes connaissances et compétences à tous, la logique des socles de compétences. Et enfin l'égalité de respect, transversale (Dupriez & Dumay, 2008), où chaque élève est reconnu comme un individu." },
+      { q:"Pourquoi les inégalités deviennent-elles visibles (Duru-Bellat & van Zanten, 2012) ?", a:"Parce qu'avec la généralisation de l'accès à l'école, l'idée d'égalité des chances rend les écarts de réussite problématiques. L'école, pensée comme progressiste et libératrice, commence alors à être analysée comme pouvant contribuer à la reproduction de l'ordre social." },
+      { q:"Comment les scolarités différentes étaient-elles perçues avant la massification ?", a:"Comme normales. Le système n'était pas forcément égalitaire, mais il était pensé comme juste, avec par exemple la bourse au mérite qui valorise les élèves de milieu populaire. Les difficultés scolaires étaient interprétées comme des problèmes individuels ou psychologiques." },
+      { q:"Qu'est-ce que l'échec scolaire selon Isambert-Jamati (2020) ?", a:"Pas une donnée naturelle, mais une catégorie socialement construite. Désigner un phénomène comme « échec » suppose une norme scolaire partagée par rapport à laquelle on juge un parcours insuffisant." },
+      { q:"Quelle est la norme de référence en France pour juger un parcours scolaire ?", a:"Une norme d'excellence, très culturelle : une norme élitiste, celle des prépas et des grandes écoles. L'échec scolaire se situe en dessous de la norme moyenne." },
+      { q:"Quand l'échec scolaire devient-il un problème social ?", a:"Dans les années 1970, mais surtout 1980, à partir du moment où la question intéresse l'État ou un responsable politique. Il cesse alors d'être seulement un problème individuel." },
+      { q:"Quel paradoxe historique le cours souligne-t-il à propos de Durkheim ?", a:"Chez Durkheim, la question ne se posait même pas : il semblait normal que les enfants du peuple quittent l'école tôt. Les inégalités deviennent un problème parallèlement au développement de l'idée d'égalité des chances." },
+      { q:"Selon Isambert-Jamati, qu'est-ce qui a changé : les difficultés ou le regard ?", a:"Le regard. La même réalité, un départ précoce sans diplôme, n'était scandaleuse que pour une minorité, pas pour la masse des enfants d'ouvriers et de paysans. L'échec scolaire devient un problème social au moment même où l'égalité devient un objectif légitime de l'école." },
+      { q:"Quelle distinction Antoine Prost établit-il ?", a:"Entre démocratisation quantitative, l'augmentation générale de l'accès à l'éducation, et démocratisation qualitative, qui suppose une véritable réduction du lien entre origine sociale et trajectoire scolaire." },
+      { q:"Quelle différence entre massification uniforme et massification inégalitaire (Merle) ?", a:"Dans la massification uniforme, les études s'allongent pour tous mais les écarts sociaux restent globalement similaires. Dans la massification inégalitaire, l'accès augmente mais les groupes sociaux n'en bénéficient pas de la même manière, et les inégalités sont déplacées vers le haut du système." },
+      { q:"Qu'est-ce que la démocratisation ségrégative (Merle) ?", a:"Les nouveaux publics accèdent davantage à l'éducation, mais sont davantage présents dans des filières moins valorisées, tandis que les groupes favorisés restent surreprésentés dans les formations les plus sélectives." },
+      { q:"Quelle question posent Bourdieu et Passeron ?", a:"« Quelles ressources certains élèves possèdent-ils avant même d'entrer dans la compétition scolaire ? » Leurs ouvrages de référence sont Les Héritiers (1964) et La Reproduction (1970)." },
+      { q:"Qu'est-ce que le capital culturel ?", a:"Les ressources culturelles transmises par les familles : vocabulaire, rapport à la lecture, familiarité avec certaines œuvres, façons de parler, manières d'argumenter, connaissances générales. Cet héritage contribue à l'avantage scolaire des enfants des groupes favorisés et crée une connivence avec la culture légitime de l'école." },
+      { q:"Qu'est-ce que l'habitus ?", a:"Un ensemble de dispositions durables incorporées au cours de la socialisation : manières de penser, de percevoir, d'agir, de parler, d'évaluer ce qui est possible ou impossible. Il crée une distance variable entre cultures familiales et culture scolaire." },
+      { q:"Que doivent faire les élèves dont les dispositions sont éloignées de celles de l'école ?", a:"Un véritable travail d'acculturation. D'autres élèves, eux, arrivent avec des dispositions déjà proches de celles qu'attend l'institution." },
+      { q:"Pourquoi l'école n'est-elle pas « neutre » selon Bourdieu et Passeron ?", a:"Parce qu'elle traite officiellement les élèves de manière identique, mais que tous ne disposent pas des mêmes ressources pour répondre à ses attentes. Elle est « indifférente aux différences » sociales, et l'égalité formelle masque les différences initiales." },
+      { q:"Qu'est-ce que l'autocensure ou autosélection ?", a:"Le fait d'écarter soi-même certaines orientations avant même qu'une sélection institutionnelle ait lieu : « Cette formation n'est pas pour moi. » À performances comparables, les élèves de milieux différents n'envisagent pas les mêmes possibilités." },
+      { q:"Comment Boudon explique-t-il les inégalités ?", a:"Par les raisons qui conduisent les acteurs à faire certains choix. Les familles décident à différents moments, poursuivre ou non les études, choisir une filière, et évaluent les coûts, les bénéfices attendus et les risques." },
+      { q:"Quels sont les deux mécanismes de la socialisation familiale ?", a:"L'imprégnation, où l'enfant est plongé dans un environnement qui construit progressivement certaines dispositions. Et l'inculcation, où les parents mettent volontairement en œuvre des pratiques éducatives pour transmettre certaines manières de faire." },
+      { q:"Quand les inégalités scolaires commencent-elles, selon l'approche par la socialisation ?", a:"Quand il y a un décalage ou un désaccord entre la sphère familiale et la sphère scolaire. L'élève doit alors se conformer pour apprendre de nouvelles normes, pas seulement sur les savoirs mais aussi sur l'attitude et le comportement." },
+      { q:"Quels styles éducatifs distinguent les milieux sociaux (cf. Lahire) ?", a:"Dans les familles populaires, l'obéissance, une autorité plus directe, une surveillance plus immédiate. Dans les classes moyennes et supérieures, l'autonomie, l'initiative, l'expressivité, la négociation, l'argumentation, l'intériorisation des règles, qui entrent en connivence avec les normes scolaires contemporaines." },
+      { q:"Quelle précaution le cours pose-t-il sur les styles éducatifs ?", a:"Attention à une lecture caricaturale : il s'agit de régularités statistiques, pas de portraits de toutes les familles. Toutes les familles d'une même catégorie sociale ne se ressemblent pas et il n'existe pas de déterminisme social absolu." },
       { q:"Qu'apporte la théorie de l'étiquetage de Becker ?", a:"Être étiqueté comme bon ou mauvais élève influence l'avenir scolaire. L'élève se met en conformité avec son étiquette et en prend le rôle." },
       { q:"Qu'est-ce que l'effet Pygmalion ?", a:"Une prophétie autoréalisatrice appliquée à l'école : les attentes de l'enseignant finissent par produire la réussite ou l'échec qu'elles anticipaient." },
       { q:"Que désigne le stigmate chez Goffman ?", a:"Un attribut profondément discréditant qui réduit celui qui le porte à cette seule caractéristique. À l'école, une attente particulière se forme sur la biographie de l'élève." },
@@ -362,6 +487,37 @@ const SUBJECTS = [
       { q:"Qu'est-ce qu'un transclasse ?", a:"Un individu qui change de classe sociale (par exemple grâce à la réussite scolaire)." },
       { q:"Qu'est-ce que problématiser un sujet ?", a:"Comprendre la question posée par un sujet pour la transformer en véritable question de réflexion (ex : « filles et garçons » → « pourquoi ces inégalités entre eux ? »)." }
     ], qcm:[
+      { q:"Selon Gellner, l'école est nécessaire dans la société industrielle parce que :", opts:["la famille disparaît","la société est évolutive et demande de l'adaptation","l'État l'impose","les métiers sont stables"], c:1, e:"Changement économique et professionnel, modification des métiers." },
+      { q:"Chez Gellner, ce qui devient une composante importante du travail est :", opts:["la communication explicite","la force physique","la tradition orale","l'apprentissage familial"], c:0, e:"D'où le besoin d'un apprentissage général." },
+      { q:"L'exo-éducation désigne un apprentissage pris en charge :", opts:["par la famille","par des spécialistes autres que familiaux","par les pairs","par l'enfant seul"], c:1, e:"C'est le faire et apprendre confié à des spécialistes." },
+      { q:"Chez Durkheim, la pédagogie est :", opts:["l'action transmise à l'enfant","la réflexion et les théories sur l'éducation","l'organisation de l'école","la discipline en classe"], c:1, e:"L'éducation, elle, est l'action, volontaire ou involontaire." },
+      { q:"Selon le texte 3, l'école apprend en plus des connaissances :", opts:["un métier","l'obéissance à des règles","une culture générale","l'autonomie"], c:1, e:"Elle prépare à la vie en société." },
+      { q:"Les règles scolaires s'imposent :", opts:["aux seuls élèves","à tous, y compris aux maîtres","aux familles","à l'administration"], c:1, e:"Le texte donne l'exemple du silence, obligatoire même pour les enseignants." },
+      { q:"La forme scolaire repose sur :", opts:["un espace clos et un temps soigneusement réglé","la liberté de l'enfant","l'apprentissage par imitation","des règles négociées"], c:0, e:"Un lieu spécifique et un temps spécifique, le temps scolaire." },
+      { q:"Avant l'école, on apprenait :", opts:["par voir-faire et ouï-dire","par la lecture","par des leçons","par l'écrit"], c:0, e:"Apprendre n'était pas distinct de faire." },
+      { q:"Avec la forme scolaire, l'apprentissage devient :", opts:["une activité séparée","une activité familiale","une activité collective","une activité libre"], c:0, e:"Dans un lieu spécifique, avec un maître, selon des règles et un temps précis." },
+      { q:"Albarello (2015) interroge la forme scolaire à partir :", opts:["des inégalités sociales","des stages, de l'alternance et de l'immersion","des programmes scolaires","de la démocratisation"], c:1, e:"Ces formes rapprochent apprendre et faire." },
+      { q:"Les inégalités scolaires désignent des différences qui tiennent :", opts:["au seul mérite individuel","à l'origine sociale","au niveau de l'enseignant","à la taille des classes"], c:1, e:"Dupriez & Verhoeven (2007) : différences de parcours, d'orientation ou de réussite liées à l'origine sociale." },
+      { q:"Laquelle ne fait PAS partie des quatre conceptions de l'égalité de Dupriez et Verhoeven ?", opts:["égalité d'accès","égalité de traitement","égalité des acquis","égalité des revenus"], c:3, e:"Accès, traitement, résultats ou acquis, et respect (Dupriez & Dumay, 2008)." },
+      { q:"L'égalité des acquis correspond à la logique :", opts:["des socles de compétences","de la bourse au mérite","du collège unique","de l'orientation précoce"], c:0, e:"Garantir les mêmes connaissances et compétences à tous." },
+      { q:"L'égalité de respect est ajoutée par :", opts:["Duru-Bellat & van Zanten","Dupriez & Dumay (2008)","Merle","Isambert-Jamati"], c:1, e:"Elle est transversale : chaque élève est reconnu comme un individu." },
+      { q:"Selon Isambert-Jamati, l'échec scolaire est :", opts:["une donnée naturelle","une catégorie socialement construite","un trouble psychologique","une conséquence de la massification"], c:1, e:"Le désigner suppose une norme scolaire partagée." },
+      { q:"En France, la norme scolaire de référence est :", opts:["une norme moyenne européenne","une norme d'excellence, élitiste","une norme professionnelle","une norme fixée par les familles"], c:1, e:"Celle des prépas et des grandes écoles." },
+      { q:"L'échec scolaire devient un problème social :", opts:["dès Durkheim","dans les années 1930","dans les années 1970 et surtout 1980","dans les années 2000"], c:2, e:"À partir du moment où la question intéresse l'État ou un responsable politique." },
+      { q:"Chez Durkheim, le départ précoce des enfants du peuple :", opts:["était un scandale","semblait normal","était interdit","était compensé par des bourses"], c:1, e:"C'est le paradoxe : les inégalités deviennent un problème avec l'idée d'égalité des chances." },
+      { q:"La démocratisation qualitative suppose :", opts:["plus d'élèves dans le supérieur","une réduction du lien entre origine sociale et trajectoire","une hausse du nombre de diplômes","un allongement des études"], c:1, e:"Distinction d'Antoine Prost. La quantitative, elle, est l'augmentation générale de l'accès." },
+      { q:"Dans la massification inégalitaire (Merle) :", opts:["les écarts sociaux restent similaires","les groupes sociaux ne bénéficient pas de la même manière de l'extension","l'accès à l'école diminue","les inégalités disparaissent"], c:1, e:"Les inégalités sont déplacées vers le haut du système scolaire." },
+      { q:"La démocratisation ségrégative désigne :", opts:["l'accès élargi, mais vers des filières moins valorisées","la séparation des filles et des garçons","la fin du collège unique","la sélection à l'entrée du lycée"], c:0, e:"Les groupes favorisés restent surreprésentés dans les formations sélectives." },
+      { q:"Les Héritiers (1964) et La Reproduction (1970) sont de :", opts:["Boudon","Merle","Bourdieu et Passeron","Duru-Bellat"], c:2, e:"Leur question : quelles ressources avant même d'entrer dans la compétition scolaire ?" },
+      { q:"Le capital culturel désigne :", opts:["les revenus de la famille","les ressources culturelles transmises par la famille","le niveau de diplôme de l'élève","les équipements de l'école"], c:1, e:"Vocabulaire, rapport à la lecture, œuvres, façons de parler, connaissances générales." },
+      { q:"L'habitus est :", opts:["un calcul coût-bénéfice","un ensemble de dispositions durables incorporées","un diplôme","une méthode pédagogique"], c:1, e:"Acquis au cours de la socialisation : manières de penser, percevoir, agir, parler." },
+      { q:"Dire que l'école est « indifférente aux différences » signifie :", opts:["qu'elle ignore les élèves","qu'elle traite tout le monde pareil sans tenir compte des ressources inégales","qu'elle discrimine ouvertement","qu'elle adapte ses attentes"], c:1, e:"L'égalité formelle masque les différences initiales entre élèves." },
+      { q:"L'autocensure scolaire, c'est :", opts:["une sanction de l'institution","écarter soi-même une orientation jugée « pas pour soi »","un refus d'inscription","une note éliminatoire"], c:1, e:"Elle intervient avant même toute sélection institutionnelle." },
+      { q:"Selon le cours, le moment où les inégalités se voient le plus est :", opts:["l'entrée en maternelle","l'orientation","le baccalauréat","la première année d'université"], c:1, e:"À performances comparables, les élèves de milieux différents n'envisagent pas les mêmes possibilités." },
+      { q:"Pour Boudon, les familles évaluent :", opts:["les coûts, les bénéfices attendus et les risques","leur capital culturel","leur habitus","la culture légitime"], c:0, e:"Il s'intéresse aux raisons qui conduisent les acteurs à faire certains choix." },
+      { q:"L'imprégnation, dans la socialisation familiale, désigne :", opts:["des pratiques éducatives volontaires","le fait d'être plongé dans un environnement qui construit des dispositions","l'apprentissage scolaire","la transmission d'un patrimoine"], c:1, e:"Elle s'oppose à l'inculcation, qui est volontaire." },
+      { q:"Les normes scolaires contemporaines valorisent surtout :", opts:["l'obéissance et la surveillance","l'autonomie et la participation","la mémorisation","la discipline collective"], c:1, e:"D'où la connivence avec les styles éducatifs des classes moyennes et supérieures." },
+      { q:"Les styles éducatifs différenciés relèvent :", opts:["de régularités statistiques","d'un déterminisme social absolu","de portraits de toutes les familles","d'une norme officielle"], c:0, e:"Le cours met en garde contre une lecture caricaturale." },
       { q:"La théorie de l'étiquetage est associée à :", opts:["Goffman","Becker","Dubet","Gellner"], c:1, e:"Becker. Goffman, lui, travaille la notion de stigmate." },
       { q:"Les trois logiques d'action de l'élève chez Dubet sont :", opts:["intégration, stratégie, subjectivation","famille, école, pairs","accès, orientation, réussite","savoir, savoir-faire, savoir-être"], c:0, e:"L'élève est un acteur qui doit combiner ces trois logiques hétérogènes." },
       { q:"L'exo-éducation, selon Gellner, désigne :", opts:["une éducation diffuse et quotidienne","l'éducation donnée par la famille","un apprentissage séparé et organisé","l'éducation à l'étranger"], c:2, e:"Séparée, organisée dans des lieux et temps spécifiques, avec des savoirs décontextualisés." },
@@ -377,6 +533,72 @@ const SUBJECTS = [
       { q:"Que propose Boudon face à l'approche de Bourdieu ?", opts:["Le déterminisme social total","Des stratégies rationnelles des familles","Le fonctionnalisme pur","La reproduction automatique des inégalités"], c:1, e:"Boudon critique le déterminisme bourdieusien et propose une explication par les stratégies rationnelles (calculs coûts/bénéfices)." },
       { q:"Le collège unique est créé en :", opts:["1922","1960","1970","1973"], c:2, e:"Le collège unique est créé en 1970, dans le contexte de massification scolaire." }
     ], tr:[
+      { texte:"Selon Gellner, la société industrielle est ___, ce qui impose l'adaptation.",
+        opts:["évolutive","stable","fermée","inégalitaire"], c:0,
+        e:"Changement économique et professionnel, modification des métiers." },
+      { texte:"Chez Gellner, la communication ___ devient une composante importante du travail.",
+        opts:["orale","explicite","informelle","technique"], c:1,
+        e:"D'où le besoin d'un apprentissage général donné par l'école." },
+      { texte:"L'___-éducation confie l'apprentissage à des spécialistes autres que familiaux.",
+        opts:["endo","exo","auto","co"], c:1,
+        e:"L'endo-éducation, elle, est intégrée à la vie quotidienne." },
+      { texte:"Chez Durkheim, l'éducation est une action, la ___ est une réflexion.",
+        opts:["pédagogie","didactique","socialisation","instruction"], c:0,
+        e:"Réflexion et théories sur l'éducation." },
+      { texte:"Selon le texte 3, l'école apprend en plus des connaissances l'___ à des règles.",
+        opts:["obéissance","attention","initiation","adhésion"], c:0,
+        e:"Elle prépare à la vie en société." },
+      { texte:"Les règles scolaires s'imposent à tous, y compris aux ___.",
+        opts:["élèves","parents","maîtres","surveillants"], c:2,
+        e:"Exemple du silence, obligatoire même pour les enseignants." },
+      { texte:"La forme scolaire repose sur un espace ___ et un temps soigneusement réglé.",
+        opts:["ouvert","clos","commun","neutre"], c:1,
+        e:"Un lieu spécifique, distinct des autres lieux d'activité sociale." },
+      { texte:"Avant l'école, on apprenait par voir-faire et ___-dire.",
+        opts:["ouï","entre","non","bien"], c:0,
+        e:"Apprendre n'était pas distinct de faire." },
+      { texte:"Les inégalités scolaires tiennent à l'___ sociale, et non au seul mérite individuel.",
+        opts:["origine","classe","catégorie","position"], c:0,
+        e:"Définition de Dupriez & Verhoeven (2007)." },
+      { texte:"L'égalité des acquis correspond à la logique des ___ de compétences.",
+        opts:["niveaux","socles","paliers","cycles"], c:1,
+        e:"Garantir les mêmes connaissances et compétences à tous." },
+      { texte:"Selon Isambert-Jamati, l'échec scolaire est une catégorie socialement ___.",
+        opts:["construite","admise","mesurée","tolérée"], c:0,
+        e:"Le désigner suppose une norme scolaire partagée." },
+      { texte:"En France, la norme scolaire de référence est une norme d'___.",
+        opts:["effort","excellence","équité","évaluation"], c:1,
+        e:"Une norme élitiste, celle des prépas et des grandes écoles." },
+      { texte:"Antoine Prost distingue démocratisation quantitative et ___.",
+        opts:["ségrégative","qualitative","uniforme","progressive"], c:1,
+        e:"La qualitative suppose une réduction du lien entre origine sociale et trajectoire." },
+      { texte:"Merle parle de démocratisation ___ : les nouveaux publics vont vers les filières les moins valorisées.",
+        opts:["inégalitaire","ségrégative","partielle","différée"], c:1,
+        e:"Les groupes favorisés restent surreprésentés dans les formations sélectives." },
+      { texte:"Bourdieu et Passeron demandent quelles ___ les élèves possèdent avant d'entrer dans la compétition scolaire.",
+        opts:["ressources","notes","ambitions","méthodes"], c:0,
+        e:"D'où les concepts de capital culturel et d'habitus." },
+      { texte:"L'___ désigne des dispositions durables incorporées au cours de la socialisation.",
+        opts:["héritage","habitus","habitude","identité"], c:1,
+        e:"Manières de penser, percevoir, agir, parler, évaluer ce qui est possible." },
+      { texte:"Les élèves éloignés de la culture scolaire doivent faire un travail d'___.",
+        opts:["adaptation","acculturation","apprentissage","intégration"], c:1,
+        e:"D'autres arrivent avec des dispositions déjà proches de celles de l'institution." },
+      { texte:"L'école est dite « indifférente aux ___ » sociales.",
+        opts:["origines","différences","élèves","familles"], c:1,
+        e:"Traiter tout le monde pareil ne donne pas à tous les mêmes ressources." },
+      { texte:"L'___ conduit un élève à écarter lui-même une formation jugée « pas pour moi ».",
+        opts:["autocensure","orientation","exclusion","évaluation"], c:0,
+        e:"Elle intervient avant toute sélection institutionnelle." },
+      { texte:"Pour Boudon, les familles évaluent les coûts, les bénéfices attendus et les ___.",
+        opts:["risques","efforts","délais","chances"], c:0,
+        e:"Il s'intéresse aux raisons des choix, pas seulement aux héritages." },
+      { texte:"L'___ est le mécanisme par lequel l'enfant est plongé dans un environnement qui le façonne.",
+        opts:["inculcation","imprégnation","injonction","initiation"], c:1,
+        e:"L'inculcation, elle, est volontaire : les parents transmettent des manières de faire." },
+      { texte:"Les styles éducatifs relèvent de ___ statistiques, pas d'un déterminisme absolu.",
+        opts:["régularités","exceptions","preuves","catégories"], c:0,
+        e:"Le cours met en garde contre la lecture caricaturale." },
       { texte:"La théorie de l'___ de Becker montre qu'être classé bon ou mauvais élève influence l'avenir scolaire.",
         opts:["étiquetage","évaluation","orientation","exclusion"], c:0,
         e:"L'élève se met en conformité avec son étiquette et en prend le rôle." },
@@ -438,6 +660,13 @@ const SUBJECTS = [
         opts:["Analyser","Contextualiser","Problématiser","Argumenter"], c:2,
         e:"« Filles et garçons » devient « pourquoi y a-t-il des inégalités entre elles et eux ? »." }
     ], oq:[
+      { q:"En quoi les textes de la séance montrent-ils que l'école est une institution de socialisation ?", a:"Chez Gellner, la société industrielle est évolutive : les métiers se modifient, le travail suppose une communication explicite, et l'éducation devient un point clé, prise en charge à grande échelle par des spécialistes hors de la famille, ce qu'on appelle l'exo-éducation. Chez Durkheim, l'éducation est l'action transmise à l'enfant, volontairement ou non, et elle participe à la formation de l'individu, à la différence de la pédagogie qui n'est que la réflexion sur cette action. Vincent, Lahire et Thin vont plus loin : au-delà des connaissances, l'école apprend l'obéissance à des règles et prépare à la vie en société. Elle le fait par sa forme même, un lieu spécifique et un temps spécifique, un espace clos et un temps soigneusement réglé, où chacun doit accomplir ses devoirs et respecter des règles qui s'imposent à tous, y compris aux maîtres, comme le montre l'exemple du silence. Les trois textes convergent donc : ce n'est pas seulement ce que l'école transmet qui socialise, c'est sa manière de l'organiser." },
+      { q:"Comment la forme scolaire transforme-t-elle la manière d'apprendre, et qu'est-ce qui la remet en question aujourd'hui ?", a:"Avant l'école, on apprenait par voir-faire et ouï-dire, en participant aux activités de la famille ou de la maison : apprendre n'était pas distinct de faire. Avec la forme scolaire, l'apprentissage devient une activité séparée, dans un lieu spécifique, avec un maître, selon des règles et un temps précis. C'est cette séparation entre apprendre et faire qu'Albarello interroge en 2015 : elle paraît aujourd'hui trop radicale, et de nouvelles formes de formation apparaissent. Les stages, les formations en alternance et l'immersion rapprochent à nouveau l'apprentissage et la pratique, et les apprentissages ne se font plus uniquement à l'école. La forme scolaire n'est donc pas une évidence naturelle : c'est une construction historique, qui peut être questionnée." },
+      { q:"Pourquoi peut-on dire que l'échec scolaire est une construction sociale ?", a:"Parce qu'il n'est pas une donnée naturelle : désigner un parcours comme un échec suppose une norme scolaire partagée par rapport à laquelle on le juge insuffisant. En France, cette norme est une norme d'excellence, très culturelle, élitiste, celle des prépas et des grandes écoles. Avant les années 1960, l'école était pensée comme progressive et libératrice, et les difficultés scolaires étaient lues comme des problèmes individuels ou psychologiques, avec des catégories comme la « débilité légère ». Puis les recherches sociologiques montrent la persistance des inégalités sociales de réussite. Comme le dit Isambert-Jamati (2020), c'est le regard porté sur les difficultés qui a changé, pas seulement les difficultés elles-mêmes : la même réalité, un départ précoce sans diplôme, n'était scandaleuse que pour une minorité, pas pour la masse des enfants d'ouvriers et de paysans. L'échec devient un problème social au moment même où l'égalité devient un objectif légitime de l'école." },
+      { q:"Massification et démocratisation : montre que les deux ne se confondent pas.", a:"La massification est l'augmentation du nombre et de la proportion d'élèves qui accèdent à un niveau donné d'enseignement. La démocratisation, elle, suppose les mêmes chances de réussite quelle que soit l'origine sociale. Antoine Prost distingue une démocratisation quantitative, l'augmentation générale de l'accès, et une démocratisation qualitative, qui suppose une véritable réduction du lien entre origine sociale et trajectoire. Pierre Merle précise le mécanisme : la massification peut être uniforme, les études s'allongent pour tous mais les écarts sociaux restent similaires, ou inégalitaire, quand les groupes sociaux ne bénéficient pas de la même manière de cette extension. Il parle alors de démocratisation ségrégative : les nouveaux publics accèdent davantage à l'éducation mais se concentrent dans les filières les moins valorisées, tandis que les groupes favorisés restent surreprésentés dans les formations sélectives. Les inégalités sont donc déplacées vers le haut du système plutôt que supprimées." },
+      { q:"Comment Bourdieu et Passeron expliquent-ils les inégalités scolaires ?", a:"Ils partent d'une question : quelles ressources certains élèves possèdent-ils avant même d'entrer dans la compétition scolaire ? La réponse tient d'abord au capital culturel, ces ressources culturelles transmises par la famille, vocabulaire, rapport à la lecture, familiarité avec certaines œuvres, façons de parler et d'argumenter, qui entrent en connivence avec la culture légitime valorisée par l'école. Elle tient ensuite à l'habitus, cet ensemble de dispositions durables incorporées au cours de la socialisation, qui crée une distance variable entre culture familiale et culture scolaire : certains élèves arrivent avec des dispositions proches des attentes de l'institution, d'autres doivent effectuer un travail d'acculturation. De là leur thèse sur la neutralité : l'école traite officiellement tous les élèves de manière identique, mais traiter tout le monde pareil ne donne pas à tous les mêmes ressources. Elle est « indifférente aux différences », et son égalité formelle masque les différences initiales. Les inégalités ne concernent d'ailleurs pas que les résultats : l'autocensure conduit certains élèves à écarter eux-mêmes des orientations, avant toute sélection institutionnelle." },
+      { q:"En quoi l'explication de Boudon diffère-t-elle de celle de Bourdieu et Passeron ?", a:"Bourdieu et Passeron expliquent les inégalités par ce qui précède le choix : le capital culturel hérité et l'habitus, des dispositions incorporées qui rendent certaines voies pensables et d'autres non. Boudon, lui, s'intéresse aux raisons qui conduisent les acteurs à effectuer certains choix. Les familles prennent des décisions à différents moments du parcours : poursuivre ou non les études, choisir une filière, une formation, accepter un coût, prendre un risque. Elles évaluent les coûts, les bénéfices attendus et les risques, et ces calculs diffèrent selon la position sociale. D'un côté, des dispositions intériorisées ; de l'autre, des décisions rationnelles en situation. Les deux modèles éclairent le même fait, la persistance du lien entre origine sociale et parcours, mais ils n'appellent pas les mêmes réponses politiques." },
+      { q:"Comment la socialisation familiale contribue-t-elle aux inégalités scolaires ?", a:"Les parcours varient selon l'origine sociale notamment parce que les familles socialisent différemment leurs enfants, et les inégalités résultent de l'interaction entre pratiques familiales et pratiques scolaires. La socialisation familiale fonctionne selon deux mécanismes : l'imprégnation, où l'enfant est plongé dans un environnement qui construit progressivement ses dispositions, et l'inculcation, où les parents mettent volontairement en œuvre des pratiques éducatives. Les inégalités commencent quand apparaît un décalage entre la sphère familiale et la sphère scolaire : l'élève doit alors se conformer à de nouvelles normes, qui ne portent pas seulement sur les savoirs mais aussi sur l'attitude et le comportement. Les recherches, notamment celles de Lahire, mettent en évidence des styles éducatifs différenciés : obéissance, autorité plus directe et surveillance plus immédiate dans les familles populaires ; autonomie, initiative, expressivité, négociation et intériorisation des règles dans les classes moyennes et supérieures, ce qui entre en connivence avec les normes scolaires contemporaines. Il faut cependant se garder d'une lecture caricaturale : ce sont des régularités statistiques, pas des portraits de toutes les familles, et il n'existe pas de déterminisme social absolu." },
       { q:"Explique la différence entre massification et démocratisation scolaire.", a:"La massification est l'accroissement quantitatif du nombre d'élèves scolarisés et de la durée des études, pour une part croissante de la population, indépendamment de l'origine sociale. La démocratisation est la réduction du lien entre l'origine sociale et le parcours scolaire, c'est-à-dire l'accès, l'orientation et la réussite. Un système peut donc se massifier sans se démocratiser, si le poids de l'origine sociale reste inchangé ou se déplace simplement plus tard dans le cursus. Merle (2002) distingue une démocratisation quantitative, l'élargissement de l'accès, et une démocratisation qualitative, l'affaiblissement effectif du lien entre origine sociale et réussite. La France a connu surtout la première." },
       { q:"Présente la forme scolaire et ses quatre dimensions.", a:"La forme scolaire, concept associé à Guy Vincent, désigne une manière spécifique d'organiser la socialisation et les apprentissages. Elle se consolide à partir du XVIIe siècle et repose sur une séparation relativement forte entre l'école et les autres espaces de la vie sociale. Ses quatre dimensions sont des savoirs théoriques et décontextualisés qui passent par l'écrit, une relation pédagogique spécifique entre enseignant et élèves, un espace et un temps propres à l'école, et des règles impersonnelles et relativement standardisées. Apprendre devient alors une activité organisée, séparée et réglée : la manière même dont on apprend participe à la socialisation scolaire." },
       { q:"En quoi les approches interactionnistes complètent-elles les analyses macro-structurelles ?", a:"Elles déplacent le regard vers les espaces scolaires ordinaires, la cour, la salle des maîtres, le portail, et vers les interactions quotidiennes. Elles étudient les effets d'étiquetage et de prophétie autoréalisatrice, l'effet Pygmalion, la construction sociale des jugements scolaires et le rapport au savoir. Cette échelle micro permet de se demander si un élève réussit seulement parce qu'il a le niveau, ou si les attentes et les jugements des enseignants influencent aussi sa réussite. Becker apporte la théorie de l'étiquetage, Goffman la notion de stigmate." },
@@ -445,6 +674,30 @@ const SUBJECTS = [
       { q:"Explique la différence entre normes formelles et normes informelles, et pourquoi les normes informelles sont plus contraignantes.", a:"Les normes formelles sont les règles explicites. Les normes informelles sont intériorisées sans qu'on s'en rende compte, ce qui les rend plus contraignantes : on ne les questionne pas car elles paraissent naturelles." },
       { q:"Oppose la perspective fonctionnaliste et la perspective critique de l'éducation.", a:"La perspective fonctionnaliste voit l'éducation comme un facteur d'intégration et de cohésion sociale (Durkheim, Parsons). La perspective critique la voit comme un lieu de reproduction des rapports de domination (Bourdieu, Passeron), développée surtout à partir des années 1960-70." }
     ], auteurs:[
+      { nom:"Luc Albarello", courant:"Sciences de l'éducation", periode:"Texte de 2015",
+        these:"Chercheur belge, il interroge la forme scolaire à partir des évolutions actuelles, dans « Sens et mutation des apprentissages dans un contexte d'accélération ». Son point : la forme scolaire traditionnelle sépare apprendre et faire, et cette séparation paraît aujourd'hui trop radicale. Les stages, les formations en alternance et l'immersion rapprochent l'apprentissage et la pratique, et les apprentissages ne se font plus uniquement à l'école.",
+        concepts:["forme scolaire","apprendre et faire","alternance","apprentissages informels"],
+        retenir:"Pour le TD : c'est le texte 4, celui qui met la forme scolaire en question. Il répond en miroir au texte 3." },
+      { nom:"Dupriez et Verhoeven", courant:"Sociologie des politiques éducatives", periode:"Travaux de 2007",
+        these:"Vincent Dupriez et Marie Verhoeven, chercheurs à l'université catholique de Louvain, travaillent sur les systèmes scolaires et les inégalités. Le cours retient leur distinction de quatre conceptions successives de l'égalité, de plus en plus ambitieuses : égalité d'accès, de traitement, des résultats ou des acquis, et, avec Dupriez et Dumay (2008), égalité de respect. Toutes sont des déclinaisons du principe d'égalité des chances : la place de chacun ne doit pas être déterminée par les ressources héritées.",
+        concepts:["égalité d'accès","égalité de traitement","égalité des acquis","égalité de respect"],
+        retenir:"Pour le partiel : savoir énumérer les quatre égalités dans l'ordre, de la moins à la plus ambitieuse." },
+      { nom:"Marie Duru-Bellat", courant:"Sociologie des inégalités scolaires", periode:"Née en 1950, sociologue française",
+        these:"Citée avec Agnès van Zanten (2012) pour expliquer pourquoi les inégalités scolaires deviennent visibles. Ses travaux portent sur les effets de la massification, l'inflation scolaire et le poids de l'origine sociale dans les parcours. L'idée que l'école produit et reproduit des inégalités est difficile à entendre, car l'école était pensée comme une institution progressiste et libératrice.",
+        concepts:["inégalités scolaires","inflation scolaire","égalité des chances"],
+        retenir:"Pour le cours : avec la généralisation de l'accès, l'égalité des chances rend les écarts de réussite problématiques." },
+      { nom:"Viviane Isambert-Jamati", courant:"Sociologie de l'éducation",
+        these:"Sociologue française de l'éducation, connue pour ses travaux sur les contenus d'enseignement et sur la construction sociale de l'échec scolaire. Le cours cite l'édition de 2020 : avant, les difficultés scolaires étaient lues comme relevant de facteurs individuels et psychologiques, avec des catégories comme la « débilité légère », et non comme un problème social. C'est le regard porté sur ces difficultés qui a changé.",
+        concepts:["échec scolaire","catégorie socialement construite","norme scolaire"],
+        retenir:"Pour le partiel : l'échec scolaire devient un problème social au moment où l'égalité devient un objectif légitime de l'école." },
+      { nom:"Antoine Prost", courant:"Histoire de l'éducation", periode:"Né en 1933, historien français",
+        these:"Historien de l'enseignement français, il a notamment écrit sur l'histoire de l'éducation en France et sur les réformes du système scolaire. Le cours retient sa distinction entre démocratisation quantitative, l'augmentation générale de l'accès à l'éducation, et démocratisation qualitative, qui suppose une réduction effective du lien entre origine sociale et trajectoire scolaire.",
+        concepts:["démocratisation quantitative","démocratisation qualitative","massification"],
+        retenir:"Pour le partiel : ne pas confondre massification et démocratisation, et savoir distinguer ses deux formes." },
+      { nom:"Bernard Lahire", courant:"Sociologie dispositionnaliste", periode:"Né en 1963, sociologue français",
+        these:"Élève critique de Bourdieu, il travaille sur les configurations familiales et la réussite scolaire, notamment dans Tableaux de familles (1995), et sur la pluralité des dispositions dans L'Homme pluriel (1998). Il montre que les individus ne sont pas porteurs d'un habitus unique et cohérent : chacun puise dans des dispositions plurielles, parfois contradictoires, selon les contextes.",
+        concepts:["homme pluriel","styles éducatifs","configurations familiales","dispositions"],
+        retenir:"Pour le cours : il nuance Bourdieu. Les styles éducatifs différenciés sont des régularités statistiques, pas un destin." },
       { nom:"Becker", courant:"Interactionnisme symbolique", periode:"1928-2023",
         these:"Howard Becker est l'auteur de la théorie de l'étiquetage : ce n'est pas l'acte qui fait la déviance, c'est la réaction sociale qui le désigne comme tel. Appliquée à l'école, un élève étiqueté bon ou mauvais voit son avenir scolaire influencé, et finit par se conformer à son étiquette.",
         concepts:["étiquetage","déviance","carrière","réaction sociale"],
@@ -490,7 +743,114 @@ const SUBJECTS = [
       { nom:"Boudon", contrib:"« L'Inégalité des chances » (1973). Explique les inégalités par les stratégies rationnelles des familles plutôt que par le déterminisme social." },
       { nom:"Parsons", contrib:"Prolonge le fonctionnalisme durkheimien : l'école prépare aux rôles sociaux adultes." }
     ] },
-  { id:"e193", ue:"UE19", ects:2, ecue:"19.3", title:"Introduction à la démarche de recherche 2", cm:[], td:[], fc:[], qcm:[], oq:[], auteurs:[] },
+  { id:"e193", ue:"UE19", ects:2, ecue:"19.3", title:"Introduction à la démarche de recherche 2",
+    cm:[
+      { label:"CM 1 · 24/09", sections:[
+        { title:"Les dates des CM", body:"Le CM est en lien avec le TD, mais <b>plus théorique</b>.", list:["<b>CM 1</b> : 24/09 · <b>CM 2</b> : 01/10 (en visio) · <b>CM 3</b> : 08/10","<b>CM 4</b> : 15/10 · <b>CM 5</b> : 12/11 · <b>CM 6</b> : 19/11","<b>Évaluation</b> : partiel de 2 h en fin de semestre, questions de cours et de connaissance, plus un sujet de réflexion. Il faut avoir des références théoriques."] },
+
+        { title:"Les objectifs du cours", body:"", list:["Connaître et comprendre les <b>principaux éléments qui structurent une recherche</b> en sciences sociales.","<b>Initiation à l'épistémologie</b> d'une enquête.","Question de départ : <span class='chunk-highlight'>quelles sont les principales techniques de recherche en sciences sociales ?</span>"] },
+
+        { title:"Les techniques de recueil de données", body:"Trois grandes techniques : l'<b>entretien</b>, le <b>questionnaire</b> et l'<b>observation</b>. On les développe avec un objectif : <b>acquérir des connaissances sur le monde social</b>.", list:["<b>1. Le questionnaire</b> : des questions ouvertes ou fermées. On est du côté de la <b>quantité</b>.","<b>2. L'entretien</b> : du <b>qualitatif</b>.","<b>3. L'observation</b> : le <b>comportement pratique</b>.","Pourquoi celles-ci, et pourquoi les avoir développées ? Parce qu'elles <b>répondent à des objectifs différents</b>."] },
+
+        { title:"Pourquoi recueillir des données ?", body:"Pour essayer de <b>produire des connaissances réelles</b>. Le recueil de données permet d'analyser, d'obtenir de la donnée, et donc d'avoir une connaissance sur le monde social.", list:["On travaille sur des <b>données sociales</b>, sur les <b>représentations du monde social</b>.","La démarche demande une part de <b>curiosité intellectuelle et émotionnelle</b>.","Le travail passe par le <b>codage et le recodage</b> des données."] },
+
+        { title:"L'épistémologie", body:"<b>Épistémologie</b> : la science qui s'intéresse à la connaissance, au <span class='chunk-highlight'>mécanisme d'un énoncé pour savoir s'il est vrai ou faux</span>." },
+
+        { title:"Le biais de désirabilité", body:"Dans un entretien, la personne a l'impression de <b>passer un test</b>, et essaie donc de donner <b>la réponse parfaite</b>.", list:["Au contraire, on veut la réponse <b>la plus brute et la plus concrète</b> possible."] },
+
+        { title:"La normativité, à éviter", body:"On ne veut pas savoir si <b>c'est bien ou c'est mal</b>.", list:["On veut <b>décrire</b> le jugement de valeur, la personnalité.","On veut <b>comprendre ce qu'on a voulu nous dire</b> sur le sujet."] },
+
+        { title:"Milgram : la soumission à l'autorité", body:"L'expérience électrique de <b>Milgram</b> porte sur la <b>soumission à l'autorité</b> : comment l'individu peut se soumettre à une autorité, malgré ce qu'il veut.", list:["Le mécanisme est celui de la <b>délégation</b> : mettre de côté son propre jugement face à une personne qui détient l'autorité."] },
+
+        { title:"L'entretien socio-biographique", body:"Un entretien où <b>une personne se livre</b>. Ce n'est pas seulement <b>intellectuel</b>, c'est aussi <b>émotionnel</b>." },
+
+        { title:"La question de la focale", body:"La focale, ou l'échelle : <b>qu'est-ce que je cherche à voir ?</b>", list:["Une vision <b>macrosociologique</b>, à grande échelle.","Une vision <b>microsociologique</b>, au plus près des situations."] },
+
+        { title:"Deux points de vigilance", body:"", list:["<span class='chunk-highlight'>Notre présence peut changer le comportement de l'individu.</span>","Le moyen simple d'analyser les données, c'est de les <b>comparer par type et par nombre</b>."] },
+
+        { title:"Repères de vocabulaire", body:"<i>Section ajoutée en complément : ces termes sont employés dans le cours sans y être définis.</i>", list:["<b>Méthode quantitative</b> : elle mesure et compte sur un grand nombre de cas, pour dégager des régularités. C'est le terrain du questionnaire.","<b>Méthode qualitative</b> : elle cherche à comprendre en profondeur le sens que les personnes donnent à leurs pratiques, sur un petit nombre de cas. C'est le terrain de l'entretien.","<b>Question ouverte</b> : la personne répond avec ses propres mots. <b>Question fermée</b> : elle choisit parmi des réponses prévues, ce qui permet de compter.","<b>Codage</b> : transformer des réponses brutes en catégories analysables. Le <b>recodage</b> consiste à regrouper ou redécouper ces catégories au fil de l'analyse.","<b>Macrosociologie</b> : l'étude des structures et des grands ensembles sociaux. <b>Microsociologie</b> : l'étude des interactions et des situations concrètes.","<b>Récit de vie</b>, ou entretien socio-biographique : la personne raconte son parcours, ce qui fait apparaître l'articulation entre sa trajectoire personnelle et les contraintes sociales.","<b>Neutralité axiologique</b> : la règle, formulée par Max Weber, selon laquelle le chercheur décrit et explique sans porter de jugement de valeur sur ce qu'il étudie. C'est ce que vise le refus de la normativité.","<b>Désirabilité sociale</b> : la tendance à répondre ce qui est socialement valorisé plutôt que ce que l'on fait ou pense vraiment.","<b>Effet de l'enquêteur</b> : le fait que la présence de celui qui observe modifie le comportement observé."] }
+      ], recap:[
+        "Le CM est plus théorique que le TD, et demande des références théoriques.",
+        "Trois techniques de recueil : le questionnaire (quantitatif, questions ouvertes ou fermées), l'entretien (qualitatif) et l'observation (comportement pratique).",
+        "Elles répondent à des objectifs différents : le choix de la technique dépend de la question.",
+        "On recueille des données pour produire des connaissances réelles sur le monde social et ses représentations.",
+        "Épistémologie : la science de la connaissance, qui interroge le mécanisme d'un énoncé pour savoir s'il est vrai ou faux.",
+        "Biais de désirabilité : la personne cherche la réponse parfaite, alors qu'on veut la plus brute et la plus concrète.",
+        "Éviter la normativité : ne pas juger si c'est bien ou mal, mais décrire et comprendre.",
+        "Milgram : la soumission à l'autorité passe par la délégation, mettre de côté son propre jugement.",
+        "L'entretien socio-biographique engage aussi l'émotionnel, pas seulement l'intellectuel.",
+        "La focale : chercher à voir du côté macrosociologique ou microsociologique.",
+        "Notre présence peut changer le comportement de l'individu. On analyse en comparant par type et par nombre."
+      ] }
+    ], td:[],
+    fc:[
+      { q:"Quelles sont les trois principales techniques de recueil de données ?", a:"Le questionnaire, l'entretien et l'observation. Elles répondent à des objectifs différents." },
+      { q:"Que permet le questionnaire ?", a:"Il repose sur des questions ouvertes ou fermées et se situe du côté de la quantité." },
+      { q:"De quel côté se situe l'entretien ?", a:"Du côté du qualitatif." },
+      { q:"Sur quoi porte l'observation ?", a:"Sur le comportement pratique." },
+      { q:"Pourquoi recueille-t-on des données ?", a:"Pour essayer de produire des connaissances réelles. Le recueil permet d'analyser et d'obtenir de la donnée, donc d'avoir une connaissance sur le monde social. On travaille sur des données sociales et sur les représentations du monde social." },
+      { q:"Qu'est-ce que l'épistémologie ?", a:"La science qui s'intéresse à la connaissance, au mécanisme d'un énoncé pour savoir s'il est vrai ou faux." },
+      { q:"Qu'est-ce que le biais de désirabilité ?", a:"En entretien, la personne a l'impression de passer un test et essaie de donner la réponse parfaite. Or on veut au contraire la réponse la plus brute et la plus concrète." },
+      { q:"Pourquoi éviter la normativité en recherche ?", a:"Parce qu'on ne cherche pas à savoir si c'est bien ou mal. On veut décrire le jugement de valeur ou la personnalité, et comprendre ce qu'on a voulu nous dire sur le sujet." },
+      { q:"Que montre l'expérience de Milgram ?", a:"La soumission à l'autorité : comment un individu peut se soumettre à une autorité malgré ce qu'il veut. Le mécanisme est la délégation, mettre de côté son propre jugement face à une personne qui détient l'autorité." },
+      { q:"Qu'est-ce qu'un entretien socio-biographique ?", a:"Un entretien où la personne se livre. Il n'est pas seulement intellectuel, il est aussi émotionnel." },
+      { q:"Que désigne la question de la focale ?", a:"L'échelle à laquelle on regarde : qu'est-ce que je cherche à voir ? Une vision macrosociologique, ou une vision microsociologique." },
+      { q:"Quel effet la présence du chercheur a-t-elle ?", a:"Notre présence peut changer le comportement de l'individu observé." },
+      { q:"Quel est le moyen simple d'analyser les données ?", a:"Les comparer par type et par nombre. Le travail passe aussi par le codage et le recodage des données." },
+      { q:"Quelle différence entre méthode quantitative et qualitative ?", a:"La méthode quantitative mesure et compte sur un grand nombre de cas pour dégager des régularités, c'est le terrain du questionnaire. La méthode qualitative cherche à comprendre en profondeur le sens que les personnes donnent à leurs pratiques, sur peu de cas, c'est le terrain de l'entretien." }
+    ],
+    qcm:[
+      { q:"Le questionnaire relève surtout :", opts:["du qualitatif","de la quantité","de l'observation directe","de l'épistémologie"], c:1, e:"Il repose sur des questions ouvertes ou fermées." },
+      { q:"L'entretien relève surtout :", opts:["du quantitatif","du qualitatif","du comportement pratique","du codage"], c:1, e:"L'observation, elle, porte sur le comportement pratique." },
+      { q:"L'épistémologie s'intéresse :", opts:["aux méthodes de terrain","à la connaissance et au mécanisme d'un énoncé","aux statistiques","aux représentations sociales"], c:1, e:"Pour savoir si un énoncé est vrai ou faux." },
+      { q:"Le biais de désirabilité conduit la personne à :", opts:["refuser de répondre","donner la réponse qu'elle croit parfaite","exagérer ses difficultés","répondre trop vite"], c:1, e:"Elle a l'impression de passer un test. On veut au contraire du brut et du concret." },
+      { q:"Éviter la normativité, c'est :", opts:["ne pas juger si c'est bien ou mal","ne pas poser de questions fermées","ne pas observer","ne pas coder les données"], c:0, e:"On décrit le jugement de valeur, on cherche à comprendre ce qui est dit." },
+      { q:"L'expérience de Milgram porte sur :", opts:["la mémoire","la soumission à l'autorité","le conformisme de groupe","l'apprentissage scolaire"], c:1, e:"Le mécanisme est la délégation du jugement." },
+      { q:"La délégation, chez Milgram, consiste à :", opts:["confier la tâche à un tiers","mettre de côté son propre jugement face à l'autorité","refuser l'ordre reçu","partager la responsabilité du groupe"], c:1, e:"C'est ce qui permet la soumission malgré le désaccord." },
+      { q:"L'entretien socio-biographique engage :", opts:["seulement l'intellectuel","l'intellectuel et l'émotionnel","seulement des questions fermées","uniquement l'observation"], c:1, e:"La personne se livre." },
+      { q:"La question de la focale oppose :", opts:["ouvert et fermé","macrosociologique et microsociologique","quantitatif et statistique","vrai et faux"], c:1, e:"Qu'est-ce que je cherche à voir, et à quelle échelle ?" },
+      { q:"Le moyen simple d'analyser les données recueillies est de :", opts:["les comparer par type et par nombre","les classer par date","les résumer","les publier"], c:0, e:"Avec un travail de codage et de recodage." },
+      { q:"Un risque majeur de l'observation est :", opts:["le coût","que notre présence change le comportement de l'individu","la lenteur","l'absence de données"], c:1, e:"C'est l'effet de l'enquêteur." }
+    ],
+    tr:[
+      { texte:"Les trois techniques de recueil sont le questionnaire, l'entretien et l'___.",
+        opts:["observation","analyse","expérience","enquête"], c:0,
+        e:"Elles répondent à des objectifs différents." },
+      { texte:"Le questionnaire se situe du côté de la ___.",
+        opts:["qualité","quantité","théorie","pratique"], c:1,
+        e:"Questions ouvertes ou fermées. L'entretien, lui, est qualitatif." },
+      { texte:"L'___ est la science qui s'intéresse à la connaissance et au mécanisme d'un énoncé.",
+        opts:["épistémologie","éthique","ethnographie","enquête"], c:0,
+        e:"Pour savoir si un énoncé est vrai ou faux." },
+      { texte:"Le biais de ___ pousse la personne interrogée à donner la réponse parfaite.",
+        opts:["confirmation","désirabilité","sélection","mémoire"], c:1,
+        e:"On veut au contraire la réponse la plus brute et la plus concrète." },
+      { texte:"On cherche à éviter la ___ : savoir si c'est bien ou mal n'est pas la question.",
+        opts:["subjectivité","normativité","neutralité","complexité"], c:1,
+        e:"On décrit et on cherche à comprendre." },
+      { texte:"L'expérience de Milgram porte sur la soumission à l'___.",
+        opts:["autorité","expérience","opinion","institution"], c:0,
+        e:"Par le mécanisme de la délégation du jugement." },
+      { texte:"L'entretien ___ est un entretien où la personne se livre, aussi émotionnellement.",
+        opts:["directif","socio-biographique","collectif","exploratoire"], c:1,
+        e:"Pas seulement intellectuel." },
+      { texte:"La focale oppose une vision macrosociologique et une vision ___.",
+        opts:["microsociologique","ethnographique","statistique","historique"], c:0,
+        e:"Qu'est-ce que je cherche à voir ?" },
+      { texte:"Le travail sur les données passe par le codage et le ___.",
+        opts:["classement","recodage","comptage","tri"], c:1,
+        e:"Puis par la comparaison par type et par nombre." }
+    ],
+    oq:[
+      { q:"Présente les trois techniques de recueil de données et ce qui les distingue.", a:"La recherche en sciences sociales mobilise trois grandes techniques, qui répondent à des objectifs différents. Le questionnaire, d'abord, repose sur des questions ouvertes ou fermées et se situe du côté de la quantité : il permet de mesurer et de compter sur un grand nombre de cas. L'entretien, ensuite, relève du qualitatif : il cherche à comprendre le sens que les personnes donnent à leurs pratiques, et dans sa forme socio-biographique il engage autant l'émotionnel que l'intellectuel, puisque la personne se livre. L'observation, enfin, porte sur le comportement pratique, ce que les gens font et non ce qu'ils en disent. Le choix dépend de la question posée et de la focale retenue, macrosociologique ou microsociologique. Dans tous les cas, l'objectif est le même : produire des connaissances réelles sur le monde social et sur ses représentations, par un travail de codage et de recodage des données, puis de comparaison par type et par nombre." },
+      { q:"Quels biais le chercheur doit-il surveiller, et pourquoi ?", a:"Le premier est le biais de désirabilité : en entretien, la personne a l'impression de passer un test et cherche à donner la réponse parfaite, alors que l'enquêteur veut la réponse la plus brute et la plus concrète. Le deuxième est la normativité : il ne s'agit pas de savoir si ce qui est raconté est bien ou mal, mais de décrire le jugement de valeur exprimé et de comprendre ce que la personne a voulu dire. C'est ce que la sociologie appelle la neutralité axiologique. Le troisième est l'effet de la présence du chercheur, qui peut changer le comportement de l'individu observé. L'expérience de Milgram sur la soumission à l'autorité éclaire d'ailleurs ce rapport : face à quelqu'un qui détient l'autorité, l'individu peut mettre de côté son propre jugement, ce qui vaut aussi dans la situation d'enquête, où l'enquêteur est souvent perçu comme une figure savante." }
+    ],
+    auteurs:[
+      { nom:"Stanley Milgram", courant:"Psychologie sociale", periode:"1933-1984, psychologue américain",
+        these:"Son expérience dite « électrique », menée à Yale à partir de 1961, demande à des participants d'administrer ce qu'ils croient être des chocs électriques croissants à une autre personne, sur l'ordre d'un expérimentateur en blouse. Une majorité obéit jusqu'aux niveaux les plus élevés. Milgram en tire une analyse de la soumission à l'autorité : l'individu entre dans un état où il se considère comme l'exécutant de la volonté d'un autre, et délègue sa responsabilité. Il met de côté son propre jugement face à celui qui détient l'autorité.",
+        concepts:["soumission à l'autorité","délégation","état agentique","obéissance"],
+        retenir:"Pour le cours : ce n'est pas la cruauté des individus qui est en jeu, mais la situation et le rapport à l'autorité. Utile aussi pour penser la place de l'enquêteur face à l'enquêté." }
+    ] },
   { id:"e201", ue:"UE20", ects:3, ecue:"20.1", title:"Culture numérique",
     cm:[
       { label:"CM1 · 03/09", sections:[
@@ -532,9 +892,29 @@ const SUBJECTS = [
         "Quatre axes du TD : usages et inégalités, posture professionnelle, confidentialité, adaptation des outils.",
         "L'IA est autorisée, mais sous condition.",
         "La charte se construit collectivement : règles, cadre, déontologie, confidentialité."
+      ] },
+      { label:"TD 2 · 22/09", sections:[
+        { title:"Au programme de la séance", body:"", list:["<b>Présentation des chartes</b> préparées par les groupes.","<b>Remodifier certains points</b> en vue du rendu final, pour le dépôt."] },
+
+        { title:"Deux types de confidentialité", body:"La séance distingue deux formes de confidentialité.", list:["La confidentialité <b>professionnelle</b>.","Le <b>secret partagé</b>."] },
+
+        { title:"Pour la prochaine fois", body:"La consigne est déposée sur <b>Eprel</b> : à préparer pour la prochaine séance." },
+
+        { title:"Repères de vocabulaire", body:"<i>Section ajoutée en complément : ces deux notions sont citées en cours sans y être développées.</i>", list:["<b>Secret professionnel</b> : l'obligation, pour certains professionnels, de ne pas révéler les informations apprises dans l'exercice de leur métier. Elle est prévue par la loi et sa violation est sanctionnée pénalement. Elle protège la personne accompagnée, pas le professionnel.","<b>Discrétion professionnelle</b> : plus large, elle porte sur tout ce qui touche au fonctionnement du service. Elle relève de la déontologie et non du droit pénal.","<b>Secret partagé</b> : le partage d'informations à caractère secret entre professionnels qui interviennent auprès de la même personne, quand c'est nécessaire à son accompagnement. Il ne s'agit pas d'une exception au secret, mais d'un cadre strict.","Les conditions habituellement retenues pour le secret partagé : les professionnels doivent <b>intervenir auprès de la même personne</b>, le partage doit être <b>strictement nécessaire</b> à l'accompagnement, il se limite aux <b>informations utiles</b>, et la personne doit en être <b>informée</b>, sa non-opposition étant recherchée.","<span class='chunk-highlight'>En numérique, ces règles se rejouent</span> : un message, un groupe de discussion, un document partagé ou un outil d'IA font circuler des informations bien au-delà du cercle prévu."] }
+      ], recap:[
+        "Présentation des chartes, puis modification de certains points pour le rendu final.",
+        "Deux types de confidentialité à distinguer : la confidentialité professionnelle et le secret partagé.",
+        "Le secret partagé n'est pas une exception au secret : c'est un cadre strict, limité aux informations nécessaires, avec information de la personne.",
+        "La consigne pour la prochaine séance est sur Eprel."
       ] }
     ],
     fc:[
+      { q:"Quels sont les deux types de confidentialité distingués en TD 2 ?", a:"La confidentialité professionnelle et le secret partagé." },
+      { q:"Qu'est-ce que le secret professionnel ?", a:"L'obligation, pour certains professionnels, de ne pas révéler les informations apprises dans l'exercice de leur métier. Elle est prévue par la loi, sa violation est sanctionnée pénalement, et elle protège la personne accompagnée, pas le professionnel." },
+      { q:"Qu'est-ce que le secret partagé ?", a:"Le partage d'informations à caractère secret entre professionnels qui interviennent auprès de la même personne, lorsque c'est nécessaire à son accompagnement. Ce n'est pas une exception au secret, mais un cadre strict." },
+      { q:"Quelles conditions encadrent le secret partagé ?", a:"Les professionnels doivent intervenir auprès de la même personne, le partage doit être strictement nécessaire à l'accompagnement, il se limite aux informations utiles, et la personne doit en être informée, sa non-opposition étant recherchée." },
+      { q:"Quelle différence entre secret professionnel et discrétion professionnelle ?", a:"Le secret professionnel porte sur les informations liées à la personne accompagnée et sa violation est pénalement sanctionnée. La discrétion professionnelle est plus large, porte sur le fonctionnement du service, et relève de la déontologie plutôt que du droit pénal." },
+      { q:"Pourquoi ces règles se rejouent-elles dans le numérique ?", a:"Parce qu'un message, un groupe de discussion, un document partagé ou un outil d'IA font circuler des informations bien au-delà du cercle prévu." },
       { q:"Quelle est la différence entre hardware et software ?", a:"Hardware = le matériel (souris, écran, clavier). Software = les logiciels, la partie non matérielle." },
       { q:"Quelles sont les 5 grandes phases du numérique ?", a:"1980 (ordinateurs personnels), 1989 (boom d'internet), 2007 (mobile), 2010 (réseaux sociaux et big data), 2022 (IA)." },
       { q:"Que régule l'ARCEP ? Et l'ARCOM ?", a:"ARCEP régule les infrastructures et l'accès au réseau. ARCOM régule les contenus et les médias qui y circulent." },
@@ -551,6 +931,11 @@ const SUBJECTS = [
       { q:"Cite 3 des 7 effets des RSN constatés chez les adolescents.", a:"Par exemple : manque de sommeil, troubles anxiodépressifs, conduites à risque (cyberharcèlement, sexting non consenti)." }
     ],
     qcm:[
+      { q:"Les deux types de confidentialité vus en TD 2 sont :", opts:["la confidentialité privée et publique","la confidentialité professionnelle et le secret partagé","le secret absolu et le secret relatif","la discrétion et la réserve"], c:1, e:"Ce sont les deux notions distinguées en séance." },
+      { q:"Le secret professionnel protège avant tout :", opts:["le professionnel","l'institution","la personne accompagnée","l'équipe"], c:2, e:"Sa violation est d'ailleurs sanctionnée pénalement." },
+      { q:"Le secret partagé est :", opts:["une exception au secret","un cadre strict de partage entre professionnels d'un même accompagnement","une autorisation de tout dire en équipe","une règle propre au numérique"], c:1, e:"Partage limité aux informations nécessaires, avec information de la personne." },
+      { q:"Laquelle n'est PAS une condition du secret partagé ?", opts:["intervenir auprès de la même personne","un partage strictement nécessaire","l'information de la personne concernée","l'accord du chef de service"], c:3, e:"Les trois autres conditions sont celles habituellement retenues." },
+      { q:"La discrétion professionnelle porte sur :", opts:["le fonctionnement du service","les seules données de santé","les informations publiques","les documents numériques"], c:0, e:"Elle est plus large que le secret professionnel et relève de la déontologie." },
       { q:"Que désigne le terme « hardware » ?", opts:["Un réseau social","Une application mobile","Le matériel physique","Un logiciel"], c:2, e:"Hardware = tout ce qui est matériel : souris, écran, clavier." },
       { q:"En quelle année situe-t-on l'essor de la technologie mobile ?", opts:["2022","2007","1989","2010"], c:1, e:"2007 marque l'essor de la technologie mobile (smartphones)." },
       { q:"Qui régule les contenus et les médias en France ?", opts:["RGPD","DSA","ARCEP","ARCOM"], c:3, e:"ARCOM régule les contenus et médias ; ARCEP régule les infrastructures et réseaux." },
@@ -560,6 +945,21 @@ const SUBJECTS = [
       { q:"Quel est l'un des 4 piliers pour un numérique raisonné à l'école ?", opts:["Ignorer les mises à jour","Ne pas informer les familles","Interdire totalement les écrans","Le dispositif « Portable en pause »"], c:3, e:"Les 4 piliers sont : usage raisonné, suspension des mises à jour, portable en pause, accompagnement des familles." }
     ],
     tr:[
+      { texte:"Le TD 2 distingue la confidentialité professionnelle et le secret ___.",
+        opts:["absolu","partagé","médical","numérique"], c:1,
+        e:"Deux notions différentes, à ne pas confondre." },
+      { texte:"Le secret professionnel protège la ___ accompagnée, pas le professionnel.",
+        opts:["personne","équipe","institution","famille"], c:0,
+        e:"Sa violation est sanctionnée pénalement." },
+      { texte:"Le partage d'informations dans le secret partagé doit être strictement ___.",
+        opts:["encadré","nécessaire","écrit","limité"], c:1,
+        e:"Et limité aux seules informations utiles à l'accompagnement." },
+      { texte:"Dans le secret partagé, la personne concernée doit être ___.",
+        opts:["consultée","informée","représentée","accompagnée"], c:1,
+        e:"Sa non-opposition est recherchée." },
+      { texte:"La ___ professionnelle porte plus largement sur le fonctionnement du service.",
+        opts:["discrétion","réserve","confiance","déontologie"], c:0,
+        e:"Elle relève de la déontologie, pas du droit pénal." },
       { texte:"Le ___ désigne le matériel physique : souris, écran, clavier.",
         opts:["software","hardware","firmware","réseau"], c:1,
         e:"Hardware, le matériel. Software, la partie logicielle, non matérielle." },
@@ -595,6 +995,7 @@ const SUBJECTS = [
         e:"L'utilisateur devient le produit : ses données et son temps d'attention sont la ressource." }
     ],
     oq:[
+      { q:"Distingue secret professionnel et secret partagé, et explique ce que le numérique y change.", a:"Le secret professionnel est l'obligation, pour certains professionnels, de ne pas révéler les informations apprises dans l'exercice de leur métier. Elle est prévue par la loi, sanctionnée pénalement, et protège la personne accompagnée, pas le professionnel. Le secret partagé n'est pas une exception à cette règle, mais un cadre strict : des professionnels qui interviennent auprès de la même personne peuvent échanger des informations à caractère secret lorsque c'est nécessaire à son accompagnement, à condition de s'en tenir aux informations utiles et d'en informer la personne, dont la non-opposition est recherchée. À côté, la discrétion professionnelle, plus large, porte sur le fonctionnement du service et relève de la déontologie. Le numérique rejoue ces règles à chaque outil utilisé : un message, un groupe de discussion, un document partagé ou un outil d'intelligence artificielle font circuler des informations bien au-delà du cercle prévu, souvent sans que l'on s'en aperçoive. D'où l'intérêt d'une charte qui pose explicitement ce cadre." },
       { q:"Explique pourquoi on dit que le problème n'est pas l'écran mais l'usage.", a:"Un écran passif (télé) et un écran actif (jeu vidéo) n'ont pas le même effet. C'est la manière dont on utilise l'outil, pas l'outil en lui-même, qui détermine son impact positif ou négatif." },
       { q:"Compare les objectifs du DSA et du RGPD.", a:"Le DSA encadre le fonctionnement des plateformes en ligne (contenus, modération, transparence). Le RGPD protège les données personnelles des individus, pour toute organisation publique ou privée. Ce sont deux réglementations complémentaires mais distinctes." },
       { q:"Pourquoi la fracture numérique est-elle devenue plus complexe au fil du temps ?", a:"Dans les années 90, c'était un problème d'accès au réseau. Dans les années 2000-2010, un problème de compétence d'usage. Aujourd'hui, elle dépend de multiples facteurs combinés : âge, éducation, revenu, contexte sanitaire (COVID), et désormais l'IA." }
@@ -769,7 +1170,98 @@ const SUBJECTS = [
         concepts:["publics invisibles","aller vers","PIC","repérage"],
         retenir:"Pour le TD : ce n'est pas un texte de recherche mais un guide de capitalisation. Il part des pratiques de terrain pour en tirer un cadre analytique, et ne prétend pas à l'exhaustivité." }
     ] },
-  { id:"e231", ue:"UE23", ects:3, ecue:"23.1", title:"Droits de l'enfant et de la famille", cm:[], td:[], fc:[], qcm:[], oq:[], auteurs:[] },
+  { id:"e231", ue:"UE23", ects:3, ecue:"23.1", title:"Droits de l'enfant et de la famille", cm:[],
+    td:[
+      { label:"TD 1 · 23/09", sections:[
+        { title:"Les dates des séances", body:"", list:["<b>TD 1</b> : 23/09 · <b>TD 2</b> : 30/09 · <b>TD 3</b> : 14/10","<b>TD 4</b> : 21/10 · <b>TD 5</b> : 04/11 · <b>TD 6</b> : 18/11","<b>TD 7</b> : 25/11 · <b>TD 8</b> : 02/12 · <b>TD 9</b> : date à confirmer","<b>TD 3</b> : évaluation sur les notions. <b>TD 6</b> : question, plus poussée. <b>TD 9</b> : évaluation finale.","Penser à prendre des feuilles pour les prochaines séances, et à recopier dessus."] },
+
+        { title:"L'entrée en matière : observer", body:"<span class='chunk-highlight'>Qu'est-ce que je vois lorsque je regarde l'enfant et ses droits ?</span><br><br>Activité : partir d'une situation de départ, avec notre expérience ou notre connaissance personnelle, et répondre aux questions." },
+
+        { title:"Qu'est-ce qu'un enfant ?", body:"Une personne <b>en phase de développement</b>, âgée de <b>moins de 18 ans</b>. Au niveau juridique, il est considéré comme <b>mineur</b> et placé sous la responsabilité de ses parents." },
+
+        { title:"Qu'est-ce que l'enfance ?", body:"Une <b>période de la vie</b>, entre la naissance et l'adolescence." },
+
+        { title:"Quels enfants sont désavantagés ou méprisés ?", body:"Des enfants qui subissent du <b>mépris et de la discrimination</b> en raison de leur situation <b>économique, sociale ou familiale</b>." },
+
+        { title:"Comment les adultes doivent-ils traiter les enfants ?", body:"Avec <b>respect et valorisation</b>, en prenant en compte <b>son avis et son ressenti</b>, comme <span class='chunk-highlight'>un être à part entière</span>." },
+
+        { title:"À quoi ressemblerait une école idéale ?", body:"Une <b>école inclusive</b>, qui prend en compte tous les besoins des enfants, peu importe leur différence, et qui les accompagne au mieux dans leur voie future, qu'elle soit scolaire ou non." },
+
+        { title:"Les autres questions de l'activité", body:"", list:["S'être déjà adressée à un adulte de confiance dans une situation de détresse : oui, une directrice de collège, une infirmière.","Aurais-tu aimé pouvoir choisir tes parents ? Oui et non.","<b>MDA et PAEJ</b> : des lieux d'écoute et d'orientation pour les jeunes, mais aussi pour les parents. C'est enrichissant, car cela permet d'être écouté et conseillé sur des situations qui nous dépassent, et d'avoir du soutien.","Connais-tu des initiatives de jeunes engagés pour une cause, la planète, la nature, l'environnement ?","Qu'est-ce qui changerait si tous les enfants pouvaient voter ?","Que connais-tu des droits et des devoirs de l'enfant ?"] },
+
+        { title:"Vidéo : les droits de l'enfant", body:"<b>Grandir est un combat.</b> L'enfant a des <b>besoins spécifiques</b>, et la reconnaissance de ses droits est un <b>long processus</b>, entamé au XIXe siècle.", list:["<b>1924</b> : reconnaissance des besoins spécifiques de l'enfant.","<b>1959</b> : les droits de l'enfant.","<b>1966</b>, puis <b>1989</b> : la <b>CIDE</b>, le droit de l'enfant en <b>54 articles</b>.","<b>Invisibilisation aux yeux de l'État</b> : malgré tous ces droits, un grand nombre d'enfants vivent toujours dans des conditions de vie dangereuses.","<b>2017</b> : <b>305 enfants</b> ont connu le <b>CRA</b>."] },
+
+        { title:"Vidéo : 1 jour, 1 question", body:"Les droits de l'enfant sont des <b>règles qui s'adressent à tous les enfants</b>.", list:["<b>1989</b> : les droits de l'enfant sont reconnus dans le monde.","L'enfant est un <span class='chunk-highlight'>être humain à part entière, en constante évolution, qui doit grandir dans un cadre sécurisant et rassurant</span>."] },
+
+        { title:"Repères de vocabulaire", body:"<i>Section ajoutée en complément : ces sigles et ces dates sont cités en cours sans y être détaillés. À vérifier avec le diaporama.</i>", list:["<b>CIDE</b> : Convention internationale des droits de l'enfant, adoptée par l'ONU le 20 novembre 1989. C'est le traité le plus ratifié au monde. Contrairement aux déclarations qui la précèdent, elle est <b>contraignante</b> pour les États qui la ratifient.","<b>1924</b> : la Déclaration de Genève, adoptée par la Société des Nations. Premier texte international sur l'enfant, mais sans force obligatoire.","<b>1959</b> : la Déclaration des droits de l'enfant, adoptée par l'ONU. Elle non plus n'est pas contraignante.","<b>1966</b> : les deux pactes internationaux de l'ONU, sur les droits civils et politiques d'une part, économiques, sociaux et culturels d'autre part. Eux sont contraignants, mais ne portent pas seulement sur l'enfant.","<b>MDA</b> : maison des adolescents. Un lieu d'accueil, d'écoute et d'orientation pour les 11-25 ans et leurs familles, gratuit et sans rendez-vous.","<b>PAEJ</b> : point accueil écoute jeunes. Un lieu d'écoute de proximité, anonyme et gratuit, pour les jeunes et leurs parents.","<b>CRA</b> : centre de rétention administrative. Un lieu où sont enfermées les personnes étrangères en attente d'éloignement du territoire. Des enfants y sont retenus avec leurs parents, ce que plusieurs instances internationales dénoncent.","<b>Invisibilisation</b> : le fait qu'un groupe et ses difficultés ne soient pas pris en compte, ni comptés, ni vus comme un problème public."] }
+      ], recap:[
+        "Un enfant : une personne en développement, de moins de 18 ans, juridiquement mineure et sous la responsabilité de ses parents.",
+        "L'enfance : la période de vie entre la naissance et l'adolescence.",
+        "Les enfants désavantagés le sont en raison de leur situation économique, sociale ou familiale.",
+        "Traiter l'enfant avec respect et valorisation, en tenant compte de son avis et de son ressenti, comme un être à part entière.",
+        "La reconnaissance des droits de l'enfant est un long processus : XIXe siècle, 1924, 1959, 1966, puis 1989.",
+        "1989 : la CIDE, les droits de l'enfant en 54 articles, reconnus dans le monde.",
+        "Malgré ces droits, beaucoup d'enfants restent dans des conditions dangereuses : c'est l'invisibilisation aux yeux de l'État.",
+        "2017 : 305 enfants ont connu le CRA.",
+        "L'enfant est un être humain à part entière, en constante évolution, qui doit grandir dans un cadre sécurisant et rassurant."
+      ] }
+    ],
+    fc:[
+      { q:"Qu'est-ce qu'un enfant ?", a:"Une personne en phase de développement, âgée de moins de 18 ans. Au niveau juridique, il est considéré comme mineur et placé sous la responsabilité de ses parents." },
+      { q:"Qu'est-ce que l'enfance ?", a:"Une période de la vie, entre la naissance et l'adolescence." },
+      { q:"Pour quelles raisons des enfants sont-ils désavantagés ou méprisés ?", a:"Ils subissent du mépris et de la discrimination en raison de leur situation économique, sociale ou familiale." },
+      { q:"Comment les adultes doivent-ils traiter les enfants ?", a:"Avec respect et valorisation, en prenant en compte son avis et son ressenti, et en le considérant comme un être à part entière." },
+      { q:"À quoi ressemblerait une école idéale, selon l'activité du TD ?", a:"Une école inclusive, qui prend en compte tous les besoins des enfants peu importe leur différence, et qui les accompagne au mieux dans leur voie future, scolaire ou non." },
+      { q:"Que sont la MDA et les PAEJ ?", a:"Des lieux d'écoute et d'orientation pour les jeunes, mais aussi pour les parents. Ils permettent d'être écouté et conseillé sur des situations qui nous dépassent, et d'avoir du soutien. MDA : maison des adolescents. PAEJ : point accueil écoute jeunes." },
+      { q:"Quelles sont les grandes dates de la reconnaissance des droits de l'enfant ?", a:"Un long processus entamé au XIXe siècle. 1924 : reconnaissance des besoins spécifiques de l'enfant. 1959 : les droits de l'enfant. 1966, puis 1989 avec la CIDE." },
+      { q:"Qu'est-ce que la CIDE ?", a:"La Convention internationale des droits de l'enfant, de 1989. Elle reconnaît les droits de l'enfant dans le monde, en 54 articles." },
+      { q:"Que signifie « invisibilisation aux yeux de l'État » ici ?", a:"Que malgré tous ces droits, un grand nombre d'enfants vivent toujours dans des conditions de vie dangereuses, sans être vus ni comptés comme un problème public." },
+      { q:"Que retenir du chiffre de 2017 sur le CRA ?", a:"En 2017, 305 enfants ont connu le centre de rétention administrative." },
+      { q:"Comment la vidéo « 1 jour, 1 question » définit-elle l'enfant ?", a:"Comme un être humain à part entière, en constante évolution, qui doit grandir dans un cadre sécurisant et rassurant. Les droits de l'enfant sont des règles qui s'adressent à tous les enfants." },
+      { q:"Quelle différence entre une déclaration et une convention comme la CIDE ?", a:"Une déclaration, comme celle de 1924 ou de 1959, est une affirmation de principes sans force obligatoire. Une convention ratifiée, comme la CIDE, est contraignante pour les États." }
+    ],
+    qcm:[
+      { q:"Juridiquement, un enfant est une personne de moins de :", opts:["15 ans","16 ans","18 ans","21 ans"], c:2, e:"Il est alors considéré comme mineur, sous la responsabilité de ses parents." },
+      { q:"L'enfance est définie dans le TD comme la période entre :", opts:["la naissance et l'adolescence","la naissance et la majorité","la maternelle et le collège","la naissance et l'autonomie"], c:0, e:"C'est la définition donnée en séance." },
+      { q:"Les enfants désavantagés le sont en raison de leur situation :", opts:["scolaire uniquement","économique, sociale ou familiale","géographique","médicale"], c:1, e:"C'est ce qui fonde le mépris et la discrimination qu'ils subissent." },
+      { q:"La CIDE date de :", opts:["1924","1959","1966","1989"], c:3, e:"Elle reconnaît les droits de l'enfant dans le monde, en 54 articles." },
+      { q:"La CIDE compte :", opts:["30 articles","54 articles","89 articles","12 articles"], c:1, e:"Un chiffre à retenir pour l'évaluation sur les notions." },
+      { q:"En 1924, le texte international marque :", opts:["la reconnaissance des besoins spécifiques de l'enfant","l'interdiction du travail des enfants","la création de l'ONU","la scolarité obligatoire"], c:0, e:"C'est la Déclaration de Genève, sans force obligatoire." },
+      { q:"Combien d'enfants ont connu le CRA en 2017 ?", opts:["105","305","505","3 050"], c:1, e:"Un chiffre cité dans la vidéo sur les droits de l'enfant." },
+      { q:"La MDA et les PAEJ sont :", opts:["des structures de placement","des lieux d'écoute et d'orientation","des tribunaux pour enfants","des dispositifs scolaires"], c:1, e:"Pour les jeunes, mais aussi pour les parents." },
+      { q:"Selon la vidéo, l'enfant est :", opts:["un adulte en miniature","un être humain à part entière en constante évolution","un mineur sans droits propres","un élève avant tout"], c:1, e:"Il doit grandir dans un cadre sécurisant et rassurant." },
+      { q:"Qu'est-ce qui distingue la CIDE des déclarations de 1924 et 1959 ?", opts:["elle est plus courte","elle est contraignante pour les États qui la ratifient","elle ne concerne que l'Europe","elle porte sur les parents"], c:1, e:"Les déclarations affirment des principes sans force obligatoire." }
+    ],
+    tr:[
+      { texte:"Juridiquement, un enfant est une personne de moins de ___ ans, considérée comme mineure.",
+        opts:["16","18","21","15"], c:1,
+        e:"Il est alors sous la responsabilité de ses parents." },
+      { texte:"L'enfance est la période de la vie entre la naissance et l'___.",
+        opts:["école","adolescence","autonomie","âge adulte"], c:1,
+        e:"Définition donnée dans l'activité du TD." },
+      { texte:"Les adultes doivent traiter l'enfant comme un être à part ___.",
+        opts:["entière","égale","sensible","fragile"], c:0,
+        e:"Avec respect et valorisation, en tenant compte de son avis et de son ressenti." },
+      { texte:"La ___ de 1989 reconnaît les droits de l'enfant dans le monde.",
+        opts:["CIDE","MDA","CRA","PAEJ"], c:0,
+        e:"Convention internationale des droits de l'enfant." },
+      { texte:"La CIDE compte ___ articles.",
+        opts:["24","54","89","30"], c:1,
+        e:"Adoptée en 1989." },
+      { texte:"Malgré ces droits, de nombreux enfants restent invisibles aux yeux de l'___.",
+        opts:["école","État","opinion","ONU"], c:1,
+        e:"Ils vivent toujours dans des conditions de vie dangereuses." },
+      { texte:"En 2017, ___ enfants ont connu le CRA.",
+        opts:["105","305","505","3 050"], c:1,
+        e:"Le centre de rétention administrative." },
+      { texte:"La MDA et les PAEJ sont des lieux d'___ et d'orientation, pour les jeunes comme pour les parents.",
+        opts:["accueil","écoute","aide","accompagnement"], c:1,
+        e:"Ils permettent d'être écouté et conseillé sur des situations qui nous dépassent." }
+    ],
+    oq:[
+      { q:"Qu'est-ce qu'un enfant, et comment les adultes doivent-ils le traiter ?", a:"Un enfant est une personne en phase de développement, âgée de moins de 18 ans. Au niveau juridique, il est considéré comme mineur et placé sous la responsabilité de ses parents. L'enfance, elle, désigne la période de la vie comprise entre la naissance et l'adolescence. Les adultes doivent traiter l'enfant avec respect et valorisation, en prenant en compte son avis et son ressenti, et en le considérant comme un être à part entière. C'est aussi ce que dit la vidéo « 1 jour, 1 question » : l'enfant est un être humain à part entière, en constante évolution, qui doit grandir dans un cadre sécurisant et rassurant. Tous les enfants ne sont cependant pas traités de la même manière : certains subissent du mépris et de la discrimination en raison de leur situation économique, sociale ou familiale." },
+      { q:"Retrace la reconnaissance des droits de l'enfant, et explique pourquoi elle ne suffit pas.", a:"Grandir est un combat : l'enfant a des besoins spécifiques, et la reconnaissance de ses droits est un long processus entamé au XIXe siècle. En 1924, ses besoins spécifiques sont reconnus. En 1959, ses droits sont affirmés. En 1966, puis surtout en 1989 avec la Convention internationale des droits de l'enfant, ces droits sont reconnus dans le monde et détaillés en 54 articles. Mais l'existence de ces droits ne suffit pas : un grand nombre d'enfants vivent toujours dans des conditions de vie dangereuses, ce que la vidéo nomme une invisibilisation aux yeux de l'État. Le chiffre cité en séance l'illustre : en 2017, 305 enfants ont connu le centre de rétention administrative. Le droit proclamé et le droit effectif sont deux choses différentes." }
+    ], auteurs:[] },
   { id:"e232", ue:"UE23", ects:3, ecue:"23.2", title:"Prévention des conduites à risques", cm:[],
     td:[
       { label:"TD 1 · 11/09", sections:[
