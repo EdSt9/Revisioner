@@ -2888,7 +2888,9 @@ function lecDire(){
   // la langue doit être celle de la voix : sinon l'iPhone ignore la voix choisie
   u.lang = LEC.voix ? LEC.voix.lang : "fr-FR";
   if(LEC.voix) u.voice = LEC.voix;
-  u.rate = LEC.vitesse;
+  const taux = lecTauxEnvoye();
+  u.rate = taux;
+  let debutParole = 0;
   const jeton = LEC.jeton;
   const motA = ci => { let k = debuts[0].k; debuts.forEach(x=>{ if(x.a <= ci && p.toks[x.k].dit) k = x.k; }); return k; };
   // la voix signale chaque mot : on suit exactement
@@ -2899,8 +2901,9 @@ function lecDire(){
   };
   // certaines voix ne signalent rien : on avance à l'estimation
   u.onstart = ()=>{
+    debutParole = performance.now();
     if(jeton !== LEC.jeton || LEC.motsSignales) return;
-    const cps = 14 * LEC.vitesse;          // caractères prononcés par seconde, environ
+    const cps = lecVitesseCible();          // caractères prononcés par seconde
     let j = 0;
     const suite = ()=>{
       if(jeton !== LEC.jeton || LEC.motsSignales || LEC.pause) return;
@@ -2917,9 +2920,51 @@ function lecDire(){
     lecArreterMinuteur();
     LEC.i++; lecDire();
   };
-  u.onend = apres;
+  u.onend = ()=>{
+    // phrase lue en entier : on mesure la vitesse réelle pour corriger la suivante
+    if(jeton === LEC.jeton && debutParole) lecMesurer(taux, texte.length, performance.now() - debutParole);
+    apres();
+  };
   u.onerror = apres;
   speechSynthesis.speak(u);
+}
+// ── Vitesse réelle ──
+// L'iPhone ne respecte pas la vitesse demandée de façon proportionnelle
+// (au-dessus de 1, il accélère bien plus fort). On mesure donc la vitesse
+// réelle de chaque phrase, et on corrige la valeur envoyée jusqu'à ce que
+// « 1,5× » soit vraiment une fois et demie la vitesse normale.
+// Les réglages appris sont gardés par voix, sur le téléphone.
+const LEC_CAL_CLE = "lec-calibrage-v1";
+const LEC_CPS_DEFAUT = 14;      // vitesse normale d'une voix française, en caractères/seconde
+let LEC_CAL = {};
+try{ LEC_CAL = JSON.parse(lecLire(LEC_CAL_CLE) || "{}") || {}; }catch(e){ LEC_CAL = {}; }
+function lecCal(){
+  const v = LEC.voix;
+  const k = v ? (v.voiceURI || v.name) : "defaut";
+  return LEC_CAL[k] || (LEC_CAL[k] = { base:0, envoi:{} });
+}
+function lecVitesseCible(){ return (lecCal().base || LEC_CPS_DEFAUT) * LEC.vitesse; }
+function lecTauxEnvoye(){
+  const m = LEC.vitesse;
+  // pour une voix jamais mesurée, la toute première phrase sert d'étalon, à vitesse normale
+  if(m === 1 || !lecCal().base) return 1;
+  const appris = lecCal().envoi[m];
+  if(appris) return appris;
+  // premier essai prudent, affiné dès la première phrase
+  return m > 1 ? 1 + (m - 1) * 0.5 : m;
+}
+function lecMesurer(taux, nbCar, ms){
+  if(ms < 600 || nbCar < 25) return;          // trop court pour être fiable
+  const cps = nbCar / (ms / 1000);
+  const c = lecCal();
+  if(taux === 1 && (LEC.vitesse === 1 || !c.base)){
+    c.base = c.base ? c.base * 0.7 + cps * 0.3 : cps;   // la vitesse normale de cette voix
+  }else{
+    const cible = (c.base || LEC_CPS_DEFAUT) * LEC.vitesse;
+    const t = taux * Math.pow(cible / cps, 0.7);        // correction amortie
+    c.envoi[LEC.vitesse] = Math.round(Math.max(0.1, Math.min(4, t)) * 1000) / 1000;
+  }
+  lecEcrire(LEC_CAL_CLE, JSON.stringify(LEC_CAL));
 }
 // Couper la phrase en cours sans déclencher la suivante.
 function lecCouper(){ LEC.jeton++; lecArreterMinuteur(); try{ speechSynthesis.cancel(); }catch(e){} }
