@@ -1016,6 +1016,24 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
   padding:13px 14px;margin-bottom:9px;font-family:var(--font-text);}
 .cal-row:active{background:var(--accent-soft);}
 .cal-txt{flex:1;min-width:0;}
+/* feuille à choix multiples : publier plusieurs chapitres d'un coup */
+.cal-row.deja{border-style:dashed;
+  background-image:repeating-linear-gradient(135deg,var(--accent-soft) 0 7px,transparent 7px 15px);}
+.cal-row.deja .cal-name{color:var(--text-soft);}
+.cal-row.sel{border-color:var(--accent);border-style:solid;}
+.pick-check{width:24px;height:24px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;
+  border:2px solid var(--border-strong);color:transparent;transition:background .2s,border-color .2s;}
+.pick-check svg{width:14px;height:14px;display:block;}
+.cal-row.sel .pick-check{background:var(--accent);border-color:var(--accent);color:#fff;}
+.pick-actions{display:flex;gap:10px;padding:12px 14px 0;flex-shrink:0;border-top:1px solid var(--border);margin-top:4px;}
+.pick-actions button{flex:1;border-radius:14px;padding:13px 10px;cursor:pointer;
+  font-family:var(--font-text);font-size:14px;font-weight:600;border:1px solid var(--border);
+  background:var(--surface);color:var(--text);}
+.pick-actions button.go{background:var(--accent);color:#fff;border-color:transparent;}
+.pick-actions button:disabled{opacity:.4;cursor:default;}
+.pick-legend{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--text-mute);margin:2px 2px 12px;}
+.pick-legend i{width:26px;height:14px;border-radius:5px;border:1px dashed var(--border-strong);flex-shrink:0;
+  background-image:repeating-linear-gradient(135deg,var(--accent-soft) 0 4px,transparent 4px 8px);}
 .cal-name{font-size:14.5px;color:var(--text);font-weight:600;}
 .cal-url{font-size:11.5px;color:var(--text-mute);margin-top:3px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -2229,6 +2247,7 @@ let SUB_ITEMS    = {};    // "classe|matière" → chapitres, pour les matières
 
 // Picker générique : une liste de choix dans une feuille qui monte.
 function openPicker(title, options, onPick){
+  document.querySelectorAll("#pick-sheet .pick-actions").forEach(n=>n.remove());
   const box = document.getElementById("pick-list");
   document.getElementById("pick-title").textContent = title;
   box.innerHTML = "";
@@ -2238,7 +2257,7 @@ function openPicker(title, options, onPick){
     box.appendChild(p);
   }
   options.forEach(o=>{
-    const b = el("button","cal-row");
+    const b = el("button","cal-row" + (o.deja ? " deja" : ""));
     b.type = "button";
     b.innerHTML = `<div class="cal-txt"><div class="cal-name">${esc(o.label)}</div>` +
       (o.sub ? `<div class="cal-url">${esc(o.sub)}</div>` : "") + `</div>`;
@@ -2246,6 +2265,54 @@ function openPicker(title, options, onPick){
     box.appendChild(b);
   });
   document.getElementById("pick-sheet").classList.add("open");
+}
+// Feuille à choix multiples. Chaque ligne se coche ; deux boutons en bas :
+// tout valider d'un coup, ou valider seulement la sélection.
+// o.deja = déjà publié : la ligne est hachurée, mais reste cochable (pour mettre à jour).
+const COCHE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+function openMultiPicker(title, options, labels, onConfirm){
+  const sheet = document.getElementById("pick-sheet");
+  sheet.querySelectorAll(".pick-actions").forEach(n=>n.remove());
+  const box = document.getElementById("pick-list");
+  document.getElementById("pick-title").textContent = title;
+  box.innerHTML = "";
+  if(options.some(o=>o.deja)){
+    const lg = el("div","pick-legend");
+    lg.innerHTML = "<i></i><span>Hachuré : déjà publié. Le recocher le met à jour.</span>";
+    box.appendChild(lg);
+  }
+  const choisis = new Set();
+  const bar = el("div","pick-actions");
+  const tout = el("button"); tout.type = "button";
+  const sel  = el("button","go"); sel.type = "button";
+  const maj = ()=>{
+    tout.textContent = labels.tout + " (" + options.length + ")";
+    sel.textContent  = choisis.size ? labels.sel + " (" + choisis.size + ")" : "Coche des lignes";
+    sel.disabled = !choisis.size;
+  };
+  options.forEach(o=>{
+    const b = el("button","cal-row" + (o.deja ? " deja" : ""));
+    b.type = "button";
+    b.innerHTML = `<div class="cal-txt"><div class="cal-name">${esc(o.label)}</div>` +
+      (o.sub ? `<div class="cal-url">${esc(o.sub)}</div>` : "") + `</div><span class="pick-check">${COCHE_SVG}</span>`;
+    b.addEventListener("click",()=>{
+      haptic();
+      if(choisis.has(o.value)) choisis.delete(o.value); else choisis.add(o.value);
+      b.classList.toggle("sel", choisis.has(o.value));
+      maj();
+    });
+    box.appendChild(b);
+  });
+  tout.addEventListener("click",()=>{ haptic(); closePicker(); onConfirm(options.map(o=>o.value)); });
+  sel.addEventListener("click",()=>{
+    if(!choisis.size) return;
+    haptic(); closePicker();
+    onConfirm(options.filter(o=>choisis.has(o.value)).map(o=>o.value));   // dans l'ordre affiché
+  });
+  bar.appendChild(tout); bar.appendChild(sel);
+  box.after(bar);
+  maj();
+  sheet.classList.add("open");
 }
 function closePicker(){ document.getElementById("pick-sheet").classList.remove("open"); }
 
@@ -2572,54 +2639,103 @@ async function publierOuMettreAJour(classId, kind, subjectTitle, payload){
   return "neuf";
 }
 
-// Choisir une matière, puis un de ses chapitres, et le publier ici.
-function publishFromClass(c){
+// Choisir une matière, puis un ou plusieurs de ses chapitres, et les publier ici.
+// Ce qui est déjà dans la classe apparaît hachuré.
+function cleEnvoi(kind, subjectTitle, label){
+  return kind === "revision" ? "revision|" + subjectTitle : kind + "|" + subjectTitle + "|" + label;
+}
+function payloadRevision(sj){
+  return {
+    label: "Révisions",
+    fc:  (sj.fc ||[]).filter(x=>!x._shared),
+    qcm: (sj.qcm||[]).filter(x=>!x._shared),
+    oq:  (sj.oq ||[]).filter(x=>!x._shared),
+    dev: (sj.dev||[]).filter(x=>!x._shared),
+    tr:  (sj.tr ||[]).filter(x=>!x._shared),
+    auteurs: (sj.auteurs||[]).filter(x=>!x._shared)
+  };
+}
+async function publishFromClass(c){
   const mats = SUBJECTS.filter(s=>((s.cm||[]).concat(s.td||[])).some(ch=>!ch._shared));
   if(!mats.length){ toast("Aucun chapitre à publier pour l'instant."); return; }
-  openPicker("Quelle matière ?", mats.map(s=>({
-    label: s.title,
-    sub: ((s.cm||[]).filter(x=>!x._shared).length) + " en cours · " +
-         ((s.td||[]).filter(x=>!x._shared).length) + " en TD",
-    value: s.id
-  })), subjId=>{
-    const sj = SUBJECTS.find(x=>x.id === subjId);
-    const opts = [];
-    (sj.cm||[]).forEach((ch,i)=>{ if(!ch._shared) opts.push({ label:ch.label, sub:"Cours", value:"cm:"+i }); });
-    (sj.td||[]).forEach((ch,i)=>{ if(!ch._shared) opts.push({ label:ch.label, sub:"TD", value:"td:"+i }); });
-    // les fiches, QCM et questions ouvertes appartiennent à la matière, pas à un chapitre
-    const nFc  = (sj.fc ||[]).filter(x=>!x._shared).length;
-    const nQcm = (sj.qcm||[]).filter(x=>!x._shared).length;
-    const nOq  = (sj.oq ||[]).filter(x=>!x._shared).length;
-    const nDev = (sj.dev||[]).filter(x=>!x._shared).length;
-    const nTr  = (sj.tr ||[]).filter(x=>!x._shared).length;
-    if(nFc + nQcm + nOq + nDev + nTr){
-      opts.push({ label:"Exercices de révision",
-        sub:`${nFc} fiches · ${nQcm} QCM · ${nTr} trous · ${nOq} questions · ${nDev} devoirs`, value:"revision" });
-    }
-    setTimeout(()=>openPicker("Quoi publier ?", opts, val=>{
-      let payload, kind;
-      if(val === "revision"){
-        kind = "revision";
-        payload = {
-          label: "Révisions",
-          fc:  (sj.fc ||[]).filter(x=>!x._shared),
-          qcm: (sj.qcm||[]).filter(x=>!x._shared),
-          oq:  (sj.oq ||[]).filter(x=>!x._shared),
-          dev: (sj.dev||[]).filter(x=>!x._shared),
-          tr:  (sj.tr ||[]).filter(x=>!x._shared),
-          auteurs: (sj.auteurs||[]).filter(x=>!x._shared)
-        };
-      }else{
-        const [type, idx] = val.split(":");
-        kind = type;
-        const ch = (type === "cm" ? sj.cm : sj.td)[Number(idx)];
-        payload = { label:ch.label, sections:ch.sections||[], recap:ch.recap||[] };
-      }
-      publierOuMettreAJour(c.id, kind, sj.title, payload)
-        .then(r=>{ toast(r === "maj" ? "Mis à jour." : "Publié."); openClass(c); })
-        .catch(()=>toast("Publication refusée."));
-    }), 320);   // on laisse la première feuille se refermer
+  // ce qui est déjà dans la classe, une seule fois
+  let items = [];
+  try{ items = (await api("class_items", { class_id:c.id })).items || []; }catch(e){}
+  const dejaPar = {};                       // clé → { item, auteurs }
+  items.forEach(it=>{
+    const k = cleEnvoi(it.kind, it.subject_title, it.label);
+    const d = dejaPar[k] || (dejaPar[k] = { mien:null, auteurs:[] });
+    if(it.author === whoAmI()) d.mien = it;
+    if(!d.auteurs.includes(it.author)) d.auteurs.push(it.author);
   });
+  const moi = whoAmI();
+  const etat = k => {
+    const d = dejaPar[k];
+    if(!d) return { deja:false, sub:"" };
+    if(d.mien) return { deja:true, sub:"déjà publié" };
+    return { deja:true, sub:"déjà publié par " + d.auteurs.join(", ") };
+  };
+  // les lignes publiables d'une matière
+  const lignesDe = sj=>{
+    const out = [];
+    (sj.cm||[]).forEach((ch,i)=>{ if(!ch._shared){ const e = etat(cleEnvoi("cm", sj.title, ch.label));
+      out.push({ label:ch.label, sub:"Cours" + (e.sub ? " · " + e.sub : ""), deja:e.deja, value:"cm:"+i }); } });
+    (sj.td||[]).forEach((ch,i)=>{ if(!ch._shared){ const e = etat(cleEnvoi("td", sj.title, ch.label));
+      out.push({ label:ch.label, sub:"TD" + (e.sub ? " · " + e.sub : ""), deja:e.deja, value:"td:"+i }); } });
+    const r = payloadRevision(sj);
+    const n = k => r[k].length;
+    if(n("fc") + n("qcm") + n("oq") + n("dev") + n("tr")){
+      const e = etat(cleEnvoi("revision", sj.title));
+      out.push({ label:"Exercices de révision",
+        sub:`${n("fc")} fiches · ${n("qcm")} QCM · ${n("tr")} trous · ${n("oq")} questions` + (e.sub ? " · " + e.sub : ""),
+        deja:e.deja, value:"revision" });
+    }
+    return out;
+  };
+
+  openPicker("Quelle matière ?", mats.map(sj=>{
+    const l = lignesDe(sj);
+    const nDeja = l.filter(x=>x.deja).length;
+    return {
+      label: sj.title,
+      sub: nDeja ? `${nDeja} sur ${l.length} déjà publiés` : `${l.length} à publier`,
+      deja: l.length > 0 && nDeja === l.length,        // tout est déjà dans la classe
+      value: sj.id
+    };
+  }), subjId=>{
+    const sj = SUBJECTS.find(x=>x.id === subjId);
+    setTimeout(()=>openMultiPicker("Quoi publier ?", lignesDe(sj),
+      { tout:"Tout publier", sel:"Publier" },
+      vals=>publierLot(c, sj, vals, dejaPar)), 320);   // on laisse la première feuille se refermer
+  });
+}
+// Publie une liste d'éléments d'une matière, l'un après l'autre.
+// Ce que j'ai déjà publié est mis à jour, le reste est créé.
+async function publierLot(c, sj, vals, dejaPar){
+  let neufs = 0, majs = 0, echecs = 0;
+  for(let k = 0; k < vals.length; k++){
+    const val = vals[k];
+    let kind, payload;
+    if(val === "revision"){ kind = "revision"; payload = payloadRevision(sj); }
+    else{
+      const [type, idx] = val.split(":");
+      kind = type;
+      const ch = (type === "cm" ? sj.cm : sj.td)[Number(idx)];
+      payload = { label:ch.label, sections:ch.sections||[], recap:ch.recap||[] };
+    }
+    if(vals.length > 1) toast(`Publication ${k + 1} sur ${vals.length}…`);
+    const d = dejaPar[cleEnvoi(kind, sj.title, payload.label)];
+    try{
+      if(d && d.mien){ await api("item_update", { item_id:d.mien.id, payload }); majs++; }
+      else{ await api("item_publish", { class_id:c.id, kind, subject_title:sj.title, payload }); neufs++; }
+    }catch(e){ echecs++; }
+  }
+  const morceaux = [];
+  if(neufs) morceaux.push(neufs + (neufs > 1 ? " publiés" : " publié"));
+  if(majs)  morceaux.push(majs + (majs > 1 ? " mis à jour" : " mis à jour"));
+  if(echecs) morceaux.push(echecs + (echecs > 1 ? " refusés" : " refusé"));
+  toast((morceaux.join(", ") || "Rien à publier") + ".");
+  openClass(c);
 }
 
 // ── Lecture d'un chapitre partagé ──
