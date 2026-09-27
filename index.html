@@ -871,6 +871,11 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
   background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 16px;
   color:var(--text);font-family:var(--font-text);font-size:14px;transition:border-color .25s;}
 .pli.open>.pli-head{border-color:var(--border-strong);}
+.pli-head.deja{border-style:dashed;
+  background-image:repeating-linear-gradient(135deg,var(--accent-soft) 0 7px,transparent 7px 15px);}
+.pli-head.deja .pli-title{color:var(--text-soft);}
+.pli-head.kind.deja{border:1px dashed var(--border);
+  background-image:repeating-linear-gradient(135deg,var(--accent-soft) 0 7px,transparent 7px 15px);}
 .pli-title{flex:1;min-width:0;}
 .pli-head.mat .pli-title{font-family:var(--font-display);font-weight:700;font-size:15.5px;}
 .pli-head.kind{background:transparent;border:none;border-radius:10px;padding:10px 6px;}
@@ -1016,6 +1021,30 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
   padding:13px 14px;margin-bottom:9px;font-family:var(--font-text);}
 .cal-row:active{background:var(--accent-soft);}
 .cal-txt{flex:1;min-width:0;}
+.site-go{flex-shrink:0;color:var(--text-mute);}
+.cal-row.accent{border-color:var(--accent);background:var(--accent-soft);}
+.cal-row.accent .cal-name{color:var(--accent);}
+.site-go svg{width:18px;height:18px;display:block;}
+/* feuille à choix multiples : publier plusieurs chapitres d'un coup */
+.cal-row.deja{border-style:dashed;
+  background-image:repeating-linear-gradient(135deg,var(--accent-soft) 0 7px,transparent 7px 15px);}
+.cal-row.deja .cal-name{color:var(--text-soft);}
+.cal-row.sel{border-color:var(--accent);border-style:solid;}
+.pick-check{width:24px;height:24px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;
+  border:2px solid var(--border-strong);color:transparent;transition:background .2s,border-color .2s;}
+.pick-check svg{width:14px;height:14px;display:block;}
+.pick-check{position:relative;}
+.pick-check::after{content:"";position:absolute;inset:-14px;}   /* zone de toucher plus large que le rond */
+.cal-row.sel .pick-check{background:var(--accent);border-color:var(--accent);color:#fff;}
+.pick-actions{display:flex;gap:10px;padding:12px 14px 0;flex-shrink:0;border-top:1px solid var(--border);margin-top:4px;}
+.pick-actions button{flex:1;border-radius:14px;padding:13px 10px;cursor:pointer;
+  font-family:var(--font-text);font-size:14px;font-weight:600;border:1px solid var(--border);
+  background:var(--surface);color:var(--text);}
+.pick-actions button.go{background:var(--accent);color:#fff;border-color:transparent;}
+.pick-actions button:disabled{opacity:.4;cursor:default;}
+.pick-legend{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--text-mute);margin:2px 2px 12px;}
+.pick-legend i{width:26px;height:14px;border-radius:5px;border:1px dashed var(--border-strong);flex-shrink:0;
+  background-image:repeating-linear-gradient(135deg,var(--accent-soft) 0 4px,transparent 4px 8px);}
 .cal-name{font-size:14.5px;color:var(--text);font-weight:600;}
 .cal-url{font-size:11.5px;color:var(--text-mute);margin-top:3px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -1396,7 +1425,7 @@ textarea::placeholder{color:var(--text-mute);}
       <button class="icon-btn" id="btn-edt" aria-label="Emploi du temps">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
       </button>
-      <button class="icon-btn" id="btn-news" aria-label="Actualités de la licence">
+      <button class="icon-btn" id="btn-news" aria-label="Mes sites">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h13a1 1 0 0 1 1 1v12a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2V5z"/><path d="M8 9h6M8 13h6M8 17h3"/></svg>
       </button>
       <button class="icon-btn" id="btn-classes" aria-label="Mes classes">
@@ -2177,6 +2206,91 @@ function editCalendar(id){
   } : null);
 }
 
+// ── Mes sites : raccourcis vers les sites utiles (fac, ENT, Eprel…) ──
+// Une liste propre à chaque personne, enregistrée avec ses réglages.
+// Toucher : ouvrir. Glisser vers la gauche : supprimer. Appui long : modifier.
+function mesSites(){
+  if(!Array.isArray(USER_SETTINGS.sites)){
+    // première ouverture : on reprend la page d'actualités qui existait déjà
+    USER_SETTINGS.sites = [{ nom:"Scolarité", url:newsUrl() }];
+  }
+  return USER_SETTINGS.sites;
+}
+function domaineDe(url){
+  try{ return new URL(url).hostname.replace(/^www\./, ""); }catch(e){ return url; }
+}
+function normaliserUrl(u){
+  u = (u || "").trim();
+  if(u && !/^https?:\/\//i.test(u)) u = "https://" + u;
+  return u;
+}
+function openSitesSheet(){
+  document.querySelectorAll("#pick-sheet .pick-actions").forEach(n=>n.remove());
+  const box = document.getElementById("pick-list");
+  document.getElementById("pick-title").textContent = "Mes sites";
+  box.innerHTML = "";
+  const sites = mesSites();
+  if(!sites.length){
+    const p = el("div","fs-hint");
+    p.textContent = "Aucun site pour l'instant. Ajoute ceux où tu vas souvent : ENT, Eprel, scolarité…";
+    p.style.margin = "0 4px 12px";
+    box.appendChild(p);
+  }
+  sites.forEach((site,i)=>{
+    const row = el("button","cal-row");
+    row.type = "button";
+    row.innerHTML = `<div class="cal-txt"><div class="cal-name">${esc(site.nom || domaineDe(site.url))}</div>` +
+      `<div class="cal-url">${esc(domaineDe(site.url))}</div></div><span class="site-go">${chevronR}</span>`;
+    row.addEventListener("click",()=>{
+      haptic(); closePicker();
+      window.open(site.url, "_blank", "noopener");
+    });
+    onLongPress(row, ()=>{ closePicker(); setTimeout(()=>editSite(i), 320); });
+    const ligne = swipeRow(row, [{ label:"Supprimer", fn:()=>{
+      sites.splice(i, 1);
+      saveContent();
+      toast("Site supprimé.");
+      openSitesSheet();
+    }}]);
+    ligne.style.marginBottom = "9px";
+    box.appendChild(ligne);
+  });
+  const add = el("button","add-inline");
+  add.type = "button";
+  add.textContent = "+  Ajouter un site";
+  add.style.marginTop = "4px";
+  add.addEventListener("click",()=>{ haptic(); closePicker(); setTimeout(()=>editSite(-1), 320); });
+  box.appendChild(add);
+  if(sites.length){
+    const h = el("div","fs-hint");
+    h.textContent = "Glisse un site vers la gauche pour le supprimer. Appui long pour le modifier.";
+    h.style.cssText = "margin:10px 4px 4px;text-align:center";
+    box.appendChild(h);
+  }
+  document.getElementById("pick-sheet").classList.add("open");
+}
+// i = -1 : nouveau site
+function editSite(i){
+  const sites = mesSites();
+  const cur = i >= 0 ? sites[i] : { nom:"", url:"" };
+  openForm(i >= 0 ? "Modifier le site" : "Ajouter un site", [
+    { key:"nom", label:"Nom", value:cur.nom, placeholder:"Eprel, ENT, Scolarité…" },
+    { key:"url", label:"Adresse", value:cur.url, placeholder:"https://…" }
+  ], i >= 0 ? "Enregistrer" : "Ajouter", v=>{
+    const url = normaliserUrl(v.url);
+    if(!url) return "Il faut une adresse.";
+    try{ new URL(url); }catch(e){ return "Cette adresse ne semble pas valide."; }
+    const site = { nom:(v.nom || "").trim() || domaineDe(url), url };
+    if(i >= 0) sites[i] = site; else sites.push(site);
+    saveContent();
+    setTimeout(openSitesSheet, 320);
+  }, i >= 0 ? ()=>{
+    sites.splice(i, 1);
+    saveContent();
+    setTimeout(openSitesSheet, 320);
+  } : null);
+}
+
 // ── Lien de la page d'actualités ──
 function editNewsUrl(){
   const cur = (USER_SETTINGS && USER_SETTINGS.news_url) || "";
@@ -2229,6 +2343,7 @@ let SUB_ITEMS    = {};    // "classe|matière" → chapitres, pour les matières
 
 // Picker générique : une liste de choix dans une feuille qui monte.
 function openPicker(title, options, onPick){
+  document.querySelectorAll("#pick-sheet .pick-actions").forEach(n=>n.remove());
   const box = document.getElementById("pick-list");
   document.getElementById("pick-title").textContent = title;
   box.innerHTML = "";
@@ -2238,7 +2353,7 @@ function openPicker(title, options, onPick){
     box.appendChild(p);
   }
   options.forEach(o=>{
-    const b = el("button","cal-row");
+    const b = el("button","cal-row" + (o.deja ? " deja" : "") + (o.accent ? " accent" : ""));
     b.type = "button";
     b.innerHTML = `<div class="cal-txt"><div class="cal-name">${esc(o.label)}</div>` +
       (o.sub ? `<div class="cal-url">${esc(o.sub)}</div>` : "") + `</div>`;
@@ -2246,6 +2361,61 @@ function openPicker(title, options, onPick){
     box.appendChild(b);
   });
   document.getElementById("pick-sheet").classList.add("open");
+}
+// Feuille à choix multiples. Chaque ligne se coche ; deux boutons en bas :
+// tout valider d'un coup, ou valider seulement la sélection.
+// o.deja = déjà publié : la ligne est hachurée, mais reste cochable (pour mettre à jour).
+const COCHE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+function openMultiPicker(title, options, labels, onConfirm, onOpen){
+  const sheet = document.getElementById("pick-sheet");
+  sheet.querySelectorAll(".pick-actions").forEach(n=>n.remove());
+  const box = document.getElementById("pick-list");
+  document.getElementById("pick-title").textContent = title;
+  box.innerHTML = "";
+  if(onOpen){
+    const lg = el("div","pick-legend");
+    lg.innerHTML = "<span>Touche le <b>rond</b> pour cocher plusieurs matières, ou le <b>nom</b> pour choisir ses chapitres.</span>";
+    box.appendChild(lg);
+  }
+  if(options.some(o=>o.deja)){
+    const lg = el("div","pick-legend");
+    lg.innerHTML = "<i></i><span>Hachuré : déjà publié. Le recocher le met à jour.</span>";
+    box.appendChild(lg);
+  }
+  const choisis = new Set();
+  const bar = el("div","pick-actions");
+  const tout = el("button"); tout.type = "button";
+  const sel  = el("button","go"); sel.type = "button";
+  const maj = ()=>{
+    tout.textContent = labels.tout + " (" + options.length + ")";
+    sel.textContent  = choisis.size ? labels.sel + " (" + choisis.size + ")" : "Coche des lignes";
+    sel.disabled = !choisis.size;
+  };
+  options.forEach(o=>{
+    const b = el("button","cal-row" + (o.deja ? " deja" : ""));
+    b.type = "button";
+    b.innerHTML = `<div class="cal-txt"><div class="cal-name">${esc(o.label)}</div>` +
+      (o.sub ? `<div class="cal-url">${esc(o.sub)}</div>` : "") + `</div><span class="pick-check">${COCHE_SVG}</span>`;
+    b.addEventListener("click", e=>{
+      haptic();
+      // avec onOpen, seul le rond coche ; le reste de la ligne ouvre l'élément
+      if(onOpen && !e.target.closest(".pick-check")){ closePicker(); onOpen(o.value); return; }
+      if(choisis.has(o.value)) choisis.delete(o.value); else choisis.add(o.value);
+      b.classList.toggle("sel", choisis.has(o.value));
+      maj();
+    });
+    box.appendChild(b);
+  });
+  tout.addEventListener("click",()=>{ haptic(); closePicker(); onConfirm(options.map(o=>o.value)); });
+  sel.addEventListener("click",()=>{
+    if(!choisis.size) return;
+    haptic(); closePicker();
+    onConfirm(options.filter(o=>choisis.has(o.value)).map(o=>o.value));   // dans l'ordre affiché
+  });
+  bar.appendChild(tout); bar.appendChild(sel);
+  box.after(bar);
+  maj();
+  sheet.classList.add("open");
 }
 function closePicker(){ document.getElementById("pick-sheet").classList.remove("open"); }
 
@@ -2257,7 +2427,7 @@ const KIND_LABEL = { cm:"Cours magistraux", td:"Travaux dirigés", devoir:"Devoi
 const PLIS_OUVERTS = new Set();
 function pli(cle, titre, opts = {}){
   const wrap = el("div","pli" + (PLIS_OUVERTS.has(cle) ? " open" : ""));
-  const head = el("button","pli-head" + (opts.style ? " " + opts.style : ""));
+  const head = el("button","pli-head" + (opts.style ? " " + opts.style : "") + (opts.deja ? " deja" : ""));
   head.type = "button";
   const t = el("span","pli-title");
   const majTitre = ()=>{ t.textContent = typeof titre === "function" ? titre(wrap.classList.contains("open")) : titre; };
@@ -2484,32 +2654,43 @@ async function openClass(c){
   }
   const parMatiere = {};
   items.forEach(it=>{ (parMatiere[it.subject_title] ||= []).push(it); });
+  // « déjà chez moi » : ajouté à mes cours, ou publié par moi. Hachuré, pour voir d'un coup d'œil ce qui manque.
+  const possede = it => isFollowed(it.id) || !!subFollowOf(it) || it.author === whoAmI();
+  if(items.some(possede)){
+    const lg = el("div","pick-legend");
+    lg.innerHTML = "<i></i><span>Hachuré : déjà dans tes cours. Le reste, c'est ce qui te manque.</span>";
+    lg.style.margin = "18px 4px 2px";
+    box.appendChild(lg);
+  }
   Object.keys(parMatiere)
     .sort((x,y)=>x.localeCompare(y,"fr",{ sensitivity:"base" }))
     .forEach(mat=>{
     const suivie = isSubFollowed(c.id, mat);
     const tous = parMatiere[mat];
+    const nPossede = tous.filter(possede).length;
     const pm = pli(c.id + "|" + mat, mat, {
-      style:"mat", count: tous.length, tag: suivie ? "Suivie" : ""
+      style:"mat", count: nPossede && nPossede < tous.length ? nPossede + "/" + tous.length : tous.length,
+      tag: suivie ? "Suivie" : "", deja: nPossede === tous.length
     });
     box.appendChild(pm.wrap);
     // suivre toute la matière : dans le bloc, pour garder l'en-tête lisible
     const fl = el("div","pli-follow");
     const b = el("button","mem-act" + (suivie ? "" : " go"));
     b.textContent = suivie ? "Suivie" : "Tout suivre";
-    b.addEventListener("click",()=>{ haptic(); followSubject(c, mat); });
+    b.addEventListener("click",()=>{ haptic(); followSubject(c, mat, tous[0] && tous[0].id); });
     fl.appendChild(b); pm.inner.appendChild(fl);
     ["cm","td","devoir","revision"].forEach(k=>{
       const list = tous.filter(x=>x.kind === k);
       if(!list.length) return;
-      const pk = pli(c.id + "|" + mat + "|" + k, KIND_LABEL[k], { style:"kind", count: list.length, flat:true });
+      const pk = pli(c.id + "|" + mat + "|" + k, KIND_LABEL[k], { style:"kind", count: list.length, flat:true,
+                                                                   deja: list.every(possede) });
       pk.wrap.style.marginTop = "4px";
       pm.inner.appendChild(pk.wrap);
       list.forEach(it=>{
         const parMatiere = !!subFollowOf(it);
         const dansMesCours = isFollowed(it.id) || parMatiere;
         const aMoi = it.author === whoAmI() || monRole === "owner";
-        const row = el("button","cal-row");
+        const row = el("button","cal-row" + (possede(it) ? " deja" : ""));
         row.type = "button";
         row.innerHTML = `<div class="cal-txt"><div class="cal-name">${esc(it.label)}</div>
           <div class="cal-url">par ${esc(it.author)}${dansMesCours ? " · dans tes cours" : ""}</div></div>`;
@@ -2572,54 +2753,127 @@ async function publierOuMettreAJour(classId, kind, subjectTitle, payload){
   return "neuf";
 }
 
-// Choisir une matière, puis un de ses chapitres, et le publier ici.
-function publishFromClass(c){
-  const mats = SUBJECTS.filter(s=>((s.cm||[]).concat(s.td||[])).some(ch=>!ch._shared));
+// Choisir une matière, puis un ou plusieurs de ses chapitres, et les publier ici.
+// Ce qui est déjà dans la classe apparaît hachuré.
+// Ce qui permet à quelqu'un d'autre de recréer la matière à l'identique.
+function metaMatiere(sj){
+  if(!sj) return null;
+  const u = UES[sj.ue] || {};
+  return { ecue:sj.ecue || "", ue_num:String(u.num || ""), ue_title:u.title || "",
+           sem:u.sem || SEMESTRES[sj.id] || null };
+}
+function cleEnvoi(kind, subjectTitle, label){
+  return kind === "revision" ? "revision|" + subjectTitle : kind + "|" + subjectTitle + "|" + label;
+}
+function payloadRevision(sj){
+  return {
+    label: "Révisions",
+    fc:  (sj.fc ||[]).filter(x=>!x._shared),
+    qcm: (sj.qcm||[]).filter(x=>!x._shared),
+    oq:  (sj.oq ||[]).filter(x=>!x._shared),
+    dev: (sj.dev||[]).filter(x=>!x._shared),
+    tr:  (sj.tr ||[]).filter(x=>!x._shared),
+    auteurs: (sj.auteurs||[]).filter(x=>!x._shared)
+  };
+}
+async function publishFromClass(c){
+  const mats = SUBJECTS.filter(s=>((s.cm||[]).concat(s.td||[])).some(ch=>!ch._shared))
+    .sort((a,b)=>a.title.localeCompare(b.title, "fr", { sensitivity:"base" }));
   if(!mats.length){ toast("Aucun chapitre à publier pour l'instant."); return; }
-  openPicker("Quelle matière ?", mats.map(s=>({
-    label: s.title,
-    sub: ((s.cm||[]).filter(x=>!x._shared).length) + " en cours · " +
-         ((s.td||[]).filter(x=>!x._shared).length) + " en TD",
-    value: s.id
-  })), subjId=>{
-    const sj = SUBJECTS.find(x=>x.id === subjId);
-    const opts = [];
-    (sj.cm||[]).forEach((ch,i)=>{ if(!ch._shared) opts.push({ label:ch.label, sub:"Cours", value:"cm:"+i }); });
-    (sj.td||[]).forEach((ch,i)=>{ if(!ch._shared) opts.push({ label:ch.label, sub:"TD", value:"td:"+i }); });
-    // les fiches, QCM et questions ouvertes appartiennent à la matière, pas à un chapitre
-    const nFc  = (sj.fc ||[]).filter(x=>!x._shared).length;
-    const nQcm = (sj.qcm||[]).filter(x=>!x._shared).length;
-    const nOq  = (sj.oq ||[]).filter(x=>!x._shared).length;
-    const nDev = (sj.dev||[]).filter(x=>!x._shared).length;
-    const nTr  = (sj.tr ||[]).filter(x=>!x._shared).length;
-    if(nFc + nQcm + nOq + nDev + nTr){
-      opts.push({ label:"Exercices de révision",
-        sub:`${nFc} fiches · ${nQcm} QCM · ${nTr} trous · ${nOq} questions · ${nDev} devoirs`, value:"revision" });
-    }
-    setTimeout(()=>openPicker("Quoi publier ?", opts, val=>{
-      let payload, kind;
-      if(val === "revision"){
-        kind = "revision";
-        payload = {
-          label: "Révisions",
-          fc:  (sj.fc ||[]).filter(x=>!x._shared),
-          qcm: (sj.qcm||[]).filter(x=>!x._shared),
-          oq:  (sj.oq ||[]).filter(x=>!x._shared),
-          dev: (sj.dev||[]).filter(x=>!x._shared),
-          tr:  (sj.tr ||[]).filter(x=>!x._shared),
-          auteurs: (sj.auteurs||[]).filter(x=>!x._shared)
-        };
-      }else{
-        const [type, idx] = val.split(":");
-        kind = type;
-        const ch = (type === "cm" ? sj.cm : sj.td)[Number(idx)];
-        payload = { label:ch.label, sections:ch.sections||[], recap:ch.recap||[] };
-      }
-      publierOuMettreAJour(c.id, kind, sj.title, payload)
-        .then(r=>{ toast(r === "maj" ? "Mis à jour." : "Publié."); openClass(c); })
-        .catch(()=>toast("Publication refusée."));
-    }), 320);   // on laisse la première feuille se refermer
+  // ce qui est déjà dans la classe, une seule fois
+  let items = [];
+  try{ items = (await api("class_items", { class_id:c.id })).items || []; }catch(e){}
+  const dejaPar = {};                       // clé → { item, auteurs }
+  items.forEach(it=>{
+    const k = cleEnvoi(it.kind, it.subject_title, it.label);
+    const d = dejaPar[k] || (dejaPar[k] = { mien:null, auteurs:[] });
+    if(it.author === whoAmI()) d.mien = it;
+    if(!d.auteurs.includes(it.author)) d.auteurs.push(it.author);
   });
+  const moi = whoAmI();
+  const etat = k => {
+    const d = dejaPar[k];
+    if(!d) return { deja:false, sub:"" };
+    if(d.mien) return { deja:true, sub:"déjà publié" };
+    return { deja:true, sub:"déjà publié par " + d.auteurs.join(", ") };
+  };
+  // les lignes publiables d'une matière
+  const lignesDe = sj=>{
+    const out = [];
+    (sj.cm||[]).forEach((ch,i)=>{ if(!ch._shared){ const e = etat(cleEnvoi("cm", sj.title, ch.label));
+      out.push({ label:ch.label, sub:"Cours" + (e.sub ? " · " + e.sub : ""), deja:e.deja, value:"cm:"+i }); } });
+    (sj.td||[]).forEach((ch,i)=>{ if(!ch._shared){ const e = etat(cleEnvoi("td", sj.title, ch.label));
+      out.push({ label:ch.label, sub:"TD" + (e.sub ? " · " + e.sub : ""), deja:e.deja, value:"td:"+i }); } });
+    const r = payloadRevision(sj);
+    const n = k => r[k].length;
+    if(n("fc") + n("qcm") + n("oq") + n("dev") + n("tr")){
+      const e = etat(cleEnvoi("revision", sj.title));
+      out.push({ label:"Exercices de révision",
+        sub:`${n("fc")} fiches · ${n("qcm")} QCM · ${n("tr")} trous · ${n("oq")} questions` + (e.sub ? " · " + e.sub : ""),
+        deja:e.deja, value:"revision" });
+    }
+    return out;
+  };
+
+  openMultiPicker("Quelle matière ?", mats.map(sj=>{
+    const l = lignesDe(sj);
+    const nDeja = l.filter(x=>x.deja).length;
+    return {
+      label: sj.title,
+      sub: nDeja ? `${nDeja} sur ${l.length} déjà publiés` : `${l.length} à publier`,
+      deja: l.length > 0 && nDeja === l.length,        // tout est déjà dans la classe
+      value: sj.id
+    };
+  }), { tout:"Tout", sel:"Publier" },
+  // plusieurs matières cochées : on publie ou met à jour tous leurs chapitres
+  ids=>{
+    const taches = [];
+    ids.forEach(id=>{
+      const sj = SUBJECTS.find(x=>x.id === id);
+      if(sj) lignesDe(sj).forEach(l=>taches.push({ sj, val:l.value }));
+    });
+    publierTaches(c, taches, dejaPar);
+  },
+  // toucher le nom : choisir parmi les chapitres de cette matière
+  subjId=>{
+    const sj = SUBJECTS.find(x=>x.id === subjId);
+    setTimeout(()=>openMultiPicker("Quoi publier ?", lignesDe(sj),
+      { tout:"Tout publier", sel:"Publier" },
+      vals=>publierLot(c, sj, vals, dejaPar)), 320);   // on laisse la première feuille se refermer
+  });
+}
+// Publie une liste d'éléments d'une matière, l'un après l'autre.
+function publierLot(c, sj, vals, dejaPar){
+  return publierTaches(c, vals.map(val=>({ sj, val })), dejaPar);
+}
+// Publie une liste de { sj, val }, éventuellement sur plusieurs matières.
+// Ce que j'ai déjà publié est mis à jour, le reste est créé.
+async function publierTaches(c, taches, dejaPar){
+  let neufs = 0, majs = 0, echecs = 0;
+  for(let k = 0; k < taches.length; k++){
+    const { sj, val } = taches[k];
+    let kind, payload;
+    if(val === "revision"){ kind = "revision"; payload = payloadRevision(sj); }
+    else{
+      const [type, idx] = val.split(":");
+      kind = type;
+      const ch = (type === "cm" ? sj.cm : sj.td)[Number(idx)];
+      payload = { label:ch.label, sections:ch.sections||[], recap:ch.recap||[] };
+    }
+    payload.meta = metaMatiere(sj);
+    if(taches.length > 1) toast(`Publication ${k + 1} sur ${taches.length}…`);
+    const d = dejaPar[cleEnvoi(kind, sj.title, payload.label)];
+    try{
+      if(d && d.mien){ await api("item_update", { item_id:d.mien.id, payload }); majs++; }
+      else{ await api("item_publish", { class_id:c.id, kind, subject_title:sj.title, payload }); neufs++; }
+    }catch(e){ echecs++; }
+  }
+  const morceaux = [];
+  if(neufs) morceaux.push(neufs + (neufs > 1 ? " publiés" : " publié"));
+  if(majs)  morceaux.push(majs + " mis à jour");
+  if(echecs) morceaux.push(echecs + (echecs > 1 ? " refusés" : " refusé"));
+  toast((morceaux.join(", ") || "Rien à publier") + ".");
+  openClass(c);
 }
 
 // ── Lecture d'un chapitre partagé ──
@@ -2673,7 +2927,7 @@ async function openSharedItem(it){
           setTimeout(()=>pickMatiere("La ranger dans quelle matière ?", subjId=>{
             parMat.subject_id = subjId;
             saveContent(); injectFollowed(); toast("Déplacée."); openSharedItem(it);
-          }), 320);
+          }, { title:it.subject_title, itemId:it.id }), 320);
         }
       });
       return;
@@ -3233,7 +3487,8 @@ function subFollowOf(it){
 }
 
 // Suivre toute une matière : les chapitres publiés plus tard arrivent tout seuls.
-function followSubject(c, subjectTitle){
+function followSubject(c, subjectTitle, itemId){
+  const source = { title:subjectTitle, itemId };
   if(isSubFollowed(c.id, subjectTitle)){
     const f = follows().find(x=>x.type === "subject" && x.class_id === c.id && x.subject_title === subjectTitle);
     const sj = f && SUBJECTS.find(x=>x.id === f.subject_id);
@@ -3251,7 +3506,7 @@ function followSubject(c, subjectTitle){
           f.subject_id = subjId;
           saveContent(); injectFollowed();
           toast("Déplacée."); openClass(c);
-        }), 320);
+        }, source), 320);
       }
     });
     return;
@@ -3263,7 +3518,7 @@ function followSubject(c, subjectTitle){
       toast("Matière suivie. Les nouveaux chapitres arriveront seuls.");
       openClass(c);
     });
-  });
+  }, source);
 }
 
 // Le nom de la matière où un chapitre suivi est rangé.
@@ -3274,14 +3529,66 @@ function matiereDeSuivi(itemId){
   return sj ? sj.title : null;
 }
 
-function pickMatiere(titre, onPick){
-  const cibles = SUBJECTS.map(s=>({
-    label: s.title,
-    sub: (UES[s.ue] && UES[s.ue].title) || "",
-    value: s.id
-  }));
+// source = { title, itemId } : la matière d'origine, dans la classe.
+// Si je n'ai pas de matière de ce nom, on propose de la créer telle quelle
+// (même nom, même UE, même ECUE, même semestre), en un seul geste.
+const sansAccents = t => (t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  .replace(/[\u2019\u2018`\u00b4]/g, "'").replace(/\s+/g, " ").toLowerCase().trim();
+async function metaDistante(itemId){
+  if(!itemId) return null;
+  let pl = SHARED_CACHE[itemId];
+  if(!pl){
+    try{
+      const out = await api("items_fetch", { ids:[itemId] });
+      pl = (out.items || [])[0]?.payload;
+      if(pl) SHARED_CACHE[itemId] = pl;
+    }catch(e){}
+  }
+  return (pl && pl.meta) || null;
+}
+function creerMatiereDepuis(titre, meta){
+  const sems = Object.values(UES).map(u=>u.sem).filter(Boolean);
+  const sem = (meta && meta.sem) || curSemestre || (sems.length ? Math.min(...sems) : 1);
+  const ueKey = trouverOuCreerUE(sem, meta ? meta.ue_title : "", meta ? meta.ue_num : "");
+  const id = newId();
+  SUBJECTS.push({ id, ue:ueKey, ects:0, ecue:(meta && meta.ecue) || "", title:titre, _own:true,
+                  cm:[], td:[], fc:[], qcm:[], oq:[], tr:[], dev:[], auteurs:[] });
+  SEMESTRES[id] = sem;
+  saveContent();
+  return id;
+}
+async function pickMatiere(titre, onPick, source){
+  const cibles = SUBJECTS.slice()
+    .sort((a,b)=>a.title.localeCompare(b.title, "fr", { sensitivity:"base" }))
+    .map(s=>({ label:s.title, sub:(UES[s.ue] && UES[s.ue].title) || "", value:s.id }));
+  let meta = null;
+  if(source && source.title){
+    const k = cibles.findIndex(c=>sansAccents(c.label) === sansAccents(source.title));
+    if(k >= 0){
+      // j'ai déjà une matière de ce nom : on la met en tête
+      const m = cibles.splice(k, 1)[0];
+      m.sub = "même nom que dans la classe";
+      m.accent = true;
+      cibles.unshift(m);
+    }else{
+      meta = await metaDistante(source.itemId);
+      const bouts = [];
+      if(meta && meta.ue_num) bouts.push("UE " + meta.ue_num);
+      if(meta && meta.ecue)   bouts.push("ECUE " + meta.ecue);
+      if(meta && meta.sem)    bouts.push("semestre " + meta.sem);
+      cibles.unshift({ label:"+  Créer « " + source.title + " »",
+        sub: bouts.length ? bouts.join(" · ") : "une nouvelle matière, avec ce nom",
+        value:"__creer__", accent:true });
+    }
+  }
   if(!cibles.length){ toast("Crée d'abord une matière où le ranger."); return; }
-  openPicker(titre, cibles, onPick);
+  openPicker(titre, cibles, v=>{
+    if(v === "__creer__"){
+      const id = creerMatiereDepuis(source.title, meta);
+      toast("Matière « " + source.title + " » créée.");
+      onPick(id);
+    }else onPick(v);
+  });
 }
 
 // Déplacer un chapitre suivi vers une autre matière.
@@ -3294,7 +3601,7 @@ function moveFollow(it){
     injectFollowed();
     toast("Déplacé.");
     openSharedItem(it);
-  });
+  }, { title:it.subject_title, itemId:it.id });
 }
 
 function followItem(it){
@@ -3306,7 +3613,7 @@ function followItem(it){
       const sj = SUBJECTS.find(x=>x.id === subjId);
       if(sj) openSubject(subjId);
     });
-  });
+  }, { title:it.subject_title, itemId:it.id });
 }
 
 function unfollowItem(itemId){
@@ -3393,7 +3700,8 @@ function publishChapitre(type, ch, subjectTitle){
     openPicker("Publier dans quelle classe ?",
       list.map(c=>({ label:c.name, sub:c.role === "owner" ? "créateur" : "adjoint", value:c.id })),
       classId=>{
-        const payload = { label:ch.label, sections:ch.sections||[], recap:ch.recap||[] };
+        const payload = { label:ch.label, sections:ch.sections||[], recap:ch.recap||[],
+          meta: metaMatiere(SUBJECTS.find(x=>x.title === subjectTitle) || curSubj) };
         publierOuMettreAJour(classId, type === "cm" ? "cm" : "td", subjectTitle, payload)
           .then(r=>toast(r === "maj" ? "Mis à jour." : "Publié."))
           .catch(()=>toast("Publication refusée."));
@@ -6349,9 +6657,8 @@ document.getElementById("btn-edt").addEventListener("click",()=>{ haptic(); open
 // Appui long pour la remplacer par celle de sa propre formation.
 document.getElementById("btn-news").addEventListener("click",()=>{
   haptic();
-  window.open(newsUrl(), "_blank", "noopener");
+  openSitesSheet();
 });
-onLongPress(document.getElementById("btn-news"), editNewsUrl);
 // entrée unique vers les semestres
 document.getElementById("sem-entry").addEventListener("click",()=>{ haptic(); showScreen("semchoice"); });
 document.getElementById("btn-semchoice-back").addEventListener("click",()=>{ renderSemestres(); showScreen("semestres"); });
