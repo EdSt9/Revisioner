@@ -988,6 +988,24 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .dev-show{width:100%;margin-top:14px;border-radius:14px;padding:12px;cursor:pointer;
   background:var(--accent);color:#fff;border:none;
   font-family:var(--font-text);font-size:14px;font-weight:600;}
+.dev-seg{grid-template-columns:1fr 1fr;margin-bottom:18px;}
+.dev-n{display:inline-block;min-width:18px;margin-left:5px;padding:1px 6px;border-radius:9px;font-size:11px;background:var(--accent-soft);color:var(--accent);}
+.dev-doc{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:var(--surface-2);border:1px solid var(--border);font-size:13.5px;line-height:1.55;color:var(--text-soft);margin-bottom:6px;}
+.dev-doc b{color:var(--text);font-weight:600;}
+.dev-lien{display:inline-flex;align-items:center;gap:6px;margin:4px 0 2px;padding:7px 12px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--accent);font-family:var(--font-text);font-size:12.5px;font-weight:600;cursor:pointer;}
+.dev-avance{display:flex;align-items:center;gap:10px;margin:12px 0 4px;font-size:12px;font-weight:600;color:var(--text-mute);}
+.dev-avance .bar{flex:1;height:6px;border-radius:6px;background:var(--border);overflow:hidden;}
+.dev-avance .bar i{display:block;height:100%;background:var(--accent);border-radius:6px;transition:width .4s var(--ease-spring);}
+.dev-avance.fini{color:var(--ok);} .dev-avance.fini .bar i{background:var(--ok);}
+.dev-q{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.dev-q-head{display:flex;gap:10px;align-items:flex-start;}
+.dev-q-num{flex-shrink:0;width:26px;height:26px;border-radius:9px;display:grid;place-items:center;font-size:13px;font-weight:700;background:var(--accent-soft);color:var(--accent);}
+.dev-q-txt{flex:1;font-size:14.5px;line-height:1.55;color:var(--text);font-weight:500;}
+.dev-pts{flex-shrink:0;font-size:11px;font-weight:700;color:var(--text-mute);background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:3px 7px;white-space:nowrap;}
+.dev-rep{margin-top:10px;min-height:96px;font-size:14px;padding:13px 14px;border-radius:14px;}
+.dev-etat{font-size:11px;color:var(--text-mute);margin-top:5px;text-align:right;min-height:14px;}
+.dev-q .dev-corr{margin-top:10px;}
+.dev-show.ghost{background:var(--accent-soft);color:var(--accent);}
 .know-group{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
   color:var(--text-mute);margin:16px 0 7px 4px;}
 .know-group:first-child{margin-top:0;}
@@ -1163,6 +1181,33 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .mode-desc{font-size:12.5px;color:var(--text-soft);margin-top:3px;line-height:1.4;}
 .mode-count{font-size:12px;font-weight:600;color:var(--text-soft);background:var(--accent-soft);border-radius:20px;padding:4px 11px;white-space:nowrap;flex-shrink:0;}
 .mode-badge-done{color:var(--ok);background:var(--ok-soft);}
+/* ── Réviser par chapitre ── */
+.scope-bar{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 12px;margin:0 -2px 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;}
+.scope-bar::-webkit-scrollbar{display:none;}
+.scope-chip{flex:0 0 auto;display:flex;flex-direction:column;gap:6px;min-width:92px;padding:9px 13px 10px;border-radius:14px;border:1px solid var(--border);background:var(--surface);color:var(--text-soft);font-family:var(--font-text);font-size:13px;font-weight:600;cursor:pointer;text-align:left;transition:border-color .25s,background .25s,color .25s,transform .25s var(--ease-spring);}
+.scope-chip:active{transform:scale(.97);}
+.scope-chip.active{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);}
+.scope-chip .sc-top{white-space:nowrap;}
+.scope-chip .sc-sub{font-size:10.5px;font-weight:500;color:var(--text-mute);white-space:nowrap;}
+.scope-chip.valide .sc-sub{color:var(--ok);font-weight:600;}
+.scope-chip .sc-bar{height:4px;border-radius:4px;background:var(--border);overflow:hidden;}
+.scope-chip .sc-bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:4px;transition:width .5s var(--ease-spring);}
+.scope-chip.valide .sc-bar i{background:var(--ok);}
+.scope-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text-mute);}
+.chap-prog{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px;margin-bottom:14px;box-shadow:0 4px 20px var(--shadow);}
+.chap-prog-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
+.chap-prog-titre{font-family:var(--font-display);font-size:17px;font-weight:500;color:var(--text);}
+.chap-prog-num{font-size:13px;font-weight:600;color:var(--accent);white-space:nowrap;}
+.chap-prog.valide .chap-prog-num{color:var(--ok);}
+.chap-prog-bar{height:8px;border-radius:8px;background:var(--border);overflow:hidden;margin:12px 0 10px;}
+.chap-prog-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:8px;transition:width .6s var(--ease-spring);}
+.chap-prog.valide .chap-prog-bar i{background:var(--ok);}
+.chap-prog-txt{font-size:12.5px;line-height:1.55;color:var(--text-soft);}
+.chap-qcm-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:16px;padding:14px 18px;border-radius:var(--r-lg);border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);font-family:var(--font-text);font-size:14.5px;font-weight:600;cursor:pointer;transition:transform .25s var(--ease-spring);}
+.chap-qcm-btn:active{transform:scale(.98);}
+.chap-qcm-btn .cq-sub{font-weight:500;font-size:12.5px;opacity:.85;}
+.res-scope{margin:6px 0 4px;font-size:13.5px;color:var(--text-soft);}
+.res-scope b{color:var(--text);}
 
 /* SESSION */
 .sess-nav{position:sticky;top:0;z-index:20;padding:calc(env(safe-area-inset-top) + 12px) 18px 12px;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
@@ -1543,8 +1588,8 @@ textarea::placeholder{color:var(--text-mute);}
 <div id="screen-devoirs" class="screen">
   <div class="wrap">
     <button class="back-btn rise" id="btn-dev-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Réviser</button>
-    <h1 class="page-title rise" style="animation-delay:.03s">Devoirs corrigés</h1>
-    <p class="page-sub rise" style="animation-delay:.06s">Le sujet, puis la correction quand tu l'as cherchée.</p>
+    <h1 class="page-title rise" style="animation-delay:.03s">Devoirs</h1>
+    <p class="page-sub rise" id="dev-sub" style="animation-delay:.06s">Rédige tes réponses ici. Quand la correction arrive, le devoir passe dans Corrigés.</p>
     <div id="dev-inner" class="rise" style="animation-delay:.1s"></div>
   </div>
 </div>
@@ -5667,6 +5712,16 @@ function renderCoursePane(type){
     r.innerHTML=`<div class="recap-label">📌 À retenir</div>`+ch.recap.map((x,i)=>`<div class="recap-item"><span class="recap-num">${i+1}</span><span>${esc(x)}</span></div>`).join("");
     pane.appendChild(r);
   }
+  // le QCM de ce chapitre, directement
+  const nQ = (curSubj.qcm||[]).filter(x=>x && x.ch === ch.label).length;
+  if(nQ){
+    const p = progressionScope(curSubj, "ch:" + ch.label, "qcm");
+    const b = el("button","chap-qcm-btn");
+    b.type = "button";
+    b.innerHTML = `⏱️ QCM de ce ${type === "cm" ? "cours" : "TD"} <span class="cq-sub">· ${p.ok === p.total ? "✓ validé" : p.ok + " / " + p.total + " validés"}</span>`;
+    b.addEventListener("click", ()=>{ haptic(); lancerQCMChapitre(ch.label); });
+    pane.appendChild(b);
+  }
   if(modifiable(ch)){
     const addSec=el("button","add-inline");
     addSec.textContent = "+  Ajouter une section";
@@ -5674,6 +5729,207 @@ function renderCoursePane(type){
     pane.appendChild(addSec);
   }
 }
+// ══════════════════════════════════════════════════
+// RÉVISER PAR CHAPITRE
+// Chaque exercice porte le libellé de son chapitre (champ ch).
+// On peut ainsi réviser un CM ou un TD à part, et le valider petit à petit.
+// ══════════════════════════════════════════════════
+const SCOPES = {};                         // matière → "all" | "ch:<libellé>" | "auteurs"
+var sessionScope = "all";
+function scopeCourant(){
+  const v = curSubj && SCOPES[curSubj.id];
+  if(!v || v === "all") return "all";
+  if(v === "auteurs") return quizAuteurs(curSubj).length ? v : "all";
+  // le chapitre peut avoir disparu (renommé, supprimé)
+  return chapitresAReviser(curSubj).some(c=>"ch:"+c.label === v) ? v : "all";
+}
+function choisirScope(v){ if(curSubj) SCOPES[curSubj.id] = v; }
+// les chapitres qui ont au moins un exercice
+function chapitresAReviser(subj){
+  const out = [];
+  ["cm","td"].forEach(type=>{
+    (subj[type]||[]).forEach(ch=>{
+      const n = ["fc","qcm","tr","oq"].reduce((k,m)=>k + (subj[m]||[]).filter(x=>x && x.ch === ch.label).length, 0);
+      if(n) out.push({ type, label:ch.label, n });
+    });
+  });
+  return out;
+}
+// les exercices d'un mode pour un périmètre, avec leur index d'origine (pour la clé)
+function itemsDuScope(subj, m, scope){
+  if(scope === "auteurs") return m === "qcm" ? quizAuteurs(subj).map((item,i)=>({ item, i })) : [];
+  const arr = (subj[m]||[]).map((item,i)=>({ item, i }));
+  if(!scope || scope === "all") return arr;
+  const lab = scope.slice(3);
+  return arr.filter(x=>x.item && x.item.ch === lab);
+}
+// une carte est « validée » quand la dernière réponse était bonne
+function estAcquise(key){ const c = SRS[key]; return !!(c && c.rep > 0); }
+function progressionScope(subj, scope, m){
+  const xs = itemsDuScope(subj, m || "qcm", scope);
+  let ok = 0;
+  xs.forEach(x=>{ if(estAcquise(cardKey(subj.id, m || "qcm", x.item, x.i))) ok++; });
+  return { ok, total:xs.length };
+}
+function nomScope(scope){
+  if(scope === "auteurs") return "Auteurs";
+  if(scope === "all") return "Toute la matière";
+  return scope.slice(3);
+}
+
+// ── QCM sur les auteurs, fabriqués à partir des fiches ──
+// Toujours les mêmes questions pour une fiche donnée : le suivi des réponses tient d'une fois sur l'autre.
+const QUIZ_AUTEURS_CACHE = {};
+function nzA(t){ return String(t||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[’‘]/g,"'").replace(/\s+/g," ").trim(); }
+function graineDe(str){
+  let h = 2166136261;
+  for(let k=0;k<str.length;k++){ h ^= str.charCodeAt(k); h = Math.imul(h, 16777619); }
+  return ()=>{ h = Math.imul(h ^ (h >>> 15), 2246822507); h = Math.imul(h ^ (h >>> 13), 3266489909); h ^= h >>> 16; return (h >>> 0) / 4294967296; };
+}
+function ficheAuteur(a0){
+  return {
+    nom: String(a0.nom||"").trim(),
+    courant: a0.courant || "", periode: a0.periode || "",
+    texte: a0.these || a0.contrib || "",
+    resume: a0.contrib || "",
+    concepts: Array.isArray(a0.concepts) ? a0.concepts.filter(Boolean) : [],
+    retenir: a0.retenir || ""
+  };
+}
+function nomsPropres(nom){
+  return nzA(nom).split(/\s+et\s+|&|,|\s+/).map(x=>x.trim()).filter(x=>x.length >= 4 && !["avec"].includes(x));
+}
+function memePersonne(a, b){
+  const x = nomsPropres(a), y = nomsPropres(b);
+  return x.some(t=>y.includes(t));
+}
+function masquerNom(txt, nom){
+  let t = String(txt||"");
+  String(nom||"").split(/\s+et\s+|&|,|\s+/).map(x=>x.trim()).filter(x=>x.length >= 4).forEach(mot=>{
+    const re = new RegExp("(^|[^\\p{L}])" + mot.replace(/[.*+?^${}()|[\]\\]/g,"\\$&") + "(?=[^\\p{L}]|$)", "giu");
+    t = t.replace(re, "$1…");
+  });
+  return t;
+}
+function couper(t, n){ t = String(t||"").trim(); return t.length > n ? t.slice(0, n).replace(/\s+\S*$/,"") + "…" : t; }
+function quizAuteurs(subj){
+  if(!subj) return [];
+  const sig = subj.id + "|" + (subj.auteurs||[]).map(a=>a && a.nom).join("|");
+  if(QUIZ_AUTEURS_CACHE[sig]) return QUIZ_AUTEURS_CACHE[sig];
+  const fiches = (subj.auteurs||[]).filter(a=>a && a.nom).map(ficheAuteur);
+  if(fiches.length < 2){ QUIZ_AUTEURS_CACHE[sig] = []; return []; }
+  // de quoi compléter les mauvaises réponses quand la matière a peu d'auteurs
+  const ailleurs = [];
+  SUBJECTS.forEach(s=>{ if(s.id !== subj.id) (s.auteurs||[]).forEach(a=>{ if(a && a.nom) ailleurs.push(ficheAuteur(a)); }); });
+  // les notions de la matière d'abord : des mauvaises réponses venues d'ailleurs seraient trop faciles
+  const notionsIci = [], notionsAilleurs = [];
+  fiches.forEach(f=>f.concepts.forEach(c=>{ if(!notionsIci.some(x=>nzA(x)===nzA(c))) notionsIci.push(c); }));
+  ailleurs.forEach(f=>f.concepts.forEach(c=>{ if(!notionsIci.some(x=>nzA(x)===nzA(c)) && !notionsAilleurs.some(x=>nzA(x)===nzA(c))) notionsAilleurs.push(c); }));
+  const texteComplet = f => nzA([f.texte, f.retenir, f.courant, f.concepts.join(" ")].join(" "));
+  const tirer = (rng, liste, n, ok)=>{
+    const pris = [];
+    const pool = liste.slice();
+    while(pool.length && pris.length < n){
+      const k = Math.floor(rng() * pool.length);
+      const x = pool.splice(k,1)[0];
+      if(ok(x, pris)) pris.push(x);
+    }
+    return pris;
+  };
+  const explication = f => couper(f.nom + " : " + (f.retenir || f.texte), 320);
+  // deux auteurs qui se citent (Bourdieu et Passeron, par exemple) partagent leurs notions :
+  // l'un ne doit jamais servir de mauvaise réponse à l'autre
+  const lies = (f, g)=> memePersonne(f.nom, g.nom)
+    || nomsPropres(g.nom).some(t=>texteComplet(f).includes(t))
+    || nomsPropres(f.nom).some(t=>texteComplet(g).includes(t));
+  const motsForts = t => nzA(t).split(/[^a-z0-9]+/).filter(w=>w.length >= 7);
+  const prochesDe = f => { const m = new Set(); f.concepts.forEach(c=>motsForts(c).forEach(w=>m.add(w))); return m; };
+  const nomsDistincts = (f, rng, exclure)=>{
+    const ok = (g, pris)=> !lies(f, g) && !pris.some(p=>memePersonne(p.nom, g.nom)) && (!exclure || !exclure(g));
+    let d = tirer(rng, fiches, 3, ok);
+    if(d.length < 3) d = d.concat(tirer(rng, ailleurs, 3 - d.length, (g,pris)=>ok(g, d.concat(pris))));
+    return d.map(g=>g.nom);
+  };
+  const out = [];
+  fiches.forEach(f=>{
+    const rng = graineDe(subj.id + f.nom);
+    // 1. les notions → l'auteur, seulement avec des notions qui n'appartiennent qu'à lui ici
+    const propres = f.concepts.filter(c=>!fiches.some(g=>g !== f && texteComplet(g).includes(nzA(c))));
+    if(propres.length){
+      const notions = propres.slice(0, 2);
+      const d = nomsDistincts(f, rng, g=>notions.some(n=>texteComplet(g).includes(nzA(n))));
+      if(d.length === 3) out.push({ ch:"auteurs", q:"Quel auteur associe-t-on à " + notions.map(n=>"« "+n+" »").join(" et ") + " ?", opts:[f.nom, ...d], c:0, e:explication(f) });
+    }
+    // 2. l'auteur → une de ses notions
+    if(f.concepts.length){
+      const bonne = f.concepts[f.concepts.length - 1];
+      const siens = texteComplet(f);
+      const proches = prochesDe(f);
+      const proprietaires = n => [...fiches, ...ailleurs].filter(g=>g.concepts.some(c=>nzA(c)===nzA(n)));
+      const okN = (n, pris)=> nzA(n) !== nzA(bonne) && !siens.includes(nzA(n))
+        && !f.concepts.some(c=>nzA(c)===nzA(n))
+        && !motsForts(n).some(w=>proches.has(w))
+        && !proprietaires(n).some(g=>lies(f, g))
+        && !pris.some(p=>nzA(p)===nzA(n));
+      let d = tirer(rng, notionsIci, 3, okN);
+      if(d.length < 3) d = d.concat(tirer(rng, notionsAilleurs, 3 - d.length, (n,pris)=>okN(n, d.concat(pris))));
+      if(d.length === 3) out.push({ ch:"auteurs", q:"Laquelle de ces notions renvoie à " + f.nom + " ?", opts:[bonne, ...d], c:0, e:explication(f) });
+    }
+    // 3. le portrait → l'auteur
+    // un courant seul est trop vague : il faut aussi la période, ou le résumé d'une ancienne fiche
+    const portrait = (f.courant && f.periode)
+      ? masquerNom(f.courant + " · " + f.periode, f.nom)
+      : (!f.courant && f.resume) ? masquerNom(f.resume, f.nom) : "";
+    if(portrait && portrait.replace(/[…\s.·]/g,"").length > 6){
+      const d = nomsDistincts(f, rng, g=> f.courant && nzA(g.courant) === nzA(f.courant));
+      if(d.length === 3) out.push({ ch:"auteurs", q:"Qui est-ce ? " + couper(portrait, 220), opts:[f.nom, ...d], c:0, e:explication(f) });
+    }
+  });
+  QUIZ_AUTEURS_CACHE[sig] = out;
+  return out;
+}
+
+// ── Barre des périmètres : Tout · CM · TD · Auteurs ──
+function barreScopes(scope){
+  const chs = chapitresAReviser(curSubj);
+  const quizA = quizAuteurs(curSubj);
+  if(!chs.length && !quizA.length) return null;
+  const wrap = el("div");
+  const head = el("div","scope-head");
+  head.innerHTML = `<span>Par chapitre</span><span>QCM validés</span>`;
+  wrap.appendChild(head);
+  const bar = el("div","scope-bar");
+  const puce = (val, titre)=>{
+    const p = progressionScope(curSubj, val, "qcm");
+    const autre = p.total ? null : progressionScope(curSubj, val, "fc");
+    const pr = p.total ? p : autre;
+    const valide = pr.total > 0 && pr.ok === pr.total;
+    const b = el("button","scope-chip" + (val === scope ? " active" : "") + (valide ? " valide" : ""));
+    b.type = "button";
+    const pct = pr.total ? Math.round(pr.ok / pr.total * 100) : 0;
+    const sub = !pr.total ? "—" : valide ? "✓ validé" : pr.ok + " / " + pr.total + (p.total ? "" : " cartes");
+    b.innerHTML = `<span class="sc-top">${esc(titre)}</span><span class="sc-bar"><i style="width:${pct}%"></i></span><span class="sc-sub">${esc(sub)}</span>`;
+    b.addEventListener("click", ()=>{ haptic(); choisirScope(val); renderTrainPane(); });
+    bar.appendChild(b);
+    return b;
+  };
+  puce("all", "Tout");
+  chs.forEach(c=>puce("ch:" + c.label, (c.type === "cm" ? "📖 " : "📝 ") + c.label));
+  if(quizA.length) puce("auteurs", "👤 Auteurs");
+  wrap.appendChild(bar);
+  // garder la pastille choisie dans le champ de vision, sans faire sauter la page
+  requestAnimationFrame(()=>{
+    const act = bar.querySelector(".scope-chip.active");
+    if(act){ bar.style.scrollBehavior = "auto"; bar.scrollLeft = act.offsetLeft - (bar.clientWidth - act.clientWidth) / 2; bar.style.scrollBehavior = ""; }
+  });
+  return wrap;
+}
+// lance directement le QCM d'un chapitre (bouton en bas du cours)
+function lancerQCMChapitre(label){
+  choisirScope("ch:" + label);
+  startSession("qcm");
+}
+
 function renderTrainPane(){
   const pane=document.getElementById("pane-2"); pane.innerHTML="";
   const hasTrain=(curSubj.fc&&curSubj.fc.length)||(curSubj.qcm&&curSubj.qcm.length)||(curSubj.oq&&curSubj.oq.length)||(curSubj.tr&&curSubj.tr.length)||(curSubj.auteurs&&curSubj.auteurs.length);
@@ -5685,6 +5941,24 @@ function renderTrainPane(){
     ? `<span class="due-pill">📅 ${dueTotal} carte${dueTotal>1?"s":""} à revoir aujourd'hui</span>`
     : `<span class="due-pill done">✓ Tout est à jour — tu peux réviser en libre</span>`;
   pane.appendChild(intro);
+  const scope = scopeCourant();
+  const barre = barreScopes(scope);
+  if(barre) pane.appendChild(barre);
+  // un chapitre ou les auteurs : où en est la validation ?
+  if(scope !== "all"){
+    const p = progressionScope(curSubj, scope, "qcm");
+    if(p.total){
+      const valide = p.ok === p.total;
+      const box = el("div","chap-prog" + (valide ? " valide" : ""));
+      box.innerHTML = `<div class="chap-prog-top"><span class="chap-prog-titre">${esc(scope === "auteurs" ? "👤 Les auteurs" : nomScope(scope))}</span>
+        <span class="chap-prog-num">${valide ? "✓ validé" : p.ok + " / " + p.total + " QCM"}</span></div>
+        <div class="chap-prog-bar"><i style="width:${Math.round(p.ok/p.total*100)}%"></i></div>
+        <div class="chap-prog-txt">${valide
+          ? (scope === "auteurs" ? "Tu as réussi tous les QCM sur les auteurs. Tu peux les refaire en libre." : "Tous les QCM de ce chapitre sont réussis. Tu peux les refaire en libre, ou passer au suivant.")
+          : "Un QCM réussi est validé. Chaque session reprend seulement ceux qui ne le sont pas encore."}</div>`;
+      pane.appendChild(box);
+    }
+  }
   const grid=el("div","mode-grid");
   const modes=[
     {m:"fc",icon:"🃏",title:"Flashcards",desc:"Question → retourne → tu te notes"},
@@ -5692,32 +5966,43 @@ function renderTrainPane(){
     {m:"oq",icon:"✍️",title:"Questions ouvertes",desc:"Rédige, puis compare au corrigé"},
     {m:"tr",icon:"🧩",title:"Texte à trous",desc:"Le bon mot · 4 choix · 10 s"},
   ];
+  if(scope === "auteurs"){
+    modes.forEach(mo=>{ if(mo.m === "qcm"){ mo.title = "QCM auteurs"; mo.desc = "Notions, portraits, qui a dit quoi"; } });
+  }
   modes.forEach(mo=>{
-    const arr=curSubj[mo.m]||[];
+    const arr=itemsDuScope(curSubj, mo.m, scope);
     if(!arr.length) return;
-    // cartes dues pour ce mode précis
-    let d=0;
-    arr.forEach((item,i)=>{ if(srsIsDue(cardKey(curSubj.id,mo.m,item,i))) d++; });
+    let d=0, txt;
+    if(scope === "all"){
+      // cartes dues pour ce mode précis
+      arr.forEach(x=>{ if(srsIsDue(cardKey(curSubj.id,mo.m,x.item,x.i))) d++; });
+      txt = d>0 ? d+" à revoir · "+arr.length+" au total" : mo.desc;
+    } else {
+      // dans un chapitre : ce qu'il reste à valider
+      arr.forEach(x=>{ if(!estAcquise(cardKey(curSubj.id,mo.m,x.item,x.i))) d++; });
+      txt = d>0 ? d+" à valider · "+arr.length+" au total" : "Tout validé · "+arr.length+" au total";
+    }
     const card=el("button","mode-card");
     card.innerHTML=`<div class="mode-icon">${mo.icon}</div>
-      <div class="mode-info"><div class="mode-name">${mo.title}</div><div class="mode-desc">${d>0? d+" à revoir · "+arr.length+" au total" : mo.desc}</div></div>
+      <div class="mode-info"><div class="mode-name">${mo.title}</div><div class="mode-desc">${txt}</div></div>
       <span class="mode-count${d>0?" mode-due":" mode-badge-done"}">${d>0? d : "✓"}</span>`;
     card.addEventListener("click",()=>startSession(mo.m));
     grid.appendChild(card);
   });
   // devoirs corrigés : toujours proposé, même vide, sinon impossible d'en créer un
-  if(canEdit() || (curSubj.dev && curSubj.dev.length)){
+  if(scope === "all" && (canEdit() || (curSubj.dev && curSubj.dev.length))){
     const n = (curSubj.dev||[]).length;
+    const nc = (curSubj.dev||[]).filter(estCorrige).length, nr = n - nc;
     const card=el("button","mode-card");
     card.innerHTML=`<div class="mode-icon">📄</div>
-      <div class="mode-info"><div class="mode-name">Devoirs corrigés</div>
-      <div class="mode-desc">${n ? "Sujets et corrections" : "Aucun pour l'instant"}</div></div>
-      <span class="mode-count">${n}</span>`;
+      <div class="mode-info"><div class="mode-name">Devoirs</div>
+      <div class="mode-desc">${n ? [nr ? nr+" à remplir" : "", nc ? nc+" corrigé"+(nc>1?"s":"") : ""].filter(Boolean).join(" · ") : "Aucun pour l'instant"}</div></div>
+      <span class="mode-count${nr ? " mode-due" : ""}">${n}</span>`;
     card.addEventListener("click",renderDevoirs);
     grid.appendChild(card);
   }
 
-  if(curSubj.auteurs && curSubj.auteurs.length){
+  if((scope === "all" || scope === "auteurs") && curSubj.auteurs && curSubj.auteurs.length){
     const card=el("button","mode-card");
     card.innerHTML=`<div class="mode-icon">👤</div>
       <div class="mode-info"><div class="mode-name">Auteurs</div><div class="mode-desc">Fiches à déplier</div></div>
@@ -5901,75 +6186,247 @@ function marquerDev(){
   curSubj._over.dev = true;
 }
 
+// ══════════════════════════════════════════════════
+// DEVOIRS : à remplir (je rédige) ou corrigés (sujet puis correction)
+// ══════════════════════════════════════════════════
+// Mes réponses aux devoirs à remplir : enregistrées chez moi et synchronisées.
+var DEVREP_KEY = "revision_devrep_v1";
+var DEVREP = {};
+try{ DEVREP = JSON.parse(localStorage.getItem(DEVREP_KEY) || "{}") || {}; }catch(e){ DEVREP = {}; }
+function devrepSave(){ try{ localStorage.setItem(DEVREP_KEY, JSON.stringify(DEVREP)); }catch(e){} scheduleSync(); }
+function devrepCle(d, qi){ return (curSubj ? curSubj.id : "") + "|" + (d.label || "") + "|" + qi; }
+
+// Les questions d'un devoir : celles qui sont fournies, ou celles numérotées dans le sujet.
+function questionsDe(d){
+  if(Array.isArray(d.questions) && d.questions.length) return { intro:"", qs:d.questions };
+  const txt = String(d.enonce || "");
+  const lignes = txt.split(/\n/);
+  const qs = []; const intro = [];
+  lignes.forEach(l=>{
+    const m = l.match(/^\s*(\d+)\s*[\).:]\s*(.+)$/);
+    if(m){
+      let q = m[2].trim(), pts = "";
+      const p = q.match(/\(([\d,.]+\s*(?:points?|pts?))\)\s*$/i);
+      if(p){ pts = p[1]; q = q.slice(0, p.index).trim(); }
+      qs.push({ q, pts });
+    } else if(qs.length && l.trim()){
+      qs[qs.length-1].q += " " + l.trim();        // suite de la question sur la ligne suivante
+    } else if(l.trim()){
+      intro.push(l.trim());
+    }
+  });
+  return qs.length >= 2 ? { intro:intro.join("\n"), qs } : { intro:"", qs:[] };
+}
+function estCorrige(d){
+  return !!(d.correction || (Array.isArray(d.questions) && d.questions.some(q=>q && q.corr)));
+}
+let DEV_ONGLET = {};       // matière → "remplir" | "corriges"
+
 function renderDevoirs(){
   showScreen("devoirs");
   const box = document.getElementById("dev-inner");
   box.innerHTML = "";
   const list = devList();
+  const aRemplir = [], corriges = [];
+  list.forEach((d,i)=>{ (estCorrige(d) ? corriges : aRemplir).push({ d, i }); });
+  let onglet = DEV_ONGLET[curSubj.id] || (aRemplir.length || !corriges.length ? "remplir" : "corriges");
 
-  if(!list.length){
+  // deux onglets, comme Cours / TD
+  const seg = el("div","chap-seg dev-seg");
+  const thumb = el("div","chap-thumb");
+  thumb.style.width = "calc((100% - 8px)/2)";
+  thumb.style.transform = onglet === "corriges" ? "translateX(calc(100% + 2px))" : "translateX(0)";
+  seg.appendChild(thumb);
+  [["remplir","✏️ À remplir",aRemplir.length],["corriges","✅ Corrigés",corriges.length]].forEach(([k,lbl,n])=>{
+    const b = el("button","chap-opt" + (onglet === k ? " active" : ""));
+    b.type = "button";
+    b.innerHTML = esc(lbl) + `<span class="dev-n">${n}</span>`;
+    b.addEventListener("click",()=>{ haptic(); DEV_ONGLET[curSubj.id] = k; renderDevoirs(); });
+    seg.appendChild(b);
+  });
+  box.appendChild(seg);
+
+  const liste = onglet === "remplir" ? aRemplir : corriges;
+  if(!liste.length){
     const e = el("div","empty-note");
-    e.textContent = canEdit()
-      ? "Aucun devoir pour l'instant. Ajoute un sujet et sa correction pour les réviser."
+    e.textContent = onglet === "remplir"
+      ? "Aucun devoir à remplir dans cette matière."
       : "Aucun devoir corrigé dans cette matière.";
     box.appendChild(e);
   }
-
-  list.forEach((d,i)=>{
-    const card = el("div","dev-card");
-    const top  = el("div","dev-top");
-    const nom  = el("div","dev-name"); nom.textContent = d.label || "Devoir";
-    top.appendChild(nom);
-    card.appendChild(top);
-
-    if(d.enonce){
-      const l = el("div","dev-lbl"); l.textContent = "Sujet";
-      const t = el("div","dev-txt"); t.textContent = d.enonce;
-      l.style.marginTop = "0";
-      card.appendChild(l); card.appendChild(t);
-    }
-    if(d.correction){
-      const btn = el("button","dev-show");
-      btn.type = "button";
-      btn.textContent = "Voir la correction";
-      const zone = el("div","dev-corr");
-      zone.hidden = true;
-      const l2 = el("div","dev-lbl"); l2.textContent = "Correction";
-      const t2 = el("div","dev-txt"); t2.textContent = d.correction;
-      zone.appendChild(l2); zone.appendChild(t2);
-      btn.addEventListener("click",()=>{
-        haptic();
-        zone.hidden = !zone.hidden;
-        btn.textContent = zone.hidden ? "Voir la correction" : "Masquer la correction";
-      });
-      card.appendChild(btn); card.appendChild(zone);
-    }
-    // appui long pour modifier ou supprimer, comme ailleurs
-    if(canEdit() && !d._shared) onLongPress(card, ()=>editDevoir(i));
-    box.appendChild(card);
-  });
+  liste.forEach(({d,i})=> box.appendChild(onglet === "remplir" ? carteARemplir(d,i) : carteCorrigee(d,i)));
 
   if(canEdit()){
     const add = el("button","add-inline");
-    add.textContent = "+  Ajouter un devoir corrigé";
+    add.textContent = "+  Ajouter un devoir";
     add.addEventListener("click",()=>{ haptic(); editDevoir(null); });
     box.appendChild(add);
   }
 }
 
+// en-tête commun : titre, document à lire, chapitre lié
+function enteteDevoir(card, d){
+  const top = el("div","dev-top");
+  const nom = el("div","dev-name"); nom.textContent = d.label || "Devoir";
+  top.appendChild(nom); card.appendChild(top);
+  if(d.doc){
+    const doc = el("div","dev-doc");
+    doc.innerHTML = `<span>📄</span><span><b>Document à lire :</b> ${esc(d.doc)}</span>`;
+    card.appendChild(doc);
+  }
+  if(d.ch){
+    const ou = [["cm",curSubj.cm||[]],["td",curSubj.td||[]]]
+      .map(([t,a])=>({ t, k:a.findIndex(c=>c.label === d.ch) })).find(x=>x.k >= 0);
+    if(ou){
+      const b = el("button","dev-lien");
+      b.type = "button";
+      b.textContent = (ou.t === "cm" ? "📖 Revoir le " : "📝 Revoir le ") + d.ch;
+      b.addEventListener("click", e=>{ e.stopPropagation(); haptic(); ouvrirChapitre(ou.t, ou.k); });
+      card.appendChild(b);
+    }
+  }
+}
+function textareaQuiGrandit(t){
+  const ajuster = ()=>{ t.style.height = "auto"; t.style.height = Math.max(96, t.scrollHeight + 2) + "px"; };
+  t.addEventListener("input", ajuster);
+  requestAnimationFrame(ajuster);
+}
+
+function carteARemplir(d, i){
+  const card = el("div","dev-card");
+  enteteDevoir(card, d);
+  const { intro, qs } = questionsDe(d);
+  if(!qs.length){
+    // sujet libre : une seule zone de réponse
+    if(d.enonce){
+      const l = el("div","dev-lbl"); l.textContent = "Sujet";
+      const t = el("div","dev-txt"); t.textContent = d.enonce;
+      card.appendChild(l); card.appendChild(t);
+    }
+    card.appendChild(zoneReponse(d, 0));
+  } else {
+    if(intro){ const t = el("div","dev-txt"); t.textContent = intro; card.appendChild(t); }
+    const av = el("div","dev-avance");
+    const majAvance = ()=>{
+      const n = qs.filter((_,k)=>(DEVREP[devrepCle(d,k)]||"").trim()).length;
+      av.className = "dev-avance" + (n === qs.length ? " fini" : "");
+      av.innerHTML = `<span>${n === qs.length ? "✓ Tout est rédigé" : n + " / " + qs.length + " rédigées"}</span><span class="bar"><i style="width:${Math.round(n/qs.length*100)}%"></i></span>`;
+    };
+    majAvance();
+    card.appendChild(av);
+    qs.forEach((q,k)=>{
+      const bloc = el("div","dev-q");
+      const head = el("div","dev-q-head");
+      head.innerHTML = `<span class="dev-q-num">${k+1}</span><span class="dev-q-txt">${esc(q.q)}</span>` + (q.pts ? `<span class="dev-pts">${esc(q.pts)}</span>` : "");
+      bloc.appendChild(head);
+      bloc.appendChild(zoneReponse(d, k, majAvance));
+      card.appendChild(bloc);
+    });
+  }
+  if(canEdit() && !d._shared){
+    const b = el("button","dev-show ghost");
+    b.type = "button";
+    b.textContent = "J'ai la correction";
+    b.addEventListener("click",()=>{ haptic(); editDevoir(i); });
+    card.appendChild(b);
+    onLongPress(card.querySelector(".dev-top"), ()=>editDevoir(i));
+  }
+  return card;
+}
+function zoneReponse(d, k, apres){
+  const w = el("div");
+  const t = document.createElement("textarea");
+  t.className = "dev-rep";
+  t.placeholder = "Ta réponse…";
+  t.value = DEVREP[devrepCle(d,k)] || "";
+  const etat = el("div","dev-etat");
+  let minuterie = null;
+  t.addEventListener("input",()=>{
+    etat.textContent = "…";
+    clearTimeout(minuterie);
+    minuterie = setTimeout(()=>{
+      const v = t.value;
+      if(v.trim()) DEVREP[devrepCle(d,k)] = v; else delete DEVREP[devrepCle(d,k)];
+      devrepSave();
+      etat.textContent = "Enregistré";
+      if(apres) apres();
+    }, 600);
+  });
+  textareaQuiGrandit(t);
+  w.appendChild(t); w.appendChild(etat);
+  return w;
+}
+
+function carteCorrigee(d, i){
+  const card = el("div","dev-card");
+  enteteDevoir(card, d);
+  const qs = Array.isArray(d.questions) ? d.questions : [];
+  if(d.enonce){
+    const l = el("div","dev-lbl"); l.textContent = "Sujet";
+    const t = el("div","dev-txt"); t.textContent = d.enonce;
+    l.style.marginTop = d.doc ? "" : "0";
+    card.appendChild(l); card.appendChild(t);
+  }
+  // questions corrigées une par une
+  qs.forEach((q,k)=>{
+    const bloc = el("div","dev-q");
+    const head = el("div","dev-q-head");
+    head.innerHTML = `<span class="dev-q-num">${k+1}</span><span class="dev-q-txt">${esc(q.q)}</span>` + (q.pts ? `<span class="dev-pts">${esc(q.pts)}</span>` : "");
+    bloc.appendChild(head);
+    const mine = (DEVREP[devrepCle(d,k)]||"").trim();
+    if(mine){ const l = el("div","dev-lbl"); l.textContent = "Ta réponse"; const t = el("div","dev-txt"); t.textContent = mine; bloc.appendChild(l); bloc.appendChild(t); }
+    if(q.corr) bloc.appendChild(boutonCorrection(q.corr));
+    card.appendChild(bloc);
+  });
+  if(d.correction) card.appendChild(boutonCorrection(d.correction));
+  // appui long pour modifier ou supprimer, comme ailleurs
+  if(canEdit() && !d._shared) onLongPress(card, ()=>editDevoir(i));
+  return card;
+}
+function boutonCorrection(texte){
+  const w = el("div");
+  const btn = el("button","dev-show");
+  btn.type = "button";
+  btn.textContent = "Voir la correction";
+  const zone = el("div","dev-corr");
+  zone.hidden = true;
+  const l2 = el("div","dev-lbl"); l2.textContent = "Correction";
+  const t2 = el("div","dev-txt"); t2.textContent = texte;
+  zone.appendChild(l2); zone.appendChild(t2);
+  btn.addEventListener("click",()=>{
+    haptic();
+    zone.hidden = !zone.hidden;
+    btn.textContent = zone.hidden ? "Voir la correction" : "Masquer la correction";
+  });
+  w.appendChild(btn); w.appendChild(zone);
+  return w;
+}
+
 function editDevoir(i){
   const list = devList();
   const d = i === null ? null : list[i];
-  openForm(d ? "Modifier le devoir" : "Nouveau devoir corrigé", [
+  // un devoir à questions fournies : on garde ses questions, on modifie le reste
+  const avecQuestions = d && Array.isArray(d.questions) && d.questions.length;
+  openForm(d ? "Modifier le devoir" : "Nouveau devoir", [
     { key:"label", label:"Titre", value:d ? d.label : "", placeholder:"Contrôle du 12 novembre" },
-    { key:"enonce", label:"Sujet", type:"area", value:d ? (d.enonce||"") : "",
-      placeholder:"L'énoncé, la consigne, les questions…" },
+    { key:"enonce", label:avecQuestions ? "Consigne (les questions restent)" : "Sujet", type:"area", value:d ? (d.enonce||"") : "",
+      placeholder:"L'énoncé, la consigne, les questions numérotées 1), 2)…" },
     { key:"correction", label:"Correction", type:"area", value:d ? (d.correction||"") : "",
-      placeholder:"La correction, telle qu'elle a été donnée." }
+      placeholder:"Facultatif. Sans correction, le devoir va dans « À remplir »." }
   ], "Enregistrer", v=>{
     if(!v.label) return "Donne un titre à ce devoir.";
-    if(!v.enonce && !v.correction) return "Il faut au moins un sujet ou une correction.";
-    if(d){ d.label = v.label; d.enonce = v.enonce; d.correction = v.correction; }
+    if(!v.enonce && !v.correction && !avecQuestions) return "Il faut au moins un sujet ou une correction.";
+    if(d){
+      // si le titre change, mes réponses suivent
+      if(d.label !== v.label){
+        Object.keys(DEVREP).forEach(k=>{
+          const pre = curSubj.id + "|" + d.label + "|";
+          if(k.startsWith(pre)){ DEVREP[curSubj.id + "|" + v.label + "|" + k.slice(pre.length)] = DEVREP[k]; delete DEVREP[k]; }
+        });
+        devrepSave();
+      }
+      d.label = v.label; d.enonce = v.enonce; d.correction = v.correction;
+    }
     else  list.push({ label:v.label, enonce:v.enonce, correction:v.correction });
     marquerDev();
     saveContent(); renderDevoirs();
@@ -6062,16 +6519,25 @@ function startSession(m){
   curMode=m; idx=0; score=0; answers=[];
   flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv=""; oqEcrit="";
   globalSession = false;
+  sessionScope = scopeCourant();
   // Chaque entrée porte sa matière + son mode (permet aussi les sessions multi-matières).
-  const all = (curSubj[m]||[]).map((item,i)=>({
+  const all = itemsDuScope(curSubj, m, sessionScope).map(({item,i})=>({
     // la clé se calcule sur la question d'origine, le mélange ne la perturbe pas
     item: (m === "qcm" || m === "tr") ? melangerQCM(item) : item,
     mode:m, subj:curSubj, key: cardKey(curSubj.id,m,item,i)
   }));
-  const due    = shuffle(all.filter(x=>  srsIsDue(x.key) ));
-  const notDue = shuffle(all.filter(x=> !srsIsDue(x.key) ));
-  queue = (due.length ? due : notDue);
-  sessionDueOnly = due.length > 0;
+  if(!all.length) return;
+  if(sessionScope !== "all"){
+    // un chapitre : on reprend ce qui n'est pas encore validé, sinon tout en libre
+    const aValider = shuffle(all.filter(x=> !estAcquise(x.key) ));
+    queue = aValider.length ? aValider : shuffle(all);
+    sessionDueOnly = false;
+  } else {
+    const due    = shuffle(all.filter(x=>  srsIsDue(x.key) ));
+    const notDue = shuffle(all.filter(x=> !srsIsDue(x.key) ));
+    queue = (due.length ? due : notDue);
+    sessionDueOnly = due.length > 0;
+  }
   clearInterval(timerInt);
   showScreen("session");
   renderSess();
@@ -6082,6 +6548,7 @@ function startGlobalSession(){
   idx=0; score=0; answers=[];
   flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv=""; oqEcrit="";
   globalSession = true;
+  sessionScope = "all";
   const all = [];
   SUBJECTS.forEach(s=>{
     ["fc","qcm","oq","tr"].forEach(m=>{
@@ -6348,7 +6815,8 @@ function showResults(){
   const pct=queue.length? score/queue.length : 0;
   const emoji=pct>=.8?"🏆":pct>=.5?mk():"💪";
   const msg=pct>=.8?"Franchement bien joué. T'avais le niveau depuis le début.":pct>=.5?"Pas mal du tout. Encore un effort et c'est dans la poche.":"C'est un début ! Relis les points ratés et retente.";
-  if(!globalSession && curSubj) stats[curSubj.id+"_"+curMode]={score,total:queue.length};
+  // le score d'un chapitre ne doit pas écraser celui de la matière entière
+  if(!globalSession && curSubj && sessionScope === "all") stats[curSubj.id+"_"+curMode]={score,total:queue.length};
   // reste à revoir : sur la matière (session simple) ou sur tout (session globale)
   const restant = globalSession
     ? SUBJECTS.reduce((n,s)=>n+dueCount(s),0)
@@ -6362,6 +6830,7 @@ function showResults(){
     ${restant>0
       ? `<div class="due-pill">📅 Il te reste ${restant} carte${restant>1?"s":""} à revoir aujourd'hui</div>`
       : `<div class="due-pill done">✓ Tout est à jour pour aujourd'hui</div>`}
+    ${(!globalSession && sessionScope !== "all") ? (()=>{ const p = progressionScope(curSubj, sessionScope, curMode); return p.total ? `<p class="res-scope">${esc(nomScope(sessionScope))} : <b>${p.ok === p.total ? "✓ tout validé" : p.ok + " / " + p.total + " validés"}</b></p>` : ""; })() : ""}
     <div class="results-detail"><div class="results-detail-label">Détail</div>${rows}</div>`;
   const row=el("div","btn-row");
   if(globalSession){
@@ -6856,7 +7325,12 @@ function applyContent(row){
         sj[type] = o[type].map(normChapitre);
         sj._over[type] = true;
       });
-      if(Array.isArray(o.dev)){ sj.dev = o.dev; sj._over.dev = true; }
+      if(Array.isArray(o.dev)){
+        // les devoirs ajoutés depuis dans data.js ne doivent pas disparaître derrière une ancienne retouche
+        const deja = new Set(o.dev.map(x=>x && x.label));
+        sj.dev = o.dev.concat((sj.dev||[]).filter(x=>x && !deja.has(x.label)));
+        sj._over.dev = true;
+      }
     });
     // chapitres ajoutés dans l'app à une matière de data.js
     const extra = (c.extra && typeof c.extra === "object") ? c.extra : {};
@@ -6916,7 +7390,7 @@ async function pushState(){
     PSYCHO_STEPS.forEach(s=>{ psy[s.id] = !!s.done; });
     const patch = {
       theme: document.documentElement.getAttribute("data-theme") || "girly",
-      srs: Object.assign({}, SRS, { __edtnotes: EDTNOTES, __memo: MEMO }),
+      srs: Object.assign({}, SRS, { __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP }),
       psycho: psy,
       settings: USER_SETTINGS
     };
@@ -6963,7 +7437,11 @@ function applyRemote(row){
       };
       try{ localStorage.setItem(MEMO_KEY, JSON.stringify(MEMO)); }catch(e){}
     }
-    delete incoming.__edtnotes; delete incoming.__memo;
+    if(incoming.__devrep && typeof incoming.__devrep === "object"){
+      DEVREP = incoming.__devrep;
+      try{ localStorage.setItem(DEVREP_KEY, JSON.stringify(DEVREP)); }catch(e){}
+    }
+    delete incoming.__edtnotes; delete incoming.__memo; delete incoming.__devrep;
     SRS = incoming;
     try{ localStorage.setItem(SRS_KEY, JSON.stringify(SRS)); }catch(e){}
   }
