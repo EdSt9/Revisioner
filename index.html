@@ -1151,6 +1151,18 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   transition:color .25s;}
 .chap-opt.active{color:var(--accent);}
+.chap-opt .rv-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--text-mute);opacity:.55;margin-right:6px;vertical-align:1px;transition:background .25s,opacity .25s,box-shadow .25s;}
+.chap-opt.revise{color:var(--ok);}
+.chap-opt.nouveau .rv-dot{background:var(--new);opacity:1;box-shadow:0 0 7px var(--new);}
+.chap-opt.revise .rv-dot{background:var(--ok);opacity:1;box-shadow:0 0 7px var(--ok);}
+.chap-opt.revise.active{color:var(--ok);}
+.rv-switch{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;margin-top:16px;padding:14px 18px;border-radius:var(--r-lg);border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:var(--font-text);font-size:14.5px;font-weight:600;cursor:pointer;text-align:left;transition:border-color .25s,background .25s;}
+.rv-switch .rv-sub{display:block;font-size:12px;font-weight:500;color:var(--text-soft);margin-top:2px;}
+.rv-switch .sw{flex-shrink:0;width:48px;height:29px;border-radius:20px;background:var(--border-strong);position:relative;transition:background .25s;}
+.rv-switch .sw::after{content:"";position:absolute;top:3px;left:3px;width:23px;height:23px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25);transition:left .28s var(--ease-spring);}
+.rv-switch.on{border-color:var(--ok-border);background:var(--ok-soft);}
+.rv-switch.on .sw{background:var(--ok);}
+.rv-switch.on .sw::after{left:22px;}
 .section{margin-bottom:26px;width:100%;}
 .section-title{font-family:var(--font-display);font-weight:500;font-size:19px;letter-spacing:-.01em;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:10px;overflow-wrap:break-word;word-break:break-word;}
 .section-title::before{content:"";width:4px;height:20px;border-radius:4px;background:var(--accent);flex-shrink:0;}
@@ -1865,6 +1877,20 @@ function srsLoad(){ try{ SRS = JSON.parse(localStorage.getItem(SRS_KEY) || "{}")
 function srsSave(){ try{ localStorage.setItem(SRS_KEY, JSON.stringify(SRS)); }catch(e){} scheduleSync(); }
 srsLoad();
 
+// Chapitres marqués « révisé » par moi : { "matière|cm|libellé": date }
+var REVISES_KEY = "revision_revises_v1";
+var REVISES = {};
+try{ REVISES = JSON.parse(localStorage.getItem(REVISES_KEY) || "{}") || {}; }catch(e){ REVISES = {}; }
+function revisesSave(){ try{ localStorage.setItem(REVISES_KEY, JSON.stringify(REVISES)); }catch(e){} scheduleSync(); }
+function cleRevise(subj, type, ch){ return subj.id + "|" + type + "|" + (ch && ch.label || ""); }
+function estRevise(subj, type, ch){ return !!REVISES[cleRevise(subj, type, ch)]; }
+function basculerRevise(subj, type, ch){
+  const k = cleRevise(subj, type, ch);
+  if(REVISES[k]) delete REVISES[k]; else REVISES[k] = Date.now();
+  revisesSave();
+  return !!REVISES[k];
+}
+
 // ══════════════════════════════════════════════════
 // ANNOTATIONS DE COURS (contrôle, note perso, matière liée)
 // ══════════════════════════════════════════════════
@@ -2316,7 +2342,9 @@ function openSitesSheet(){
       window.open(site.url, "_blank", "noopener");
     });
     onLongPress(row, ()=>{ closePicker(); setTimeout(()=>editSite(i), 320); });
-    const ligne = swipeRow(row, [{ label:"Supprimer", fn:()=>{
+    const ligne = swipeRow(row, [{ label:"Modifier", doux:true, fn:()=>{
+      closePicker(); setTimeout(()=>editSite(i), 320);
+    }}, { label:"Supprimer", fn:()=>{
       sites.splice(i, 1);
       saveContent();
       toast("Site supprimé.");
@@ -2333,7 +2361,7 @@ function openSitesSheet(){
   box.appendChild(add);
   if(sites.length){
     const h = el("div","fs-hint");
-    h.textContent = "Glisse un site vers la gauche pour le supprimer. Appui long pour le modifier.";
+    h.textContent = "Glisse un site vers la gauche pour le modifier ou le supprimer.";
     h.style.cssText = "margin:10px 4px 4px;text-align:center";
     box.appendChild(h);
   }
@@ -2449,7 +2477,8 @@ function openMultiPicker(title, options, labels, onConfirm, onOpen){
   }
   if(options.some(o=>o.deja)){
     const lg = el("div","pick-legend");
-    lg.innerHTML = "<i></i><span>Hachuré : déjà publié. Le recocher le met à jour.</span>";
+    lg.innerHTML = "<i></i><span>Hachuré : déjà publié. Le recocher le met à jour" +
+      (options.some(o=>o.actions && o.actions.length) ? ", le glisser vers la gauche le retire." : ".") + "</span>";
     box.appendChild(lg);
   }
   const choisis = new Set();
@@ -2474,7 +2503,12 @@ function openMultiPicker(title, options, labels, onConfirm, onOpen){
       b.classList.toggle("sel", choisis.has(o.value));
       maj();
     });
-    box.appendChild(b);
+    // une ligne peut porter des actions au glissement (dépublier ce qui est déjà en ligne)
+    if(Array.isArray(o.actions) && o.actions.length){
+      const ligne = swipeRow(b, o.actions);
+      ligne.style.marginBottom = "9px";
+      box.appendChild(ligne);
+    } else box.appendChild(b);
   });
   tout.addEventListener("click",()=>{ haptic(); closePicker(); onConfirm(options.map(o=>o.value)); });
   sel.addEventListener("click",()=>{
@@ -2785,6 +2819,17 @@ async function openClass(c){
   });
 }
 
+// Retirer plusieurs publications d'un coup (un chapitre publié deux fois, ou toute une matière).
+function depublierPlusieurs(c, its, nom){
+  if(!its || !its.length) return;
+  if(its.length === 1 && its[0].label === nom) return depublier(c, its[0]);
+  openForm("Dépublier « " + nom + " »" + (its.length > 1 ? " (" + its.length + ")" : ""), [], "Annuler", ()=>{}, async ()=>{
+    let ko = 0;
+    for(const it of its){ try{ await api("item_delete", { item_id:it.id }); }catch(e){ ko++; } }
+    toast(ko ? "Certains n'ont pas pu être retirés." : "Retiré de la classe.");
+    openClass(c);
+  });
+}
 // Retirer un chapitre de la classe. Il disparaît aussi de chez ceux qui le suivaient.
 function depublier(c, it){
   openForm("Dépublier « " + it.label + " »", [], "Annuler", ()=>{}, ()=>{
@@ -2856,8 +2901,8 @@ async function publishFromClass(c){
   const dejaPar = {};                       // clé → { item, auteurs }
   items.forEach(it=>{
     const k = cleEnvoi(it.kind, it.subject_title, it.label);
-    const d = dejaPar[k] || (dejaPar[k] = { mien:null, auteurs:[] });
-    if(it.author === whoAmI()) d.mien = it;
+    const d = dejaPar[k] || (dejaPar[k] = { mien:null, miens:[], auteurs:[] });
+    if(it.author === whoAmI()){ d.mien = it; d.miens.push(it); }
     if(!d.auteurs.includes(it.author)) d.auteurs.push(it.author);
   });
   const moi = whoAmI();
@@ -2867,23 +2912,31 @@ async function publishFromClass(c){
     if(d.mien) return { deja:true, sub:"déjà publié" };
     return { deja:true, sub:"déjà publié par " + d.auteurs.join(", ") };
   };
+  // ce que j'ai publié moi-même pour une clé : je peux le retirer en glissant
+  const retirer = (k, nom)=>{
+    const d = dejaPar[k];
+    if(!d || !d.miens.length) return undefined;
+    return [{ label:"Dépublier", fn:()=>{ closePicker(); setTimeout(()=>depublierPlusieurs(c, d.miens, nom), 320); } }];
+  };
   // les lignes publiables d'une matière
   const lignesDe = sj=>{
     const out = [];
-    (sj.cm||[]).forEach((ch,i)=>{ if(!ch._shared){ const e = etat(cleEnvoi("cm", sj.title, ch.label));
-      out.push({ label:ch.label, sub:"Cours" + (e.sub ? " · " + e.sub : ""), deja:e.deja, value:"cm:"+i }); } });
-    (sj.td||[]).forEach((ch,i)=>{ if(!ch._shared){ const e = etat(cleEnvoi("td", sj.title, ch.label));
-      out.push({ label:ch.label, sub:"TD" + (e.sub ? " · " + e.sub : ""), deja:e.deja, value:"td:"+i }); } });
+    (sj.cm||[]).forEach((ch,i)=>{ if(!ch._shared){ const k = cleEnvoi("cm", sj.title, ch.label), e = etat(k);
+      out.push({ label:ch.label, sub:"Cours" + (e.sub ? " · " + e.sub : ""), deja:e.deja, value:"cm:"+i, actions:retirer(k, ch.label) }); } });
+    (sj.td||[]).forEach((ch,i)=>{ if(!ch._shared){ const k = cleEnvoi("td", sj.title, ch.label), e = etat(k);
+      out.push({ label:ch.label, sub:"TD" + (e.sub ? " · " + e.sub : ""), deja:e.deja, value:"td:"+i, actions:retirer(k, ch.label) }); } });
     const r = payloadRevision(sj);
     const n = k => r[k].length;
     if(n("fc") + n("qcm") + n("oq") + n("dev") + n("tr")){
-      const e = etat(cleEnvoi("revision", sj.title));
+      const k = cleEnvoi("revision", sj.title), e = etat(k);
       out.push({ label:"Exercices de révision",
         sub:`${n("fc")} fiches · ${n("qcm")} QCM · ${n("tr")} trous · ${n("oq")} questions` + (e.sub ? " · " + e.sub : ""),
-        deja:e.deja, value:"revision" });
+        deja:e.deja, value:"revision", actions:retirer(k, "les exercices de révision") });
     }
     return out;
   };
+  // tout ce que j'ai publié pour une matière
+  const miensDe = sj => Object.values(dejaPar).flatMap(d=>d.miens).filter(it=>it.subject_title === sj.title);
 
   openMultiPicker("Quelle matière ?", mats.map(sj=>{
     const l = lignesDe(sj);
@@ -2892,7 +2945,10 @@ async function publishFromClass(c){
       label: sj.title,
       sub: nDeja ? `${nDeja} sur ${l.length} déjà publiés` : `${l.length} à publier`,
       deja: l.length > 0 && nDeja === l.length,        // tout est déjà dans la classe
-      value: sj.id
+      value: sj.id,
+      actions: miensDe(sj).length ? [{ label:"Tout\ndépublier", fn:()=>{
+        closePicker(); setTimeout(()=>depublierPlusieurs(c, miensDe(sj), sj.title), 320);
+      } }] : undefined
     };
   }), { tout:"Tout", sel:"Publier" },
   // plusieurs matières cochées : on publie ou met à jour tous leurs chapitres
@@ -5046,10 +5102,53 @@ function markSubjectSeen(id){
   const list = seenSubjects();
   if(!list.includes(id)){ list.push(id); try{ localStorage.setItem(SEEN_KEY, JSON.stringify(list)); }catch(e){} }
 }
-// matières avec du contenu, jamais ouvertes en révision
+// « Nouveau », c'est factuel : un chapitre (CM ou TD) que je n'ai encore jamais ouvert.
+// Il cesse d'être nouveau dès qu'il s'affiche à l'écran.
+var VUS_KEY = "revision_chapitres_vus_v1";
+var VUS = null;
+function vusCharger(){
+  if(VUS) return VUS;
+  try{ VUS = JSON.parse(localStorage.getItem(VUS_KEY) || "null"); }catch(e){ VUS = null; }
+  if(!VUS || typeof VUS !== "object"){
+    // les matières ne sont pas encore chargées : on attend, sinon tout paraîtrait nouveau
+    const nbChap = SUBJECTS.reduce((n,sj)=>n + (sj.cm||[]).length + (sj.td||[]).length, 0);
+    if(!nbChap){ VUS = null; return {}; }
+    // première fois : ce qui est déjà dans les matières que j'avais ouvertes compte comme vu,
+    // pour que seuls les vrais ajouts apparaissent comme nouveaux
+    VUS = {};
+    const deja = seenSubjects();
+    SUBJECTS.forEach(sj=>{
+      if(!deja.includes(sj.id)) return;
+      ["cm","td"].forEach(t=>(sj[t]||[]).forEach(ch=>{ VUS[cleVu(sj, t, ch)] = 1; }));
+    });
+    vusSave(false);
+  }
+  return VUS;
+}
+function vusSave(sync){ try{ localStorage.setItem(VUS_KEY, JSON.stringify(VUS)); }catch(e){} if(sync !== false) scheduleSync(); }
+function cleVu(sj, type, ch){ return sj.id + "|" + type + "|" + (ch && ch.label || ""); }
+function chapitreNouveau(sj, type, ch){ return !!ch && !vusCharger()[cleVu(sj, type, ch)]; }
+function marquerVu(sj, type, ch){
+  const v = vusCharger(), k = cleVu(sj, type, ch);
+  if(!ch || v[k]) return;
+  v[k] = 1; vusSave();
+}
+// les chapitres jamais ouverts d'une matière : [{ type, idx, ch }]
+function nouveauxDe(sj){
+  const out = [];
+  ["cm","td"].forEach(t=>(sj[t]||[]).forEach((ch,idx)=>{ if(chapitreNouveau(sj, t, ch)) out.push({ type:t, idx, ch }); }));
+  return out;
+}
+// matières qui ont au moins un chapitre jamais ouvert
 function newSubjects(){
-  const seen = seenSubjects();
-  return SUBJECTS.filter(s => totalCards(s) > 0 && !seen.includes(s.id));
+  return SUBJECTS.filter(s => nouveauxDe(s).length > 0);
+}
+// ouvrir directement le premier chapitre nouveau d'une matière
+function ouvrirNouveau(sj){
+  const n = nouveauxDe(sj)[0];
+  curSemestre = SEMESTRES[sj.id];
+  openSubject(sj.id);
+  if(n) ouvrirChapitre(n.type, n.idx);
 }
 
 // Le bloc « À savoir » : nouveaux cours + échéances annotées, une ligne chacun.
@@ -5109,19 +5208,17 @@ function renderKnowBlock(){
     box.appendChild(t);
     const card = el("div","know-card");
     news.slice(0,3).forEach(sub=>{
+      const nv = nouveauxDe(sub);
       const row = el("button","know-row");
+      const quoi = nv.length === 1 ? nv[0].ch.label : nv.length + " nouveaux chapitres";
       row.innerHTML = `
         <span class="know-dot new"></span>
         <span class="know-txt">
-          <span class="know-tag new">Nouveau</span>
+          <span class="know-tag new">${esc(quoi)}</span>
           <span class="know-name">${esc(sub.title)}</span>
         </span>
         <span class="know-when">→</span>`;
-      row.addEventListener("click",()=>{
-        haptic();
-        curSemestre = SEMESTRES[sub.id];
-        openSubject(sub.id);
-      });
+      row.addEventListener("click",()=>{ haptic(); ouvrirNouveau(sub); });
       card.appendChild(row);
     });
     if(news.length > 3){
@@ -5401,10 +5498,12 @@ function makeEcueCard(s){
   const hasContent = totalQ>0 || (s.cm&&s.cm.length) || (s.td&&s.td.length);
   const card=el("button","ecue-card");
   let status;
+  const nv = nouveauxDe(s).length;
   if(!hasContent) status=`<span class="ecue-status empty">À remplir</span>`;
+  else if(nv) status=`<span class="ecue-status new">${nv === 1 ? "1 nouveau" : nv + " nouveaux"}</span>`;
   else if(prog.allDone && prog.started) status=`<span class="ecue-status done">Maîtrisé</span>`;
   else if(prog.started) status=`<span class="ecue-status started">En cours</span>`;
-  else status=`<span class="ecue-status new">Nouveau</span>`;
+  else status=``;
   card.innerHTML=`
     <div class="ecue-top">
       <span class="ecue-num">${esc(s.ecue)}</span>
@@ -5685,9 +5784,19 @@ function renderCoursePane(type){
   thumb.style.transform = `translateX(calc(${chIdx} * (100% + 2px)))`;
   sel.appendChild(thumb);
   chapters.forEach((ch,i)=>{
-    const opt=el("button","chap-opt"+(i===chIdx?" active":""));
-    opt.textContent=ch.label;
-    opt.addEventListener("click",()=>{ if(type==="cm")curCmIdx=i; else curTdIdx=i; renderCoursePane(type); });
+    const opt=el("button","chap-opt"+(i===chIdx?" active":"")+(estRevise(curSubj,type,ch)?" revise":"")+(i!==chIdx && chapitreNouveau(curSubj,type,ch)?" nouveau":""));
+    opt.innerHTML = `<span class="rv-dot"></span>` + esc(ch.label);
+    opt.addEventListener("click",()=>{
+      // toucher le chapitre déjà ouvert : le marquer révisé (ou l'enlever)
+      if(i === chIdx){
+        haptic();
+        const r = basculerRevise(curSubj, type, ch);
+        toast(r ? "✓ Marqué révisé" : "Plus marqué révisé");
+        renderCoursePane(type);
+        return;
+      }
+      if(type==="cm")curCmIdx=i; else curTdIdx=i; renderCoursePane(type);
+    });
     sel.appendChild(opt);
   });
   const row = el("div","chap-row");
@@ -5719,6 +5828,9 @@ function renderCoursePane(type){
     pane.appendChild(r);
   }
   const ch=chapters[chIdx];
+  marquerVu(curSubj, type, ch);
+  const pActive = sel.querySelectorAll(".chap-opt")[chIdx];
+  if(pActive) pActive.classList.remove("nouveau");
   lecteurStop();
   if(TTS_OK && (ch.sections||[]).length) pane.appendChild(lecteurBouton(pane));
   (ch.sections||[]).forEach((sec,si)=>{
@@ -5738,6 +5850,24 @@ function renderCoursePane(type){
     r.innerHTML=`<div class="recap-label">📌 À retenir</div>`+ch.recap.map((x,i)=>`<div class="recap-item"><span class="recap-num">${i+1}</span><span>${esc(x)}</span></div>`).join("");
     pane.appendChild(r);
   }
+  // marquer le chapitre comme révisé
+  const rv = el("button","rv-switch" + (estRevise(curSubj, type, ch) ? " on" : ""));
+  rv.type = "button";
+  const majRv = ()=>{
+    const on = estRevise(curSubj, type, ch);
+    rv.classList.toggle("on", on);
+    rv.innerHTML = `<span>${on ? "Révisé ✓" : "Marquer comme révisé"}<span class="rv-sub">${on ? "Touche pour enlever" : "Tu peux aussi retoucher " + esc(ch.label) + " en haut"}</span></span><span class="sw"></span>`;
+  };
+  majRv();
+  rv.addEventListener("click",()=>{
+    haptic();
+    basculerRevise(curSubj, type, ch);
+    majRv();
+    // la pastille du haut suit
+    const pastille = pane.querySelectorAll(".chap-opt")[chIdx];
+    if(pastille) pastille.classList.toggle("revise", estRevise(curSubj, type, ch));
+  });
+  pane.appendChild(rv);
   // le QCM de ce chapitre, directement
   const nQ = (curSubj.qcm||[]).filter(x=>x && x.ch === ch.label).length;
   if(nQ){
@@ -6037,7 +6167,7 @@ function renderTrainPane(){
     {m:"fc",icon:"🃏",title:"Flashcards",desc:"Question → retourne → tu te notes"},
     {m:"qcm",icon:"⏱️",title:"QCM",desc:"4 choix · 20 s · explication après"},
     {m:"oq",icon:"✍️",title:"Questions ouvertes",desc:"Rédige, puis compare au corrigé"},
-    {m:"tr",icon:"🧩",title:"Texte à trous",desc:"Le bon mot · 4 choix · 10 s"},
+    {m:"tr",icon:"🧩",title:"Texte à trous",desc:"Le bon mot · 4 choix · 15 s"},
   ];
   modes.forEach(mo=>{
     const arr=itemsDuScope(curSubj, mo.m, scope);
@@ -6943,19 +7073,19 @@ function doGrade(grade, question){
   if(grade === 0) queue.push(queue[idx]);
   advance();
 }
-// ── Texte à trous : même moteur que le QCM, phrase à compléter et 10 s ──
+// ── Texte à trous : même moteur que le QCM, phrase à compléter et 15 s ──
 function renderTR(cur,body){
   const wrap=el("div","rise");
   if(!confirmed){
-    timerVal=10;
-    const tr=el("div","timer-row"); tr.innerHTML=`<span class="timer-lbl" id="tlbl">⏰ 10 s</span>`; wrap.appendChild(tr);
+    timerVal=15;
+    const tr=el("div","timer-row"); tr.innerHTML=`<span class="timer-lbl" id="tlbl">⏰ 15 s</span>`; wrap.appendChild(tr);
     const tt=el("div","timer-track"); tt.innerHTML=`<div class="timer-bar" id="tbar" style="width:100%"></div>`; wrap.appendChild(tt);
     clearInterval(timerInt);
     timerInt=setInterval(()=>{
       timerVal--;
       const l=document.getElementById("tlbl"), b=document.getElementById("tbar");
-      if(l){ l.textContent="⏰ "+timerVal+" s"; l.className="timer-lbl"+(timerVal<=3?" red":""); }
-      if(b){ b.style.width=(timerVal/10*100)+"%"; b.className="timer-bar"+(timerVal<=3?" red":""); }
+      if(l){ l.textContent="⏰ "+timerVal+" s"; l.className="timer-lbl"+(timerVal<=5?" red":""); }
+      if(b){ b.style.width=(timerVal/15*100)+"%"; b.className="timer-bar"+(timerVal<=5?" red":""); }
       if(timerVal<=0){ clearInterval(timerInt); if(!confirmed) doQCM(-1,cur); }
     },1000);
   }
@@ -7471,7 +7601,7 @@ async function pushState(){
     PSYCHO_STEPS.forEach(s=>{ psy[s.id] = !!s.done; });
     const patch = {
       theme: document.documentElement.getAttribute("data-theme") || "girly",
-      srs: Object.assign({}, SRS, { __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP }),
+      srs: Object.assign({}, SRS, { __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP, __revises: REVISES, __vus: vusCharger() }),
       psycho: psy,
       settings: USER_SETTINGS
     };
@@ -7522,7 +7652,16 @@ function applyRemote(row){
       DEVREP = incoming.__devrep;
       try{ localStorage.setItem(DEVREP_KEY, JSON.stringify(DEVREP)); }catch(e){}
     }
-    delete incoming.__edtnotes; delete incoming.__memo; delete incoming.__devrep;
+    if(incoming.__revises && typeof incoming.__revises === "object"){
+      REVISES = incoming.__revises;
+      try{ localStorage.setItem(REVISES_KEY, JSON.stringify(REVISES)); }catch(e){}
+    }
+    if(incoming.__vus && typeof incoming.__vus === "object"){
+      // on fusionne : un chapitre vu sur un appareil l'est partout
+      VUS = Object.assign({}, vusCharger(), incoming.__vus);
+      try{ localStorage.setItem(VUS_KEY, JSON.stringify(VUS)); }catch(e){}
+    }
+    delete incoming.__edtnotes; delete incoming.__memo; delete incoming.__devrep; delete incoming.__revises; delete incoming.__vus;
     SRS = incoming;
     try{ localStorage.setItem(SRS_KEY, JSON.stringify(SRS)); }catch(e){}
   }
