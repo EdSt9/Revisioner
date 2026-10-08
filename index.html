@@ -770,6 +770,8 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 .ecue-status.started{background:var(--warn-soft);color:var(--warn);}
 .ecue-status.done{background:var(--ok-soft);color:var(--ok);}
 .ecue-status.empty{background:var(--accent-soft);color:var(--text-mute);}
+.ecue-status.ajour{background:var(--ok-soft);color:var(--ok);box-shadow:inset 0 0 0 1.5px var(--ok-border);}
+.ecue-status.areviser{background:var(--warn-soft);color:var(--warn);box-shadow:inset 0 0 0 1.5px var(--warn);}
 .ecue-arrow{color:var(--text-mute);font-size:16px;flex-shrink:0;transition:transform .3s var(--ease-spring),color .3s;}
 .ecue-card:hover .ecue-arrow{transform:translateX(3px);color:var(--accent);}
 .chip-num{background:var(--accent);color:#fff;border-radius:6px;padding:1px 7px;font-weight:700;font-size:12px;margin-right:2px;}
@@ -5548,11 +5550,17 @@ function makeEcueCard(s){
   const card=el("button","ecue-card");
   let status;
   const nv = nouveauxDe(s).length;
-  if(!hasContent) status=`<span class="ecue-status empty">À remplir</span>`;
-  else if(nv) status=`<span class="ecue-status new">${nv === 1 ? "1 nouveau" : nv + " nouveaux"}</span>`;
-  else if(prog.allDone && prog.started) status=`<span class="ecue-status done">Maîtrisé</span>`;
-  else if(prog.started) status=`<span class="ecue-status started">En cours</span>`;
-  else status=``;
+  // À jour : tous les CM et TD marqués révisés. À réviser : une partie, ou aucun.
+  const chs = ["cm","td"].flatMap(t=>(s[t]||[]).map(ch=>({ t, ch })));
+  const nRev = chs.filter(x=>estRevise(s, x.t, x.ch)).length;
+  if(!chs.length && !hasContent) status=`<span class="ecue-status empty">À remplir</span>`;
+  else if(!chs.length) status=``;
+  else if(nRev === chs.length) status=`<span class="ecue-status ajour">✓ À jour</span>`;
+  else {
+    // un seul badge : les nouveautés d'abord, sinon où j'en suis
+    const detail = nv ? (nv === 1 ? "1 nouveau" : nv + " nouveaux") : nRev ? nRev + "/" + chs.length : "";
+    status=`<span class="ecue-status areviser">À réviser${detail ? " · " + detail : ""}</span>`;
+  }
   card.innerHTML=`
     <div class="ecue-top">
       <span class="ecue-num">${esc(s.ecue)}</span>
