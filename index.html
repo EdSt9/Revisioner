@@ -770,8 +770,6 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 .ecue-status.started{background:var(--warn-soft);color:var(--warn);}
 .ecue-status.done{background:var(--ok-soft);color:var(--ok);}
 .ecue-status.empty{background:var(--accent-soft);color:var(--text-mute);}
-.ecue-status.ajour{background:var(--ok-soft);color:var(--ok);box-shadow:inset 0 0 0 1.5px var(--ok-border);}
-.ecue-status.areviser{background:var(--warn-soft);color:var(--warn);box-shadow:inset 0 0 0 1.5px var(--warn);}
 .ecue-arrow{color:var(--text-mute);font-size:16px;flex-shrink:0;transition:transform .3s var(--ease-spring),color .3s;}
 .ecue-card:hover .ecue-arrow{transform:translateX(3px);color:var(--accent);}
 .chip-num{background:var(--accent);color:#fff;border-radius:6px;padding:1px 7px;font-weight:700;font-size:12px;margin-right:2px;}
@@ -868,62 +866,6 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 .mem-act.go{background:var(--accent);color:#fff;border-color:transparent;}
 .res-group{font-family:var(--font-display);font-size:13px;font-weight:700;
   color:var(--text-mute);margin:18px 0 8px 4px;}
-.pli{margin-top:10px;}
-.pli-head{width:100%;display:flex;align-items:center;gap:10px;cursor:pointer;text-align:left;
-  background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 16px;
-  color:var(--text);font-family:var(--font-text);font-size:14px;transition:border-color .25s;}
-.pli.open>.pli-head{border-color:var(--border-strong);}
-.pli-head.deja{border-style:dashed;
-  background-image:repeating-linear-gradient(135deg,var(--accent-soft) 0 7px,transparent 7px 15px);}
-.pli-head.deja .pli-title{color:var(--text-soft);}
-.pli-head.kind.deja{border:1px dashed var(--border);
-  background-image:repeating-linear-gradient(135deg,var(--accent-soft) 0 7px,transparent 7px 15px);}
-.pli-title{flex:1;min-width:0;}
-.pli-head.mat .pli-title{font-family:var(--font-display);font-weight:700;font-size:15.5px;}
-.pli-head.kind{background:transparent;border:none;border-radius:10px;padding:10px 6px;}
-.pli-head.kind .pli-title{font-family:var(--font-display);font-size:13.5px;font-weight:700;color:var(--text-soft);}
-.pli-count{flex-shrink:0;font-size:11.5px;font-weight:700;font-variant-numeric:tabular-nums;
-  border-radius:999px;padding:2px 9px;background:var(--accent-soft);color:var(--accent);}
-.pli-tag{flex-shrink:0;font-size:10.5px;font-weight:700;color:var(--text-mute);}
-.pli-chev{width:18px;height:18px;flex-shrink:0;color:var(--text-mute);
-  transition:transform .3s var(--ease-spring),color .25s;}
-.pli-chev svg{width:18px;height:18px;display:block;}
-.pli.open>.pli-head .pli-chev{transform:rotate(90deg);color:var(--accent);}
-.pli-body{display:grid;grid-template-rows:0fr;opacity:0;
-  transition:grid-template-rows .34s var(--ease-spring),opacity .24s ease;}
-.pli.open>.pli-body{grid-template-rows:1fr;opacity:1;}
-.pli-inner{min-height:0;overflow:hidden;padding:4px 0 2px 12px;}
-.pli-inner.flat{padding-left:2px;}
-.pli-follow{display:flex;justify-content:flex-end;padding:8px 2px 2px;}
-/* ── lecture à voix haute ── */
-.lec-start{display:inline-flex;align-items:center;gap:8px;margin:4px 0 14px;cursor:pointer;
-  background:var(--accent-soft);color:var(--accent);border:1px solid var(--border);
-  border-radius:999px;padding:9px 16px 9px 13px;font-family:var(--font-text);font-size:13.5px;font-weight:600;}
-.lec-start svg{width:18px;height:18px;flex-shrink:0;}
-.lec-calque{position:absolute;left:0;top:0;width:0;height:0;pointer-events:none;z-index:4;}
-.lec-calque>div{position:absolute;border-radius:5px;}
-.lec-calque.lec-phrase>div{background:var(--accent);opacity:.10;}
-.lec-calque.lec-mot>div{background:var(--accent);opacity:.42;}
-.lec-start:active{transform:scale(.97);}
-.section.tts-on .card,.recap.tts-on{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);
-  transition:border-color .3s,box-shadow .3s;}
-.section.tts-on .section-title{color:var(--accent);}
-.section,.recap{scroll-margin-top:150px;}
-.lec-bar{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 18px);z-index:58;
-  transform:translateX(-50%) translateY(140%);transition:transform .35s var(--ease-spring);
-  display:flex;align-items:center;gap:4px;padding:7px;border-radius:999px;
-  background:var(--surface-solid);border:1px solid var(--border-strong);
-  box-shadow:0 10px 34px rgba(0,0,0,.35),0 0 0 1px var(--border);max-width:calc(100vw - 32px);}
-.lec-bar.show{transform:translateX(-50%) translateY(0);}
-.lec-btn{flex-shrink:0;width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;
-  display:grid;place-items:center;background:transparent;color:var(--text-soft);padding:0;
-  font-family:var(--font-text);font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;}
-.lec-btn svg{width:20px;height:20px;display:block;}
-.lec-btn:active{transform:scale(.9);}
-.lec-btn.lec-play{width:50px;height:50px;background:var(--accent);color:#fff;box-shadow:0 6px 18px var(--accent-glow);}
-.lec-btn.lec-play svg{width:22px;height:22px;}
-.lec-btn.lec-speed{width:auto;min-width:46px;padding:0 8px;border-radius:21px;color:var(--accent);font-size:12.5px;}
-body.lec-on .screen.active::after{content:"";display:block;height:96px;}
 /* ── prochain cours ── */
 .next-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);
   padding:16px 18px;margin-bottom:12px;box-shadow:0 4px 18px var(--shadow);
@@ -990,24 +932,6 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .dev-show{width:100%;margin-top:14px;border-radius:14px;padding:12px;cursor:pointer;
   background:var(--accent);color:#fff;border:none;
   font-family:var(--font-text);font-size:14px;font-weight:600;}
-.dev-seg{grid-template-columns:1fr 1fr;margin-bottom:18px;}
-.dev-n{display:inline-block;min-width:18px;margin-left:5px;padding:1px 6px;border-radius:9px;font-size:11px;background:var(--accent-soft);color:var(--accent);}
-.dev-doc{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:var(--surface-2);border:1px solid var(--border);font-size:13.5px;line-height:1.55;color:var(--text-soft);margin-bottom:6px;}
-.dev-doc b{color:var(--text);font-weight:600;}
-.dev-lien{display:inline-flex;align-items:center;gap:6px;margin:4px 0 2px;padding:7px 12px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--accent);font-family:var(--font-text);font-size:12.5px;font-weight:600;cursor:pointer;}
-.dev-avance{display:flex;align-items:center;gap:10px;margin:12px 0 4px;font-size:12px;font-weight:600;color:var(--text-mute);}
-.dev-avance .bar{flex:1;height:6px;border-radius:6px;background:var(--border);overflow:hidden;}
-.dev-avance .bar i{display:block;height:100%;background:var(--accent);border-radius:6px;transition:width .4s var(--ease-spring);}
-.dev-avance.fini{color:var(--ok);} .dev-avance.fini .bar i{background:var(--ok);}
-.dev-q{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
-.dev-q-head{display:flex;gap:10px;align-items:flex-start;}
-.dev-q-num{flex-shrink:0;width:26px;height:26px;border-radius:9px;display:grid;place-items:center;font-size:13px;font-weight:700;background:var(--accent-soft);color:var(--accent);}
-.dev-q-txt{flex:1;font-size:14.5px;line-height:1.55;color:var(--text);font-weight:500;}
-.dev-pts{flex-shrink:0;font-size:11px;font-weight:700;color:var(--text-mute);background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:3px 7px;white-space:nowrap;}
-.dev-rep{margin-top:10px;min-height:96px;font-size:14px;padding:13px 14px;border-radius:14px;}
-.dev-etat{font-size:11px;color:var(--text-mute);margin-top:5px;text-align:right;min-height:14px;}
-.dev-q .dev-corr{margin-top:10px;}
-.dev-show.ghost{background:var(--accent-soft);color:var(--accent);}
 .know-group{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
   color:var(--text-mute);margin:16px 0 7px 4px;}
 .know-group:first-child{margin-top:0;}
@@ -1041,30 +965,6 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
   padding:13px 14px;margin-bottom:9px;font-family:var(--font-text);}
 .cal-row:active{background:var(--accent-soft);}
 .cal-txt{flex:1;min-width:0;}
-.site-go{flex-shrink:0;color:var(--text-mute);}
-.cal-row.accent{border-color:var(--accent);background:var(--accent-soft);}
-.cal-row.accent .cal-name{color:var(--accent);}
-.site-go svg{width:18px;height:18px;display:block;}
-/* feuille à choix multiples : publier plusieurs chapitres d'un coup */
-.cal-row.deja{border-style:dashed;
-  background-image:repeating-linear-gradient(135deg,var(--accent-soft) 0 7px,transparent 7px 15px);}
-.cal-row.deja .cal-name{color:var(--text-soft);}
-.cal-row.sel{border-color:var(--accent);border-style:solid;}
-.pick-check{width:24px;height:24px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;
-  border:2px solid var(--border-strong);color:transparent;transition:background .2s,border-color .2s;}
-.pick-check svg{width:14px;height:14px;display:block;}
-.pick-check{position:relative;}
-.pick-check::after{content:"";position:absolute;inset:-14px;}   /* zone de toucher plus large que le rond */
-.cal-row.sel .pick-check{background:var(--accent);border-color:var(--accent);color:#fff;}
-.pick-actions{display:flex;gap:10px;padding:12px 14px 0;flex-shrink:0;border-top:1px solid var(--border);margin-top:4px;}
-.pick-actions button{flex:1;border-radius:14px;padding:13px 10px;cursor:pointer;
-  font-family:var(--font-text);font-size:14px;font-weight:600;border:1px solid var(--border);
-  background:var(--surface);color:var(--text);}
-.pick-actions button.go{background:var(--accent);color:#fff;border-color:transparent;}
-.pick-actions button:disabled{opacity:.4;cursor:default;}
-.pick-legend{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--text-mute);margin:2px 2px 12px;}
-.pick-legend i{width:26px;height:14px;border-radius:5px;border:1px dashed var(--border-strong);flex-shrink:0;
-  background-image:repeating-linear-gradient(135deg,var(--accent-soft) 0 4px,transparent 4px 8px);}
 .cal-name{font-size:14.5px;color:var(--text);font-weight:600;}
 .cal-url{font-size:11.5px;color:var(--text-mute);margin-top:3px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -1107,7 +1007,6 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
   font-family:var(--font-text);font-size:15px;cursor:pointer;}
 .fs-cancel{background:var(--surface);color:var(--text-soft);border-color:var(--border);}
 .fs-ok{background:var(--accent);color:#fff;}
-.fs-ok.danger{background:var(--danger);}
 .fs-err{font-size:12.5px;color:#ff6b6b;padding:10px 18px 0;min-height:14px;}
 /* petit « + » posé dans une page, pour les chapitres et les sections */
 .add-inline{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
@@ -1154,18 +1053,6 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   transition:color .25s;}
 .chap-opt.active{color:var(--accent);}
-.chap-opt .rv-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--text-mute);opacity:.55;margin-right:6px;vertical-align:1px;transition:background .25s,opacity .25s,box-shadow .25s;}
-.chap-opt.revise{color:var(--ok);}
-.chap-opt.nouveau .rv-dot{background:var(--new);opacity:1;box-shadow:0 0 7px var(--new);}
-.chap-opt.revise .rv-dot{background:var(--ok);opacity:1;box-shadow:0 0 7px var(--ok);}
-.chap-opt.revise.active{color:var(--ok);}
-.rv-switch{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;margin-top:16px;padding:14px 18px;border-radius:var(--r-lg);border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:var(--font-text);font-size:14.5px;font-weight:600;cursor:pointer;text-align:left;transition:border-color .25s,background .25s;}
-.rv-switch .rv-sub{display:block;font-size:12px;font-weight:500;color:var(--text-soft);margin-top:2px;}
-.rv-switch .sw{flex-shrink:0;width:48px;height:29px;border-radius:20px;background:var(--border-strong);position:relative;transition:background .25s;}
-.rv-switch .sw::after{content:"";position:absolute;top:3px;left:3px;width:23px;height:23px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25);transition:left .28s var(--ease-spring);}
-.rv-switch.on{border-color:var(--ok-border);background:var(--ok-soft);}
-.rv-switch.on .sw{background:var(--ok);}
-.rv-switch.on .sw::after{left:22px;}
 .section{margin-bottom:26px;width:100%;}
 .section-title{font-family:var(--font-display);font-weight:500;font-size:19px;letter-spacing:-.01em;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:10px;overflow-wrap:break-word;word-break:break-word;}
 .section-title::before{content:"";width:4px;height:20px;border-radius:4px;background:var(--accent);flex-shrink:0;}
@@ -1196,47 +1083,6 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .mode-desc{font-size:12.5px;color:var(--text-soft);margin-top:3px;line-height:1.4;}
 .mode-count{font-size:12px;font-weight:600;color:var(--text-soft);background:var(--accent-soft);border-radius:20px;padding:4px 11px;white-space:nowrap;flex-shrink:0;}
 .mode-badge-done{color:var(--ok);background:var(--ok-soft);}
-/* ── Réviser par chapitre ── */
-.scope-bar{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 12px;margin:0 -2px 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;}
-.scope-bar::-webkit-scrollbar{display:none;}
-.scope-chip{flex:0 0 auto;display:flex;flex-direction:column;gap:6px;min-width:92px;padding:9px 13px 10px;border-radius:14px;border:1px solid var(--border);background:var(--surface);color:var(--text-soft);font-family:var(--font-text);font-size:13px;font-weight:600;cursor:pointer;text-align:left;transition:border-color .25s,background .25s,color .25s,transform .25s var(--ease-spring);}
-.scope-chip:active{transform:scale(.97);}
-.scope-chip.active{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);}
-.scope-chip .sc-top{white-space:nowrap;}
-.scope-chip .sc-sub{font-size:10.5px;font-weight:500;color:var(--text-mute);white-space:nowrap;}
-.scope-chip.valide .sc-sub{color:var(--ok);font-weight:600;}
-.scope-chip .sc-bar{height:4px;border-radius:4px;background:var(--border);overflow:hidden;}
-.scope-chip .sc-bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:4px;transition:width .5s var(--ease-spring);}
-.scope-chip.valide .sc-bar i{background:var(--ok);}
-.scope-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text-mute);}
-.chap-prog{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px;margin-bottom:14px;box-shadow:0 4px 20px var(--shadow);}
-.chap-prog-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
-.chap-prog-titre{font-family:var(--font-display);font-size:17px;font-weight:500;color:var(--text);}
-.chap-prog-num{font-size:13px;font-weight:600;color:var(--accent);white-space:nowrap;}
-.chap-prog.valide .chap-prog-num{color:var(--ok);}
-.chap-prog-bar{height:8px;border-radius:8px;background:var(--border);overflow:hidden;margin:12px 0 10px;}
-.chap-prog-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:8px;transition:width .6s var(--ease-spring);}
-.chap-prog.valide .chap-prog-bar i{background:var(--ok);}
-.chap-prog-txt{font-size:12.5px;line-height:1.55;color:var(--text-soft);}
-.chap-qcm-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:16px;padding:14px 18px;border-radius:var(--r-lg);border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);font-family:var(--font-text);font-size:14.5px;font-weight:600;cursor:pointer;transition:transform .25s var(--ease-spring);}
-.chap-qcm-btn:active{transform:scale(.98);}
-.chap-qcm-btn .cq-sub{font-weight:500;font-size:12.5px;opacity:.85;}
-.qc-group{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-mute);margin:22px 0 9px 4px;}
-.qc-card{display:flex;align-items:center;gap:14px;text-align:left;width:100%;cursor:pointer;font-family:var(--font-text);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:15px 18px;margin-bottom:10px;box-shadow:0 4px 20px var(--shadow);transition:transform .3s var(--ease-spring),border-color .3s;}
-.qc-card:active{transform:scale(.985);}
-.qc-card .mode-icon{width:42px;height:42px;font-size:19px;border-radius:12px;}
-.qc-info{flex:1;min-width:0;}
-.qc-name{font-family:var(--font-display);font-size:16.5px;font-weight:500;color:var(--text);}
-.qc-sub{font-size:12px;color:var(--text-soft);margin-top:3px;}
-.qc-bar{height:5px;border-radius:5px;background:var(--border);overflow:hidden;margin-top:9px;}
-.qc-bar i{display:block;height:100%;background:var(--accent);border-radius:5px;}
-.qc-card.valide .qc-bar i{background:var(--ok);}
-.qc-card.valide .qc-sub{color:var(--ok);font-weight:600;}
-.qc-card.grand{padding:20px 20px;border-color:var(--accent);background:linear-gradient(135deg,var(--accent-soft),var(--surface));box-shadow:0 10px 34px var(--accent-glow);}
-.qc-card.grand .mode-icon{width:52px;height:52px;font-size:25px;}
-.qc-card.grand .qc-name{font-size:20px;}
-.res-scope{margin:6px 0 4px;font-size:13.5px;color:var(--text-soft);}
-.res-scope b{color:var(--text);}
 
 /* SESSION */
 .sess-nav{position:sticky;top:0;z-index:20;padding:calc(env(safe-area-inset-top) + 12px) 18px 12px;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
@@ -1499,7 +1345,7 @@ textarea::placeholder{color:var(--text-mute);}
       <button class="icon-btn" id="btn-edt" aria-label="Emploi du temps">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
       </button>
-      <button class="icon-btn" id="btn-news" aria-label="Mes sites">
+      <button class="icon-btn" id="btn-news" aria-label="Actualités de la licence">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h13a1 1 0 0 1 1 1v12a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2V5z"/><path d="M8 9h6M8 13h6M8 17h3"/></svg>
       </button>
       <button class="icon-btn" id="btn-classes" aria-label="Mes classes">
@@ -1617,8 +1463,8 @@ textarea::placeholder{color:var(--text-mute);}
 <div id="screen-devoirs" class="screen">
   <div class="wrap">
     <button class="back-btn rise" id="btn-dev-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Réviser</button>
-    <h1 class="page-title rise" style="animation-delay:.03s">Devoirs</h1>
-    <p class="page-sub rise" id="dev-sub" style="animation-delay:.06s">Rédige tes réponses ici. Quand la correction arrive, le devoir passe dans Corrigés.</p>
+    <h1 class="page-title rise" style="animation-delay:.03s">Devoirs corrigés</h1>
+    <p class="page-sub rise" style="animation-delay:.06s">Le sujet, puis la correction quand tu l'as cherchée.</p>
     <div id="dev-inner" class="rise" style="animation-delay:.1s"></div>
   </div>
 </div>
@@ -1775,17 +1621,6 @@ textarea::placeholder{color:var(--text-mute);}
   </div>
 </div>
 
-<!-- CHOIX DU QCM -->
-<div id="screen-qcmchoix" class="screen">
-  <div class="wrap">
-    <button class="back-btn rise" id="btn-qcmchoix-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Réviser</button>
-    <div class="page-eyebrow rise" id="qcmchoix-eyebrow" style="animation-delay:.03s"></div>
-    <h1 class="page-title rise" id="qcmchoix-titre" style="animation-delay:.06s">QCM</h1>
-    <p class="page-sub rise" id="qcmchoix-sub" style="animation-delay:.09s">Un QCM réussi est validé. Chaque session reprend d'abord ceux qui ne le sont pas encore.</p>
-    <div id="qcmchoix-inner"></div>
-  </div>
-</div>
-
 <!-- SESSION -->
 <div id="screen-session" class="screen">
   <div class="sess-nav">
@@ -1879,20 +1714,6 @@ let SRS = {};
 function srsLoad(){ try{ SRS = JSON.parse(localStorage.getItem(SRS_KEY) || "{}"); }catch(e){ SRS = {}; } }
 function srsSave(){ try{ localStorage.setItem(SRS_KEY, JSON.stringify(SRS)); }catch(e){} scheduleSync(); }
 srsLoad();
-
-// Chapitres marqués « révisé » par moi : { "matière|cm|libellé": date }
-var REVISES_KEY = "revision_revises_v1";
-var REVISES = {};
-try{ REVISES = JSON.parse(localStorage.getItem(REVISES_KEY) || "{}") || {}; }catch(e){ REVISES = {}; }
-function revisesSave(){ try{ localStorage.setItem(REVISES_KEY, JSON.stringify(REVISES)); }catch(e){} scheduleSync(); }
-function cleRevise(subj, type, ch){ return subj.id + "|" + type + "|" + (ch && ch.label || ""); }
-function estRevise(subj, type, ch){ return !!REVISES[cleRevise(subj, type, ch)]; }
-function basculerRevise(subj, type, ch){
-  const k = cleRevise(subj, type, ch);
-  if(REVISES[k]) delete REVISES[k]; else REVISES[k] = Date.now();
-  revisesSave();
-  return !!REVISES[k];
-}
 
 // ══════════════════════════════════════════════════
 // ANNOTATIONS DE COURS (contrôle, note perso, matière liée)
@@ -2177,7 +1998,6 @@ function openForm(title, fields, okLabel, onSubmit, onDelete, extra){
   fsExtra = extra ? () => { closeForm(); extra.fn(); } : null;
   document.getElementById("fs-title").textContent = title;
   document.getElementById("fs-ok").textContent = okLabel || "Créer";
-  document.getElementById("fs-ok").classList.remove("danger");
   document.getElementById("fs-err").textContent = "";
   // La suppression demande deux touches : la première arme, la seconde exécute.
   fsDelArmed = false;
@@ -2236,17 +2056,6 @@ function openForm(title, fields, okLabel, onSubmit, onDelete, extra){
   };
   document.getElementById("form-sheet").classList.add("open");
   setTimeout(()=>{ const first = body.querySelector("input,textarea"); if(first) first.focus(); }, 320);
-}
-// Une confirmation claire : un texte, « Annuler » et un seul bouton d'action.
-function confirmer(titre, texte, action, fn, danger){
-  openForm(titre, [], action, ()=>{ fn(); }, null);
-  if(texte){
-    const p = el("div","fs-hint");
-    p.textContent = texte;
-    p.style.cssText = "margin:2px 4px 6px;font-size:14px;line-height:1.55;text-align:center";
-    document.getElementById("fs-body").appendChild(p);
-  }
-  if(danger !== false) document.getElementById("fs-ok").classList.add("danger");
 }
 function closeForm(){
   document.getElementById("form-sheet").classList.remove("open");
@@ -2317,93 +2126,6 @@ function editCalendar(id){
   } : null);
 }
 
-// ── Mes sites : raccourcis vers les sites utiles (fac, ENT, Eprel…) ──
-// Une liste propre à chaque personne, enregistrée avec ses réglages.
-// Toucher : ouvrir. Glisser vers la gauche : supprimer. Appui long : modifier.
-function mesSites(){
-  if(!Array.isArray(USER_SETTINGS.sites)){
-    // première ouverture : on reprend la page d'actualités qui existait déjà
-    USER_SETTINGS.sites = [{ nom:"Scolarité", url:newsUrl() }];
-  }
-  return USER_SETTINGS.sites;
-}
-function domaineDe(url){
-  try{ return new URL(url).hostname.replace(/^www\./, ""); }catch(e){ return url; }
-}
-function normaliserUrl(u){
-  u = (u || "").trim();
-  if(u && !/^https?:\/\//i.test(u)) u = "https://" + u;
-  return u;
-}
-function openSitesSheet(){
-  document.querySelectorAll("#pick-sheet .pick-actions").forEach(n=>n.remove());
-  const box = document.getElementById("pick-list");
-  document.getElementById("pick-title").textContent = "Mes sites";
-  box.innerHTML = "";
-  const sites = mesSites();
-  if(!sites.length){
-    const p = el("div","fs-hint");
-    p.textContent = "Aucun site pour l'instant. Ajoute ceux où tu vas souvent : ENT, Eprel, scolarité…";
-    p.style.margin = "0 4px 12px";
-    box.appendChild(p);
-  }
-  sites.forEach((site,i)=>{
-    const row = el("button","cal-row");
-    row.type = "button";
-    row.innerHTML = `<div class="cal-txt"><div class="cal-name">${esc(site.nom || domaineDe(site.url))}</div>` +
-      `<div class="cal-url">${esc(domaineDe(site.url))}</div></div><span class="site-go">${chevronR}</span>`;
-    row.addEventListener("click",()=>{
-      haptic(); closePicker();
-      window.open(site.url, "_blank", "noopener");
-    });
-    onLongPress(row, ()=>{ closePicker(); setTimeout(()=>editSite(i), 320); });
-    const ligne = swipeRow(row, [{ label:"Modifier", doux:true, fn:()=>{
-      closePicker(); setTimeout(()=>editSite(i), 320);
-    }}, { label:"Supprimer", fn:()=>{
-      sites.splice(i, 1);
-      saveContent();
-      toast("Site supprimé.");
-      openSitesSheet();
-    }}]);
-    ligne.style.marginBottom = "9px";
-    box.appendChild(ligne);
-  });
-  const add = el("button","add-inline");
-  add.type = "button";
-  add.textContent = "+  Ajouter un site";
-  add.style.marginTop = "4px";
-  add.addEventListener("click",()=>{ haptic(); closePicker(); setTimeout(()=>editSite(-1), 320); });
-  box.appendChild(add);
-  if(sites.length){
-    const h = el("div","fs-hint");
-    h.textContent = "Glisse un site vers la gauche pour le modifier ou le supprimer.";
-    h.style.cssText = "margin:10px 4px 4px;text-align:center";
-    box.appendChild(h);
-  }
-  document.getElementById("pick-sheet").classList.add("open");
-}
-// i = -1 : nouveau site
-function editSite(i){
-  const sites = mesSites();
-  const cur = i >= 0 ? sites[i] : { nom:"", url:"" };
-  openForm(i >= 0 ? "Modifier le site" : "Ajouter un site", [
-    { key:"nom", label:"Nom", value:cur.nom, placeholder:"Eprel, ENT, Scolarité…" },
-    { key:"url", label:"Adresse", value:cur.url, placeholder:"https://…" }
-  ], i >= 0 ? "Enregistrer" : "Ajouter", v=>{
-    const url = normaliserUrl(v.url);
-    if(!url) return "Il faut une adresse.";
-    try{ new URL(url); }catch(e){ return "Cette adresse ne semble pas valide."; }
-    const site = { nom:(v.nom || "").trim() || domaineDe(url), url };
-    if(i >= 0) sites[i] = site; else sites.push(site);
-    saveContent();
-    setTimeout(openSitesSheet, 320);
-  }, i >= 0 ? ()=>{
-    sites.splice(i, 1);
-    saveContent();
-    setTimeout(openSitesSheet, 320);
-  } : null);
-}
-
 // ── Lien de la page d'actualités ──
 function editNewsUrl(){
   const cur = (USER_SETTINGS && USER_SETTINGS.news_url) || "";
@@ -2456,7 +2178,6 @@ let SUB_ITEMS    = {};    // "classe|matière" → chapitres, pour les matières
 
 // Picker générique : une liste de choix dans une feuille qui monte.
 function openPicker(title, options, onPick){
-  document.querySelectorAll("#pick-sheet .pick-actions").forEach(n=>n.remove());
   const box = document.getElementById("pick-list");
   document.getElementById("pick-title").textContent = title;
   box.innerHTML = "";
@@ -2466,7 +2187,7 @@ function openPicker(title, options, onPick){
     box.appendChild(p);
   }
   options.forEach(o=>{
-    const b = el("button","cal-row" + (o.deja ? " deja" : "") + (o.accent ? " accent" : ""));
+    const b = el("button","cal-row");
     b.type = "button";
     b.innerHTML = `<div class="cal-txt"><div class="cal-name">${esc(o.label)}</div>` +
       (o.sub ? `<div class="cal-url">${esc(o.sub)}</div>` : "") + `</div>`;
@@ -2475,98 +2196,9 @@ function openPicker(title, options, onPick){
   });
   document.getElementById("pick-sheet").classList.add("open");
 }
-// Feuille à choix multiples. Chaque ligne se coche ; deux boutons en bas :
-// tout valider d'un coup, ou valider seulement la sélection.
-// o.deja = déjà publié : la ligne est hachurée, mais reste cochable (pour mettre à jour).
-const COCHE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
-function openMultiPicker(title, options, labels, onConfirm, onOpen){
-  const sheet = document.getElementById("pick-sheet");
-  sheet.querySelectorAll(".pick-actions").forEach(n=>n.remove());
-  const box = document.getElementById("pick-list");
-  document.getElementById("pick-title").textContent = title;
-  box.innerHTML = "";
-  if(onOpen){
-    const lg = el("div","pick-legend");
-    lg.innerHTML = "<span>Touche le <b>rond</b> pour cocher plusieurs matières, ou le <b>nom</b> pour choisir ses chapitres.</span>";
-    box.appendChild(lg);
-  }
-  if(options.some(o=>o.deja)){
-    const lg = el("div","pick-legend");
-    lg.innerHTML = "<i></i><span>Hachuré : déjà publié. Le recocher le met à jour" +
-      (options.some(o=>o.actions && o.actions.length) ? ", le glisser vers la gauche le retire." : ".") + "</span>";
-    box.appendChild(lg);
-  }
-  const choisis = new Set();
-  const bar = el("div","pick-actions");
-  const tout = el("button"); tout.type = "button";
-  const sel  = el("button","go"); sel.type = "button";
-  const maj = ()=>{
-    tout.textContent = labels.tout + " (" + options.length + ")";
-    sel.textContent  = choisis.size ? labels.sel + " (" + choisis.size + ")" : "Coche des lignes";
-    sel.disabled = !choisis.size;
-  };
-  options.forEach(o=>{
-    const b = el("button","cal-row" + (o.deja ? " deja" : ""));
-    b.type = "button";
-    b.innerHTML = `<div class="cal-txt"><div class="cal-name">${esc(o.label)}</div>` +
-      (o.sub ? `<div class="cal-url">${esc(o.sub)}</div>` : "") + `</div><span class="pick-check">${COCHE_SVG}</span>`;
-    b.addEventListener("click", e=>{
-      haptic();
-      // avec onOpen, seul le rond coche ; le reste de la ligne ouvre l'élément
-      if(onOpen && !e.target.closest(".pick-check")){ closePicker(); onOpen(o.value); return; }
-      if(choisis.has(o.value)) choisis.delete(o.value); else choisis.add(o.value);
-      b.classList.toggle("sel", choisis.has(o.value));
-      maj();
-    });
-    // une ligne peut porter des actions au glissement (dépublier ce qui est déjà en ligne)
-    if(Array.isArray(o.actions) && o.actions.length){
-      const ligne = swipeRow(b, o.actions);
-      ligne.style.marginBottom = "9px";
-      box.appendChild(ligne);
-    } else box.appendChild(b);
-  });
-  tout.addEventListener("click",()=>{ haptic(); closePicker(); onConfirm(options.map(o=>o.value)); });
-  sel.addEventListener("click",()=>{
-    if(!choisis.size) return;
-    haptic(); closePicker();
-    onConfirm(options.filter(o=>choisis.has(o.value)).map(o=>o.value));   // dans l'ordre affiché
-  });
-  bar.appendChild(tout); bar.appendChild(sel);
-  box.after(bar);
-  maj();
-  sheet.classList.add("open");
-}
 function closePicker(){ document.getElementById("pick-sheet").classList.remove("open"); }
 
 const KIND_LABEL = { cm:"Cours magistraux", td:"Travaux dirigés", devoir:"Devoirs", revision:"Révisions" };
-
-// Blocs repliables de l'écran d'une classe. Repliés par défaut ;
-// on se souvient de ceux qu'on a ouverts pour que l'écran ne se referme
-// pas à chaque action (suivre, nommer un adjoint…).
-const PLIS_OUVERTS = new Set();
-function pli(cle, titre, opts = {}){
-  const wrap = el("div","pli" + (PLIS_OUVERTS.has(cle) ? " open" : ""));
-  const head = el("button","pli-head" + (opts.style ? " " + opts.style : "") + (opts.deja ? " deja" : ""));
-  head.type = "button";
-  const t = el("span","pli-title");
-  const majTitre = ()=>{ t.textContent = typeof titre === "function" ? titre(wrap.classList.contains("open")) : titre; };
-  majTitre();
-  head.appendChild(t);
-  if(opts.tag){ const g = el("span","pli-tag"); g.textContent = opts.tag; head.appendChild(g); }
-  if(opts.count != null){ const n = el("span","pli-count"); n.textContent = opts.count; head.appendChild(n); }
-  const ch = el("span","pli-chev"); ch.innerHTML = chevronR; head.appendChild(ch);
-  const body = el("div","pli-body");
-  const inner = el("div","pli-inner" + (opts.flat ? " flat" : ""));
-  body.appendChild(inner);
-  head.addEventListener("click",()=>{
-    haptic();
-    const ouvert = wrap.classList.toggle("open");
-    if(ouvert) PLIS_OUVERTS.add(cle); else PLIS_OUVERTS.delete(cle);
-    majTitre();
-  });
-  wrap.appendChild(head); wrap.appendChild(body);
-  return { wrap, inner };
-}
 
 // Emballe une ligne pour qu'un glissement vers la gauche révèle « Retirer ».
 function swipeRow(node, actions, flat){
@@ -2735,10 +2367,8 @@ async function openClass(c){
   if(monRole === "owner"){
     const valides = membres.filter(m=>m.role === "membre" || m.role === "adjoint");
     if(valides.length){
-      const p = pli(c.id + "|membres", o => o ? "Masquer les membres" : "Voir les membres",
-                    { count: valides.length, flat:true });
-      p.wrap.style.marginTop = "16px";
-      box.appendChild(p.wrap);
+      const t = el("div","kind-head"); t.textContent = "Membres";
+      box.appendChild(t);
       valides.forEach(m=>{
         const row = el("div","mem-row");
         const nm = el("div","mem-name");
@@ -2747,7 +2377,7 @@ async function openClass(c){
         b.textContent = m.role === "adjoint" ? "Retirer l'adjoint" : "Nommer adjoint";
         b.addEventListener("click",()=>setRole(c, m.pseudo, m.role === "adjoint" ? "membre" : "adjoint"));
         row.appendChild(nm); row.appendChild(b);
-        p.inner.appendChild(row);
+        box.appendChild(row);
       });
     }
   }
@@ -2773,43 +2403,29 @@ async function openClass(c){
   }
   const parMatiere = {};
   items.forEach(it=>{ (parMatiere[it.subject_title] ||= []).push(it); });
-  // « déjà chez moi » : ajouté à mes cours, ou publié par moi. Hachuré, pour voir d'un coup d'œil ce qui manque.
-  const possede = it => isFollowed(it.id) || !!subFollowOf(it) || it.author === whoAmI();
-  if(items.some(possede)){
-    const lg = el("div","pick-legend");
-    lg.innerHTML = "<i></i><span>Hachuré : déjà dans tes cours. Le reste, c'est ce qui te manque.</span>";
-    lg.style.margin = "18px 4px 2px";
-    box.appendChild(lg);
-  }
-  Object.keys(parMatiere)
-    .sort((x,y)=>x.localeCompare(y,"fr",{ sensitivity:"base" }))
-    .forEach(mat=>{
+  Object.keys(parMatiere).sort().forEach(mat=>{
     const suivie = isSubFollowed(c.id, mat);
-    const tous = parMatiere[mat];
-    const nPossede = tous.filter(possede).length;
-    const pm = pli(c.id + "|" + mat, mat, {
-      style:"mat", count: nPossede && nPossede < tous.length ? nPossede + "/" + tous.length : tous.length,
-      tag: suivie ? "Suivie" : "", deja: nPossede === tous.length
-    });
-    box.appendChild(pm.wrap);
-    // suivre toute la matière : dans le bloc, pour garder l'en-tête lisible
-    const fl = el("div","pli-follow");
+    const t = el("div","kind-head");
+    t.style.color = "var(--accent)";
+    t.style.display = "flex";
+    t.style.alignItems = "center";
+    t.style.gap = "10px";
+    const nom = el("span"); nom.textContent = mat; nom.style.flex = "1";
     const b = el("button","mem-act" + (suivie ? "" : " go"));
     b.textContent = suivie ? "Suivie" : "Tout suivre";
-    b.addEventListener("click",()=>{ haptic(); followSubject(c, mat, tous[0] && tous[0].id); });
-    fl.appendChild(b); pm.inner.appendChild(fl);
+    b.addEventListener("click",()=>{ haptic(); followSubject(c, mat); });
+    t.appendChild(nom); t.appendChild(b);
+    box.appendChild(t);
     ["cm","td","devoir","revision"].forEach(k=>{
-      const list = tous.filter(x=>x.kind === k);
+      const list = parMatiere[mat].filter(x=>x.kind === k);
       if(!list.length) return;
-      const pk = pli(c.id + "|" + mat + "|" + k, KIND_LABEL[k], { style:"kind", count: list.length, flat:true,
-                                                                   deja: list.every(possede) });
-      pk.wrap.style.marginTop = "4px";
-      pm.inner.appendChild(pk.wrap);
+      const sub = el("div","res-group"); sub.textContent = KIND_LABEL[k];
+      box.appendChild(sub);
       list.forEach(it=>{
         const parMatiere = !!subFollowOf(it);
         const dansMesCours = isFollowed(it.id) || parMatiere;
         const aMoi = it.author === whoAmI() || monRole === "owner";
-        const row = el("button","cal-row" + (possede(it) ? " deja" : ""));
+        const row = el("button","cal-row");
         row.type = "button";
         row.innerHTML = `<div class="cal-txt"><div class="cal-name">${esc(it.label)}</div>
           <div class="cal-url">par ${esc(it.author)}${dansMesCours ? " · dans tes cours" : ""}</div></div>`;
@@ -2826,32 +2442,15 @@ async function openClass(c){
           unfollowItem(it.id); toast("Retiré de tes cours."); openClass(c);
         }});
         if(aMoi) actions.push({ label:"Dépublier", fn:()=>depublier(c, it) });
-        const ligne = actions.length ? swipeRow(row, actions) : row;
-        ligne.style.marginBottom = "8px";
-        pk.inner.appendChild(ligne);
+        box.appendChild(actions.length ? swipeRow(row, actions) : row);
       });
     });
   });
 }
 
-// Retirer plusieurs publications d'un coup (un chapitre publié deux fois, ou toute une matière).
-function depublierPlusieurs(c, its, nom){
-  if(!its || !its.length) return;
-  if(its.length === 1 && its[0].label === nom) return depublier(c, its[0]);
-  confirmer("Dépublier « " + nom + " » ?",
-    (its.length > 1 ? its.length + " éléments seront retirés de la classe. " : "Il sera retiré de la classe. ") + "Ceux qui l'avaient ajouté ne l'auront plus.",
-    "Dépublier", async ()=>{
-    let ko = 0;
-    for(const it of its){ try{ await api("item_delete", { item_id:it.id }); }catch(e){ ko++; } }
-    toast(ko ? "Certains n'ont pas pu être retirés." : "Retiré de la classe.");
-    openClass(c);
-  });
-}
 // Retirer un chapitre de la classe. Il disparaît aussi de chez ceux qui le suivaient.
 function depublier(c, it){
-  confirmer("Dépublier « " + it.label + " » ?",
-    "Il sera retiré de la classe. Ceux qui l'avaient ajouté ne l'auront plus.",
-    "Dépublier", ()=>{
+  openForm("Dépublier « " + it.label + " »", [], "Annuler", ()=>{}, ()=>{
     api("item_delete", { item_id:it.id })
       .then(()=>{ toast("Retiré de la classe."); openClass(c); })
       .catch(()=>toast("Action refusée."));
@@ -2887,138 +2486,54 @@ async function publierOuMettreAJour(classId, kind, subjectTitle, payload){
   return "neuf";
 }
 
-// Choisir une matière, puis un ou plusieurs de ses chapitres, et les publier ici.
-// Ce qui est déjà dans la classe apparaît hachuré.
-// Ce qui permet à quelqu'un d'autre de recréer la matière à l'identique.
-function metaMatiere(sj){
-  if(!sj) return null;
-  const u = UES[sj.ue] || {};
-  return { ecue:sj.ecue || "", ue_num:String(u.num || ""), ue_title:u.title || "",
-           sem:u.sem || SEMESTRES[sj.id] || null };
-}
-function cleEnvoi(kind, subjectTitle, label){
-  return kind === "revision" ? "revision|" + subjectTitle : kind + "|" + subjectTitle + "|" + label;
-}
-function payloadRevision(sj){
-  return {
-    label: "Révisions",
-    fc:  (sj.fc ||[]).filter(x=>!x._shared),
-    qcm: (sj.qcm||[]).filter(x=>!x._shared),
-    oq:  (sj.oq ||[]).filter(x=>!x._shared),
-    dev: (sj.dev||[]).filter(x=>!x._shared),
-    tr:  (sj.tr ||[]).filter(x=>!x._shared),
-    auteurs: (sj.auteurs||[]).filter(x=>!x._shared)
-  };
-}
-async function publishFromClass(c){
-  const mats = SUBJECTS.filter(s=>((s.cm||[]).concat(s.td||[])).some(ch=>!ch._shared))
-    .sort((a,b)=>a.title.localeCompare(b.title, "fr", { sensitivity:"base" }));
+// Choisir une matière, puis un de ses chapitres, et le publier ici.
+function publishFromClass(c){
+  const mats = SUBJECTS.filter(s=>((s.cm||[]).concat(s.td||[])).some(ch=>!ch._shared));
   if(!mats.length){ toast("Aucun chapitre à publier pour l'instant."); return; }
-  // ce qui est déjà dans la classe, une seule fois
-  let items = [];
-  try{ items = (await api("class_items", { class_id:c.id })).items || []; }catch(e){}
-  const dejaPar = {};                       // clé → { item, auteurs }
-  items.forEach(it=>{
-    const k = cleEnvoi(it.kind, it.subject_title, it.label);
-    const d = dejaPar[k] || (dejaPar[k] = { mien:null, miens:[], auteurs:[] });
-    if(it.author === whoAmI()){ d.mien = it; d.miens.push(it); }
-    if(!d.auteurs.includes(it.author)) d.auteurs.push(it.author);
-  });
-  const moi = whoAmI();
-  const etat = k => {
-    const d = dejaPar[k];
-    if(!d) return { deja:false, sub:"" };
-    if(d.mien) return { deja:true, sub:"déjà publié" };
-    return { deja:true, sub:"déjà publié par " + d.auteurs.join(", ") };
-  };
-  // ce que j'ai publié moi-même pour une clé : je peux le retirer en glissant
-  const retirer = (k, nom)=>{
-    const d = dejaPar[k];
-    if(!d || !d.miens.length) return undefined;
-    return [{ label:"Dépublier", fn:()=>{ closePicker(); setTimeout(()=>depublierPlusieurs(c, d.miens, nom), 320); } }];
-  };
-  // les lignes publiables d'une matière
-  const lignesDe = sj=>{
-    const out = [];
-    (sj.cm||[]).forEach((ch,i)=>{ if(!ch._shared){ const k = cleEnvoi("cm", sj.title, ch.label), e = etat(k);
-      out.push({ label:ch.label, sub:"Cours" + (e.sub ? " · " + e.sub : ""), deja:e.deja, value:"cm:"+i, actions:retirer(k, ch.label) }); } });
-    (sj.td||[]).forEach((ch,i)=>{ if(!ch._shared){ const k = cleEnvoi("td", sj.title, ch.label), e = etat(k);
-      out.push({ label:ch.label, sub:"TD" + (e.sub ? " · " + e.sub : ""), deja:e.deja, value:"td:"+i, actions:retirer(k, ch.label) }); } });
-    const r = payloadRevision(sj);
-    const n = k => r[k].length;
-    if(n("fc") + n("qcm") + n("oq") + n("dev") + n("tr")){
-      const k = cleEnvoi("revision", sj.title), e = etat(k);
-      out.push({ label:"Exercices de révision",
-        sub:`${n("fc")} fiches · ${n("qcm")} QCM · ${n("tr")} trous · ${n("oq")} questions` + (e.sub ? " · " + e.sub : ""),
-        deja:e.deja, value:"revision", actions:retirer(k, "les exercices de révision") });
-    }
-    return out;
-  };
-  // tout ce que j'ai publié pour une matière
-  const miensDe = sj => Object.values(dejaPar).flatMap(d=>d.miens).filter(it=>it.subject_title === sj.title);
-
-  openMultiPicker("Quelle matière ?", mats.map(sj=>{
-    const l = lignesDe(sj);
-    const nDeja = l.filter(x=>x.deja).length;
-    return {
-      label: sj.title,
-      sub: nDeja ? `${nDeja} sur ${l.length} déjà publiés` : `${l.length} à publier`,
-      deja: l.length > 0 && nDeja === l.length,        // tout est déjà dans la classe
-      value: sj.id,
-      actions: miensDe(sj).length ? [{ label:"Tout\ndépublier", fn:()=>{
-        closePicker(); setTimeout(()=>depublierPlusieurs(c, miensDe(sj), sj.title), 320);
-      } }] : undefined
-    };
-  }), { tout:"Tout", sel:"Publier" },
-  // plusieurs matières cochées : on publie ou met à jour tous leurs chapitres
-  ids=>{
-    const taches = [];
-    ids.forEach(id=>{
-      const sj = SUBJECTS.find(x=>x.id === id);
-      if(sj) lignesDe(sj).forEach(l=>taches.push({ sj, val:l.value }));
-    });
-    publierTaches(c, taches, dejaPar);
-  },
-  // toucher le nom : choisir parmi les chapitres de cette matière
-  subjId=>{
+  openPicker("Quelle matière ?", mats.map(s=>({
+    label: s.title,
+    sub: ((s.cm||[]).filter(x=>!x._shared).length) + " en cours · " +
+         ((s.td||[]).filter(x=>!x._shared).length) + " en TD",
+    value: s.id
+  })), subjId=>{
     const sj = SUBJECTS.find(x=>x.id === subjId);
-    setTimeout(()=>openMultiPicker("Quoi publier ?", lignesDe(sj),
-      { tout:"Tout publier", sel:"Publier" },
-      vals=>publierLot(c, sj, vals, dejaPar)), 320);   // on laisse la première feuille se refermer
-  });
-}
-// Publie une liste d'éléments d'une matière, l'un après l'autre.
-function publierLot(c, sj, vals, dejaPar){
-  return publierTaches(c, vals.map(val=>({ sj, val })), dejaPar);
-}
-// Publie une liste de { sj, val }, éventuellement sur plusieurs matières.
-// Ce que j'ai déjà publié est mis à jour, le reste est créé.
-async function publierTaches(c, taches, dejaPar){
-  let neufs = 0, majs = 0, echecs = 0;
-  for(let k = 0; k < taches.length; k++){
-    const { sj, val } = taches[k];
-    let kind, payload;
-    if(val === "revision"){ kind = "revision"; payload = payloadRevision(sj); }
-    else{
-      const [type, idx] = val.split(":");
-      kind = type;
-      const ch = (type === "cm" ? sj.cm : sj.td)[Number(idx)];
-      payload = { label:ch.label, sections:ch.sections||[], recap:ch.recap||[] };
+    const opts = [];
+    (sj.cm||[]).forEach((ch,i)=>{ if(!ch._shared) opts.push({ label:ch.label, sub:"Cours", value:"cm:"+i }); });
+    (sj.td||[]).forEach((ch,i)=>{ if(!ch._shared) opts.push({ label:ch.label, sub:"TD", value:"td:"+i }); });
+    // les fiches, QCM et questions ouvertes appartiennent à la matière, pas à un chapitre
+    const nFc  = (sj.fc ||[]).filter(x=>!x._shared).length;
+    const nQcm = (sj.qcm||[]).filter(x=>!x._shared).length;
+    const nOq  = (sj.oq ||[]).filter(x=>!x._shared).length;
+    const nDev = (sj.dev||[]).filter(x=>!x._shared).length;
+    const nTr  = (sj.tr ||[]).filter(x=>!x._shared).length;
+    if(nFc + nQcm + nOq + nDev + nTr){
+      opts.push({ label:"Exercices de révision",
+        sub:`${nFc} fiches · ${nQcm} QCM · ${nTr} trous · ${nOq} questions · ${nDev} devoirs`, value:"revision" });
     }
-    payload.meta = metaMatiere(sj);
-    if(taches.length > 1) toast(`Publication ${k + 1} sur ${taches.length}…`);
-    const d = dejaPar[cleEnvoi(kind, sj.title, payload.label)];
-    try{
-      if(d && d.mien){ await api("item_update", { item_id:d.mien.id, payload }); majs++; }
-      else{ await api("item_publish", { class_id:c.id, kind, subject_title:sj.title, payload }); neufs++; }
-    }catch(e){ echecs++; }
-  }
-  const morceaux = [];
-  if(neufs) morceaux.push(neufs + (neufs > 1 ? " publiés" : " publié"));
-  if(majs)  morceaux.push(majs + " mis à jour");
-  if(echecs) morceaux.push(echecs + (echecs > 1 ? " refusés" : " refusé"));
-  toast((morceaux.join(", ") || "Rien à publier") + ".");
-  openClass(c);
+    setTimeout(()=>openPicker("Quoi publier ?", opts, val=>{
+      let payload, kind;
+      if(val === "revision"){
+        kind = "revision";
+        payload = {
+          label: "Révisions",
+          fc:  (sj.fc ||[]).filter(x=>!x._shared),
+          qcm: (sj.qcm||[]).filter(x=>!x._shared),
+          oq:  (sj.oq ||[]).filter(x=>!x._shared),
+          dev: (sj.dev||[]).filter(x=>!x._shared),
+          tr:  (sj.tr ||[]).filter(x=>!x._shared),
+          auteurs: (sj.auteurs||[]).filter(x=>!x._shared)
+        };
+      }else{
+        const [type, idx] = val.split(":");
+        kind = type;
+        const ch = (type === "cm" ? sj.cm : sj.td)[Number(idx)];
+        payload = { label:ch.label, sections:ch.sections||[], recap:ch.recap||[] };
+      }
+      publierOuMettreAJour(c.id, kind, sj.title, payload)
+        .then(r=>{ toast(r === "maj" ? "Mis à jour." : "Publié."); openClass(c); })
+        .catch(()=>toast("Publication refusée."));
+    }), 320);   // on laisse la première feuille se refermer
+  });
 }
 
 // ── Lecture d'un chapitre partagé ──
@@ -3072,7 +2587,7 @@ async function openSharedItem(it){
           setTimeout(()=>pickMatiere("La ranger dans quelle matière ?", subjId=>{
             parMat.subject_id = subjId;
             saveContent(); injectFollowed(); toast("Déplacée."); openSharedItem(it);
-          }, { title:it.subject_title, itemId:it.id }), 320);
+          }), 320);
         }
       });
       return;
@@ -3089,516 +2604,8 @@ async function openSharedItem(it){
   box.appendChild(suivre);
 }
 
-// ── LECTURE À VOIX HAUTE ──
-// Utilise les voix déjà installées sur l'appareil (Web Speech API) :
-// gratuit, sans serveur, et ça marche même hors ligne.
-// On lit phrase par phrase : Safari et Chrome coupent les textes trop longs.
-// Chaque mot lu garde un lien vers sa place dans la page : c'est ce qui permet
-// de le surligner, et de reprendre la lecture là où on touche le texte.
-var TTS_OK = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
-var HL_OK = typeof Highlight !== "undefined" && typeof CSS !== "undefined" && !!CSS.highlights;
-var LEC = { phrases:[], i:0, depuis:0, blocs:[], racine:null, actif:false, pause:false, jeton:0,
-            voix:null, bar:null, blocCourant:-1, motsSignales:false, minuteur:null, toucheA:0 };
-const LEC_VITESSES = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
-function lecLire(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
-function lecEcrire(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
-LEC.vitesse = parseFloat(lecLire("lec-vitesse")) || 1;
-if(!LEC_VITESSES.includes(LEC.vitesse))
-  LEC.vitesse = LEC_VITESSES.reduce((a,b)=>Math.abs(b-LEC.vitesse) < Math.abs(a-LEC.vitesse) ? b : a, 1);
-// La liste des voix arrive par morceaux sur iPhone. On ne change JAMAIS de voix en cours de route :
-// on garde l'identifiant de celle qui a été choisie, et on ne fait que rafraîchir son objet.
-if(TTS_OK && "onvoiceschanged" in speechSynthesis) speechSynthesis.onvoiceschanged = ()=>{ lecVoixActuelle(); };
-function lecIdVoix(v){ return v ? (v.voiceURI || v.name) : ""; }
-// « Voix de l'iPhone » : on ne désigne aucune voix, l'iPhone prend sa voix française par défaut,
-// celle choisie dans Réglages. C'est souvent la plus belle, et Safari ne la montre pas dans sa liste.
-var VOIX_SYSTEME = "__systeme__";
-function lecVoixActuelle(){
-  const vs = voixFrancaises();
-  if(LEC.voixId === VOIX_SYSTEME){ LEC.voix = null; return null; }
-  if(LEC.voixId){
-    // la même voix, avec un objet tout frais : Safari ignore parfois un objet trop ancien
-    const meme = vs.find(v=>lecIdVoix(v) === LEC.voixId);
-    if(meme) LEC.voix = meme;
-    return LEC.voix;
-  }
-  const v = choisirVoix();
-  if(v === VOIX_SYSTEME){ LEC.voix = null; LEC.voixId = VOIX_SYSTEME; return null; }
-  if(v){ LEC.voix = v; LEC.voixId = lecIdVoix(v); }
-  return LEC.voix;
-}
-
-function voixFrancaises(){
-  return TTS_OK ? speechSynthesis.getVoices().filter(v=>/^fr/i.test(v.lang)) : [];
-}
-// La qualité se lit dans l'identifiant de la voix (ex. com.apple.voice.enhanced.fr-FR.Thomas).
-function lecQualite(v){
-  const id = ((v.voiceURI || "") + " " + (v.name || "")).toLowerCase();
-  if(/premium/.test(id)) return "premium";
-  if(/enhanced|amélior|neural|natural/.test(id)) return "améliorée";
-  if(/compact|super-?compact/.test(id)) return "compacte";
-  return "";
-}
-function choisirVoix(){
-  const memo = lecLire("lec-voix");
-  if(memo === VOIX_SYSTEME) return VOIX_SYSTEME;
-  const vs = voixFrancaises();
-  if(!vs.length) return VOIX_SYSTEME;
-  const rang = v => ({ premium:3, "améliorée":2, "":1, compacte:0 })[lecQualite(v)];
-  // choix mémorisé par identifiant ; sinon par nom, en prenant la meilleure version de cette voix
-  const perso = vs.find(v=>v.voiceURI && v.voiceURI === memo)
-    || vs.filter(v=>v.name === memo).sort((a,b)=>rang(b)-rang(a))[0];
-  if(perso) return perso;
-  // aucune belle voix dans la liste de Safari : la voix par défaut de l'iPhone sera meilleure
-  if(!vs.some(v=>lecQualite(v) === "premium" || lecQualite(v) === "améliorée")) return VOIX_SYSTEME;
-  // les voix « améliorées » d'iOS sont bien plus naturelles : on les préfère
-  // la qualité passe avant tout : une belle voix québécoise vaut mieux qu'une voix compacte de France
-  const score = v => (/fr[-_]FR/i.test(v.lang) ? 2 : 0)
-    + (lecQualite(v) === "premium" ? 12 : lecQualite(v) === "améliorée" ? 8 : lecQualite(v) === "compacte" ? -4 : 0)
-    + (/Amélie|Audrey|Aurélie|Marie|Thomas|Denise|Julie/i.test(v.name) ? 2 : 0)
-    + (v.localService ? 1 : 0);
-  return vs.slice().sort((a,b)=>score(b)-score(a))[0];
-}
-
-const LEC_MOIS = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
-// Ce qui s'affiche bien mais se lit mal. Appliqué mot par mot,
-// pour que chaque morceau prononcé corresponde toujours à un mot de la page.
-function motPourLaVoix(m){
-  if(/^https?:\/\//.test(m)) return "";
-  if(m === "→" || m === "⇒") return ", puis,";
-  if(m === "·") return ".";
-  if(m === "+") return "plus";
-  if(m === "p.") return "page";
-  return m
-    .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, "")
-    .replace(/\((?:\.\.\.|…)\)/g, "")
-    .replace(/^CàR/, "conduites à risque")
-    .replace(/^XVIIIe/, "dix-huitième").replace(/^XIXe/, "dix-neuvième")
-    .replace(/^XXIe/, "vingt-et-unième").replace(/^XXe/, "vingtième")
-    .replace(/\b(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?\b/g, (x,j,mo,a)=>{
-      const k = +mo;
-      if(k < 1 || k > 12 || +j < 1 || +j > 31) return x;
-      return (+j === 1 ? "premier" : String(+j)) + " " + LEC_MOIS[k-1] + (a ? " " + (a.length === 2 ? "20" + a : a) : "");
-    })
-    .replace(/(\d)[-–](\d)/g, "$1 à $2")
-    .trim();
-}
-
-// Découpe un élément de la page en mots, en gardant pour chacun sa position exacte.
-function motsDe(elem){
-  const txt = [], pos = [];          // pos[k] = { n: nœud texte, o: décalage } pour chaque caractère
-  const w = document.createTreeWalker(elem, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT);
-  let n;
-  while((n = w.nextNode())){
-    if(n.nodeType === 1){ if(n.tagName === "BR"){ txt.push("\n"); pos.push(null); } continue; }
-    const v = n.nodeValue;
-    for(let k = 0; k < v.length; k++){ txt.push(v[k]); pos.push({ n, o:k }); }
-  }
-  const brut = txt.join("");
-  const mots = [];
-  const re = /\S+/g; let m, fin = 0;
-  while((m = re.exec(brut))){
-    const a = pos[m.index], z = pos[m.index + m[0].length - 1];
-    const ligne = /\n/.test(brut.slice(fin, m.index));   // un <br> avant ce mot : nouvelle phrase
-    fin = m.index + m[0].length;
-    if(!a || !z) continue;
-    mots.push({ brut:m[0], dit:motPourLaVoix(m[0]), n1:a.n, o1:a.o, n2:z.n, o2:z.o + 1, ligne });
-  }
-  return mots;
-}
-// Regroupe les mots en phrases courtes.
-function phrasesDe(mots, b){
-  const out = [];
-  let cur = [], long = 0;
-  const pousser = ()=>{ if(cur.some(t=>t.dit)) out.push({ b, toks:cur }); cur = []; long = 0; };
-  mots.forEach(t=>{
-    if(t.ligne && cur.length) pousser();
-    cur.push(t); long += t.dit.length + 1;
-    if(/[.!?…][»")\]]*$/.test(t.brut) && t.brut !== "p.") pousser();
-    else if(long > 200 && /[,;:]$/.test(t.brut)) pousser();
-  });
-  pousser();
-  return out;
-}
-// On lit ce qui est affiché : titres, textes, listes, puis « À retenir ».
-function construireFile(root){
-  const blocs = [...root.querySelectorAll(".section, .recap")];
-  const phrases = [];
-  blocs.forEach((b,bi)=>{
-    const morceaux = b.classList.contains("recap")
-      ? [b.querySelector(".recap-label"), ...b.querySelectorAll(".recap-item > span:last-child")]
-      : [b.querySelector(".section-title"), b.querySelector(".card-body"), ...b.querySelectorAll(".card-list .li-text")];
-    morceaux.filter(Boolean).forEach(e=>phrasesDe(motsDe(e), bi).forEach(p=>phrases.push(p)));
-  });
-  return { blocs, phrases };
-}
-
-function lecPlage(t1, t2){
-  try{ const r = document.createRange(); r.setStart(t1.n1, t1.o1); r.setEnd(t2.n2, t2.o2); return r; }
-  catch(e){ return null; }
-}
-// Surlignage dessiné par-dessus le texte, avec des rectangles qu'on efface
-// vraiment à chaque mot. (L'API Highlight laissait des traces sur iPhone.)
-const LEC_CALQUES = {};
-function lecSurligner(nom, r){
-  let calque = LEC_CALQUES[nom];
-  if(!r){ if(calque) calque.innerHTML = ""; return; }
-  if(!calque){
-    calque = LEC_CALQUES[nom] = el("div","lec-calque " + nom);
-    document.body.appendChild(calque);
-  }
-  // une boîte par ligne : on fusionne les morceaux d'une même ligne
-  const lignes = [];
-  [...r.getClientRects()].forEach(b=>{
-    if(b.width < 1 || b.height < 1) return;
-    const l = lignes.find(x=>Math.abs(x.top - b.top) < b.height * 0.5);
-    if(l){ l.left = Math.min(l.left, b.left); l.right = Math.max(l.right, b.right);
-           l.top = Math.min(l.top, b.top); l.bottom = Math.max(l.bottom, b.bottom); }
-    else lignes.push({ left:b.left, right:b.right, top:b.top, bottom:b.bottom });
-  });
-  calque.innerHTML = "";
-  lignes.forEach(l=>{
-    const d = document.createElement("div");
-    d.style.cssText = `left:${l.left + scrollX - 2}px;top:${l.top + scrollY}px;` +
-                      `width:${l.right - l.left + 4}px;height:${l.bottom - l.top}px`;
-    calque.appendChild(d);
-  });
-}
-function lecMarquerBloc(bi){
-  if(bi === LEC.blocCourant) return;
-  LEC.blocs.forEach(b=>b.classList.remove("tts-on"));
-  LEC.blocCourant = bi;
-  if(LEC.blocs[bi]) LEC.blocs[bi].classList.add("tts-on");
-}
-// Faire suivre la page, sauf si la personne est en train de faire défiler elle-même.
-function lecSuivre(r){
-  if(!r || Date.now() - LEC.toucheA < 4000) return;
-  const box = r.getBoundingClientRect();
-  if(!box.height) return;
-  if(box.top < 170 || box.bottom > innerHeight - 130)
-    window.scrollBy({ top: box.top - innerHeight * 0.33, behavior:"smooth" });
-}
-function lecMot(p, k){
-  const t = p.toks[k];
-  if(t) lecSurligner("lec-mot", lecPlage(t, t));
-}
-function lecArreterMinuteur(){ if(LEC.minuteur){ clearTimeout(LEC.minuteur); LEC.minuteur = null; } }
-
-function lecDire(){
-  if(!LEC.actif || LEC.pause) return;
-  if(LEC.i >= LEC.phrases.length){ lecteurStop(); toast("Lecture terminée."); return; }
-  const p = LEC.phrases[LEC.i];
-  const depuis = Math.min(LEC.depuis || 0, p.toks.length - 1);
-  LEC.depuis = 0;
-  // le texte prononcé, et où commence chaque mot dedans
-  let texte = "";
-  const debuts = [];
-  for(let k = depuis; k < p.toks.length; k++){
-    const d = p.toks[k].dit;
-    debuts.push({ k, a: texte.length + (texte && d ? 1 : 0) });
-    if(d) texte += (texte ? " " : "") + d;
-  }
-  if(!texte.trim()){ LEC.i++; lecDire(); return; }
-  if(!/[.!?…:;,]$/.test(texte)) texte += ".";
-
-  lecMarquerBloc(p.b);
-  const rPhrase = lecPlage(p.toks[depuis], p.toks[p.toks.length - 1]);
-  lecSurligner("lec-phrase", rPhrase);
-  lecMot(p, debuts.find(x=>p.toks[x.k].dit) ? debuts.find(x=>p.toks[x.k].dit).k : depuis);
-  lecSuivre(rPhrase);
-
-  const u = new SpeechSynthesisUtterance(texte);
-  lecVoixActuelle();
-  // la langue doit être celle de la voix : sinon l'iPhone ignore la voix choisie
-  u.lang = LEC.voix ? LEC.voix.lang : "fr-FR";
-  if(LEC.voix) u.voice = LEC.voix;
-  const taux = lecTauxEnvoye();
-  u.rate = taux;
-  let debutParole = 0;
-  const jeton = LEC.jeton;
-  const motA = ci => { let k = debuts[0].k; debuts.forEach(x=>{ if(x.a <= ci && p.toks[x.k].dit) k = x.k; }); return k; };
-  // la voix signale chaque mot : on suit exactement
-  u.onboundary = e=>{
-    if(jeton !== LEC.jeton || (e.name && e.name !== "word")) return;
-    LEC.motsSignales = true; lecArreterMinuteur();
-    lecMot(p, motA(e.charIndex));
-  };
-  // certaines voix ne signalent rien : on avance à l'estimation
-  u.onstart = ()=>{
-    debutParole = performance.now();
-    if(jeton !== LEC.jeton || LEC.motsSignales) return;
-    const cps = lecVitesseCible();          // caractères prononcés par seconde
-    let j = 0;
-    const suite = ()=>{
-      if(jeton !== LEC.jeton || LEC.motsSignales || LEC.pause) return;
-      const x = debuts[j]; if(!x) return;
-      if(p.toks[x.k].dit) lecMot(p, x.k);
-      const nxt = debuts[j + 1];
-      j++;
-      if(nxt) LEC.minuteur = setTimeout(suite, Math.max(90, (nxt.a - x.a) / cps * 1000));
-    };
-    suite();
-  };
-  const apres = ()=>{
-    if(jeton !== LEC.jeton || !LEC.actif || LEC.pause) return;   // interrompu volontairement
-    lecArreterMinuteur();
-    LEC.i++; lecDire();
-  };
-  u.onend = ()=>{
-    // phrase lue en entier : on mesure la vitesse réelle pour corriger la suivante
-    if(jeton === LEC.jeton && debutParole) lecMesurer(taux, texte.length, performance.now() - debutParole);
-    apres();
-  };
-  u.onerror = apres;
-  speechSynthesis.speak(u);
-}
-// ── Vitesse réelle ──
-// L'iPhone ne respecte pas la vitesse demandée de façon proportionnelle
-// (au-dessus de 1, il accélère bien plus fort). On mesure donc la vitesse
-// réelle de chaque phrase, et on corrige la valeur envoyée jusqu'à ce que
-// « 1,5× » soit vraiment une fois et demie la vitesse normale.
-// Les réglages appris sont gardés par voix, sur le téléphone.
-const LEC_CAL_CLE = "lec-calibrage-v1";
-const LEC_CPS_DEFAUT = 14;      // vitesse normale d'une voix française, en caractères/seconde
-let LEC_CAL = {};
-try{ LEC_CAL = JSON.parse(lecLire(LEC_CAL_CLE) || "{}") || {}; }catch(e){ LEC_CAL = {}; }
-function lecCal(){
-  const v = LEC.voix;
-  const k = v ? (v.voiceURI || v.name) : "defaut";
-  return LEC_CAL[k] || (LEC_CAL[k] = { base:0, envoi:{} });
-}
-function lecVitesseCible(){ return (lecCal().base || LEC_CPS_DEFAUT) * LEC.vitesse; }
-function lecTauxEnvoye(){
-  const m = LEC.vitesse;
-  // pour une voix jamais mesurée, la toute première phrase sert d'étalon, à vitesse normale
-  if(m === 1 || !lecCal().base) return 1;
-  const appris = lecCal().envoi[m];
-  if(appris) return appris;
-  // premier essai prudent, affiné dès la première phrase
-  return m > 1 ? 1 + (m - 1) * 0.5 : m;
-}
-function lecMesurer(taux, nbCar, ms){
-  if(ms < 600 || nbCar < 25) return;          // trop court pour être fiable
-  const cps = nbCar / (ms / 1000);
-  const c = lecCal();
-  if(taux === 1 && (LEC.vitesse === 1 || !c.base)){
-    c.base = c.base ? c.base * 0.7 + cps * 0.3 : cps;   // la vitesse normale de cette voix
-  }else{
-    const cible = (c.base || LEC_CPS_DEFAUT) * LEC.vitesse;
-    const t = taux * Math.pow(cible / cps, 0.7);        // correction amortie
-    c.envoi[LEC.vitesse] = Math.round(Math.max(0.1, Math.min(4, t)) * 1000) / 1000;
-  }
-  lecEcrire(LEC_CAL_CLE, JSON.stringify(LEC_CAL));
-}
-// Couper la phrase en cours sans déclencher la suivante.
-function lecCouper(){ LEC.jeton++; lecArreterMinuteur(); try{ speechSynthesis.cancel(); }catch(e){} }
-function lecRelancer(){
-  lecCouper();
-  // Safari ignore parfois un speak() collé à un cancel()
-  setTimeout(lecDire, 80);
-}
-
-// Toucher un mot pendant la lecture : on reprend à ce mot.
-function lecPositionTouchee(x, y){
-  if(document.caretPositionFromPoint){
-    const c = document.caretPositionFromPoint(x, y);
-    return c ? { n:c.offsetNode, o:c.offset } : null;
-  }
-  if(document.caretRangeFromPoint){
-    const r = document.caretRangeFromPoint(x, y);
-    return r ? { n:r.startContainer, o:r.startOffset } : null;
-  }
-  return null;
-}
-function lecToucher(e){
-  if(!LEC.actif) return;
-  if(e.target.closest("a, button, input, textarea")) return;
-  const bloc = e.target.closest(".section, .recap");
-  if(!bloc || !LEC.racine || !LEC.racine.contains(bloc)) return;
-  const pos = lecPositionTouchee(e.clientX, e.clientY);
-  let pi = -1, ti = 0;
-  if(pos && pos.n && pos.n.nodeType === 3){
-    // le mot touché, ou à défaut le premier mot qui suit dans ce nœud
-    for(let i = 0; i < LEC.phrases.length && pi < 0; i++){
-      const toks = LEC.phrases[i].toks;
-      for(let k = 0; k < toks.length; k++){
-        const t = toks[k];
-        const dedans = (t.n1 === pos.n && t.o1 <= pos.o && (t.n2 !== pos.n || pos.o <= t.o2))
-                    || (t.n2 === pos.n && t.n1 !== pos.n && pos.o <= t.o2);
-        if(dedans || (t.n1 === pos.n && t.o1 >= pos.o)){ pi = i; ti = k; break; }
-      }
-    }
-  }
-  if(pi < 0){
-    const bi = LEC.blocs.indexOf(bloc);
-    pi = LEC.phrases.findIndex(p=>p.b === bi);
-    ti = 0;
-  }
-  if(pi < 0) return;
-  e.preventDefault(); e.stopPropagation();
-  haptic();
-  LEC.i = pi; LEC.depuis = ti; LEC.pause = false; LEC.toucheA = 0;
-  lecMajBarre(); lecGarderEcran();
-  lecCouper();
-  lecDire();                       // dans le geste : Safari laisse parler
-}
-function lecDefilementManuel(){ LEC.toucheA = Date.now(); }
-
-// Garder l'écran allumé pendant la lecture : sinon la mise en veille automatique
-// verrouille le téléphone, et l'iPhone coupe la voix.
-let lecVerrou = null;
-async function lecGarderEcran(){
-  try{
-    if(!("wakeLock" in navigator) || lecVerrou) return;
-    lecVerrou = await navigator.wakeLock.request("screen");
-    lecVerrou.addEventListener("release", ()=>{ lecVerrou = null; });
-  }catch(e){ lecVerrou = null; }
-}
-function lecLibererEcran(){
-  try{ if(lecVerrou) lecVerrou.release(); }catch(e){}
-  lecVerrou = null;
-}
-
-function lecteurStart(root){
-  if(!TTS_OK){ toast("La lecture à voix haute n'est pas disponible sur cet appareil."); return; }
-  lecteurStop();
-  const f = construireFile(root);
-  if(!f.phrases.length){ toast("Rien à lire dans ce chapitre."); return; }
-  Object.assign(LEC, { phrases:f.phrases, blocs:f.blocs, racine:root, i:0, depuis:0,
-                       actif:true, pause:false, blocCourant:-1, toucheA:0 });
-  root.addEventListener("click", lecToucher, true);
-  window.addEventListener("touchmove", lecDefilementManuel, { passive:true });
-  window.addEventListener("wheel", lecDefilementManuel, { passive:true });
-  lecBarre();
-  document.body.classList.add("lec-on");
-  lecDire();                                  // dans le geste : iOS l'exige pour le premier son
-  lecGarderEcran();
-}
-function lecteurStop(){
-  if(!LEC || (!LEC.actif && !LEC.bar)) return;
-  lecCouper();
-  LEC.actif = false; LEC.pause = false;
-  // sans choix personnel, la prochaine lecture reprendra la meilleure voix disponible
-  if(!lecLire("lec-voix")) LEC.voixId = "";
-  lecLibererEcran();
-  if(LEC.racine) LEC.racine.removeEventListener("click", lecToucher, true);
-  window.removeEventListener("touchmove", lecDefilementManuel);
-  window.removeEventListener("wheel", lecDefilementManuel);
-  lecSurligner("lec-phrase", null); lecSurligner("lec-mot", null);
-  LEC.blocs.forEach(b=>b.classList.remove("tts-on"));
-  LEC.blocs = []; LEC.phrases = []; LEC.blocCourant = -1; LEC.racine = null;
-  if(LEC.bar){ LEC.bar.remove(); LEC.bar = null; }
-  document.body.classList.remove("lec-on");
-}
-function lecPlayPause(){
-  if(LEC.pause){ LEC.pause = false; LEC.toucheA = 0; lecMajBarre(); lecDire(); lecGarderEcran(); }
-  else{ LEC.pause = true; lecCouper(); lecMajBarre(); lecLibererEcran(); }
-}
-function lecAller(sens){
-  const bi = LEC.phrases[LEC.i] ? LEC.phrases[LEC.i].b : 0;
-  const debut = b => LEC.phrases.findIndex(p=>p.b === b);
-  let cible;
-  if(sens > 0){
-    cible = LEC.phrases.findIndex(p=>p.b > bi);
-    if(cible < 0){ lecteurStop(); return; }
-  }else{
-    const d = debut(bi);
-    // en début de section, on remonte à la précédente ; sinon on reprend celle-ci
-    cible = (LEC.i - d > 1 || bi === 0) ? d : debut(LEC.phrases[d - 1].b);
-  }
-  LEC.i = cible; LEC.depuis = 0; LEC.pause = false; LEC.toucheA = 0;
-  lecMajBarre(); lecRelancer();
-}
-// Au-delà de 2×, Safari plafonne : inutile de proposer plus.
-function lecVitesse(){
-  const enCours = !LEC.pause;
-  if(enCours){ LEC.pause = true; lecCouper(); lecMajBarre(); }
-  const fmt = v => String(v).replace(".", ",") + "×";
-  openPicker("Vitesse de lecture", LEC_VITESSES.map(v=>({
-    label: fmt(v) + (v === LEC.vitesse ? "  ✓" : ""),
-    sub: v === 1 ? "vitesse normale" : v < 1 ? "plus lent" : "plus rapide",
-    value: String(v)
-  })), v=>{
-    LEC.vitesse = parseFloat(v);
-    lecEcrire("lec-vitesse", String(LEC.vitesse));
-    if(LEC.actif){ LEC.pause = false; lecMajBarre(); lecRelancer(); }
-  });
-}
-function lecChoixVoix(){
-  const vs = voixFrancaises();
-  const cur = lecVoixActuelle() || {};
-  const actuelle = LEC.voixId === VOIX_SYSTEME ? VOIX_SYSTEME : (cur.voiceURI || cur.name);
-  if(!LEC.pause){ LEC.pause = true; lecCouper(); lecMajBarre(); }
-  openPicker("Choisir une voix", [{
-    label: "Voix de l'iPhone" + (actuelle === VOIX_SYSTEME ? "  ✓" : ""),
-    sub: "celle de Réglages › Accessibilité › Contenu énoncé · souvent la plus naturelle",
-    value: VOIX_SYSTEME
-  }].concat(vs.map(v=>({
-    label: v.name + ((v.voiceURI || v.name) === actuelle ? "  ✓" : ""),
-    sub: [lecQualite(v) ? "voix " + lecQualite(v) : "", v.lang, v.localService ? "sur l'appareil" : "en ligne"]
-           .filter(Boolean).join(" · "),
-    value: v.voiceURI || v.name
-  }))), nom=>{
-    lecEcrire("lec-voix", nom);
-    LEC.voix = nom === VOIX_SYSTEME ? null : (vs.find(v=>(v.voiceURI || v.name) === nom) || null);
-    LEC.voixId = nom === VOIX_SYSTEME ? VOIX_SYSTEME : (LEC.voix ? lecIdVoix(LEC.voix) : "");
-    LEC.motsSignales = false;              // la nouvelle voix signale peut-être autrement
-    toast("Voix choisie.");
-    if(LEC.actif){ LEC.pause = false; lecMajBarre(); lecRelancer(); }
-  });
-}
-
-const LEC_ICO = {
-  play:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>',
-  pause:'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6.5" y="5" width="4" height="14" rx="1.2"/><rect x="13.5" y="5" width="4" height="14" rx="1.2"/></svg>',
-  prev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5v14"/><path d="M18 6l-8 6 8 6z" fill="currentColor"/></svg>',
-  next:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 5v14"/><path d="M6 6l8 6-8 6z" fill="currentColor"/></svg>',
-  close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
-  voix:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>'
-};
-function lecBarre(){
-  if(LEC.bar) LEC.bar.remove();
-  const bar = el("div","lec-bar");
-  const b = (cls, html, label, fn)=>{
-    const x = el("button","lec-btn " + cls);
-    x.type = "button"; x.innerHTML = html; x.setAttribute("aria-label", label);
-    x.addEventListener("click", e=>{ e.stopPropagation(); haptic(); fn(); });
-    bar.appendChild(x); return x;
-  };
-  b("lec-voix", LEC_ICO.voix, "Choisir la voix", lecChoixVoix);
-  b("lec-prev", LEC_ICO.prev, "Section précédente", ()=>lecAller(-1));
-  b("lec-play", LEC_ICO.pause, "Pause", lecPlayPause);
-  b("lec-next", LEC_ICO.next, "Section suivante", ()=>lecAller(1));
-  b("lec-speed", "", "Vitesse", lecVitesse);
-  b("lec-close", LEC_ICO.close, "Arrêter la lecture", lecteurStop);
-  document.body.appendChild(bar);
-  LEC.bar = bar;
-  lecMajBarre();
-  requestAnimationFrame(()=>bar.classList.add("show"));
-}
-function lecMajBarre(){
-  if(!LEC.bar) return;
-  const p = LEC.bar.querySelector(".lec-play");
-  p.innerHTML = LEC.pause ? LEC_ICO.play : LEC_ICO.pause;
-  p.setAttribute("aria-label", LEC.pause ? "Reprendre" : "Pause");
-  LEC.bar.querySelector(".lec-speed").textContent = String(LEC.vitesse).replace(".", ",") + "×";
-}
-// Le bouton posé en haut d'un chapitre.
-function lecteurBouton(root){
-  const x = el("button","lec-start");
-  x.type = "button";
-  x.innerHTML = LEC_ICO.voix + "<span>Écouter ce chapitre</span>";
-  x.addEventListener("click",()=>{ haptic(); lecteurStart(root); });
-  return x;
-}
-// Écran verrouillé ou app en arrière-plan : iOS coupe la voix, on se met en pause.
-document.addEventListener("visibilitychange",()=>{
-  if(document.hidden && LEC.actif && !LEC.pause){ LEC.pause = true; lecCouper(); lecMajBarre(); lecLibererEcran(); }
-});
-
 // Rend les sections d'un chapitre dans n'importe quel conteneur.
 function renderSectionsInto(box, ch){
-  lecteurStop();
-  if(TTS_OK && (ch.sections||[]).length) box.appendChild(lecteurBouton(box));
   (ch.sections||[]).forEach(sec=>{
     const block = el("div","section");
     const title = el("h2","section-title"); title.textContent = sec.title || "";
@@ -3662,8 +2669,7 @@ function subFollowOf(it){
 }
 
 // Suivre toute une matière : les chapitres publiés plus tard arrivent tout seuls.
-function followSubject(c, subjectTitle, itemId){
-  const source = { title:subjectTitle, itemId };
+function followSubject(c, subjectTitle){
   if(isSubFollowed(c.id, subjectTitle)){
     const f = follows().find(x=>x.type === "subject" && x.class_id === c.id && x.subject_title === subjectTitle);
     const sj = f && SUBJECTS.find(x=>x.id === f.subject_id);
@@ -3681,7 +2687,7 @@ function followSubject(c, subjectTitle, itemId){
           f.subject_id = subjId;
           saveContent(); injectFollowed();
           toast("Déplacée."); openClass(c);
-        }, source), 320);
+        }), 320);
       }
     });
     return;
@@ -3693,7 +2699,7 @@ function followSubject(c, subjectTitle, itemId){
       toast("Matière suivie. Les nouveaux chapitres arriveront seuls.");
       openClass(c);
     });
-  }, source);
+  });
 }
 
 // Le nom de la matière où un chapitre suivi est rangé.
@@ -3704,75 +2710,14 @@ function matiereDeSuivi(itemId){
   return sj ? sj.title : null;
 }
 
-// source = { title, itemId } : la matière d'origine, dans la classe.
-// Si je n'ai pas de matière de ce nom, on propose de la créer telle quelle
-// (même nom, même UE, même ECUE, même semestre), en un seul geste.
-const sansAccents = t => (t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-  .replace(/[\u2019\u2018`\u00b4]/g, "'").replace(/\s+/g, " ").toLowerCase().trim();
-async function metaDistante(itemId){
-  if(!itemId) return null;
-  let pl = SHARED_CACHE[itemId];
-  if(!pl || !pl.meta){
-    try{
-      const out = await api("items_fetch", { ids:[itemId] });
-      pl = (out.items || [])[0]?.payload;
-      if(pl) SHARED_CACHE[itemId] = pl;
-    }catch(e){}
-  }
-  return (pl && pl.meta) || null;
-}
-// Si la publication ne porte pas l'UE et l'ECUE (publiée avant qu'on les ajoute),
-// on les retrouve dans le programme de référence, par le nom de la matière.
-function metaDepuisDonnees(titre){
-  const d = (typeof DATA_SUBJECTS !== "undefined" ? DATA_SUBJECTS : [])
-    .find(x=>sansAccents(x.title) === sansAccents(titre));
-  if(!d) return null;
-  const u = DATA_UES[d.ue] || {};
-  return { ecue:d.ecue || "", ue_num:String(u.num || ""), ue_title:u.title || "", sem:u.sem || null };
-}
-function creerMatiereDepuis(titre, meta){
-  const sems = Object.values(UES).map(u=>u.sem).filter(Boolean);
-  const sem = (meta && meta.sem) || curSemestre || (sems.length ? Math.min(...sems) : 1);
-  const ueKey = trouverOuCreerUE(sem, meta ? meta.ue_title : "", meta ? meta.ue_num : "");
-  const id = newId();
-  SUBJECTS.push({ id, ue:ueKey, ects:0, ecue:(meta && meta.ecue) || "", title:titre, _own:true,
-                  cm:[], td:[], fc:[], qcm:[], oq:[], tr:[], dev:[], auteurs:[] });
-  SEMESTRES[id] = sem;
-  saveContent();
-  return id;
-}
-async function pickMatiere(titre, onPick, source){
-  const cibles = SUBJECTS.slice()
-    .sort((a,b)=>a.title.localeCompare(b.title, "fr", { sensitivity:"base" }))
-    .map(s=>({ label:s.title, sub:(UES[s.ue] && UES[s.ue].title) || "", value:s.id }));
-  let meta = null;
-  if(source && source.title){
-    const k = cibles.findIndex(c=>sansAccents(c.label) === sansAccents(source.title));
-    if(k >= 0){
-      // j'ai déjà une matière de ce nom : on la met en tête
-      const m = cibles.splice(k, 1)[0];
-      m.sub = "même nom que dans la classe";
-      m.accent = true;
-      cibles.unshift(m);
-    }else{
-      meta = (await metaDistante(source.itemId)) || metaDepuisDonnees(source.title);
-      const bouts = [];
-      if(meta && meta.ue_num) bouts.push("UE " + meta.ue_num);
-      if(meta && meta.ecue)   bouts.push("ECUE " + meta.ecue);
-      if(meta && meta.sem)    bouts.push("semestre " + meta.sem);
-      cibles.unshift({ label:"+  Créer « " + source.title + " »",
-        sub: bouts.length ? bouts.join(" · ") : "une nouvelle matière, avec ce nom",
-        value:"__creer__", accent:true });
-    }
-  }
+function pickMatiere(titre, onPick){
+  const cibles = SUBJECTS.map(s=>({
+    label: s.title,
+    sub: (UES[s.ue] && UES[s.ue].title) || "",
+    value: s.id
+  }));
   if(!cibles.length){ toast("Crée d'abord une matière où le ranger."); return; }
-  openPicker(titre, cibles, v=>{
-    if(v === "__creer__"){
-      const id = creerMatiereDepuis(source.title, meta);
-      toast("Matière « " + source.title + " » créée.");
-      onPick(id);
-    }else onPick(v);
-  });
+  openPicker(titre, cibles, onPick);
 }
 
 // Déplacer un chapitre suivi vers une autre matière.
@@ -3785,7 +2730,7 @@ function moveFollow(it){
     injectFollowed();
     toast("Déplacé.");
     openSharedItem(it);
-  }, { title:it.subject_title, itemId:it.id });
+  });
 }
 
 function followItem(it){
@@ -3797,7 +2742,7 @@ function followItem(it){
       const sj = SUBJECTS.find(x=>x.id === subjId);
       if(sj) openSubject(subjId);
     });
-  }, { title:it.subject_title, itemId:it.id });
+  });
 }
 
 function unfollowItem(itemId){
@@ -3884,8 +2829,7 @@ function publishChapitre(type, ch, subjectTitle){
     openPicker("Publier dans quelle classe ?",
       list.map(c=>({ label:c.name, sub:c.role === "owner" ? "créateur" : "adjoint", value:c.id })),
       classId=>{
-        const payload = { label:ch.label, sections:ch.sections||[], recap:ch.recap||[],
-          meta: metaMatiere(SUBJECTS.find(x=>x.title === subjectTitle) || curSubj) };
+        const payload = { label:ch.label, sections:ch.sections||[], recap:ch.recap||[] };
         publierOuMettreAJour(classId, type === "cm" ? "cm" : "td", subjectTitle, payload)
           .then(r=>toast(r === "maj" ? "Mis à jour." : "Publié."))
           .catch(()=>toast("Publication refusée."));
@@ -3951,9 +2895,7 @@ function editSemestre(sem){
 
 function confirmerSuppressionMatiere(sub){
   const sem = SEMESTRES[sub.id];
-  confirmer("Supprimer « " + sub.title + " » ?",
-    "La matière et tout son contenu seront supprimés. C'est définitif.",
-    "Supprimer", ()=>{
+  openForm("Supprimer « " + sub.title + " »", [], "Annuler", ()=>{}, ()=>{
     const i = SUBJECTS.findIndex(x=>x.id === sub.id);
     if(i >= 0) SUBJECTS.splice(i,1);
     delete SEMESTRES[sub.id];
@@ -4184,7 +3126,6 @@ function refreshFab(id){
 }
 
 function showScreen(id){
-  lecteurStop();
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.getElementById("screen-"+id).classList.add("active");
   // le canvas <html> peint toute la surface (sous les barres Safari + safe areas PWA)
@@ -5153,53 +4094,10 @@ function markSubjectSeen(id){
   const list = seenSubjects();
   if(!list.includes(id)){ list.push(id); try{ localStorage.setItem(SEEN_KEY, JSON.stringify(list)); }catch(e){} }
 }
-// « Nouveau », c'est factuel : un chapitre (CM ou TD) que je n'ai encore jamais ouvert.
-// Il cesse d'être nouveau dès qu'il s'affiche à l'écran.
-var VUS_KEY = "revision_chapitres_vus_v1";
-var VUS = null;
-function vusCharger(){
-  if(VUS) return VUS;
-  try{ VUS = JSON.parse(localStorage.getItem(VUS_KEY) || "null"); }catch(e){ VUS = null; }
-  if(!VUS || typeof VUS !== "object"){
-    // les matières ne sont pas encore chargées : on attend, sinon tout paraîtrait nouveau
-    const nbChap = SUBJECTS.reduce((n,sj)=>n + (sj.cm||[]).length + (sj.td||[]).length, 0);
-    if(!nbChap){ VUS = null; return {}; }
-    // première fois : ce qui est déjà dans les matières que j'avais ouvertes compte comme vu,
-    // pour que seuls les vrais ajouts apparaissent comme nouveaux
-    VUS = {};
-    const deja = seenSubjects();
-    SUBJECTS.forEach(sj=>{
-      if(!deja.includes(sj.id)) return;
-      ["cm","td"].forEach(t=>(sj[t]||[]).forEach(ch=>{ VUS[cleVu(sj, t, ch)] = 1; }));
-    });
-    vusSave(false);
-  }
-  return VUS;
-}
-function vusSave(sync){ try{ localStorage.setItem(VUS_KEY, JSON.stringify(VUS)); }catch(e){} if(sync !== false) scheduleSync(); }
-function cleVu(sj, type, ch){ return sj.id + "|" + type + "|" + (ch && ch.label || ""); }
-function chapitreNouveau(sj, type, ch){ return !!ch && !vusCharger()[cleVu(sj, type, ch)]; }
-function marquerVu(sj, type, ch){
-  const v = vusCharger(), k = cleVu(sj, type, ch);
-  if(!ch || v[k]) return;
-  v[k] = 1; vusSave();
-}
-// les chapitres jamais ouverts d'une matière : [{ type, idx, ch }]
-function nouveauxDe(sj){
-  const out = [];
-  ["cm","td"].forEach(t=>(sj[t]||[]).forEach((ch,idx)=>{ if(chapitreNouveau(sj, t, ch)) out.push({ type:t, idx, ch }); }));
-  return out;
-}
-// matières qui ont au moins un chapitre jamais ouvert
+// matières avec du contenu, jamais ouvertes en révision
 function newSubjects(){
-  return SUBJECTS.filter(s => nouveauxDe(s).length > 0);
-}
-// ouvrir directement le premier chapitre nouveau d'une matière
-function ouvrirNouveau(sj){
-  const n = nouveauxDe(sj)[0];
-  curSemestre = SEMESTRES[sj.id];
-  openSubject(sj.id);
-  if(n) ouvrirChapitre(n.type, n.idx);
+  const seen = seenSubjects();
+  return SUBJECTS.filter(s => totalCards(s) > 0 && !seen.includes(s.id));
 }
 
 // Le bloc « À savoir » : nouveaux cours + échéances annotées, une ligne chacun.
@@ -5259,17 +4157,19 @@ function renderKnowBlock(){
     box.appendChild(t);
     const card = el("div","know-card");
     news.slice(0,3).forEach(sub=>{
-      const nv = nouveauxDe(sub);
       const row = el("button","know-row");
-      const quoi = nv.length === 1 ? nv[0].ch.label : nv.length + " nouveaux chapitres";
       row.innerHTML = `
         <span class="know-dot new"></span>
         <span class="know-txt">
-          <span class="know-tag new">${esc(quoi)}</span>
+          <span class="know-tag new">Nouveau</span>
           <span class="know-name">${esc(sub.title)}</span>
         </span>
         <span class="know-when">→</span>`;
-      row.addEventListener("click",()=>{ haptic(); ouvrirNouveau(sub); });
+      row.addEventListener("click",()=>{
+        haptic();
+        curSemestre = SEMESTRES[sub.id];
+        openSubject(sub.id);
+      });
       card.appendChild(row);
     });
     if(news.length > 3){
@@ -5527,13 +4427,12 @@ function renderDashboard(){
 
   // à réviser — priorité 4, une ligne discrète
   const withContent = SUBJECTS.filter(s => totalCards(s) > 0);
-  // le nombre de matières, pas de cartes : un millier de cartes, c'est écrasant
-  const totalDue = withContent.filter(s=>dueCount(s) > 0).length;
+  const totalDue = withContent.reduce((n,s)=>n+dueCount(s), 0);
   if(totalDue > 0){
     const bar = el("button","review-bar rise");
     bar.innerHTML = `
       <span class="rb-count">${totalDue}</span>
-      <span class="rb-text">matière${totalDue>1?"s":""} à réviser</span>
+      <span class="rb-text">carte${totalDue>1?"s":""} à revoir</span>
       <span class="rb-go">Réviser →</span>`;
     bar.addEventListener("click",()=>{ haptic(); startGlobalSession(); });
     box.appendChild(bar);
@@ -5549,18 +4448,10 @@ function makeEcueCard(s){
   const hasContent = totalQ>0 || (s.cm&&s.cm.length) || (s.td&&s.td.length);
   const card=el("button","ecue-card");
   let status;
-  const nv = nouveauxDe(s).length;
-  // À jour : tous les CM et TD marqués révisés. À réviser : une partie, ou aucun.
-  const chs = ["cm","td"].flatMap(t=>(s[t]||[]).map(ch=>({ t, ch })));
-  const nRev = chs.filter(x=>estRevise(s, x.t, x.ch)).length;
-  if(!chs.length && !hasContent) status=`<span class="ecue-status empty">À remplir</span>`;
-  else if(!chs.length) status=``;
-  else if(nRev === chs.length) status=`<span class="ecue-status ajour">✓ À jour</span>`;
-  else {
-    // un seul badge : les nouveautés d'abord, sinon où j'en suis
-    const detail = nv ? (nv === 1 ? "1 nouveau" : nv + " nouveaux") : nRev ? nRev + "/" + chs.length : "";
-    status=`<span class="ecue-status areviser">À réviser${detail ? " · " + detail : ""}</span>`;
-  }
+  if(!hasContent) status=`<span class="ecue-status empty">À remplir</span>`;
+  else if(prog.allDone && prog.started) status=`<span class="ecue-status done">Maîtrisé</span>`;
+  else if(prog.started) status=`<span class="ecue-status started">En cours</span>`;
+  else status=`<span class="ecue-status new">Nouveau</span>`;
   card.innerHTML=`
     <div class="ecue-top">
       <span class="ecue-num">${esc(s.ecue)}</span>
@@ -5608,7 +4499,7 @@ function renderSemestres(){
     card.innerHTML=`
       <div class="sem-tile-top">
         <div class="sem-badge">${sem%2 ? "📚" : "🧠"}</div>
-        ${dues.length ? `<span class="sem-due">${dues.length} à réviser</span>` : ``}
+        ${due>0 ? `<span class="sem-due">${due}</span>` : ``}
       </div>
       <div class="sem-name">Semestre ${sem}</div>
       <div class="sem-meta">${list.length} matières</div>
@@ -5666,21 +4557,16 @@ function renderSubjectCards(sem){
   resolveAllLangs();
   const list=SUBJECTS.filter(s=>(SEMESTRES[s.id]||5)===sem);
   const wrap=document.getElementById("subj-cards"); wrap.innerHTML="";
-  // le cercle suit les matières « À jour » : tous leurs CM et TD marqués révisés
-  const avecCours = list.filter(s=>(s.cm||[]).length + (s.td||[]).length > 0);
-  const aJour = avecCours.filter(s=>["cm","td"].every(t=>(s[t]||[]).every(ch=>estRevise(s, t, ch)))).length;
-  const pct = avecCours.length ? Math.round(aJour/avecCours.length*100) : 0;
+  const started=list.filter(s=>getSubjectProgress(s).started).length;
+  const pct=list.length?Math.round(started/list.length*100):0;
   const ueCount=new Set(list.map(s=>s.ue)).size;
   const circ=2*Math.PI*18, offset=circ-(pct/100)*circ;
   document.getElementById("subjects-eyebrow").textContent="Semestre "+sem;
   const ov=document.getElementById("overview");
-  const msg = !avecCours.length ? "Prêt à commencer ?"
-    : aJour === 0 ? "Prêt à commencer ?"
-    : aJour === avecCours.length ? "Tout est à jour, bravo !"
-    : aJour + " matière" + (aJour > 1 ? "s" : "") + " à jour sur " + avecCours.length;
+  const msg = started===0 ? "Prête à commencer ?" : started===list.length ? "Tout est lancé, continue !" : "Bien joué, continue !";
   ov.innerHTML=`
     <div class="overview-ring"><svg width="44" height="44"><circle class="overview-ring-bg" cx="22" cy="22" r="18"/><circle class="overview-ring-fill" cx="22" cy="22" r="18" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/></svg><div class="overview-ring-num">${pct}%</div></div>
-    <div class="overview-text"><div class="overview-title">${msg}</div><div class="overview-sub">${list.length} matières${list.length > avecCours.length ? ", dont " + (list.length - avecCours.length) + " à remplir" : ""} · ${ueCount} UE</div></div>`;
+    <div class="overview-text"><div class="overview-title">${msg}</div><div class="overview-sub">${list.length} matières · ${ueCount} UE</div></div>`;
   // UE rangées dans l'ordre croissant de leur numéro, quel que soit l'ordre de création
   // « 19.2 » se lit comme 19 puis 2, pas comme le nombre 19,2 :
   // sinon 2.10 passerait avant 2.2. On compare donc segment par segment.
@@ -5846,19 +4732,9 @@ function renderCoursePane(type){
   thumb.style.transform = `translateX(calc(${chIdx} * (100% + 2px)))`;
   sel.appendChild(thumb);
   chapters.forEach((ch,i)=>{
-    const opt=el("button","chap-opt"+(i===chIdx?" active":"")+(estRevise(curSubj,type,ch)?" revise":"")+(i!==chIdx && chapitreNouveau(curSubj,type,ch)?" nouveau":""));
-    opt.innerHTML = `<span class="rv-dot"></span>` + esc(ch.label);
-    opt.addEventListener("click",()=>{
-      // toucher le chapitre déjà ouvert : le marquer révisé (ou l'enlever)
-      if(i === chIdx){
-        haptic();
-        const r = basculerRevise(curSubj, type, ch);
-        toast(r ? "✓ Marqué révisé" : "Plus marqué révisé");
-        renderCoursePane(type);
-        return;
-      }
-      if(type==="cm")curCmIdx=i; else curTdIdx=i; renderCoursePane(type);
-    });
+    const opt=el("button","chap-opt"+(i===chIdx?" active":""));
+    opt.textContent=ch.label;
+    opt.addEventListener("click",()=>{ if(type==="cm")curCmIdx=i; else curTdIdx=i; renderCoursePane(type); });
     sel.appendChild(opt);
   });
   const row = el("div","chap-row");
@@ -5885,16 +4761,11 @@ function renderCoursePane(type){
     r.textContent = "Version modifiée · rétablir l'originale";
     r.addEventListener("click",()=>{
       haptic();
-      confirmer("Rétablir la version d'origine ?", "Tes modifications sur ces chapitres seront perdues.", "Rétablir", ()=>retablirOriginal(type));
+      openForm("Rétablir la version d'origine", [], "Annuler", ()=>{}, ()=>retablirOriginal(type));
     });
     pane.appendChild(r);
   }
   const ch=chapters[chIdx];
-  marquerVu(curSubj, type, ch);
-  const pActive = sel.querySelectorAll(".chap-opt")[chIdx];
-  if(pActive) pActive.classList.remove("nouveau");
-  lecteurStop();
-  if(TTS_OK && (ch.sections||[]).length) pane.appendChild(lecteurBouton(pane));
   (ch.sections||[]).forEach((sec,si)=>{
     const block=el("div","section");
     block.dataset.sec = si;
@@ -5912,34 +4783,6 @@ function renderCoursePane(type){
     r.innerHTML=`<div class="recap-label">📌 À retenir</div>`+ch.recap.map((x,i)=>`<div class="recap-item"><span class="recap-num">${i+1}</span><span>${esc(x)}</span></div>`).join("");
     pane.appendChild(r);
   }
-  // marquer le chapitre comme révisé
-  const rv = el("button","rv-switch" + (estRevise(curSubj, type, ch) ? " on" : ""));
-  rv.type = "button";
-  const majRv = ()=>{
-    const on = estRevise(curSubj, type, ch);
-    rv.classList.toggle("on", on);
-    rv.innerHTML = `<span>${on ? "Révisé ✓" : "Marquer comme révisé"}<span class="rv-sub">${on ? "Touche pour enlever" : "Tu peux aussi retoucher " + esc(ch.label) + " en haut"}</span></span><span class="sw"></span>`;
-  };
-  majRv();
-  rv.addEventListener("click",()=>{
-    haptic();
-    basculerRevise(curSubj, type, ch);
-    majRv();
-    // la pastille du haut suit
-    const pastille = pane.querySelectorAll(".chap-opt")[chIdx];
-    if(pastille) pastille.classList.toggle("revise", estRevise(curSubj, type, ch));
-  });
-  pane.appendChild(rv);
-  // le QCM de ce chapitre, directement
-  const nQ = (curSubj.qcm||[]).filter(x=>x && x.ch === ch.label).length;
-  if(nQ){
-    const p = progressionScope(curSubj, "ch:" + ch.label, "qcm");
-    const b = el("button","chap-qcm-btn");
-    b.type = "button";
-    b.innerHTML = `⏱️ QCM de ce ${type === "cm" ? "cours" : "TD"} <span class="cq-sub">· ${p.ok === p.total ? "✓ validé" : p.ok + " / " + p.total + " validés"}</span>`;
-    b.addEventListener("click", ()=>{ haptic(); lancerQCMChapitre(ch.label); });
-    pane.appendChild(b);
-  }
   if(modifiable(ch)){
     const addSec=el("button","add-inline");
     addSec.textContent = "+  Ajouter une section";
@@ -5947,282 +4790,6 @@ function renderCoursePane(type){
     pane.appendChild(addSec);
   }
 }
-// ══════════════════════════════════════════════════
-// RÉVISER PAR CHAPITRE
-// Chaque exercice porte le libellé de son chapitre (champ ch).
-// On peut ainsi réviser un CM ou un TD à part, et le valider petit à petit.
-// ══════════════════════════════════════════════════
-const SCOPES = {};                         // matière → "all" | "ch:<libellé>" | "auteurs"
-var sessionScope = "all";
-function scopeCourant(){
-  const v = curSubj && SCOPES[curSubj.id];
-  if(!v || v === "all") return "all";
-  if(v === "auteurs") return quizAuteurs(curSubj).length ? v : "all";
-  if(v === "grand") return v;
-  // le chapitre peut avoir disparu (renommé, supprimé)
-  return chapitresAReviser(curSubj).some(c=>"ch:"+c.label === v) ? v : "all";
-}
-function choisirScope(v){ if(curSubj) SCOPES[curSubj.id] = v; }
-// les chapitres qui ont au moins un exercice
-function chapitresAReviser(subj){
-  const out = [];
-  ["cm","td"].forEach(type=>{
-    (subj[type]||[]).forEach(ch=>{
-      const n = ["fc","qcm","tr","oq"].reduce((k,m)=>k + (subj[m]||[]).filter(x=>x && x.ch === ch.label).length, 0);
-      if(n) out.push({ type, label:ch.label, n });
-    });
-  });
-  return out;
-}
-// les exercices d'un mode pour un périmètre, avec leur index d'origine (pour la clé)
-function itemsDuScope(subj, m, scope){
-  if(scope === "auteurs") return m === "qcm" ? quizAuteurs(subj).map((item,i)=>({ item, i })) : [];
-  if(scope === "grand"){
-    // tout dedans : les QCM de tous les CM et TD, plus ceux sur les auteurs
-    const reels = (subj[m]||[]).map((item,i)=>({ item, i }));
-    return m === "qcm" ? reels.concat(quizAuteurs(subj).map((item,i)=>({ item, i }))) : reels;
-  }
-  const arr = (subj[m]||[]).map((item,i)=>({ item, i }));
-  if(!scope || scope === "all") return arr;
-  const lab = scope.slice(3);
-  return arr.filter(x=>x.item && x.item.ch === lab);
-}
-// une carte est « validée » quand la dernière réponse était bonne
-function estAcquise(key){ const c = SRS[key]; return !!(c && c.rep > 0); }
-function progressionScope(subj, scope, m){
-  const xs = itemsDuScope(subj, m || "qcm", scope);
-  let ok = 0;
-  xs.forEach(x=>{ if(estAcquise(cardKey(subj.id, m || "qcm", x.item, x.i))) ok++; });
-  return { ok, total:xs.length };
-}
-function nomScope(scope){
-  if(scope === "auteurs") return "Auteurs";
-  if(scope === "grand") return "Le grand QCM";
-  if(scope === "all") return "Toute la matière";
-  return scope.slice(3);
-}
-
-// ── QCM sur les auteurs, fabriqués à partir des fiches ──
-// Toujours les mêmes questions pour une fiche donnée : le suivi des réponses tient d'une fois sur l'autre.
-const QUIZ_AUTEURS_CACHE = {};
-function nzA(t){ return String(t||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[’‘]/g,"'").replace(/\s+/g," ").trim(); }
-function graineDe(str){
-  let h = 2166136261;
-  for(let k=0;k<str.length;k++){ h ^= str.charCodeAt(k); h = Math.imul(h, 16777619); }
-  return ()=>{ h = Math.imul(h ^ (h >>> 15), 2246822507); h = Math.imul(h ^ (h >>> 13), 3266489909); h ^= h >>> 16; return (h >>> 0) / 4294967296; };
-}
-function ficheAuteur(a0){
-  return {
-    nom: String(a0.nom||"").trim(),
-    courant: a0.courant || "", periode: a0.periode || "",
-    texte: a0.these || a0.contrib || "",
-    resume: a0.contrib || "",
-    concepts: Array.isArray(a0.concepts) ? a0.concepts.filter(Boolean) : [],
-    retenir: a0.retenir || ""
-  };
-}
-function nomsPropres(nom){
-  return nzA(nom).split(/\s+et\s+|&|,|\s+/).map(x=>x.trim()).filter(x=>x.length >= 4 && !["avec"].includes(x));
-}
-function memePersonne(a, b){
-  const x = nomsPropres(a), y = nomsPropres(b);
-  return x.some(t=>y.includes(t));
-}
-function masquerNom(txt, nom){
-  let t = String(txt||"");
-  String(nom||"").split(/\s+et\s+|&|,|\s+/).map(x=>x.trim()).filter(x=>x.length >= 4).forEach(mot=>{
-    const re = new RegExp("(^|[^\\p{L}])" + mot.replace(/[.*+?^${}()|[\]\\]/g,"\\$&") + "(?=[^\\p{L}]|$)", "giu");
-    t = t.replace(re, "$1…");
-  });
-  return t;
-}
-function couper(t, n){ t = String(t||"").trim(); return t.length > n ? t.slice(0, n).replace(/\s+\S*$/,"") + "…" : t; }
-function quizAuteurs(subj){
-  if(!subj) return [];
-  const sig = subj.id + "|" + (subj.auteurs||[]).map(a=>a && a.nom).join("|");
-  if(QUIZ_AUTEURS_CACHE[sig]) return QUIZ_AUTEURS_CACHE[sig];
-  const fiches = (subj.auteurs||[]).filter(a=>a && a.nom).map(ficheAuteur);
-  if(fiches.length < 2){ QUIZ_AUTEURS_CACHE[sig] = []; return []; }
-  // de quoi compléter les mauvaises réponses quand la matière a peu d'auteurs
-  const ailleurs = [];
-  SUBJECTS.forEach(s=>{ if(s.id !== subj.id) (s.auteurs||[]).forEach(a=>{ if(a && a.nom) ailleurs.push(ficheAuteur(a)); }); });
-  // les notions de la matière d'abord : des mauvaises réponses venues d'ailleurs seraient trop faciles
-  const notionsIci = [], notionsAilleurs = [];
-  fiches.forEach(f=>f.concepts.forEach(c=>{ if(!notionsIci.some(x=>nzA(x)===nzA(c))) notionsIci.push(c); }));
-  ailleurs.forEach(f=>f.concepts.forEach(c=>{ if(!notionsIci.some(x=>nzA(x)===nzA(c)) && !notionsAilleurs.some(x=>nzA(x)===nzA(c))) notionsAilleurs.push(c); }));
-  const texteComplet = f => nzA([f.texte, f.retenir, f.courant, f.concepts.join(" ")].join(" "));
-  const tirer = (rng, liste, n, ok)=>{
-    const pris = [];
-    const pool = liste.slice();
-    while(pool.length && pris.length < n){
-      const k = Math.floor(rng() * pool.length);
-      const x = pool.splice(k,1)[0];
-      if(ok(x, pris)) pris.push(x);
-    }
-    return pris;
-  };
-  const explication = f => couper(f.nom + " : " + (f.retenir || f.texte), 320);
-  // deux auteurs qui se citent (Bourdieu et Passeron, par exemple) partagent leurs notions :
-  // l'un ne doit jamais servir de mauvaise réponse à l'autre
-  const lies = (f, g)=> memePersonne(f.nom, g.nom)
-    || nomsPropres(g.nom).some(t=>texteComplet(f).includes(t))
-    || nomsPropres(f.nom).some(t=>texteComplet(g).includes(t));
-  const motsForts = t => nzA(t).split(/[^a-z0-9]+/).filter(w=>w.length >= 7);
-  const prochesDe = f => { const m = new Set(); f.concepts.forEach(c=>motsForts(c).forEach(w=>m.add(w))); return m; };
-  const nomsDistincts = (f, rng, exclure)=>{
-    const ok = (g, pris)=> !lies(f, g) && !pris.some(p=>memePersonne(p.nom, g.nom)) && (!exclure || !exclure(g));
-    let d = tirer(rng, fiches, 3, ok);
-    if(d.length < 3) d = d.concat(tirer(rng, ailleurs, 3 - d.length, (g,pris)=>ok(g, d.concat(pris))));
-    return d.map(g=>g.nom);
-  };
-  const out = [];
-  fiches.forEach(f=>{
-    const rng = graineDe(subj.id + f.nom);
-    // 1. les notions → l'auteur, seulement avec des notions qui n'appartiennent qu'à lui ici
-    const propres = f.concepts.filter(c=>!fiches.some(g=>g !== f && texteComplet(g).includes(nzA(c))));
-    if(propres.length){
-      const notions = propres.slice(0, 2);
-      const d = nomsDistincts(f, rng, g=>notions.some(n=>texteComplet(g).includes(nzA(n))));
-      if(d.length === 3) out.push({ ch:"auteurs", q:"Quel auteur associe-t-on à " + notions.map(n=>"« "+n+" »").join(" et ") + " ?", opts:[f.nom, ...d], c:0, e:explication(f) });
-    }
-    // 2. l'auteur → une de ses notions
-    if(f.concepts.length){
-      const bonne = f.concepts[f.concepts.length - 1];
-      const siens = texteComplet(f);
-      const proches = prochesDe(f);
-      const proprietaires = n => [...fiches, ...ailleurs].filter(g=>g.concepts.some(c=>nzA(c)===nzA(n)));
-      const okN = (n, pris)=> nzA(n) !== nzA(bonne) && !siens.includes(nzA(n))
-        && !f.concepts.some(c=>nzA(c)===nzA(n))
-        && !motsForts(n).some(w=>proches.has(w))
-        && !proprietaires(n).some(g=>lies(f, g))
-        && !pris.some(p=>nzA(p)===nzA(n));
-      let d = tirer(rng, notionsIci, 3, okN);
-      if(d.length < 3) d = d.concat(tirer(rng, notionsAilleurs, 3 - d.length, (n,pris)=>okN(n, d.concat(pris))));
-      if(d.length === 3) out.push({ ch:"auteurs", q:"Laquelle de ces notions renvoie à " + f.nom + " ?", opts:[bonne, ...d], c:0, e:explication(f) });
-    }
-    // 3. le portrait → l'auteur
-    // un courant seul est trop vague : il faut aussi la période, ou le résumé d'une ancienne fiche
-    const portrait = (f.courant && f.periode)
-      ? masquerNom(f.courant + " · " + f.periode, f.nom)
-      : (!f.courant && f.resume) ? masquerNom(f.resume, f.nom) : "";
-    if(portrait && portrait.replace(/[…\s.·]/g,"").length > 6){
-      const d = nomsDistincts(f, rng, g=> f.courant && nzA(g.courant) === nzA(f.courant));
-      if(d.length === 3) out.push({ ch:"auteurs", q:"Qui est-ce ? " + couper(portrait, 220), opts:[f.nom, ...d], c:0, e:explication(f) });
-    }
-  });
-  QUIZ_AUTEURS_CACHE[sig] = out;
-  return out;
-}
-
-// ── Barre des périmètres : Tout · CM · TD · Auteurs ──
-function barreScopes(scope){
-  const chs = chapitresAReviser(curSubj);
-  const quizA = quizAuteurs(curSubj);
-  if(!chs.length && !quizA.length) return null;
-  const wrap = el("div");
-  const head = el("div","scope-head");
-  head.innerHTML = `<span>Par chapitre</span><span>QCM validés</span>`;
-  wrap.appendChild(head);
-  const bar = el("div","scope-bar");
-  const puce = (val, titre)=>{
-    const p = progressionScope(curSubj, val, "qcm");
-    const autre = p.total ? null : progressionScope(curSubj, val, "fc");
-    const pr = p.total ? p : autre;
-    const valide = pr.total > 0 && pr.ok === pr.total;
-    const b = el("button","scope-chip" + (val === scope ? " active" : "") + (valide ? " valide" : ""));
-    b.type = "button";
-    const pct = pr.total ? Math.round(pr.ok / pr.total * 100) : 0;
-    const sub = !pr.total ? "—" : valide ? "✓ validé" : pr.ok + " / " + pr.total + (p.total ? "" : " cartes");
-    b.innerHTML = `<span class="sc-top">${esc(titre)}</span><span class="sc-bar"><i style="width:${pct}%"></i></span><span class="sc-sub">${esc(sub)}</span>`;
-    b.addEventListener("click", ()=>{ haptic(); choisirScope(val); renderTrainPane(); });
-    bar.appendChild(b);
-    return b;
-  };
-  puce("all", "Tout");
-  chs.forEach(c=>puce("ch:" + c.label, (c.type === "cm" ? "📖 " : "📝 ") + c.label));
-  if(quizA.length) puce("auteurs", "👤 Auteurs");
-  wrap.appendChild(bar);
-  // garder la pastille choisie dans le champ de vision, sans faire sauter la page
-  requestAnimationFrame(()=>{
-    const act = bar.querySelector(".scope-chip.active");
-    if(act){ bar.style.scrollBehavior = "auto"; bar.scrollLeft = act.offsetLeft - (bar.clientWidth - act.clientWidth) / 2; bar.style.scrollBehavior = ""; }
-  });
-  return wrap;
-}
-// lance directement le QCM d'un chapitre (bouton en bas du cours)
-function lancerQCMChapitre(label){
-  choisirScope("ch:" + label);
-  const t = curTab;
-  retourSession = ()=>{ setTab(t); showScreen("split"); };
-  startSession("qcm");
-}
-// où revenir en fin de session (null = l'onglet Réviser)
-var retourSession = null;
-function quitterSession(){
-  const f = retourSession;
-  if(f) f(); else { setTab(2); showScreen("split"); }
-}
-
-// ── La liste des QCM : le grand, chaque CM, chaque TD, les auteurs ──
-// La liste d'un type d'exercice : tout d'un coup, chaque CM, chaque TD (et les auteurs pour les QCM).
-const CHOIX_MODES = {
-  qcm:{ titre:"QCM", grand:"Le grand QCM", unite:"questions", valide:"Un QCM réussi est validé. Chaque session reprend d'abord ceux qui ne le sont pas encore." },
-  fc: { titre:"Flashcards", grand:"Toutes les flashcards", unite:"cartes", valide:"Une carte notée « Difficile » ou « Facile » est validée. Chaque session reprend d'abord celles qui ne le sont pas encore." },
-  tr: { titre:"Textes à trous", grand:"Tous les textes à trous", unite:"phrases", valide:"Un trou bien rempli est validé. Chaque session reprend d'abord ceux qui ne le sont pas encore." },
-  oq: { titre:"Questions ouvertes", grand:"Toutes les questions", unite:"questions", valide:"Une réponse que tu juges réussie est validée. Chaque session reprend d'abord celles qui ne le sont pas encore." }
-};
-function renderChoix(m){
-  const cfg = CHOIX_MODES[m] || CHOIX_MODES.qcm;
-  document.getElementById("qcmchoix-eyebrow").textContent = curSubj.title;
-  document.getElementById("qcmchoix-titre").textContent = cfg.titre;
-  document.getElementById("qcmchoix-sub").textContent = cfg.valide;
-  const box = document.getElementById("qcmchoix-inner");
-  box.innerHTML = "";
-  const carte = (scope, icone, titre, cls)=>{
-    const p = progressionScope(curSubj, scope, m);
-    if(!p.total) return null;
-    const valide = p.ok === p.total;
-    const b = el("button","qc-card rise" + (cls ? " " + cls : "") + (valide ? " valide" : ""));
-    b.type = "button";
-    const sub = valide ? "✓ validé · " + p.total + " " + cfg.unite
-      : p.ok ? p.ok + " / " + p.total + " validés"
-      : p.total + " " + cfg.unite;
-    b.innerHTML = `<div class="mode-icon">${icone}</div>
-      <div class="qc-info"><div class="qc-name">${esc(titre)}</div><div class="qc-sub">${esc(sub)}</div>
-      <div class="qc-bar"><i style="width:${Math.round(p.ok/p.total*100)}%"></i></div></div>`;
-    b.addEventListener("click",()=>{
-      haptic();
-      choisirScope(scope);
-      retourSession = ()=>renderChoix(m);
-      startSession(m);
-    });
-    return b;
-  };
-  const grand = carte("grand", "🎯", cfg.grand, "grand");
-  if(grand){
-    const sous = grand.querySelector(".qc-sub");
-    sous.textContent = sous.textContent + " · tout dedans";
-    box.appendChild(grand);
-  }
-  const chs = chapitresAReviser(curSubj).filter(c=>(curSubj[m]||[]).some(x=>x && x.ch === c.label));
-  [["cm","Cours","📖"],["td","TD","📝"]].forEach(([type, nom, icone])=>{
-    const liste = chs.filter(c=>c.type === type);
-    if(!liste.length) return;
-    const g = el("div","qc-group"); g.textContent = nom;
-    box.appendChild(g);
-    liste.forEach(c=>{ const b = carte("ch:" + c.label, icone, c.label); if(b) box.appendChild(b); });
-  });
-  if(m === "qcm" && quizAuteurs(curSubj).length){
-    const g = el("div","qc-group"); g.textContent = "Auteurs";
-    box.appendChild(g);
-    box.appendChild(carte("auteurs", "👤", "Les auteurs et leurs notions"));
-  }
-  // les exercices sans chapitre (ajoutés à la main, partagés) restent dans « tout d'un coup »
-  showScreen("qcmchoix");
-  window.scrollTo(0,0);
-}
-function renderQcmChoix(){ renderChoix("qcm"); }
-
 function renderTrainPane(){
   const pane=document.getElementById("pane-2"); pane.innerHTML="";
   const hasTrain=(curSubj.fc&&curSubj.fc.length)||(curSubj.qcm&&curSubj.qcm.length)||(curSubj.oq&&curSubj.oq.length)||(curSubj.tr&&curSubj.tr.length)||(curSubj.auteurs&&curSubj.auteurs.length);
@@ -6234,50 +4801,39 @@ function renderTrainPane(){
     ? `<span class="due-pill">📅 ${dueTotal} carte${dueTotal>1?"s":""} à revoir aujourd'hui</span>`
     : `<span class="due-pill done">✓ Tout est à jour — tu peux réviser en libre</span>`;
   pane.appendChild(intro);
-  const scope = "all";
   const grid=el("div","mode-grid");
   const modes=[
     {m:"fc",icon:"🃏",title:"Flashcards",desc:"Question → retourne → tu te notes"},
     {m:"qcm",icon:"⏱️",title:"QCM",desc:"4 choix · 20 s · explication après"},
     {m:"oq",icon:"✍️",title:"Questions ouvertes",desc:"Rédige, puis compare au corrigé"},
-    {m:"tr",icon:"🧩",title:"Texte à trous",desc:"Le bon mot · 4 choix · 15 s"},
+    {m:"tr",icon:"🧩",title:"Texte à trous",desc:"Le bon mot · 4 choix · 10 s"},
   ];
   modes.forEach(mo=>{
-    const arr=itemsDuScope(curSubj, mo.m, scope);
+    const arr=curSubj[mo.m]||[];
     if(!arr.length) return;
-    let d=0, txt;
-    if(scope === "all"){
-      // cartes dues pour ce mode précis
-      arr.forEach(x=>{ if(srsIsDue(cardKey(curSubj.id,mo.m,x.item,x.i))) d++; });
-      txt = d>0 ? d+" à revoir · "+arr.length+" au total" : mo.desc;
-    } else {
-      // dans un chapitre : ce qu'il reste à valider
-      arr.forEach(x=>{ if(!estAcquise(cardKey(curSubj.id,mo.m,x.item,x.i))) d++; });
-      txt = d>0 ? d+" à valider · "+arr.length+" au total" : "Tout validé · "+arr.length+" au total";
-    }
+    // cartes dues pour ce mode précis
+    let d=0;
+    arr.forEach((item,i)=>{ if(srsIsDue(cardKey(curSubj.id,mo.m,item,i))) d++; });
     const card=el("button","mode-card");
     card.innerHTML=`<div class="mode-icon">${mo.icon}</div>
-      <div class="mode-info"><div class="mode-name">${mo.title}</div><div class="mode-desc">${txt}</div></div>
+      <div class="mode-info"><div class="mode-name">${mo.title}</div><div class="mode-desc">${d>0? d+" à revoir · "+arr.length+" au total" : mo.desc}</div></div>
       <span class="mode-count${d>0?" mode-due":" mode-badge-done"}">${d>0? d : "✓"}</span>`;
-    // chaque type ouvre sa liste : tout d'un coup, chaque CM et TD (et les auteurs pour les QCM)
-    card.querySelector(".mode-desc").textContent = mo.m === "qcm" ? "Le grand QCM, ou par CM, TD et auteurs" : "Tout d'un coup, ou par CM et TD";
-    card.addEventListener("click",()=>{ haptic(); renderChoix(mo.m); });
+    card.addEventListener("click",()=>startSession(mo.m));
     grid.appendChild(card);
   });
   // devoirs corrigés : toujours proposé, même vide, sinon impossible d'en créer un
-  if(scope === "all" && (canEdit() || (curSubj.dev && curSubj.dev.length))){
+  if(canEdit() || (curSubj.dev && curSubj.dev.length)){
     const n = (curSubj.dev||[]).length;
-    const nc = (curSubj.dev||[]).filter(estCorrige).length, nr = n - nc;
     const card=el("button","mode-card");
     card.innerHTML=`<div class="mode-icon">📄</div>
-      <div class="mode-info"><div class="mode-name">Devoirs</div>
-      <div class="mode-desc">${n ? [nr ? nr+" à remplir" : "", nc ? nc+" corrigé"+(nc>1?"s":"") : ""].filter(Boolean).join(" · ") : "Aucun pour l'instant"}</div></div>
-      <span class="mode-count${nr ? " mode-due" : ""}">${n}</span>`;
+      <div class="mode-info"><div class="mode-name">Devoirs corrigés</div>
+      <div class="mode-desc">${n ? "Sujets et corrections" : "Aucun pour l'instant"}</div></div>
+      <span class="mode-count">${n}</span>`;
     card.addEventListener("click",renderDevoirs);
     grid.appendChild(card);
   }
 
-  if((scope === "all" || scope === "auteurs") && curSubj.auteurs && curSubj.auteurs.length){
+  if(curSubj.auteurs && curSubj.auteurs.length){
     const card=el("button","mode-card");
     card.innerHTML=`<div class="mode-icon">👤</div>
       <div class="mode-info"><div class="mode-name">Auteurs</div><div class="mode-desc">Fiches à déplier</div></div>
@@ -6461,247 +5017,75 @@ function marquerDev(){
   curSubj._over.dev = true;
 }
 
-// ══════════════════════════════════════════════════
-// DEVOIRS : à remplir (je rédige) ou corrigés (sujet puis correction)
-// ══════════════════════════════════════════════════
-// Mes réponses aux devoirs à remplir : enregistrées chez moi et synchronisées.
-var DEVREP_KEY = "revision_devrep_v1";
-var DEVREP = {};
-try{ DEVREP = JSON.parse(localStorage.getItem(DEVREP_KEY) || "{}") || {}; }catch(e){ DEVREP = {}; }
-function devrepSave(){ try{ localStorage.setItem(DEVREP_KEY, JSON.stringify(DEVREP)); }catch(e){} scheduleSync(); }
-function devrepCle(d, qi){ return (curSubj ? curSubj.id : "") + "|" + (d.label || "") + "|" + qi; }
-
-// Les questions d'un devoir : celles qui sont fournies, ou celles numérotées dans le sujet.
-function questionsDe(d){
-  if(Array.isArray(d.questions) && d.questions.length) return { intro:"", qs:d.questions };
-  const txt = String(d.enonce || "");
-  const lignes = txt.split(/\n/);
-  const qs = []; const intro = [];
-  lignes.forEach(l=>{
-    const m = l.match(/^\s*(\d+)\s*[\).:]\s*(.+)$/);
-    if(m){
-      let q = m[2].trim(), pts = "";
-      const p = q.match(/\(([\d,.]+\s*(?:points?|pts?))\)\s*$/i);
-      if(p){ pts = p[1]; q = q.slice(0, p.index).trim(); }
-      qs.push({ q, pts });
-    } else if(qs.length && l.trim()){
-      qs[qs.length-1].q += " " + l.trim();        // suite de la question sur la ligne suivante
-    } else if(l.trim()){
-      intro.push(l.trim());
-    }
-  });
-  return qs.length >= 2 ? { intro:intro.join("\n"), qs } : { intro:"", qs:[] };
-}
-function estCorrige(d){
-  return !!(d.correction || (Array.isArray(d.questions) && d.questions.some(q=>q && q.corr)));
-}
-let DEV_ONGLET = {};       // matière → "remplir" | "corriges"
-
 function renderDevoirs(){
   showScreen("devoirs");
   const box = document.getElementById("dev-inner");
   box.innerHTML = "";
   const list = devList();
-  const aRemplir = [], corriges = [];
-  list.forEach((d,i)=>{ (estCorrige(d) ? corriges : aRemplir).push({ d, i }); });
-  let onglet = DEV_ONGLET[curSubj.id] || (aRemplir.length || !corriges.length ? "remplir" : "corriges");
 
-  // deux onglets, comme Cours / TD
-  const seg = el("div","chap-seg dev-seg");
-  const thumb = el("div","chap-thumb");
-  thumb.style.width = "calc((100% - 8px)/2)";
-  thumb.style.transform = onglet === "corriges" ? "translateX(calc(100% + 2px))" : "translateX(0)";
-  seg.appendChild(thumb);
-  [["remplir","✏️ À remplir",aRemplir.length],["corriges","✅ Corrigés",corriges.length]].forEach(([k,lbl,n])=>{
-    const b = el("button","chap-opt" + (onglet === k ? " active" : ""));
-    b.type = "button";
-    b.innerHTML = esc(lbl) + `<span class="dev-n">${n}</span>`;
-    b.addEventListener("click",()=>{ haptic(); DEV_ONGLET[curSubj.id] = k; renderDevoirs(); });
-    seg.appendChild(b);
-  });
-  box.appendChild(seg);
-
-  const liste = onglet === "remplir" ? aRemplir : corriges;
-  if(!liste.length){
+  if(!list.length){
     const e = el("div","empty-note");
-    e.textContent = onglet === "remplir"
-      ? "Aucun devoir à remplir dans cette matière."
+    e.textContent = canEdit()
+      ? "Aucun devoir pour l'instant. Ajoute un sujet et sa correction pour les réviser."
       : "Aucun devoir corrigé dans cette matière.";
     box.appendChild(e);
   }
-  liste.forEach(({d,i})=> box.appendChild(onglet === "remplir" ? carteARemplir(d,i) : carteCorrigee(d,i)));
+
+  list.forEach((d,i)=>{
+    const card = el("div","dev-card");
+    const top  = el("div","dev-top");
+    const nom  = el("div","dev-name"); nom.textContent = d.label || "Devoir";
+    top.appendChild(nom);
+    card.appendChild(top);
+
+    if(d.enonce){
+      const l = el("div","dev-lbl"); l.textContent = "Sujet";
+      const t = el("div","dev-txt"); t.textContent = d.enonce;
+      l.style.marginTop = "0";
+      card.appendChild(l); card.appendChild(t);
+    }
+    if(d.correction){
+      const btn = el("button","dev-show");
+      btn.type = "button";
+      btn.textContent = "Voir la correction";
+      const zone = el("div","dev-corr");
+      zone.hidden = true;
+      const l2 = el("div","dev-lbl"); l2.textContent = "Correction";
+      const t2 = el("div","dev-txt"); t2.textContent = d.correction;
+      zone.appendChild(l2); zone.appendChild(t2);
+      btn.addEventListener("click",()=>{
+        haptic();
+        zone.hidden = !zone.hidden;
+        btn.textContent = zone.hidden ? "Voir la correction" : "Masquer la correction";
+      });
+      card.appendChild(btn); card.appendChild(zone);
+    }
+    // appui long pour modifier ou supprimer, comme ailleurs
+    if(canEdit() && !d._shared) onLongPress(card, ()=>editDevoir(i));
+    box.appendChild(card);
+  });
 
   if(canEdit()){
     const add = el("button","add-inline");
-    add.textContent = "+  Ajouter un devoir";
+    add.textContent = "+  Ajouter un devoir corrigé";
     add.addEventListener("click",()=>{ haptic(); editDevoir(null); });
     box.appendChild(add);
   }
 }
 
-// en-tête commun : titre, document à lire, chapitre lié
-function enteteDevoir(card, d){
-  const top = el("div","dev-top");
-  const nom = el("div","dev-name"); nom.textContent = d.label || "Devoir";
-  top.appendChild(nom); card.appendChild(top);
-  if(d.doc){
-    const doc = el("div","dev-doc");
-    doc.innerHTML = `<span>📄</span><span><b>Document à lire :</b> ${esc(d.doc)}</span>`;
-    card.appendChild(doc);
-  }
-  if(d.ch){
-    const ou = [["cm",curSubj.cm||[]],["td",curSubj.td||[]]]
-      .map(([t,a])=>({ t, k:a.findIndex(c=>c.label === d.ch) })).find(x=>x.k >= 0);
-    if(ou){
-      const b = el("button","dev-lien");
-      b.type = "button";
-      b.textContent = (ou.t === "cm" ? "📖 Revoir le " : "📝 Revoir le ") + d.ch;
-      b.addEventListener("click", e=>{ e.stopPropagation(); haptic(); ouvrirChapitre(ou.t, ou.k); });
-      card.appendChild(b);
-    }
-  }
-}
-function textareaQuiGrandit(t){
-  const ajuster = ()=>{ t.style.height = "auto"; t.style.height = Math.max(96, t.scrollHeight + 2) + "px"; };
-  t.addEventListener("input", ajuster);
-  requestAnimationFrame(ajuster);
-}
-
-function carteARemplir(d, i){
-  const card = el("div","dev-card");
-  enteteDevoir(card, d);
-  const { intro, qs } = questionsDe(d);
-  if(!qs.length){
-    // sujet libre : une seule zone de réponse
-    if(d.enonce){
-      const l = el("div","dev-lbl"); l.textContent = "Sujet";
-      const t = el("div","dev-txt"); t.textContent = d.enonce;
-      card.appendChild(l); card.appendChild(t);
-    }
-    card.appendChild(zoneReponse(d, 0));
-  } else {
-    if(intro){ const t = el("div","dev-txt"); t.textContent = intro; card.appendChild(t); }
-    const av = el("div","dev-avance");
-    const majAvance = ()=>{
-      const n = qs.filter((_,k)=>(DEVREP[devrepCle(d,k)]||"").trim()).length;
-      av.className = "dev-avance" + (n === qs.length ? " fini" : "");
-      av.innerHTML = `<span>${n === qs.length ? "✓ Tout est rédigé" : n + " / " + qs.length + " rédigées"}</span><span class="bar"><i style="width:${Math.round(n/qs.length*100)}%"></i></span>`;
-    };
-    majAvance();
-    card.appendChild(av);
-    qs.forEach((q,k)=>{
-      const bloc = el("div","dev-q");
-      const head = el("div","dev-q-head");
-      head.innerHTML = `<span class="dev-q-num">${k+1}</span><span class="dev-q-txt">${esc(q.q)}</span>` + (q.pts ? `<span class="dev-pts">${esc(q.pts)}</span>` : "");
-      bloc.appendChild(head);
-      bloc.appendChild(zoneReponse(d, k, majAvance));
-      card.appendChild(bloc);
-    });
-  }
-  if(canEdit() && !d._shared){
-    const b = el("button","dev-show ghost");
-    b.type = "button";
-    b.textContent = "J'ai la correction";
-    b.addEventListener("click",()=>{ haptic(); editDevoir(i); });
-    card.appendChild(b);
-    onLongPress(card.querySelector(".dev-top"), ()=>editDevoir(i));
-  }
-  return card;
-}
-function zoneReponse(d, k, apres){
-  const w = el("div");
-  const t = document.createElement("textarea");
-  t.className = "dev-rep";
-  t.placeholder = "Ta réponse…";
-  t.value = DEVREP[devrepCle(d,k)] || "";
-  const etat = el("div","dev-etat");
-  let minuterie = null;
-  t.addEventListener("input",()=>{
-    etat.textContent = "…";
-    clearTimeout(minuterie);
-    minuterie = setTimeout(()=>{
-      const v = t.value;
-      if(v.trim()) DEVREP[devrepCle(d,k)] = v; else delete DEVREP[devrepCle(d,k)];
-      devrepSave();
-      etat.textContent = "Enregistré";
-      if(apres) apres();
-    }, 600);
-  });
-  textareaQuiGrandit(t);
-  w.appendChild(t); w.appendChild(etat);
-  return w;
-}
-
-function carteCorrigee(d, i){
-  const card = el("div","dev-card");
-  enteteDevoir(card, d);
-  const qs = Array.isArray(d.questions) ? d.questions : [];
-  if(d.enonce){
-    const l = el("div","dev-lbl"); l.textContent = "Sujet";
-    const t = el("div","dev-txt"); t.textContent = d.enonce;
-    l.style.marginTop = d.doc ? "" : "0";
-    card.appendChild(l); card.appendChild(t);
-  }
-  // questions corrigées une par une
-  qs.forEach((q,k)=>{
-    const bloc = el("div","dev-q");
-    const head = el("div","dev-q-head");
-    head.innerHTML = `<span class="dev-q-num">${k+1}</span><span class="dev-q-txt">${esc(q.q)}</span>` + (q.pts ? `<span class="dev-pts">${esc(q.pts)}</span>` : "");
-    bloc.appendChild(head);
-    const mine = (DEVREP[devrepCle(d,k)]||"").trim();
-    if(mine){ const l = el("div","dev-lbl"); l.textContent = "Ta réponse"; const t = el("div","dev-txt"); t.textContent = mine; bloc.appendChild(l); bloc.appendChild(t); }
-    if(q.corr) bloc.appendChild(boutonCorrection(q.corr));
-    card.appendChild(bloc);
-  });
-  if(d.correction) card.appendChild(boutonCorrection(d.correction));
-  // appui long pour modifier ou supprimer, comme ailleurs
-  if(canEdit() && !d._shared) onLongPress(card, ()=>editDevoir(i));
-  return card;
-}
-function boutonCorrection(texte){
-  const w = el("div");
-  const btn = el("button","dev-show");
-  btn.type = "button";
-  btn.textContent = "Voir la correction";
-  const zone = el("div","dev-corr");
-  zone.hidden = true;
-  const l2 = el("div","dev-lbl"); l2.textContent = "Correction";
-  const t2 = el("div","dev-txt"); t2.textContent = texte;
-  zone.appendChild(l2); zone.appendChild(t2);
-  btn.addEventListener("click",()=>{
-    haptic();
-    zone.hidden = !zone.hidden;
-    btn.textContent = zone.hidden ? "Voir la correction" : "Masquer la correction";
-  });
-  w.appendChild(btn); w.appendChild(zone);
-  return w;
-}
-
 function editDevoir(i){
   const list = devList();
   const d = i === null ? null : list[i];
-  // un devoir à questions fournies : on garde ses questions, on modifie le reste
-  const avecQuestions = d && Array.isArray(d.questions) && d.questions.length;
-  openForm(d ? "Modifier le devoir" : "Nouveau devoir", [
+  openForm(d ? "Modifier le devoir" : "Nouveau devoir corrigé", [
     { key:"label", label:"Titre", value:d ? d.label : "", placeholder:"Contrôle du 12 novembre" },
-    { key:"enonce", label:avecQuestions ? "Consigne (les questions restent)" : "Sujet", type:"area", value:d ? (d.enonce||"") : "",
-      placeholder:"L'énoncé, la consigne, les questions numérotées 1), 2)…" },
+    { key:"enonce", label:"Sujet", type:"area", value:d ? (d.enonce||"") : "",
+      placeholder:"L'énoncé, la consigne, les questions…" },
     { key:"correction", label:"Correction", type:"area", value:d ? (d.correction||"") : "",
-      placeholder:"Facultatif. Sans correction, le devoir va dans « À remplir »." }
+      placeholder:"La correction, telle qu'elle a été donnée." }
   ], "Enregistrer", v=>{
     if(!v.label) return "Donne un titre à ce devoir.";
-    if(!v.enonce && !v.correction && !avecQuestions) return "Il faut au moins un sujet ou une correction.";
-    if(d){
-      // si le titre change, mes réponses suivent
-      if(d.label !== v.label){
-        Object.keys(DEVREP).forEach(k=>{
-          const pre = curSubj.id + "|" + d.label + "|";
-          if(k.startsWith(pre)){ DEVREP[curSubj.id + "|" + v.label + "|" + k.slice(pre.length)] = DEVREP[k]; delete DEVREP[k]; }
-        });
-        devrepSave();
-      }
-      d.label = v.label; d.enonce = v.enonce; d.correction = v.correction;
-    }
+    if(!v.enonce && !v.correction) return "Il faut au moins un sujet ou une correction.";
+    if(d){ d.label = v.label; d.enonce = v.enonce; d.correction = v.correction; }
     else  list.push({ label:v.label, enonce:v.enonce, correction:v.correction });
     marquerDev();
     saveContent(); renderDevoirs();
@@ -6794,29 +5178,16 @@ function startSession(m){
   curMode=m; idx=0; score=0; answers=[];
   flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv=""; oqEcrit="";
   globalSession = false;
-  sessionScope = scopeCourant();
   // Chaque entrée porte sa matière + son mode (permet aussi les sessions multi-matières).
-  const all = itemsDuScope(curSubj, m, sessionScope).map(({item,i})=>({
+  const all = (curSubj[m]||[]).map((item,i)=>({
     // la clé se calcule sur la question d'origine, le mélange ne la perturbe pas
     item: (m === "qcm" || m === "tr") ? melangerQCM(item) : item,
     mode:m, subj:curSubj, key: cardKey(curSubj.id,m,item,i)
   }));
-  if(!all.length) return;
-  if(sessionScope === "grand"){
-    // tout dedans : ce qui n'est pas validé d'abord, puis le reste
-    queue = shuffle(all.filter(x=> !estAcquise(x.key) )).concat(shuffle(all.filter(x=> estAcquise(x.key) )));
-    sessionDueOnly = false;
-  } else if(sessionScope !== "all"){
-    // un chapitre : on reprend ce qui n'est pas encore validé, sinon tout en libre
-    const aValider = shuffle(all.filter(x=> !estAcquise(x.key) ));
-    queue = aValider.length ? aValider : shuffle(all);
-    sessionDueOnly = false;
-  } else {
-    const due    = shuffle(all.filter(x=>  srsIsDue(x.key) ));
-    const notDue = shuffle(all.filter(x=> !srsIsDue(x.key) ));
-    queue = (due.length ? due : notDue);
-    sessionDueOnly = due.length > 0;
-  }
+  const due    = shuffle(all.filter(x=>  srsIsDue(x.key) ));
+  const notDue = shuffle(all.filter(x=> !srsIsDue(x.key) ));
+  queue = (due.length ? due : notDue);
+  sessionDueOnly = due.length > 0;
   clearInterval(timerInt);
   showScreen("session");
   renderSess();
@@ -6827,7 +5198,6 @@ function startGlobalSession(){
   idx=0; score=0; answers=[];
   flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv=""; oqEcrit="";
   globalSession = true;
-  sessionScope = "all";
   const all = [];
   SUBJECTS.forEach(s=>{
     ["fc","qcm","oq","tr"].forEach(m=>{
@@ -7094,8 +5464,7 @@ function showResults(){
   const pct=queue.length? score/queue.length : 0;
   const emoji=pct>=.8?"🏆":pct>=.5?mk():"💪";
   const msg=pct>=.8?"Franchement bien joué. T'avais le niveau depuis le début.":pct>=.5?"Pas mal du tout. Encore un effort et c'est dans la poche.":"C'est un début ! Relis les points ratés et retente.";
-  // le score d'un chapitre ne doit pas écraser celui de la matière entière
-  if(!globalSession && curSubj && (sessionScope === "all" || sessionScope === "grand")) stats[curSubj.id+"_"+curMode]={score,total:queue.length};
+  if(!globalSession && curSubj) stats[curSubj.id+"_"+curMode]={score,total:queue.length};
   // reste à revoir : sur la matière (session simple) ou sur tout (session globale)
   const restant = globalSession
     ? SUBJECTS.reduce((n,s)=>n+dueCount(s),0)
@@ -7109,7 +5478,6 @@ function showResults(){
     ${restant>0
       ? `<div class="due-pill">📅 Il te reste ${restant} carte${restant>1?"s":""} à revoir aujourd'hui</div>`
       : `<div class="due-pill done">✓ Tout est à jour pour aujourd'hui</div>`}
-    ${(!globalSession && sessionScope !== "all") ? (()=>{ const p = progressionScope(curSubj, sessionScope, curMode); return p.total ? `<p class="res-scope">${esc(nomScope(sessionScope))} : <b>${p.ok === p.total ? "✓ tout validé" : p.ok + " / " + p.total + " validés"}</b></p>` : ""; })() : ""}
     <div class="results-detail"><div class="results-detail-label">Détail</div>${rows}</div>`;
   const row=el("div","btn-row");
   if(globalSession){
@@ -7124,7 +5492,7 @@ function showResults(){
     const b1=el("button","btn ghost"); b1.textContent="🔁 Recommencer";
     b1.addEventListener("click",()=>startSession(curMode)); row.appendChild(b1);
     const b2=el("button","btn"); b2.textContent="Terminer";
-    b2.addEventListener("click",()=>quitterSession());
+    b2.addEventListener("click",()=>{ setTab(2); showScreen("split"); });
     row.appendChild(b2);
   }
   wrap.appendChild(row);
@@ -7142,19 +5510,19 @@ function doGrade(grade, question){
   if(grade === 0) queue.push(queue[idx]);
   advance();
 }
-// ── Texte à trous : même moteur que le QCM, phrase à compléter et 15 s ──
+// ── Texte à trous : même moteur que le QCM, phrase à compléter et 10 s ──
 function renderTR(cur,body){
   const wrap=el("div","rise");
   if(!confirmed){
-    timerVal=15;
-    const tr=el("div","timer-row"); tr.innerHTML=`<span class="timer-lbl" id="tlbl">⏰ 15 s</span>`; wrap.appendChild(tr);
+    timerVal=10;
+    const tr=el("div","timer-row"); tr.innerHTML=`<span class="timer-lbl" id="tlbl">⏰ 10 s</span>`; wrap.appendChild(tr);
     const tt=el("div","timer-track"); tt.innerHTML=`<div class="timer-bar" id="tbar" style="width:100%"></div>`; wrap.appendChild(tt);
     clearInterval(timerInt);
     timerInt=setInterval(()=>{
       timerVal--;
       const l=document.getElementById("tlbl"), b=document.getElementById("tbar");
-      if(l){ l.textContent="⏰ "+timerVal+" s"; l.className="timer-lbl"+(timerVal<=5?" red":""); }
-      if(b){ b.style.width=(timerVal/15*100)+"%"; b.className="timer-bar"+(timerVal<=5?" red":""); }
+      if(l){ l.textContent="⏰ "+timerVal+" s"; l.className="timer-lbl"+(timerVal<=3?" red":""); }
+      if(b){ b.style.width=(timerVal/10*100)+"%"; b.className="timer-bar"+(timerVal<=3?" red":""); }
       if(timerVal<=0){ clearInterval(timerInt); if(!confirmed) doQCM(-1,cur); }
     },1000);
   }
@@ -7401,8 +5769,7 @@ document.getElementById("btn-class-menu").addEventListener("click",()=>{ haptic(
 document.getElementById("pick-sheet").addEventListener("click",e=>{ if(e.target.id==="pick-sheet") closePicker(); });
 document.getElementById("fs-ok").addEventListener("click",()=>{ haptic(); if(fsSubmit) fsSubmit(); });
 document.getElementById("form-sheet").addEventListener("click",e=>{ if(e.target.id==="form-sheet") closeForm(); });
-document.getElementById("btn-session-back").addEventListener("click",()=>{ clearInterval(timerInt); if(globalSession){ renderSemestres(); showScreen("semestres"); } else if(retourSession){ quitterSession(); } else { showScreen("split"); } });
-document.getElementById("btn-qcmchoix-back").addEventListener("click",()=>{ haptic(); setTab(2); showScreen("split"); });
+document.getElementById("btn-session-back").addEventListener("click",()=>{ clearInterval(timerInt); if(globalSession){ renderSemestres(); showScreen("semestres"); } else { showScreen("split"); } });
 document.getElementById("btn-auteurs-back").addEventListener("click",()=>{ setTab(2); showScreen("split"); });
 document.getElementById("btn-dev-back").addEventListener("click",()=>{ setTab(2); showScreen("split"); });
 document.getElementById("btn-plan-back").addEventListener("click",()=>{ showScreen("edt"); });
@@ -7415,8 +5782,9 @@ document.getElementById("btn-edt").addEventListener("click",()=>{ haptic(); open
 // Appui long pour la remplacer par celle de sa propre formation.
 document.getElementById("btn-news").addEventListener("click",()=>{
   haptic();
-  openSitesSheet();
+  window.open(newsUrl(), "_blank", "noopener");
 });
+onLongPress(document.getElementById("btn-news"), editNewsUrl);
 // entrée unique vers les semestres
 document.getElementById("sem-entry").addEventListener("click",()=>{ haptic(); showScreen("semchoice"); });
 document.getElementById("btn-semchoice-back").addEventListener("click",()=>{ renderSemestres(); showScreen("semestres"); });
@@ -7605,12 +5973,7 @@ function applyContent(row){
         sj[type] = o[type].map(normChapitre);
         sj._over[type] = true;
       });
-      if(Array.isArray(o.dev)){
-        // les devoirs ajoutés depuis dans data.js ne doivent pas disparaître derrière une ancienne retouche
-        const deja = new Set(o.dev.map(x=>x && x.label));
-        sj.dev = o.dev.concat((sj.dev||[]).filter(x=>x && !deja.has(x.label)));
-        sj._over.dev = true;
-      }
+      if(Array.isArray(o.dev)){ sj.dev = o.dev; sj._over.dev = true; }
     });
     // chapitres ajoutés dans l'app à une matière de data.js
     const extra = (c.extra && typeof c.extra === "object") ? c.extra : {};
@@ -7633,27 +5996,7 @@ function applyContent(row){
   subs.forEach(x=>SUBJECTS.push(x));
   Object.keys(SEMESTRES).forEach(k=>delete SEMESTRES[k]);
   fusionnerUEsDoublons();
-  if(!isCiva() && reparerMatieresSansCode()) saveContent();
   SUBJECTS.forEach(x=>{ if(UES[x.ue]) SEMESTRES[x.id] = UES[x.ue].sem; });
-}
-
-// Une matière créée depuis une classe sans ses codes atterrit dans « Mes matières »,
-// sans ECUE. Si son nom est celui d'une matière du programme, on lui rend
-// son ECUE et on la range dans la bonne UE. On ne touche à rien d'autre.
-function reparerMatieresSansCode(){
-  let change = false;
-  SUBJECTS.forEach(sj=>{
-    if(!sj._own || sj.ecue) return;
-    const u = UES[sj.ue];
-    if(u && u.title && u.title !== "Mes matières") return;   // rangée à la main : on respecte
-    const m = metaDepuisDonnees(sj.title);
-    if(!m || !m.sem) return;
-    sj.ecue = m.ecue;
-    sj.ue = trouverOuCreerUE(m.sem, m.ue_title, m.ue_num);
-    change = true;
-  });
-  if(change) nettoyerUEsVides();
-  return change;
 }
 
 // Sauvegarde (locale toujours, distante si dispo). Groupée pour ne pas spammer.
@@ -7670,7 +6013,7 @@ async function pushState(){
     PSYCHO_STEPS.forEach(s=>{ psy[s.id] = !!s.done; });
     const patch = {
       theme: document.documentElement.getAttribute("data-theme") || "girly",
-      srs: Object.assign({}, SRS, { __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP, __revises: REVISES, __vus: vusCharger() }),
+      srs: Object.assign({}, SRS, { __edtnotes: EDTNOTES, __memo: MEMO }),
       psycho: psy,
       settings: USER_SETTINGS
     };
@@ -7717,20 +6060,7 @@ function applyRemote(row){
       };
       try{ localStorage.setItem(MEMO_KEY, JSON.stringify(MEMO)); }catch(e){}
     }
-    if(incoming.__devrep && typeof incoming.__devrep === "object"){
-      DEVREP = incoming.__devrep;
-      try{ localStorage.setItem(DEVREP_KEY, JSON.stringify(DEVREP)); }catch(e){}
-    }
-    if(incoming.__revises && typeof incoming.__revises === "object"){
-      REVISES = incoming.__revises;
-      try{ localStorage.setItem(REVISES_KEY, JSON.stringify(REVISES)); }catch(e){}
-    }
-    if(incoming.__vus && typeof incoming.__vus === "object"){
-      // on fusionne : un chapitre vu sur un appareil l'est partout
-      VUS = Object.assign({}, vusCharger(), incoming.__vus);
-      try{ localStorage.setItem(VUS_KEY, JSON.stringify(VUS)); }catch(e){}
-    }
-    delete incoming.__edtnotes; delete incoming.__memo; delete incoming.__devrep; delete incoming.__revises; delete incoming.__vus;
+    delete incoming.__edtnotes; delete incoming.__memo;
     SRS = incoming;
     try{ localStorage.setItem(SRS_KEY, JSON.stringify(SRS)); }catch(e){}
   }
