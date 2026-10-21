@@ -581,6 +581,12 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 .sem-tile .sem-meta{font-size:12px;color:var(--text-mute);margin:3px 0 14px;}
 .sem-tile .sem-sous{font-size:12.5px;font-weight:600;color:var(--accent);margin-top:4px;}
 .sem-tile .sem-sous + .sem-meta{margin-top:2px;}
+/* semestres rangés par sous-titre (ex. L1 Humanités, L3 SESS), Projet Psycho à part */
+.sem-groupe{grid-column:1/-1;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--accent);margin:10px 2px -12px;display:flex;align-items:center;gap:10px;}
+.sem-groupe::after{content:"";flex:1;height:1px;background:var(--border);}
+.sem-groupe:first-child{margin-top:0;}
+.sem-grid.groupee .sem-tile .sem-sous{display:none;}
 .pen.pen-bas{top:auto;bottom:8px;right:8px;}
 .sem-tile .sem-bar{height:5px;background:var(--surface-2,rgba(255,255,255,.06));border-radius:3px;overflow:hidden;}
 .sem-tile .sem-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:3px;
@@ -819,6 +825,13 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
   transition:background .2s,color .2s;}
 .home-btn svg{width:18px;height:18px;}
 .home-btn:active{background:var(--accent-soft);color:var(--accent);}
+/* « Revenir à l'accueil », en haut de la feuille Changer de matière */
+.sheet-home{display:flex;align-items:center;gap:12px;width:calc(100% - 28px);flex-shrink:0;margin:0 14px 14px;box-sizing:border-box;padding:12px 14px;
+  border-radius:14px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;
+  font-family:var(--font-text);font-size:15px;font-weight:600;text-align:left;transition:background .2s,transform .18s var(--ease-spring);}
+.sheet-home:active{transform:scale(.98);background:var(--accent-soft);}
+.sheet-home-ic{width:34px;height:34px;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex-shrink:0;}
+.sheet-home-ic svg{width:18px;height:18px;}
 .fab.show{display:flex;}
 .fab:active{transform:scale(.92);}
 /* crayon d'édition, posé sur la zone qu'il modifie */
@@ -914,6 +927,14 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 .lec-calque.lec-phrase>div{background:var(--accent);opacity:.10;}
 .lec-calque.lec-mot>div{background:var(--accent);opacity:.42;}
 .lec-start:active{transform:scale(.97);}
+/* bouton flottant « Sommaire » */
+.somm-flot{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 18px);transform:translate(-50%,24px);opacity:0;
+  pointer-events:none;z-index:30;display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;
+  background:var(--accent);color:#fff;border:0;font-family:var(--font-text);font-weight:700;font-size:13.5px;
+  box-shadow:0 8px 24px var(--shadow);transition:opacity .2s,transform .25s var(--ease-spring);}
+.somm-flot.on{opacity:1;pointer-events:auto;transform:translate(-50%,0);}
+.pane[data-somm]{padding-bottom:64px;}
+.somm-flot svg{width:16px;height:16px;}
 .lec-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 14px;}
 .lec-row .lec-start{margin:0;}
 .lec-start.partage{background:var(--surface);color:var(--text-soft);}
@@ -1208,6 +1229,15 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
   background:var(--accent-soft);color:var(--accent);}
 .chap-pick-ic svg{width:16px;height:16px;}
 .chap-row>.chap-pick{margin-bottom:0;}
+/* partager : un carré de la même hauteur que le sélecteur, aligné avec lui */
+.chap-row:has(>.chap-pick){align-items:stretch;}
+.chap-share{flex-shrink:0;aspect-ratio:1;min-width:50px;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  background:var(--seg-thumb);border:1px solid var(--border);border-radius:14px;box-shadow:0 2px 8px var(--shadow);
+  color:var(--text-soft);transition:transform .18s var(--ease-spring),color .2s;}
+.chap-share svg{width:20px;height:20px;}
+.chap-share:active{transform:scale(.94);color:var(--accent);}
+/* ajouter un chapitre : en bas de la liste des chapitres */
+#pick-list .chap-ajout{width:100%;margin:4px 0 0;}
 .chap-ligne{display:flex;align-items:center;gap:12px;}
 .chap-ligne .rv-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;background:var(--text-mute);opacity:.55;}
 .chap-ligne.revise .rv-dot{background:var(--ok);opacity:1;box-shadow:0 0 7px var(--ok);}
@@ -1622,9 +1652,6 @@ textarea::placeholder{color:var(--text-mute);}
   <div class="split-head">
     <div class="head-row">
       <button class="back-btn" id="btn-split-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Matières</button>
-      <button class="home-btn" id="btn-split-home" aria-label="Accueil">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5"/><path d="M5.5 9.5V20h13V9.5"/><path d="M9.5 20v-6h5v6"/></svg>
-      </button>
       <button class="subj-chip" id="split-chip"></button>
     </div>
     <div class="segment">
@@ -1743,6 +1770,10 @@ textarea::placeholder{color:var(--text-mute);}
   <div class="sheet">
     <div class="sheet-grip"></div>
     <div class="sheet-title">Changer de matière</div>
+    <button class="sheet-home" id="btn-split-home" type="button">
+      <span class="sheet-home-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5"/><path d="M5.5 9.5V20h13V9.5"/><path d="M9.5 20v-6h5v6"/></svg></span>
+      <span class="sheet-home-txt">Revenir à l'accueil</span>
+    </button>
     <div class="sheet-list" id="sheet-list"></div>
   </div>
 </div>
@@ -3030,7 +3061,7 @@ async function publishFromClass(c){
     if(n("fc") + n("qcm") + n("oq") + n("dev") + n("tr")){
       const k = cleEnvoi("revision", sj.title), e = etat(k);
       out.push({ label:"Exercices de révision",
-        sub:`${n("fc")} fiches · ${n("qcm")} QCM · ${n("tr")} trous · ${n("oq")} questions` + (e.sub ? " · " + e.sub : ""),
+        sub:`${n("fc")} fiches · ${nbQCM(r.qcm)} QCM · ${n("tr")} trous · ${n("oq")} questions ouvertes` + (e.sub ? " · " + e.sub : ""),
         deja:e.deja, value:"revision", actions:retirer(k, "les exercices de révision") });
     }
     return out;
@@ -3123,7 +3154,7 @@ async function openSharedItem(it){
   if(it.kind === "revision"){
     const n = c => (payload[c]||[]).length;
     const d = el("div","empty-note");
-    d.innerHTML = `${n("fc")} fiches · ${n("qcm")} QCM · ${n("tr")} textes à trous · ${n("oq")} questions · ${n("dev")} devoirs<br>
+    d.innerHTML = `${n("fc")} fiches · ${nbQCM(payload.qcm)} QCM · ${n("tr")} textes à trous · ${n("oq")} questions ouvertes · ${n("dev")} devoirs<br>
       Ajoute-les à une de tes matières pour les réviser.`;
     box.appendChild(d);
   }else{
@@ -3723,10 +3754,12 @@ async function partagerTexte(titre, texte){
   try{ await navigator.clipboard.writeText(texte); toast("Copié. Colle-le où tu veux."); }
   catch(e){ toast("Impossible de partager depuis ce navigateur."); }
 }
-function boutonPartager(type, ch){
-  const b = el("button","lec-start partage");
+function boutonPartager(type, ch, icone){
+  const b = el("button", icone ? "chap-share" : "lec-start partage");
   b.type = "button";
-  b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M7.5 7.5L12 3l4.5 4.5"/><path d="M5 12v6.5A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V12"/></svg><span>Partager</span>';
+  const svg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M7.5 7.5L12 3l4.5 4.5"/><path d="M5 12v6.5A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V12"/></svg>';
+  b.innerHTML = icone ? svg : svg + '<span>Partager</span>';
+  b.setAttribute("aria-label", "Partager ce chapitre");
   b.addEventListener("click",()=>{
     haptic();
     const sj = curSubj;
@@ -3734,7 +3767,7 @@ function boutonPartager(type, ch){
     if(!nQ){ partagerTexte(sj.title + " · " + ch.label, texteChapitre(sj, type, ch, false)); return; }
     openPicker("Partager « " + ch.label + " »", [
       { label:"Le cours", sub:"Les sections et « À retenir »", value:"cours" },
-      { label:"Le cours et ses QCM", sub:nQ + " QCM avec les bonnes réponses, pour les faire vérifier", value:"qcm" }
+      { label:"Le cours et son QCM", sub:"Avec les bonnes réponses, pour le faire vérifier", value:"qcm" }
     ], v=>partagerTexte(sj.title + " · " + ch.label, texteChapitre(sj, type, ch, v === "qcm")));
   });
   return b;
@@ -5009,8 +5042,10 @@ function boutonChapitre(type, chapters, chIdx){
   b.type = "button";
   b.innerHTML = `<span class="rv-dot"></span><span class="chap-pick-txt">${esc(libelleChapitre(ch.label))}</span>` +
     (nouveaux ? `<span class="chap-pick-new">${nouveaux} nouveau${nouveaux > 1 ? "x" : ""}</span>` : "") +
-    (chapters.length > 1 ? `<span class="chap-pick-nb">${chIdx + 1}/${chapters.length}</span><span class="chap-pick-ic">${IC_HAUT_BAS}</span>` : "");
-  if(chapters.length > 1) b.addEventListener("click",()=>{ haptic(); listeChapitres(type, chapters, chIdx); });
+    (chapters.length > 1 ? `<span class="chap-pick-nb">${chIdx + 1}/${chapters.length}</span>` : "") +
+    // la liste s'ouvre aussi avec un seul chapitre quand on peut en ajouter (le + est en bas)
+    (chapters.length > 1 || canEdit() ? `<span class="chap-pick-ic">${IC_HAUT_BAS}</span>` : "");
+  if(chapters.length > 1 || canEdit()) b.addEventListener("click",()=>{ haptic(); listeChapitres(type, chapters, chIdx); });
   return b;
 }
 function listeChapitres(type, chapters, chIdx){
@@ -5025,7 +5060,7 @@ function listeChapitres(type, chapters, chIdx){
     const r = el("button","cal-row chap-ligne" + (i === chIdx ? " actif" : "") + (rev ? " revise" : "") + (nouv ? " nouveau" : ""));
     r.type = "button";
     r.innerHTML = `<span class="rv-dot"></span><div class="cal-txt"><div class="cal-name">${esc(libelleChapitre(c.label))}</div>
-      <div class="cal-url">${etat}${nQ ? " · " + nQ + " QCM" : ""}</div></div>` +
+      <div class="cal-url">${etat}${nQ ? " · 1 QCM" : ""}</div></div>` +
       (i === chIdx ? `<span class="chap-ligne-ok">${COCHE_SVG}</span>` : "");
     r.addEventListener("click",()=>{
       haptic(); closePicker();
@@ -5036,6 +5071,13 @@ function listeChapitres(type, chapters, chIdx){
     });
     box.appendChild(r);
   });
+  if(canEdit()){
+    const add = el("button","add-inline chap-ajout");
+    add.type = "button";
+    add.textContent = type === "cm" ? "+  Ajouter un CM" : "+  Ajouter un TD";
+    add.addEventListener("click",()=>{ haptic(); closePicker(); setTimeout(()=>addChapitre(type), 320); });
+    box.appendChild(add);
+  }
   document.getElementById("pick-sheet").classList.add("open");
 }
 
@@ -5139,7 +5181,7 @@ function openEvSheet(e){
   // liste des matières du site
   resolveAllLangs();
   const sel = document.getElementById("ev-subj");
-  sel.innerHTML = `<option value="">— aucune —</option>` +
+  sel.innerHTML = `<option value="">Aucune</option>` +
     SUBJECTS.map(x=>`<option value="${x.id}">${esc(x.ecue)} · ${esc(x.title)}</option>`).join("");
   sel.value = n.subj || "";
   document.getElementById("ev-note").value = n.note || "";
@@ -5658,7 +5700,7 @@ function renderMemo(box){
     row.querySelector(".mo-keep").addEventListener("click",()=>{
       haptic();
       const label = (o.note.type==="controle"?"Contrôle : ":o.note.type==="devoir"?"À rendre : ":"") +
-                    o.title + (o.note.note ? " — " + o.note.note : "");
+                    o.title + (o.note.note ? " · " + o.note.note : "");
       MEMO.todos.push({ text: label, done:false });
       memoSave();
       EDTNOTES[o.key] = Object.assign({}, o.note, { dismissed:true });
@@ -5904,11 +5946,12 @@ function renderSemestres(){
       </div>
       <div class="sem-name">${esc(titreSemestre(sem))}</div>
       ${t.sous ? `<div class="sem-sous">${esc(t.sous)}</div>` : ``}
-      <div class="sem-meta">${list.length} matières</div>
+      <div class="sem-meta">${list.length} matière${list.length > 1 ? "s" : ""}</div>
       <div class="sem-bar"><div class="sem-bar-fill" style="width:${pct}%"></div></div>
       <div class="sem-pct">${tot ? pct+" %" : "vide"}</div>`;
     card.addEventListener("click",()=>{ curSemestre=sem; renderSubjectCards(sem); showScreen("subjects"); });
-    tuiles.push({ cle:"sem:" + sem, el:card, defaut:"Semestre " + sem, icone:sem%2 ? "📚" : "🧠", sem });
+    tuiles.push({ cle:"sem:" + sem, el:card, defaut:"Semestre " + sem, icone:sem%2 ? "📚" : "🧠", sem,
+                  groupe:(t.sous || "").trim() });
   });
 
   // Projet Psycho : réservé à Civa et Nana, invisible pour les autres comptes
@@ -5922,13 +5965,34 @@ function renderSemestres(){
       <div class="sem-bar"><div class="sem-bar-fill" style="width:${psyProgress()}%"></div></div>
       <div class="sem-pct">${psyProgress()} %</div>`;
     psy.addEventListener("click",()=>{ haptic(); renderPsycho(); });
-    tuiles.push({ cle:"psy", el:psy, defaut:psyTitle(), icone:"💜", sousDefaut:"Passerelles · masters" });
+    tuiles.push({ cle:"psy", el:psy, defaut:psyTitle(), icone:"💜", sousDefaut:"Passerelles · masters", groupe:"\u0000psy" });
   }
 
   // l'ordre choisi d'abord, les nouvelles tuiles ensuite dans l'ordre naturel
   const ordre = Array.isArray(USER_SETTINGS.ordreTuiles) ? USER_SETTINGS.ordreTuiles : [];
   const rang = c => { const k = ordre.indexOf(c); return k < 0 ? 1000 : k; };
-  tuiles.map((t,k)=>({ t, k })).sort((a,b)=>(rang(a.t.cle) - rang(b.t.cle)) || (a.k - b.k)).forEach(({ t },si)=>{
+  const triees = tuiles.map((t,k)=>({ t, k })).sort((a,b)=>(rang(a.t.cle) - rang(b.t.cle)) || (a.k - b.k)).map(o=>o.t);
+  // regroupement par sous-titre : chaque groupe à la place de sa première tuile,
+  // les semestres sans sous-titre ensemble, le Projet Psycho toujours à part
+  const groupes = [];
+  triees.forEach(t=>{
+    let g = groupes.find(x=>x.cle === t.groupe);
+    if(!g){ g = { cle:t.groupe, tuiles:[] }; groupes.push(g); }
+    g.tuiles.push(t);
+  });
+  const avecTitres = groupes.length > 1;
+  wrap.classList.toggle("groupee", avecTitres);
+  const nomGroupe = c => c === "\u0000psy" ? "Projets" : (c || "Autres semestres");
+  let si = 0;
+  groupes.forEach(g=>{
+    if(avecTitres){
+      const h = el("div","sem-groupe rise"); h.textContent = nomGroupe(g.cle);
+      h.style.animationDelay = (0.12 + si*0.04) + "s";
+      wrap.appendChild(h);
+    }
+    g.tuiles.forEach(t=>placerTuile(t, si++));
+  });
+  function placerTuile(t, si){
     t.el.style.animationDelay = (0.14 + si*0.04) + "s";
     if(!canEdit()){ wrap.appendChild(t.el); return; }
     onLongPress(t.el, ()=>personnaliserTuile(t, tuiles));
@@ -5936,7 +6000,7 @@ function renderSemestres(){
     const pen = w.querySelector && w.querySelector(".pen");
     if(pen) pen.classList.add("pen-bas");
     wrap.appendChild(w);
-  });
+  }
 }
 
 // ── Personnaliser les tuiles de l'accueil : titre, sous-titre, icône, ordre ──
@@ -6021,7 +6085,7 @@ function renderSubjectCards(sem){
     : aJour + " matière" + (aJour > 1 ? "s" : "") + " à jour sur " + avecCours.length;
   ov.innerHTML=`
     <div class="overview-ring"><svg width="44" height="44"><circle class="overview-ring-bg" cx="22" cy="22" r="18"/><circle class="overview-ring-fill" cx="22" cy="22" r="18" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/></svg><div class="overview-ring-num">${pct}%</div></div>
-    <div class="overview-text"><div class="overview-title">${msg}</div><div class="overview-sub">${list.length} matières${list.length > avecCours.length ? ", dont " + (list.length - avecCours.length) + " à remplir" : ""} · ${ueCount} UE</div></div>`;
+    <div class="overview-text"><div class="overview-title">${msg}</div><div class="overview-sub">${list.length} matière${list.length > 1 ? "s" : ""}${list.length > avecCours.length ? ", dont " + (list.length - avecCours.length) + " à remplir" : ""} · ${ueCount} UE</div></div>`;
   // UE rangées dans l'ordre croissant de leur numéro, quel que soit l'ordre de création
   // « 19.2 » se lit comme 19 puis 2, pas comme le nombre 19,2 :
   // sinon 2.10 passerait avant 2.2. On compare donc segment par segment.
@@ -6151,6 +6215,71 @@ function onSwipe(elm, opts){
   }, {passive:true});
 }
 
+// ── Sommaire et progression de lecture d'un chapitre ──
+const IC_SOMMAIRE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg>';
+const SOMMAIRE_MIN = 4;   // en dessous, pas de sommaire
+function minutesLecture(ch){
+  const mots = JSON.stringify(ch.sections||[]).replace(/<[^>]+>/g," ").split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(mots / 200));
+}
+function allerSection(pane, i){
+  const b = pane.querySelector('.section[data-sec="' + i + '"]');
+  if(!b) return;
+  const h = document.querySelector("#screen-split .split-head").offsetHeight;
+  window.scrollTo({ top:b.getBoundingClientRect().top + window.scrollY - h - 12, behavior:"smooth" });
+}
+function sectionsVisibles(){
+  const scr = document.getElementById("screen-split");
+  if(!scr || !scr.classList.contains("active")) return null;
+  const pane = scr.querySelector(".pane.active");
+  if(!pane || pane.id === "pane-2" || !pane.dataset.somm) return null;
+  return { scr, pane, secs:[...pane.querySelectorAll(".section[data-sec]")] };
+}
+function majProgression(){
+  const flot = document.getElementById("somm-flot");
+  if(!flot) return;
+  const v = sectionsVisibles();
+  if(!v || !v.secs.length){ flot.classList.remove("on"); return; }
+  const h = v.scr.querySelector(".split-head").offsetHeight;
+  let cur = 0;
+  v.secs.forEach((s,i)=>{ if(s.getBoundingClientRect().top < h + 90) cur = i; });
+  flot.classList.add("on");
+  flot.querySelector(".somm-flot-txt").textContent = "Sommaire · " + (cur + 1) + "/" + v.secs.length;
+  flot._cur = cur;
+}
+function listeSections(){
+  const v = sectionsVisibles(); if(!v) return;
+  const cur = document.getElementById("somm-flot")._cur || 0;
+  document.querySelectorAll("#pick-sheet .pick-actions").forEach(n=>n.remove());
+  const box = document.getElementById("pick-list");
+  document.getElementById("pick-title").textContent = "Sommaire" + (v.pane.dataset.min ? " · " + v.pane.dataset.min + " min de lecture" : "");
+  box.innerHTML = "";
+  v.secs.forEach((s,i)=>{
+    const t = s.querySelector(".section-title");
+    const r = el("button","cal-row chap-ligne" + (i === cur ? " actif" : "") + (i < cur ? " revise" : ""));
+    r.type = "button";
+    r.innerHTML = `<span class="rv-dot"></span><div class="cal-txt"><div class="cal-name">${esc(t ? t.textContent : "Section " + (i + 1))}</div>
+      <div class="cal-url">${i < cur ? "Lu" : i === cur ? "Tu es ici" : "Section " + (i + 1)}</div></div>` +
+      (i === cur ? `<span class="chap-ligne-ok">${COCHE_SVG}</span>` : "");
+    r.addEventListener("click",()=>{ haptic(); closePicker(); setTimeout(()=>allerSection(v.pane, i), 260); });
+    box.appendChild(r);
+  });
+  document.getElementById("pick-sheet").classList.add("open");
+  const ici = box.querySelector(".actif");
+  if(ici) setTimeout(()=>ici.scrollIntoView({ block:"center" }), 60);
+}
+(function initProgression(){
+  const scr = document.getElementById("screen-split");
+  if(scr && !document.getElementById("somm-flot")){
+    const f = el("button","somm-flot"); f.id = "somm-flot"; f.type = "button";
+    f.innerHTML = IC_SOMMAIRE + '<span class="somm-flot-txt">Sommaire</span>';
+    f.addEventListener("click",()=>{ haptic(); listeSections(); });
+    scr.appendChild(f);
+  }
+  window.addEventListener("scroll", ()=>requestAnimationFrame(majProgression), { passive:true });
+  window.addEventListener("resize", ()=>requestAnimationFrame(majProgression));
+})();
+
 function setTab(i){
   curTab=i;
   document.querySelectorAll(".seg-btn").forEach((b,k)=>b.classList.toggle("active",k===i));
@@ -6162,6 +6291,7 @@ function setTab(i){
   const pane=document.getElementById("pane-"+i);
   if(pane){ pane.style.animation="none"; void pane.offsetWidth; pane.style.animation=""; }
   window.scrollTo(0,0);
+  requestAnimationFrame(majProgression);
 }
 function renderCoursePane(type){
   const chapters = type==="cm" ? (curSubj.cm||[]) : (curSubj.td||[]);
@@ -6184,14 +6314,8 @@ function renderCoursePane(type){
   const sel = boutonChapitre(type, chapters, chIdx);
   const row = el("div","chap-row");
   row.appendChild(sel);
-  if(canEdit()){
-    const addPill = el("button","chap-add");
-    addPill.type = "button";
-    addPill.textContent = "+";
-    addPill.setAttribute("aria-label","Ajouter un chapitre");
-    addPill.addEventListener("click",()=>{ haptic(); addChapitre(type); });
-    row.appendChild(addPill);
-  }
+  // seul l'auteur partage son cours : un chapitre reçu d'une classe reste dans l'app
+  if(!chapters[chIdx]._shared) row.appendChild(boutonPartager(type, chapters[chIdx], true));
   pane.appendChild(row);
   // un appui long sur le sélecteur ouvre la fiche du chapitre affiché.
   // Un chapitre partagé n'est pas modifiable ici, il se retire depuis sa classe.
@@ -6211,14 +6335,16 @@ function renderCoursePane(type){
   const ch=chapters[chIdx];
   marquerVu(curSubj, type, ch);
   lecteurStop();
-  // écouter et partager, côte à côte
-  if((ch.sections||[]).length){
+  // écouter (partager est à côté du sélecteur)
+  if((ch.sections||[]).length && TTS_OK){
     const rangee = el("div","lec-row");
-    if(TTS_OK) rangee.appendChild(lecteurBouton(pane));
-    // seul l'auteur partage son cours : un chapitre reçu d'une classe reste dans l'app
-    if(!ch._shared) rangee.appendChild(boutonPartager(type, ch));
-    if(rangee.children.length) pane.appendChild(rangee);
+    rangee.appendChild(lecteurBouton(pane));
+    pane.appendChild(rangee);
   }
+  // chapitres longs : le bouton flottant « Sommaire » donne accès aux sections
+  if((ch.sections||[]).length >= SOMMAIRE_MIN){ pane.dataset.somm = "1"; pane.dataset.min = minutesLecture(ch); }
+  else { delete pane.dataset.somm; delete pane.dataset.min; }
+  requestAnimationFrame(majProgression);
   (ch.sections||[]).forEach((sec,si)=>{
     const block=el("div","section");
     block.dataset.sec = si;
@@ -6361,6 +6487,8 @@ function masquerNom(txt, nom){
   return t;
 }
 function couper(t, n){ t = String(t||"").trim(); return t.length > n ? t.slice(0, n).replace(/\s+\S*$/,"") + "…" : t; }
+// nombre de QCM : un par chapitre qui a des questions (pas le nombre de questions)
+function nbQCM(liste){ return new Set((liste||[]).filter(Boolean).map(x=>x.ch || "")).size; }
 function quizAuteurs(subj){
   if(!subj) return [];
   const sig = subj.id + "|" + (subj.auteurs||[]).map(a=>a && a.nom).join("|");
@@ -6556,7 +6684,7 @@ function renderTrainPane(){
   const intro=el("div","train-intro");
   intro.innerHTML = dueTotal > 0
     ? `<span class="due-pill">📅 ${dueTotal} carte${dueTotal>1?"s":""} à revoir aujourd'hui</span>`
-    : `<span class="due-pill done">✓ Tout est à jour — tu peux réviser en libre</span>`;
+    : `<span class="due-pill done">✓ Tout est à jour, tu peux réviser en libre</span>`;
   pane.appendChild(intro);
   const scope = "all";
   const grid=el("div","mode-grid");
@@ -7590,17 +7718,17 @@ function renderPsychoEtapes(){
   loadPsychoSteps();
   const inner=document.getElementById("psycho-inner"); inner.innerHTML="";
   psyBack(inner,renderPsycho);
-  const hero=el("div","psy-hero rise"); hero.innerHTML=`<div class="psy-hero-mark">📋</div><div class="psy-hero-title">Les étapes</div><div class="psy-hero-sub">Coche au fur et à mesure. Pas de pression — tu reviens quand tu veux. 💜</div>`; inner.appendChild(hero);
+  const hero=el("div","psy-hero rise"); hero.innerHTML=`<div class="psy-hero-mark">📋</div><div class="psy-hero-title">Les étapes</div><div class="psy-hero-sub">Coche au fur et à mesure. Pas de pression, tu reviens quand tu veux. 💜</div>`; inner.appendChild(hero);
   const done=PSYCHO_STEPS.filter(s=>s.done).length, total=PSYCHO_STEPS.length, pct=Math.round(done/total*100);
   const circ=2*Math.PI*24, offset=circ-(pct/100)*circ;
-  const pt=done===0?"C'est parti — première étape !":done===total?"Tout est fait 🎉 Bravo Nana !":done+" / "+total+" étapes complétées";
-  const ps=done===0?"Tu peux y aller à ton rythme 💜":done===total?"Le dossier est prêt. Tu l'as fait ! 🌸":"Tu avances bien — continue comme ça 🌸";
+  const pt=done===0?"C'est parti : première étape !":done===total?"Tout est fait 🎉 Bravo Nana !":done+" / "+total+" étapes complétées";
+  const ps=done===0?"Tu peux y aller à ton rythme 💜":done===total?"Le dossier est prêt. Tu l'as fait ! 🌸":"Tu avances bien, continue comme ça 🌸";
   const ph=el("div","psy-prog-head rise"); ph.style.animationDelay=".05s";
   ph.innerHTML=`<div class="psy-ring"><svg width="56" height="56"><circle class="psy-ring-bg" cx="28" cy="28" r="24"/><circle class="psy-ring-fill" cx="28" cy="28" r="24" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/></svg><div class="psy-ring-num">${pct}%</div></div><div><div class="psy-prog-title">${pt}</div><div class="psy-prog-sub">${ps}</div></div>`;
   inner.appendChild(ph);
   const phases=[
     {label:"🌱 Dès maintenant",motiv:"Le plus tôt tu te renseignes, le plus sereine tu seras. 🌸",ids:["s1","s2"]},
-    {label:"📅 Janvier 2027",motiv:"Parcoursup ouvre en janvier — juste un vœu à déposer en plus. 💜",ids:["s3","s4"]},
+    {label:"📅 Janvier 2027",motiv:"Parcoursup ouvre en janvier, juste un vœu à déposer en plus. 💜",ids:["s3","s4"]},
     {label:"✍️ Février → Avril 2027",motiv:"Cette étape prend du temps, mais tu as largement le tien. 🫂",ids:["s5","s6","s7","s7b"]},
     {label:"📬 Avant fin Mai 2027",motiv:"Tu auras tout bouclé un mois à l'avance. Sereine, promis. 🌸",ids:["s8"]},
     {label:"🎓 Juin → Septembre 2027",motiv:"Tu es presque au bout. Tout ce travail va payer. 💜",ids:["s9","s10","s11"]},
@@ -7622,7 +7750,7 @@ function renderPsychoEtapes(){
   });
   if(done===total && isNana()){
     const c=el("div","psy-congrats");
-    c.innerHTML=`<div class="psy-congrats-emoji">🎉💜🌸</div><div class="psy-congrats-title">Tu l'as fait, Nana.</div><div class="psy-congrats-text">Chaque étape cochée, c'était un pas de plus vers la version de toi que tu veux devenir.<br><br>Le dossier est prêt. Maintenant tu attends — et tu mérites d'être fière. 💜</div>`;
+    c.innerHTML=`<div class="psy-congrats-emoji">🎉💜🌸</div><div class="psy-congrats-title">Tu l'as fait, Nana.</div><div class="psy-congrats-text">Chaque étape cochée, c'était un pas de plus vers la version de toi que tu veux devenir.<br><br>Le dossier est prêt. Maintenant tu attends, et tu mérites d'être fière. 💜</div>`;
     inner.appendChild(c);
   }
   // Le carrousel de motivation n'existe que dans l'espace rose (Nana)
@@ -7655,10 +7783,10 @@ function renderPsychoInfos(){
 function renderPsychoSpecialite(){
   const inner=document.getElementById("psycho-inner"); inner.innerHTML="";
   psyBack(inner,renderPsycho);
-  const hero=el("div","psy-hero rise"); hero.innerHTML=`<div class="psy-hero-mark">🔍</div><div class="psy-hero-title">Quelle spécialité ?</div><div class="psy-hero-sub">Pas besoin de tout décider maintenant. Lis tranquillement — quelque chose va résonner en toi. 💜</div>`; inner.appendChild(hero);
+  const hero=el("div","psy-hero rise"); hero.innerHTML=`<div class="psy-hero-mark">🔍</div><div class="psy-hero-title">Quelle spécialité ?</div><div class="psy-hero-sub">Pas besoin de tout décider maintenant. Lis tranquillement, quelque chose va résonner en toi. 💜</div>`; inner.appendChild(hero);
   inner.appendChild(psyMini(motivDoux()));
   const intro=el("div","psy-info-card");
-  intro.innerHTML=`<div class="psy-info-header"><span class="psy-info-icon">💬</span><span class="psy-info-title">Comment ça fonctionne ?</span></div><div class="psy-info-lines"><div class="psy-info-line">En psychologie, on choisit sa spécialité au moment du Master — pas de la licence.</div><div class="psy-info-line">La licence donne les bases communes à toutes les branches.</div><div class="psy-info-line">Mais connaître les spécialités maintenant, c'est savoir vers où on marche. 🌸</div></div>`;
+  intro.innerHTML=`<div class="psy-info-header"><span class="psy-info-icon">💬</span><span class="psy-info-title">Comment ça fonctionne ?</span></div><div class="psy-info-lines"><div class="psy-info-line">En psychologie, on choisit sa spécialité au moment du Master, pas de la licence.</div><div class="psy-info-line">La licence donne les bases communes à toutes les branches.</div><div class="psy-info-line">Mais connaître les spécialités maintenant, c'est savoir vers où on marche. 🌸</div></div>`;
   inner.appendChild(intro);
   const st=el("div","psy-section-label"); st.textContent="Les grandes spécialités"; inner.appendChild(st);
   PSYCHO_SPES.forEach(s=>{
@@ -7849,7 +7977,7 @@ if("serviceWorker" in navigator){
 (function initOfflineBanner(){
   const b = document.createElement("div");
   b.id = "offline-banner";
-  b.textContent = "Hors ligne — tes révisions restent accessibles";
+  b.textContent = "Hors ligne : tes révisions restent accessibles";
   document.body.appendChild(b);
   const sync = ()=> b.classList.toggle("show", !navigator.onLine);
   window.addEventListener("online", sync);
