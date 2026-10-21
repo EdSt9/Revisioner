@@ -288,6 +288,12 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 .edt-info{min-width:0;flex:1;}
 .edt-title{font-size:14px;font-weight:600;color:var(--text);line-height:1.35;overflow-wrap:break-word;}
 .edt-place{font-size:12px;color:var(--text-soft);margin-top:3px;overflow-wrap:break-word;}
+.edt-prof{display:inline-flex;align-items:center;gap:4px;}
+.edt-prof svg{width:12px;height:12px;flex-shrink:0;opacity:.8;}
+.edt-sep{margin:0 6px;opacity:.6;}
+.next-lieu{display:inline-flex;flex-wrap:wrap;align-items:center;}
+#ev-prof .prof-row{margin:0;}
+.ev-prof-champs{display:flex;flex-direction:column;gap:8px;}
 
 /* segment Semaine / Jour (style iOS) */
 .seg{display:flex;gap:3px;background:var(--surface-2,rgba(255,255,255,.06));
@@ -573,6 +579,9 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
   min-width:24px;height:24px;padding:0 7px;border-radius:12px;display:grid;place-items:center;}
 .sem-tile .sem-name{font-family:var(--font-display);font-size:20px;line-height:1.1;}
 .sem-tile .sem-meta{font-size:12px;color:var(--text-mute);margin:3px 0 14px;}
+.sem-tile .sem-sous{font-size:12.5px;font-weight:600;color:var(--accent);margin-top:4px;}
+.sem-tile .sem-sous + .sem-meta{margin-top:2px;}
+.pen.pen-bas{top:auto;bottom:8px;right:8px;}
 .sem-tile .sem-bar{height:5px;background:var(--surface-2,rgba(255,255,255,.06));border-radius:3px;overflow:hidden;}
 .sem-tile .sem-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:3px;
   transition:width .5s var(--ease-spring);}
@@ -905,6 +914,29 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 .lec-calque.lec-phrase>div{background:var(--accent);opacity:.10;}
 .lec-calque.lec-mot>div{background:var(--accent);opacity:.42;}
 .lec-start:active{transform:scale(.97);}
+.lec-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 14px;}
+.lec-row .lec-start{margin:0;}
+.lec-start.partage{background:var(--surface);color:var(--text-soft);}
+.prof-row{display:flex;align-items:center;gap:12px;margin:2px 0 12px;padding:10px 10px 10px 12px;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);}
+.prof-row.tap{cursor:pointer;}
+.prof-row.tap:active{transform:scale(.985);}
+.prof-av{width:38px;height:38px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  background:var(--accent-soft);color:var(--accent);font-family:var(--font-text);font-weight:700;font-size:14px;}
+.prof-av svg{width:18px;height:18px;}
+.prof-txt{flex:1;min-width:0;font-family:var(--font-text);}
+.prof-role{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text-mute);}
+.prof-nom{font-size:15px;font-weight:600;color:var(--text);line-height:1.3;}
+.prof-sub{font-size:13px;color:var(--text-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.prof-manque{color:var(--accent);font-weight:600;}
+.prof-mail{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  background:var(--accent);color:#fff;}
+.prof-mail svg{width:19px;height:19px;}
+.prof-mail:active{transform:scale(.92);}
+.prof-add{display:inline-flex;align-items:center;gap:8px;margin:2px 0 12px;cursor:pointer;
+  background:none;color:var(--text-soft);border:1px dashed var(--border-strong);border-radius:999px;
+  padding:8px 14px 8px 11px;font-family:var(--font-text);font-size:13px;font-weight:600;}
+.prof-add svg{width:16px;height:16px;}
 .section.tts-on .card,.recap.tts-on{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);
   transition:border-color .3s,box-shadow .3s;}
 .section.tts-on .section-title{color:var(--accent);}
@@ -1145,7 +1177,7 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
    peuvent pas différer : c'est un unique objet divisé par une grille. */
 .chap-seg{position:relative;display:grid;gap:2px;background:var(--seg-bg);
   border-radius:12px;padding:3px;margin-bottom:22px;}
-.chap-thumb{position:absolute;top:3px;bottom:3px;border-radius:9px;
+.chap-thumb{position:absolute;top:3px;bottom:3px;left:3px;border-radius:9px;
   background:var(--seg-thumb);box-shadow:0 2px 8px var(--shadow);
   transition:transform .32s var(--ease-spring);}
 .chap-opt{position:relative;z-index:1;border:none;background:none;cursor:pointer;
@@ -1159,6 +1191,33 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .chap-opt.nouveau .rv-dot{background:var(--new);opacity:1;box-shadow:0 0 7px var(--new);}
 .chap-opt.revise .rv-dot{background:var(--ok);opacity:1;box-shadow:0 0 7px var(--ok);}
 .chap-opt.revise.active{color:var(--ok);}
+.chap-pick{flex:1;min-width:0;display:flex;align-items:center;gap:8px;cursor:pointer;
+  background:var(--seg-thumb);border:1px solid var(--border);border-radius:14px;
+  padding:11px 12px 11px 14px;box-shadow:0 2px 8px var(--shadow);
+  font-family:var(--font-text);font-size:15px;font-weight:700;color:var(--accent);text-align:left;
+  transition:transform .18s var(--ease-spring);}
+.chap-pick:active{transform:scale(.98);}
+.chap-pick .rv-dot{display:inline-block;width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--text-mute);opacity:.55;}
+.chap-pick.revise{color:var(--ok);}
+.chap-pick.revise .rv-dot{background:var(--ok);opacity:1;box-shadow:0 0 7px var(--ok);}
+.chap-pick-txt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.chap-pick-new{flex-shrink:0;font-size:11px;font-weight:700;color:var(--new);background:var(--accent-soft);
+  border-radius:999px;padding:3px 8px;}
+.chap-pick-nb{flex-shrink:0;font-size:12px;font-weight:600;color:var(--text-mute);}
+.chap-pick-ic{flex-shrink:0;width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  background:var(--accent-soft);color:var(--accent);}
+.chap-pick-ic svg{width:16px;height:16px;}
+.chap-row>.chap-pick{margin-bottom:0;}
+.chap-ligne{display:flex;align-items:center;gap:12px;}
+.chap-ligne .rv-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;background:var(--text-mute);opacity:.55;}
+.chap-ligne.revise .rv-dot{background:var(--ok);opacity:1;box-shadow:0 0 7px var(--ok);}
+.chap-ligne.nouveau .rv-dot{background:var(--new);opacity:1;box-shadow:0 0 7px var(--new);}
+.chap-ligne.revise .cal-url{color:var(--ok);}
+.chap-ligne.nouveau .cal-url{color:var(--new);}
+.chap-ligne.actif{border-color:var(--accent);background:var(--accent-soft);}
+.chap-ligne.actif .cal-name{color:var(--accent);}
+.chap-ligne-ok{width:22px;height:22px;flex-shrink:0;color:var(--accent);}
+.chap-ligne-ok svg{width:100%;height:100%;}
 .rv-switch{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;margin-top:16px;padding:14px 18px;border-radius:var(--r-lg);border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:var(--font-text);font-size:14.5px;font-weight:600;cursor:pointer;text-align:left;transition:border-color .25s,background .25s;}
 .rv-switch .rv-sub{display:block;font-size:12px;font-weight:500;color:var(--text-soft);margin-top:2px;}
 .rv-switch .sw{flex-shrink:0;width:48px;height:29px;border-radius:20px;background:var(--border-strong);position:relative;transition:background .25s;}
@@ -1731,6 +1790,9 @@ textarea::placeholder{color:var(--text-mute);}
     <div class="sheet-title" id="ev-title">Cours</div>
     <div class="sheet-sub" id="ev-when"></div>
     <div class="ev-scroll">
+      <div class="ev-label">Prof</div>
+      <div id="ev-prof"></div>
+
       <div class="ev-label">Type</div>
       <div class="ev-types" id="ev-types">
         <button class="ev-type" data-type="">Aucun</button>
@@ -1887,6 +1949,23 @@ try{ REVISES = JSON.parse(localStorage.getItem(REVISES_KEY) || "{}") || {}; }cat
 function revisesSave(){ try{ localStorage.setItem(REVISES_KEY, JSON.stringify(REVISES)); }catch(e){} scheduleSync(); }
 function cleRevise(subj, type, ch){ return subj.id + "|" + type + "|" + (ch && ch.label || ""); }
 function estRevise(subj, type, ch){ return !!REVISES[cleRevise(subj, type, ch)]; }
+// Profs saisis par moi : { "id matière|cm": { nom, mail } }.
+// Une entrée vide masque le prof prévu par défaut.
+var PROFS_KEY = "revision_profs_v1";
+var PROFS = {};
+try{ PROFS = JSON.parse(localStorage.getItem(PROFS_KEY) || "{}") || {}; }catch(e){ PROFS = {}; }
+function profsSave(){ try{ localStorage.setItem(PROFS_KEY, JSON.stringify(PROFS)); }catch(e){} scheduleSync(); }
+function profDe(subj, type){
+  if(!subj) return null;
+  const k = subj.id + "|" + type;
+  const plein = p=>p && (p.nom || p.mail) ? p : null;
+  if(k in PROFS) return plein(PROFS[k]);
+  const d = plein(subj.profs && subj.profs[type]);
+  if(d) return d;
+  // chapitres reçus d'une classe : l'auteur a pu indiquer le prof
+  const recu = (subj[type]||[]).find(ch=>ch._shared && ch.meta && ch.meta.profs && plein(ch.meta.profs[type]));
+  return recu ? recu.meta.profs[type] : null;
+}
 function basculerRevise(subj, type, ch){
   const k = cleRevise(subj, type, ch);
   if(REVISES[k]) delete REVISES[k]; else REVISES[k] = Date.now();
@@ -2215,6 +2294,7 @@ function openForm(title, fields, okLabel, onSubmit, onDelete, extra){
         row.appendChild(b);
       });
       w.appendChild(row);
+      w.appendChild(inp);   // le champ caché doit être dans la page, sinon la valeur est perdue
     }else{
       inp = f.type === "area" ? el("textarea","fs-area") : el("input","fs-input");
       if(f.type !== "area") inp.type = f.type || "text";
@@ -2894,7 +2974,8 @@ function metaMatiere(sj){
   if(!sj) return null;
   const u = UES[sj.ue] || {};
   return { ecue:sj.ecue || "", ue_num:String(u.num || ""), ue_title:u.title || "",
-           sem:u.sem || SEMESTRES[sj.id] || null };
+           sem:u.sem || SEMESTRES[sj.id] || null,
+           profs:{ cm:profDe(sj, "cm"), td:profDe(sj, "td") } };
 }
 function cleEnvoi(kind, subjectTitle, label){
   return kind === "revision" ? "revision|" + subjectTitle : kind + "|" + subjectTitle + "|" + label;
@@ -3595,6 +3676,73 @@ document.addEventListener("visibilitychange",()=>{
   if(document.hidden && LEC.actif && !LEC.pause){ LEC.pause = true; lecCouper(); lecMajBarre(); lecLibererEcran(); }
 });
 
+// ══ PARTAGER UN CHAPITRE ══
+// Le chapitre en texte propre, à coller dans Gemini, ChatGPT, Notes, un message…
+function texteBrut(html){
+  const d = document.createElement("div");
+  d.innerHTML = String(html || "")
+    .replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, "$1 ($2)")    // liens écrits [texte](adresse)
+    .replace(/<br\s*\/?>/gi, "\n");
+  d.querySelectorAll("a[href]").forEach(a=>{ if(a.textContent !== a.href) a.textContent = a.textContent + " (" + a.href + ")"; });
+  return d.textContent.replace(/[ \t]+\n/g, "\n").trim();
+}
+function texteChapitre(subj, type, ch, avecQcm){
+  const l = [];
+  l.push(subj.title + " · " + ch.label);
+  l.push("");
+  (ch.sections||[]).forEach(sec=>{
+    l.push("## " + texteBrut(sec.title));
+    if(sec.body) l.push(texteBrut(sec.body));
+    (sec.list||[]).forEach(x=>l.push("• " + texteBrut(x)));
+    l.push("");
+  });
+  if((ch.recap||[]).length){
+    l.push("## À retenir");
+    ch.recap.forEach((x,i)=>l.push((i+1) + ". " + texteBrut(x)));
+    l.push("");
+  }
+  if(avecQcm){
+    const qs = (subj.qcm||[]).filter(x=>x && !x._shared && x.ch === ch.label);
+    if(qs.length){
+      l.push("## QCM (" + qs.length + ")");
+      qs.forEach((q,i)=>{
+        l.push((i+1) + ". " + q.q);
+        q.opts.forEach((o,k)=>l.push("   " + String.fromCharCode(65+k) + ") " + o + (k === q.c ? "   ← bonne réponse" : "")));
+        if(q.e) l.push("   Explication : " + q.e);
+      });
+      l.push("");
+    }
+  }
+  return l.join("\n").trim();
+}
+async function partagerTexte(titre, texte){
+  if(navigator.share){
+    try{ await navigator.share({ title:titre, text:texte }); return; }
+    catch(e){ if(e && e.name === "AbortError") return; }      // partage annulé : rien à faire
+  }
+  try{ await navigator.clipboard.writeText(texte); toast("Copié. Colle-le où tu veux."); }
+  catch(e){ toast("Impossible de partager depuis ce navigateur."); }
+}
+function boutonPartager(type, ch){
+  const b = el("button","lec-start partage");
+  b.type = "button";
+  b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M7.5 7.5L12 3l4.5 4.5"/><path d="M5 12v6.5A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V12"/></svg><span>Partager</span>';
+  b.addEventListener("click",()=>{
+    haptic();
+    const sj = curSubj;
+    const nQ = (sj.qcm||[]).filter(x=>x && !x._shared && x.ch === ch.label).length;
+    if(!nQ){ partagerTexte(sj.title + " · " + ch.label, texteChapitre(sj, type, ch, false)); return; }
+    openPicker("Partager « " + ch.label + " »", [
+      { label:"Le cours", sub:"Les sections et « À retenir »", value:"cours" },
+      { label:"Le cours et ses QCM", sub:nQ + " QCM avec les bonnes réponses, pour les faire vérifier", value:"qcm" }
+    ], v=>partagerTexte(sj.title + " · " + ch.label, texteChapitre(sj, type, ch, v === "qcm")));
+  });
+  return b;
+}
+
+// ── Le prof du CM ou du TD, avec son mail ──
+const IC_PROF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>';
+const IC_MAIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3.5 7l8.5 6 8.5-6"/></svg>';
 // Rend les sections d'un chapitre dans n'importe quel conteneur.
 function renderSectionsInto(box, ch){
   lecteurStop();
@@ -4850,6 +4998,110 @@ function renderEDT(){
   }
 }
 
+// ── Sélecteur de chapitre ──
+// « TD 1 · 15/09 » s'affiche « TD 1 • 15/09 » : seulement à l'écran, le libellé reste la clé.
+function libelleChapitre(l){ return String(l||"").replace(/^(CM|TD)\s*(\d)/i, "$1 $2").replace(/\s*·\s*/g, " • "); }
+const IC_HAUT_BAS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9.5l5-5 5 5"/><path d="M7 14.5l5 5 5-5"/></svg>';
+function boutonChapitre(type, chapters, chIdx){
+  const ch = chapters[chIdx];
+  const nouveaux = chapters.filter((c,i)=>i !== chIdx && chapitreNouveau(curSubj, type, c)).length;
+  const b = el("button","chap-pick" + (estRevise(curSubj, type, ch) ? " revise" : ""));
+  b.type = "button";
+  b.innerHTML = `<span class="rv-dot"></span><span class="chap-pick-txt">${esc(libelleChapitre(ch.label))}</span>` +
+    (nouveaux ? `<span class="chap-pick-new">${nouveaux} nouveau${nouveaux > 1 ? "x" : ""}</span>` : "") +
+    (chapters.length > 1 ? `<span class="chap-pick-nb">${chIdx + 1}/${chapters.length}</span><span class="chap-pick-ic">${IC_HAUT_BAS}</span>` : "");
+  if(chapters.length > 1) b.addEventListener("click",()=>{ haptic(); listeChapitres(type, chapters, chIdx); });
+  return b;
+}
+function listeChapitres(type, chapters, chIdx){
+  document.querySelectorAll("#pick-sheet .pick-actions").forEach(n=>n.remove());
+  const box = document.getElementById("pick-list");
+  document.getElementById("pick-title").textContent = type === "cm" ? "Choisir un CM" : "Choisir un TD";
+  box.innerHTML = "";
+  chapters.forEach((c,i)=>{
+    const rev = estRevise(curSubj, type, c), nouv = i !== chIdx && chapitreNouveau(curSubj, type, c);
+    const nQ = (curSubj.qcm||[]).filter(x=>x && x.ch === c.label).length;
+    const etat = rev ? "Révisé" : nouv ? "Nouveau" : "À réviser";
+    const r = el("button","cal-row chap-ligne" + (i === chIdx ? " actif" : "") + (rev ? " revise" : "") + (nouv ? " nouveau" : ""));
+    r.type = "button";
+    r.innerHTML = `<span class="rv-dot"></span><div class="cal-txt"><div class="cal-name">${esc(libelleChapitre(c.label))}</div>
+      <div class="cal-url">${etat}${nQ ? " · " + nQ + " QCM" : ""}</div></div>` +
+      (i === chIdx ? `<span class="chap-ligne-ok">${COCHE_SVG}</span>` : "");
+    r.addEventListener("click",()=>{
+      haptic(); closePicker();
+      if(i === chIdx) return;
+      if(type === "cm") curCmIdx = i; else curTdIdx = i;
+      renderCoursePane(type);
+      window.scrollTo({ top:0, behavior:"smooth" });
+    });
+    box.appendChild(r);
+  });
+  document.getElementById("pick-sheet").classList.add("open");
+}
+
+// ── Le prof d'un cours de l'emploi du temps ──
+// Ordre : ce que j'ai saisi pour ce cours, puis le calendrier de la fac, puis la matière.
+function plat(t){ return String(t||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
+function cleProfCours(e){ return "edt|" + plat(titreCours(e.title)).replace(/\s+/g," ").trim(); }
+function profDuCalendrier(e){
+  const txt = (e.desc || "") + "\n" + (e.title || "");
+  const m = txt.match(/(?:enseignant|intervenant|professeur|formateur|formatrice)[a-z()]*\s*:\s*([^\n]+)/i);
+  const nom = m ? m[1].replace(/\s+/g," ").trim() : "";
+  return nom ? { nom, mail:"" } : null;
+}
+// la matière du site qui correspond au cours : celle que j'ai liée, sinon par son code ECUE
+function matiereDuCours(e){
+  const n = evNote(e);
+  if(n && n.subj){ const s = SUBJECTS.find(x=>x.id === n.subj); if(s) return s; }
+  const m = String(e.title||"").match(/\b(?:ECUE|UE)\s*([0-9]+(?:\.[0-9]+)*)/i);
+  if(!m) return null;
+  const cands = SUBJECTS.filter(x=>String(x.ecue||"").split(/\s/)[0] === m[1]);
+  if(cands.length < 2) return cands[0] || null;
+  // même code pour plusieurs matières : on garde celle dont le nom colle le mieux
+  const mots = t=>plat(t).split(/[^a-z0-9]+/).filter(w=>w.length > 3);
+  const titre = new Set(mots(e.title));
+  const score = x=>mots(x.title).filter(w=>titre.has(w)).length;
+  const best = cands.slice().sort((a,b)=>score(b) - score(a));
+  return score(best[0]) > score(best[1]) ? best[0] : null;
+}
+function typeDuCours(e, sj){
+  const t = String(e.title||"");
+  if(/\bCM\b/.test(t)) return "cm";
+  if(/\bTD\b/.test(t)) return "td";
+  const cm = profDe(sj, "cm"), td = profDe(sj, "td");
+  if(cm && !td) return "cm";
+  if(td && !cm) return "td";
+  return null;
+}
+function memeNom(a, b){
+  const ma = plat(a).split(/[^a-z]+/).filter(w=>w.length > 1);
+  const mb = new Set(plat(b).split(/[^a-z]+/).filter(w=>w.length > 1));
+  return ma.length > 0 && ma.every(w=>mb.has(w));
+}
+function profDuCours(e){
+  const k = cleProfCours(e);
+  if(k in PROFS){ const p = PROFS[k]; return p && (p.nom || p.mail) ? p : null; }
+  const sj = matiereDuCours(e);
+  const t = sj ? typeDuCours(e, sj) : null;
+  const def = t ? profDe(sj, t) : null;
+  const cal = profDuCalendrier(e);
+  if(cal){
+    // le calendrier donne le nom ; le mail vient de la matière si c'est la même personne
+    if(def && def.mail && memeNom(def.nom, cal.nom)) return { nom:cal.nom, mail:def.mail };
+    return cal;
+  }
+  return def;
+}
+const IC_PROF_MINI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>';
+// « PYR 308 · Aksel Kilic »
+function lieuEtProf(e){
+  const p = profDuCours(e);
+  const bouts = [];
+  if(e.place) bouts.push(`<span>${esc(e.place)}</span>`);
+  if(p && p.nom) bouts.push(`<span class="edt-prof">${IC_PROF_MINI}${esc(p.nom)}</span>`);
+  return bouts.join('<span class="edt-sep">·</span>');
+}
+
 // une carte de cours (cliquable pour l'annoter)
 function courseCard(e){
   const n = evNote(e);
@@ -4863,7 +5115,7 @@ function courseCard(e){
     <div class="edt-time"><span>${hhmm(e.start)}</span><span class="edt-time-end">${hhmm(e.end)}</span></div>
     <div class="edt-info">
       <div class="edt-title">${badge}${esc(titreCours(e.title))}</div>
-      ${e.place?`<div class="edt-place">${esc(e.place)}</div>`:``}
+      ${lieuEtProf(e)?`<div class="edt-place">${lieuEtProf(e)}</div>`:``}
       ${note}
     </div>`;
   c.addEventListener("click",()=>{ haptic(); openEvSheet(e); });
@@ -4891,8 +5143,41 @@ function openEvSheet(e){
     SUBJECTS.map(x=>`<option value="${x.id}">${esc(x.ecue)} · ${esc(x.title)}</option>`).join("");
   sel.value = n.subj || "";
   document.getElementById("ev-note").value = n.note || "";
+  renderEvProf(e, false);
 
   document.getElementById("ev-overlay").classList.add("open");
+}
+// Le prof du cours : sa carte avec le mail, ou les champs pour le saisir.
+function renderEvProf(e, edition, focus){
+  const box = document.getElementById("ev-prof");
+  box.innerHTML = "";
+  const p = profDuCours(e);
+  if(p && !edition){
+    const row = el("div","prof-row tap");
+    const ini = (p.nom||"").split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join("");
+    row.innerHTML = `<div class="prof-av">${ini ? esc(ini) : IC_PROF_MINI}</div>
+      <div class="prof-txt"><div class="prof-nom">${esc(p.nom || "Nom non renseigné")}</div>
+      <div class="prof-sub">${p.mail ? esc(p.mail) : '<span class="prof-manque">+ Ajouter son mail</span>'}</div></div>`;
+    if(p.mail){
+      const a = el("a","prof-mail");
+      a.href = "mailto:" + p.mail;
+      a.setAttribute("aria-label","Écrire à " + (p.nom || p.mail));
+      a.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3.5 7l8.5 6 8.5-6"/></svg>';
+      a.addEventListener("click", ev=>{ ev.stopPropagation(); haptic(); });
+      row.appendChild(a);
+    }
+    row.addEventListener("click",()=>{ haptic(); renderEvProf(e, true, p.mail ? "nom" : "mail"); });
+    box.appendChild(row);
+    return;
+  }
+  const v = p || { nom:"", mail:"" };
+  box.innerHTML = `<div class="ev-prof-champs">
+      <input class="ev-select" id="ev-prof-nom" type="text" autocomplete="off" placeholder="Nom du prof">
+      <input class="ev-select" id="ev-prof-mail" type="email" autocomplete="off" autocapitalize="off" placeholder="prenom.nom@u-pec.fr">
+    </div>`;
+  document.getElementById("ev-prof-nom").value = v.nom || "";
+  document.getElementById("ev-prof-mail").value = v.mail || "";
+  if(focus) setTimeout(()=>document.getElementById("ev-prof-" + focus).focus(), 60);
 }
 function closeEvSheet(){
   document.getElementById("ev-overlay").classList.remove("open");
@@ -4904,6 +5189,18 @@ function saveEvSheet(){
   const type = (document.querySelector("#ev-types .ev-type.active")||{}).dataset?.type || "";
   const subj = document.getElementById("ev-subj").value;
   const note = document.getElementById("ev-note").value.trim();
+  // le prof : enregistré pour tous les créneaux de ce cours, seulement s'il a changé
+  const champNom = document.getElementById("ev-prof-nom");
+  if(champNom){
+    const nom  = champNom.value.trim();
+    const mail = document.getElementById("ev-prof-mail").value.trim();
+    if(mail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)){ toast("Cette adresse mail n'a pas l'air complète."); return; }
+    const avant = profDuCours(evEditing) || { nom:"", mail:"" };
+    if(nom !== (avant.nom||"") || mail !== (avant.mail||"")){
+      PROFS[cleProfCours(evEditing)] = { nom, mail };
+      profsSave();
+    }
+  }
   if(!type && !subj && !note){ delete EDTNOTES[k]; }
   else {
     const prev = EDTNOTES[k] || {};
@@ -4919,7 +5216,7 @@ function saveEvSheet(){
 // « ECUE 20.2.1 Anglais C » devient « Anglais C » : le code alourdit sans rien apprendre.
 function titreCours(t){
   return String(t || "Cours")
-    .replace(/^\s*(ECUE|UE)\s*[0-9]+(?:[.\-][0-9A-Za-z]+)*\s*(bis)?\s*[:\-–]?\s*/i, "")
+    .replace(/^\s*(ECUE|UE)\s*[0-9]+(?:[.\-][0-9A-Za-z]+)*\s*(bis|ter|quater)?\s*[:\-–]?\s*/i, "")
     .trim() || String(t || "Cours");
 }
 
@@ -4981,7 +5278,7 @@ function renderNextCourse(){
     <div class="next-title">${esc(titreCours(ev.title))}</div>
     <div class="next-meta">
       <span>${horaire}</span>
-      ${ev.place ? `<span>${esc(ev.place)}</span>` : ""}
+      ${lieuEtProf(ev) ? `<span class="next-lieu">${lieuEtProf(ev)}</span>` : ""}
       <span class="next-when">${esc(quand)}</span>
     </div>
     ${n.note ? `<div class="next-note">${esc(n.note)}</div>` : ""}`;
@@ -5566,7 +5863,7 @@ function makeEcueCard(s){
       <span class="ecue-num">${esc(s.ecue)}</span>
       <div class="ecue-info">
         <div class="ecue-name">${esc(s.title)}</div>
-        <div class="ecue-meta"><span class="ecue-ects">${s.ects} ECTS</span>${status}</div>
+        <div class="ecue-meta">${s.ects ? `<span class="ecue-ects">${s.ects} ECTS</span>` : ""}${status}</div>
       </div>
       <span class="ecue-arrow">→</span>
     </div>`;
@@ -5589,49 +5886,93 @@ function renderSemestres(){
   if(!sems.length && canEdit()){
     wrap.innerHTML = `<div class="empty-note">Aucun semestre pour l'instant.<br>Touche le + pour en créer un.</div>`;
   }
+  const tuiles = [];
   sems.forEach((sem,si)=>{
     const list=SUBJECTS.filter(s=>(SEMESTRES[s.id]||0)===sem);
-    const ueCount=new Set(list.map(s=>s.ue)).size;
     // progression réelle : notions acquises / notions totales
     const tot   = list.reduce((n,s)=>n+totalCards(s),0);
     const learn = list.reduce((n,s)=>n+learnedCount(s),0);
-    const due   = list.reduce((n,s)=>n+dueCount(s),0);
     const pct   = tot ? Math.round(learn/tot*100) : 0;
     // matières à revoir dans ce semestre (le détail vit ici, pas sur l'accueil)
     const dues = list.map(x=>({x, d:dueCount(x)})).filter(o=>o.d>0).sort((a,b)=>b.d-a.d);
-    const dueChips = dues.length ? `<div class="sem-chips">` +
-      dues.slice(0,4).map(o=>`<span class="sem-chip"><span class="sc-num">${esc(o.x.ecue)}</span>${o.d}</span>`).join("") +
-      (dues.length>4 ? `<span class="sem-chip more">+${dues.length-4}</span>` : ``) +
-      `</div>` : ``;
+    const t = tuileDe("sem:" + sem);
     const card=el("button","sem-tile rise");
-    card.style.animationDelay=(0.14+si*0.04)+"s";
     card.innerHTML=`
       <div class="sem-tile-top">
-        <div class="sem-badge">${sem%2 ? "📚" : "🧠"}</div>
+        <div class="sem-badge">${esc(t.icone || (sem%2 ? "📚" : "🧠"))}</div>
         ${dues.length ? `<span class="sem-due">${dues.length} à réviser</span>` : ``}
       </div>
-      <div class="sem-name">Semestre ${sem}</div>
+      <div class="sem-name">${esc(titreSemestre(sem))}</div>
+      ${t.sous ? `<div class="sem-sous">${esc(t.sous)}</div>` : ``}
       <div class="sem-meta">${list.length} matières</div>
       <div class="sem-bar"><div class="sem-bar-fill" style="width:${pct}%"></div></div>
       <div class="sem-pct">${tot ? pct+" %" : "vide"}</div>`;
     card.addEventListener("click",()=>{ curSemestre=sem; renderSubjectCards(sem); showScreen("subjects"); });
-    wrap.appendChild(semIsOwn(sem)
-      ? withPen(card, "Modifier le semestre "+sem, ()=>editSemestre(sem))
-      : card);
+    tuiles.push({ cle:"sem:" + sem, el:card, defaut:"Semestre " + sem, icone:sem%2 ? "📚" : "🧠", sem });
   });
 
   // Projet Psycho : réservé à Civa et Nana, invisible pour les autres comptes
-  if(!isCloseFriend()) return;
-  const psy = el("button","sem-tile psy-tile rise");
-  psy.style.animationDelay = ".22s";
-  psy.innerHTML = `
-    <div class="sem-tile-top"><div class="sem-badge">💜</div></div>
-    <div class="sem-name">${psyTitle()}</div>
-    <div class="sem-meta">Passerelles · masters</div>
-    <div class="sem-bar"><div class="sem-bar-fill" style="width:${psyProgress()}%"></div></div>
-    <div class="sem-pct">${psyProgress()} %</div>`;
-  psy.addEventListener("click",()=>{ haptic(); renderPsycho(); });
-  wrap.appendChild(psy);
+  if(isCloseFriend()){
+    const t = tuileDe("psy");
+    const psy = el("button","sem-tile psy-tile rise");
+    psy.innerHTML = `
+      <div class="sem-tile-top"><div class="sem-badge">${esc(t.icone || "💜")}</div></div>
+      <div class="sem-name">${esc(t.titre || psyTitle())}</div>
+      <div class="sem-meta">${esc(t.sous || "Passerelles · masters")}</div>
+      <div class="sem-bar"><div class="sem-bar-fill" style="width:${psyProgress()}%"></div></div>
+      <div class="sem-pct">${psyProgress()} %</div>`;
+    psy.addEventListener("click",()=>{ haptic(); renderPsycho(); });
+    tuiles.push({ cle:"psy", el:psy, defaut:psyTitle(), icone:"💜", sousDefaut:"Passerelles · masters" });
+  }
+
+  // l'ordre choisi d'abord, les nouvelles tuiles ensuite dans l'ordre naturel
+  const ordre = Array.isArray(USER_SETTINGS.ordreTuiles) ? USER_SETTINGS.ordreTuiles : [];
+  const rang = c => { const k = ordre.indexOf(c); return k < 0 ? 1000 : k; };
+  tuiles.map((t,k)=>({ t, k })).sort((a,b)=>(rang(a.t.cle) - rang(b.t.cle)) || (a.k - b.k)).forEach(({ t },si)=>{
+    t.el.style.animationDelay = (0.14 + si*0.04) + "s";
+    if(!canEdit()){ wrap.appendChild(t.el); return; }
+    onLongPress(t.el, ()=>personnaliserTuile(t, tuiles));
+    const w = withPen(t.el, "Personnaliser « " + (tuileDe(t.cle).titre || t.defaut) + " »", ()=>personnaliserTuile(t, tuiles));
+    const pen = w.querySelector && w.querySelector(".pen");
+    if(pen) pen.classList.add("pen-bas");
+    wrap.appendChild(w);
+  });
+}
+
+// ── Personnaliser les tuiles de l'accueil : titre, sous-titre, icône, ordre ──
+// Enregistré dans les réglages du compte : suit sur tous les appareils.
+function tuileDe(cle){
+  const t = USER_SETTINGS.tuiles && USER_SETTINGS.tuiles[cle];
+  return (t && typeof t === "object") ? t : {};
+}
+function titreSemestre(sem){ return tuileDe("sem:" + sem).titre || ("Semestre " + sem); }
+const ICONES_TUILE = ["📚","🧠","💜","🎓","📖","✏️","🌱","⭐","🧩","🎯","🏛️","🌍"];
+function personnaliserTuile(t, tuiles){
+  const cur = tuileDe(t.cle);
+  const ordreActuel = tuiles.map(x=>x.cle).sort((a,b)=>{
+    const o = Array.isArray(USER_SETTINGS.ordreTuiles) ? USER_SETTINGS.ordreTuiles : [];
+    const r = c => { const k = o.indexOf(c); return k < 0 ? 1000 : k; };
+    return (r(a) - r(b)) || (tuiles.findIndex(x=>x.cle===a) - tuiles.findIndex(x=>x.cle===b));
+  });
+  const icones = ICONES_TUILE.includes(cur.icone || t.icone) ? ICONES_TUILE : [cur.icone || t.icone].concat(ICONES_TUILE);
+  const extra = t.sem && semIsOwn(t.sem) ? { label:"Changer le numéro ou supprimer", fn:()=>setTimeout(()=>editSemestre(t.sem), 320) } : null;
+  openForm("Personnaliser", [
+    { key:"titre", label:"Titre", value:cur.titre || "", placeholder:t.defaut },
+    { key:"sous",  label:"Sous-titre", value:cur.sous || "", placeholder:t.sousDefaut || "ex. L3 SESS (UPEC)" },
+    { key:"icone", label:"Icône", type:"choice", value:cur.icone || t.icone, options:icones.map(x=>({ v:x, label:x })) },
+    { key:"pos",   label:"Position", type:"choice", value:String(ordreActuel.indexOf(t.cle) + 1),
+      options:ordreActuel.map((_,k)=>({ v:String(k+1), label:String(k+1) })) }
+  ], "Enregistrer", v=>{
+    USER_SETTINGS.tuiles = Object.assign({}, USER_SETTINGS.tuiles);
+    const n = { titre:v.titre, sous:v.sous, icone:v.icone === t.icone ? "" : v.icone };
+    if(!n.titre && !n.sous && !n.icone) delete USER_SETTINGS.tuiles[t.cle];
+    else USER_SETTINGS.tuiles[t.cle] = n;
+    const o = ordreActuel.filter(c=>c !== t.cle);
+    o.splice(Math.max(0, parseInt(v.pos,10) - 1), 0, t.cle);
+    USER_SETTINGS.ordreTuiles = o;
+    saveContent();
+    renderSemestres();
+  }, null, extra);
 }
 
 // avancement du Projet Psycho : étapes cochées / total
@@ -5672,7 +6013,7 @@ function renderSubjectCards(sem){
   const pct = avecCours.length ? Math.round(aJour/avecCours.length*100) : 0;
   const ueCount=new Set(list.map(s=>s.ue)).size;
   const circ=2*Math.PI*18, offset=circ-(pct/100)*circ;
-  document.getElementById("subjects-eyebrow").textContent="Semestre "+sem;
+  document.getElementById("subjects-eyebrow").textContent=titreSemestre(sem);
   const ov=document.getElementById("overview");
   const msg = !avecCours.length ? "Prêt à commencer ?"
     : aJour === 0 ? "Prêt à commencer ?"
@@ -5837,30 +6178,10 @@ function renderCoursePane(type){
     return;
   }
   const chIdx = type==="cm"?curCmIdx:curTdIdx;
-  // chapter pills
+  // Sélecteur de chapitre : un seul bouton qui affiche le chapitre ouvert.
+  // Le toucher ouvre la liste des autres. Marquer « révisé » se fait en bas du chapitre.
   const n = chapters.length;
-  const sel = el("div","chap-seg");
-  sel.style.gridTemplateColumns = `repeat(${n},1fr)`;
-  const thumb = el("div","chap-thumb");
-  thumb.style.width = `calc((100% - 6px - ${(n-1)*2}px)/${n})`;
-  thumb.style.transform = `translateX(calc(${chIdx} * (100% + 2px)))`;
-  sel.appendChild(thumb);
-  chapters.forEach((ch,i)=>{
-    const opt=el("button","chap-opt"+(i===chIdx?" active":"")+(estRevise(curSubj,type,ch)?" revise":"")+(i!==chIdx && chapitreNouveau(curSubj,type,ch)?" nouveau":""));
-    opt.innerHTML = `<span class="rv-dot"></span>` + esc(ch.label);
-    opt.addEventListener("click",()=>{
-      // toucher le chapitre déjà ouvert : le marquer révisé (ou l'enlever)
-      if(i === chIdx){
-        haptic();
-        const r = basculerRevise(curSubj, type, ch);
-        toast(r ? "✓ Marqué révisé" : "Plus marqué révisé");
-        renderCoursePane(type);
-        return;
-      }
-      if(type==="cm")curCmIdx=i; else curTdIdx=i; renderCoursePane(type);
-    });
-    sel.appendChild(opt);
-  });
+  const sel = boutonChapitre(type, chapters, chIdx);
   const row = el("div","chap-row");
   row.appendChild(sel);
   if(canEdit()){
@@ -5872,11 +6193,9 @@ function renderCoursePane(type){
     row.appendChild(addPill);
   }
   pane.appendChild(row);
-  // pas de crayon posé sur la page : un appui long sur une pastille ouvre sa fiche.
+  // un appui long sur le sélecteur ouvre la fiche du chapitre affiché.
   // Un chapitre partagé n'est pas modifiable ici, il se retire depuis sa classe.
-  sel.querySelectorAll(".chap-opt").forEach((b,i)=>{
-    if(modifiable(chapters[i])) onLongPress(b, ()=>editChapitre(type, i));
-  });
+  if(modifiable(chapters[chIdx])) onLongPress(sel, ()=>editChapitre(type, chIdx));
   // retouché : on le dit, et on propose de revenir à ma version
   if(curSubj._over && curSubj._over[type]){
     const r = el("button","add-inline");
@@ -5891,10 +6210,15 @@ function renderCoursePane(type){
   }
   const ch=chapters[chIdx];
   marquerVu(curSubj, type, ch);
-  const pActive = sel.querySelectorAll(".chap-opt")[chIdx];
-  if(pActive) pActive.classList.remove("nouveau");
   lecteurStop();
-  if(TTS_OK && (ch.sections||[]).length) pane.appendChild(lecteurBouton(pane));
+  // écouter et partager, côte à côte
+  if((ch.sections||[]).length){
+    const rangee = el("div","lec-row");
+    if(TTS_OK) rangee.appendChild(lecteurBouton(pane));
+    // seul l'auteur partage son cours : un chapitre reçu d'une classe reste dans l'app
+    if(!ch._shared) rangee.appendChild(boutonPartager(type, ch));
+    if(rangee.children.length) pane.appendChild(rangee);
+  }
   (ch.sections||[]).forEach((sec,si)=>{
     const block=el("div","section");
     block.dataset.sec = si;
@@ -5918,7 +6242,7 @@ function renderCoursePane(type){
   const majRv = ()=>{
     const on = estRevise(curSubj, type, ch);
     rv.classList.toggle("on", on);
-    rv.innerHTML = `<span>${on ? "Révisé ✓" : "Marquer comme révisé"}<span class="rv-sub">${on ? "Touche pour enlever" : "Tu peux aussi retoucher " + esc(ch.label) + " en haut"}</span></span><span class="sw"></span>`;
+    rv.innerHTML = `<span>${on ? "Révisé ✓" : "Marquer comme révisé"}<span class="rv-sub">${on ? "Touche pour enlever" : "Le point devient vert dans la liste des chapitres"}</span></span><span class="sw"></span>`;
   };
   majRv();
   rv.addEventListener("click",()=>{
@@ -5926,7 +6250,7 @@ function renderCoursePane(type){
     basculerRevise(curSubj, type, ch);
     majRv();
     // la pastille du haut suit
-    const pastille = pane.querySelectorAll(".chap-opt")[chIdx];
+    const pastille = pane.querySelector(".chap-pick");
     if(pastille) pastille.classList.toggle("revise", estRevise(curSubj, type, ch));
   });
   pane.appendChild(rv);
@@ -7670,7 +7994,7 @@ async function pushState(){
     PSYCHO_STEPS.forEach(s=>{ psy[s.id] = !!s.done; });
     const patch = {
       theme: document.documentElement.getAttribute("data-theme") || "girly",
-      srs: Object.assign({}, SRS, { __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP, __revises: REVISES, __vus: vusCharger() }),
+      srs: Object.assign({}, SRS, { __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP, __revises: REVISES, __vus: vusCharger(), __profs: PROFS }),
       psycho: psy,
       settings: USER_SETTINGS
     };
@@ -7730,7 +8054,11 @@ function applyRemote(row){
       VUS = Object.assign({}, vusCharger(), incoming.__vus);
       try{ localStorage.setItem(VUS_KEY, JSON.stringify(VUS)); }catch(e){}
     }
-    delete incoming.__edtnotes; delete incoming.__memo; delete incoming.__devrep; delete incoming.__revises; delete incoming.__vus;
+    if(incoming.__profs && typeof incoming.__profs === "object"){
+      PROFS = incoming.__profs;
+      try{ localStorage.setItem(PROFS_KEY, JSON.stringify(PROFS)); }catch(e){}
+    }
+    delete incoming.__edtnotes; delete incoming.__memo; delete incoming.__devrep; delete incoming.__revises; delete incoming.__vus; delete incoming.__profs;
     SRS = incoming;
     try{ localStorage.setItem(SRS_KEY, JSON.stringify(SRS)); }catch(e){}
   }
