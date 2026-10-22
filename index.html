@@ -808,6 +808,50 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
   background:var(--surface);border:1px solid var(--border);border-radius:18px;
   padding:15px 16px;margin-bottom:10px;font-family:var(--font-text);}
 .cls-row:active{background:var(--accent-soft);}
+.cls-row{position:relative;}
+.cls-row .nb,#btn-classes .nb{top:-7px;right:-7px;}
+#btn-classes .nb{min-width:20px;height:20px;font-size:11px;padding:0 6px;}
+/* page d'une classe : pastilles code et membres, cartes de matières comme « Tes matières » */
+.cls-pill{position:relative;display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;cursor:pointer;
+  background:var(--surface);border:1px solid var(--border);font-family:var(--font-text);font-size:13px;font-weight:600;color:var(--text-soft);white-space:nowrap;}
+.cls-pill b{color:var(--accent);letter-spacing:.12em;font-weight:700;}
+.cls-pill svg{width:15px;height:15px;flex-shrink:0;}
+.cls-pill .nb{top:-8px;right:-8px;min-width:20px;height:20px;font-size:11px;padding:0 6px;}
+.head-row .cls-code-pill{margin-left:auto;padding:5px 11px;font-size:12.5px;}
+.cls-bar{display:flex;align-items:center;gap:8px;margin:-4px 0 20px;}
+.cls-mat{margin-bottom:10px;}
+.cls-mat .ecue-name{font-size:15.5px;}
+.cls-mat-n{font-size:12px;color:var(--text-mute);}
+.cls-publier{margin-top:8px;}
+.cls-kind{font-family:var(--font-text);font-size:11px;font-weight:700;color:var(--text-mute);letter-spacing:.08em;text-transform:uppercase;margin:18px 4px 8px;}
+.mem-name small{font-weight:500;color:var(--text-mute);font-size:12px;}
+.mem-name .mem-role{display:block;margin-top:2px;color:var(--accent);font-weight:600;}
+.mem-row.nouveau{border-color:color-mix(in srgb,var(--new) 45%,transparent);}
+.cls-bar .chap-pick.type-pick.cls-vue{margin:0 0 0 auto;padding:7px 8px 7px 12px;}
+/* devoirs partagés */
+.cls-suivre,.ev-share{display:flex;align-items:center;gap:12px;width:100%;text-align:left;cursor:pointer;padding:14px 16px;margin-bottom:6px;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);font-family:var(--font-text);color:var(--text);}
+.ev-share{border-radius:14px;padding:12px 14px;}
+.ev-share-t{flex:1;min-width:0;}
+.ev-share-t b{display:block;font-size:15px;font-weight:600;}
+.ev-share-t small{display:block;font-size:12.5px;color:var(--text-mute);margin-top:3px;line-height:1.35;}
+.ev-sw{flex-shrink:0;width:48px;height:29px;border-radius:20px;background:var(--border-strong);position:relative;transition:background .25s;}
+.ev-sw::after{content:"";position:absolute;top:3px;left:3px;width:23px;height:23px;border-radius:50%;background:#fff;transition:transform .25s var(--ease-spring);box-shadow:0 1px 3px rgba(0,0,0,.25);}
+.on>.ev-sw{background:var(--ok);}
+.on>.ev-sw::after{transform:translateX(19px);}
+.ev-recu{margin-top:14px;font-size:12.5px;line-height:1.45;color:var(--text-mute);}
+.cf-tag{font-size:11.5px;font-weight:700;border-radius:20px;padding:2px 8px;margin-right:4px;}
+.cf-tag.controle{color:var(--warn);background:var(--warn-soft);}
+.cf-tag.devoir{color:var(--danger);background:var(--danger-soft);}
+.cf-tag.note{color:var(--info);background:var(--info-soft);}
+.ev-autre{display:flex;align-items:center;gap:10px;margin-top:14px;padding:12px 14px;border-radius:14px;
+  background:var(--surface);border:1px solid var(--border);}
+.ev-autre-t{flex:1;min-width:0;}
+.ev-autre-t small{display:block;font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--text-mute);margin-bottom:6px;}
+.ev-autre-t p{margin:0;font-size:14px;line-height:1.45;color:var(--text);white-space:pre-line;}
+.ev-autre-x{flex-shrink:0;border-radius:999px;padding:7px 12px;cursor:pointer;font-family:var(--font-text);font-size:12.5px;font-weight:600;
+  background:none;border:1px solid var(--border);color:var(--text-soft);}
+.edt-note.edt-note-cls small{color:var(--text-mute);font-size:.92em;}
 .cls-ic{width:40px;height:40px;border-radius:13px;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;font-size:19px;
   background:var(--accent-soft);}
@@ -816,17 +860,8 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 .cls-sub{font-size:12px;color:var(--text-mute);margin-top:3px;}
 .cls-tag{flex-shrink:0;font-size:10.5px;font-weight:700;letter-spacing:.04em;
   padding:4px 9px;border-radius:8px;background:var(--accent-soft);color:var(--accent);}
-.cls-code{font-family:var(--font-display);font-size:24px;font-weight:600;letter-spacing:.22em;
-  color:var(--accent);text-align:left;padding:12px 16px 14px;margin:6px 0 14px;
-  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);}
-.cls-code::before{content:"Code de la classe";display:block;font-family:var(--font-text);font-size:11px;font-weight:700;
-  letter-spacing:.08em;text-transform:uppercase;color:var(--text-mute);margin-bottom:4px;}
-.kind-head{font-family:var(--font-text);font-size:11px;font-weight:700;
-  color:var(--text-mute);letter-spacing:.08em;text-transform:uppercase;
-  margin:24px 4px 8px;}
 .mem-row{display:flex;align-items:center;gap:10px;padding:11px 14px;margin-bottom:8px;
   background:var(--surface);border:1px solid var(--border);border-radius:14px;}
-.pli-inner .mem-row{background:none;border:0;border-bottom:1px solid var(--border);border-radius:0;margin:0;padding:11px 4px;}
 .mem-name{flex:1;min-width:0;font-size:14.5px;font-weight:600;color:var(--text);}
 .mem-act{flex-shrink:0;border-radius:999px;padding:7px 14px;cursor:pointer;
   font-family:var(--font-text);font-size:12.5px;font-weight:600;
@@ -834,34 +869,6 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 .mem-act.go{background:var(--accent);color:#fff;border-color:transparent;}
 .res-group{font-family:var(--font-text);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
   color:var(--text-mute);margin:22px 4px 8px;}
-.pli{margin-top:10px;}
-.pli-head{width:100%;display:flex;align-items:center;gap:10px;cursor:pointer;text-align:left;
-  background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 16px;
-  color:var(--text);font-family:var(--font-text);font-size:14px;transition:border-color .25s;}
-.pli.open>.pli-head{border-color:var(--border-strong);}
-.pli-head.deja{border-style:dashed;
-  background-image:repeating-linear-gradient(135deg,var(--accent-soft) 0 7px,transparent 7px 15px);}
-.pli-head.deja .pli-title{color:var(--text-soft);}
-.pli-head.kind.deja{border:1px dashed var(--border);
-  background-image:repeating-linear-gradient(135deg,var(--accent-soft) 0 7px,transparent 7px 15px);}
-.pli-title{flex:1;min-width:0;}
-.pli-head.mat .pli-title{font-family:var(--font-display);font-weight:500;font-size:16px;}
-.pli-head{border-radius:var(--r-lg);}
-.pli-head.kind{background:transparent;border:none;border-radius:10px;padding:10px 6px;}
-.pli-head.kind .pli-title{font-family:var(--font-display);font-size:13.5px;font-weight:700;color:var(--text-soft);}
-.pli-count{flex-shrink:0;font-size:11.5px;font-weight:700;font-variant-numeric:tabular-nums;
-  border-radius:999px;padding:2px 9px;background:var(--accent-soft);color:var(--accent);}
-.pli-tag{flex-shrink:0;font-size:10.5px;font-weight:700;color:var(--text-mute);}
-.pli-chev{width:18px;height:18px;flex-shrink:0;color:var(--text-mute);
-  transition:transform .3s var(--ease-spring),color .25s;}
-.pli-chev svg{width:18px;height:18px;display:block;}
-.pli.open>.pli-head .pli-chev{transform:rotate(90deg);color:var(--accent);}
-.pli-body{display:grid;grid-template-rows:0fr;opacity:0;
-  transition:grid-template-rows .34s var(--ease-spring),opacity .24s ease;}
-.pli.open>.pli-body{grid-template-rows:1fr;opacity:1;}
-.pli-inner{min-height:0;overflow:hidden;padding:4px 0 2px 12px;}
-.pli-inner.flat{padding-left:2px;}
-.pli-follow{display:flex;justify-content:flex-end;padding:8px 2px 2px;}
 /* ── lecture à voix haute ── */.lec-start{display:inline-flex;align-items:center;gap:8px;margin:4px 0 14px;cursor:pointer;
   background:var(--accent-soft);color:var(--accent);border:1px solid var(--border);
   border-radius:999px;padding:9px 16px 9px 13px;font-family:var(--font-text);font-size:13.5px;font-weight:600;}
@@ -1045,6 +1052,31 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .site-go svg{width:18px;height:18px;display:block;}
 /* feuille à choix multiples : publier plusieurs chapitres d'un coup */.cal-row.deja{border-style:dashed;
   background-image:repeating-linear-gradient(135deg,var(--accent-soft) 0 7px,transparent 7px 15px);}
+/* publier : semestres en accordéon */
+.pk-sem{display:flex;align-items:center;gap:12px;width:100%;text-align:left;cursor:pointer;padding:13px 14px;margin-bottom:9px;
+  background:var(--surface);border:1px solid var(--border);border-radius:16px;color:var(--text);font-family:var(--font-text);}
+.pk-sem .pk-sem-ic{width:38px;height:38px;border-radius:11px;font-size:19px;}
+.pk-sem-t{flex:1;min-width:0;display:flex;flex-direction:column;}
+.pk-sem-n{font-family:var(--font-display);font-size:17px;font-weight:600;}
+.pk-sem-s{font-size:12.5px;color:var(--text-mute);margin-top:2px;}
+.pk-chev{width:18px;height:18px;flex-shrink:0;color:var(--text-mute);transition:transform .25s;}
+.pk-sem.open{border-color:var(--accent);}
+.pk-sem.open .pk-chev{transform:rotate(90deg);color:var(--accent);}
+.pk-badge{flex-shrink:0;font-size:11.5px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:20px;padding:3px 9px;white-space:nowrap;}
+.pk-badge.ok{color:var(--ok);background:var(--ok-soft);}
+.pk-mats{margin:-2px 0 12px 14px;padding-left:12px;border-left:2px solid var(--accent-soft);}
+.pk-mats[hidden]{display:none;}
+.pk-mat{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:12px 4px;border:0;border-bottom:1px solid var(--border);
+  background:var(--surface-solid);color:var(--text);font-family:var(--font-text);cursor:pointer;}
+.pk-mat-t{flex:1;min-width:0;display:flex;flex-direction:column;}
+.pk-mat-n{font-size:14.5px;font-weight:600;}
+.pk-mat-s{font-size:12px;color:var(--text-mute);margin-top:2px;}
+.pk-mats .swipe{border-radius:0;margin:0;}
+.pk-mats .swipe-front{background:var(--surface-solid);}
+.pk-mat.deja .pk-mat-n{color:var(--text-soft);}
+.pk-fl{color:var(--text-mute);font-size:18px;}
+.pk-tout{display:block;width:100%;margin:10px 0 4px;padding:10px;border:1.5px dashed var(--accent);border-radius:12px;background:none;
+  color:var(--accent);font-weight:700;font-family:var(--font-text);font-size:13.5px;cursor:pointer;}
 .cal-row.deja .cal-name{color:var(--text-soft);}
 .cal-row.sel{border-color:var(--accent);border-style:solid;}
 .pick-check{width:24px;height:24px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;
@@ -1912,6 +1944,7 @@ textarea::placeholder{color:var(--text-mute);}
 
       <div class="ev-label">Note perso</div>
       <textarea class="ev-note" id="ev-note" rows="3" placeholder="Chapitres à revoir, consignes…"></textarea>
+      <div id="ev-partage"></div>
     </div>
     <div class="ev-actions">
       <button class="btn ghost" id="ev-clear">Effacer</button>
@@ -2750,33 +2783,6 @@ function closePicker(){ document.getElementById("pick-sheet").classList.remove("
 
 const KIND_LABEL = { cm:"Cours magistraux", td:"Travaux dirigés", devoir:"Devoirs", revision:"Révisions" };
 
-// Blocs repliables de l'écran d'une classe. Repliés par défaut ;
-// on se souvient de ceux qu'on a ouverts pour que l'écran ne se referme
-// pas à chaque action (suivre, nommer un adjoint…).
-const PLIS_OUVERTS = new Set();
-function pli(cle, titre, opts = {}){
-  const wrap = el("div","pli" + (PLIS_OUVERTS.has(cle) ? " open" : ""));
-  const head = el("button","pli-head" + (opts.style ? " " + opts.style : "") + (opts.deja ? " deja" : ""));
-  head.type = "button";
-  const t = el("span","pli-title");
-  const majTitre = ()=>{ t.textContent = typeof titre === "function" ? titre(wrap.classList.contains("open")) : titre; };
-  majTitre();
-  head.appendChild(t);
-  if(opts.tag){ const g = el("span","pli-tag"); g.textContent = opts.tag; head.appendChild(g); }
-  if(opts.count != null){ const n = el("span","pli-count"); n.textContent = opts.count; head.appendChild(n); }
-  const ch = el("span","pli-chev"); ch.innerHTML = chevronR; head.appendChild(ch);
-  const body = el("div","pli-body");
-  const inner = el("div","pli-inner" + (opts.flat ? " flat" : ""));
-  body.appendChild(inner);
-  head.addEventListener("click",()=>{
-    haptic();
-    const ouvert = wrap.classList.toggle("open");
-    if(ouvert) PLIS_OUVERTS.add(cle); else PLIS_OUVERTS.delete(cle);
-    majTitre();
-  });
-  wrap.appendChild(head); wrap.appendChild(body);
-  return { wrap, inner };
-}
 
 // Emballe une ligne pour qu'un glissement vers la gauche révèle « Retirer ».
 function swipeRow(node, actions, flat){
@@ -2841,7 +2847,7 @@ async function openClasses(){
   }
   MY_CLASSES.forEach(c=>{
     const row = el("button","cls-row");
-    row.type = "button";
+    row.type = "button"; row.dataset.cls = c.id;
     const tag = c.role === "owner" ? "CRÉATEUR" : c.role === "adjoint" ? "ADJOINT"
               : c.role === "pending" ? "EN ATTENTE" : "MEMBRE";
     row.innerHTML = `<div class="cls-ic">📚</div>
@@ -2858,6 +2864,8 @@ async function openClasses(){
     });
     box.appendChild(row);
   });
+  majPastillesClasses();
+  rafraichirNouveautesClasses();
 }
 
 function classMenu(){
@@ -2894,10 +2902,134 @@ function joinClass(){
 }
 
 // ── Une classe : ses membres, puis ses cours triés par matière et par type ──
+// ── Nouveautés des classes : publié depuis ta dernière visite, et pas encore dans tes cours ──
+// Même logique que les chapitres : pastille rose de l'accueil jusqu'au chapitre.
+const CLSVUS_KEY = "revision_classes_vus_v1";
+let CLSVUS = null;
+function clsVus(){
+  if(!CLSVUS){ try{ CLSVUS = JSON.parse(localStorage.getItem(CLSVUS_KEY) || "null"); }catch(e){ CLSVUS = null; } }
+  if(!CLSVUS || typeof CLSVUS !== "object") CLSVUS = {};
+  if(!CLSVUS.init || typeof CLSVUS.init !== "object") CLSVUS.init = {};
+  if(!CLSVUS.vus  || typeof CLSVUS.vus  !== "object") CLSVUS.vus  = {};
+  return CLSVUS;
+}
+function clsVusSave(sync){ try{ localStorage.setItem(CLSVUS_KEY, JSON.stringify(clsVus())); }catch(e){} if(sync !== false) scheduleSync(); }
+// « chez moi » : ajouté à mes cours, ou publié par moi
+function possedeItem(it){ return isFollowed(it.id) || !!subFollowOf(it) || it.author === whoAmI(); }
+// la première fois qu'on ouvre une classe, ce qui y est déjà ne compte pas comme nouveau
+function nouveauxClasse(c, items){
+  const v = clsVus();
+  if(!v.init[c.id]){ v.init[c.id] = 1; items.forEach(it=>{ v.vus[it.id] = 1; }); clsVusSave(); }
+  return items.filter(it=>!v.vus[it.id] && !possedeItem(it));
+}
+function marquerItemVu(it){
+  const v = clsVus();
+  if(!it || v.vus[it.id]) return;
+  v.vus[it.id] = 1; clsVusSave();
+  // la pastille de sa classe se recalcule à la prochaine visite ; on retire déjà ce qu'on sait
+  const o = clsNb(), k = it.class_id;
+  if(k != null && o[k]){
+    const reste = (CLS_ITEMS[k] || []).filter(x=>!v.vus[x.id] && !possedeItem(x));
+    clsNbPoser(k, new Set(reste.map(x=>x.subject_title)).size + (CLS_ATTENTE[k] || 0));
+  }
+}
+// dernière liste connue de chaque classe, pour recompter sans réseau
+const CLS_ITEMS = {};
+const CLS_ATTENTE = {};  // demandes en attente, par classe
+// nombre de matières avec du nouveau, par classe
+const CLSNB_KEY = "revision_classes_nb_v1";
+function clsNb(){ try{ return JSON.parse(localStorage.getItem(CLSNB_KEY) || "{}") || {}; }catch(e){ return {}; } }
+function clsNbPoser(classId, n){
+  const o = clsNb();
+  if(n) o[classId] = n; else delete o[classId];
+  try{ localStorage.setItem(CLSNB_KEY, JSON.stringify(o)); }catch(e){}
+  majPastillesClasses();
+}
+function pastille(parent, n, label){
+  if(!parent) return;
+  let p = parent.querySelector(":scope > .nb");
+  if(!n){ if(p) p.remove(); return; }
+  if(!p){ p = el("span","nb"); parent.appendChild(p); }
+  p.textContent = n > 99 ? "99+" : n;
+  p.setAttribute("aria-label", label || (n + " nouveau" + (n > 1 ? "x" : "")));
+}
+function majPastillesClasses(){
+  const o = clsNb();
+  const connues = new Set(MY_CLASSES.map(c=>String(c.id)));
+  const tot = Object.keys(o).filter(k=>!MY_CLASSES.length || connues.has(String(k))).reduce((s,k)=>s + (o[k] || 0), 0);
+  pastille(document.getElementById("btn-classes"), tot, tot + " matière" + (tot > 1 ? "s" : "") + " avec du nouveau dans tes classes");
+  document.querySelectorAll("#classes-list .cls-row[data-cls]").forEach(r=>{
+    const n = o[r.dataset.cls] || 0;
+    pastille(r, n, n + " matière" + (n > 1 ? "s" : "") + " avec du nouveau");
+  });
+}
+// en arrière-plan : de quoi poser les pastilles sans ouvrir les classes
+let nouveautesEnCours = false;
+async function rafraichirNouveautesClasses(){
+  if(!syncOn || !PSEUDO || nouveautesEnCours) return;
+  nouveautesEnCours = true;
+  try{
+    const out = await api("class_list");
+    MY_CLASSES = out.classes || [];
+    const base = {};                       // pastille de chaque classe avant les devoirs
+    for(const c of MY_CLASSES){
+      if(c.role === "pending") continue;
+      try{
+        const items = (await api("class_items", { class_id:c.id })).items || [];
+        CLS_ITEMS[c.id] = items;
+        // pour qui valide les entrées, une demande en attente compte aussi
+        let attente = 0;
+        if(c.role === "owner" || c.role === "adjoint"){
+          try{ attente = ((await api("class_members", { class_id:c.id })).membres || []).filter(m=>m.role === "pending").length; }catch(e){}
+        }
+        CLS_ATTENTE[c.id] = attente;
+        base[c.id] = new Set(nouveauxClasse(c, items).map(it=>it.subject_title)).size + attente;
+        clsNbPoser(c.id, base[c.id]);
+      }catch(e){}
+    }
+    // les devoirs, en une fois pour toutes les classes, puis posés dans l'agenda
+    const ids = MY_CLASSES.filter(c=>c.role !== "pending").map(c=>c.id);
+    try{
+      await chargerDevoirs(ids);
+      appliquerDevoirsSuivis();
+      MY_CLASSES.filter(c=>c.role !== "pending").forEach(c=>{
+        const extra = nouveauxDevoirs(c, DEVCLS[c.id] || []).length;
+        if(c.id in base) clsNbPoser(c.id, base[c.id] + extra);
+      });
+    }catch(e){}
+  }catch(e){}
+  nouveautesEnCours = false;
+  majPastillesClasses();
+}
+
+const IC_MEMBRES = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 19v-1.5a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3V19"/><circle cx="9.5" cy="8" r="3"/><path d="M21 19v-1.5a3 3 0 0 0-2.3-2.9"/><path d="M15.5 5.2a3 3 0 0 1 0 5.6"/></svg>';
+// « CM 1 · 15/09 » pour un bandeau de nouveautés
+function nomCourtItem(it){
+  if(!it.label) return KIND_LABEL[it.kind] || "Révisions";
+  const pc = partiesChapitre(it.label);
+  return pc.court + (pc.titre ? " · " + pc.titre.replace(/^Séance du /, "") : "");
+}
+
 async function openClass(c){
   curClass = c;
   showScreen("class");
   document.getElementById("class-title").textContent = c.name;
+  // le code, en pastille dans l'entête : seul le créateur le voit, c'est lui qui le donne
+  const tete = document.querySelector("#screen-class .page-head .head-row");
+  if(tete){
+    tete.querySelectorAll(".cls-code-pill").forEach(n=>n.remove());
+    if(c.code){
+      const cp = el("button","cls-pill cls-code-pill"); cp.type = "button";
+      cp.innerHTML = `Code <b>${esc(c.code)}</b>`;
+      cp.setAttribute("aria-label", "Copier le code " + c.code);
+      cp.addEventListener("click", async ()=>{
+        haptic();
+        try{ await navigator.clipboard.writeText(c.code); toast("Code copié. Donne-le à ta classe."); }
+        catch(e){ toast("Code de la classe : " + c.code); }
+      });
+      tete.appendChild(cp);
+    }
+  }
   const box = document.getElementById("class-inner");
   box.innerHTML = `<div class="empty-note">Chargement…</div>`;
 
@@ -2911,134 +3043,540 @@ async function openClass(c){
     box.innerHTML = vide("alerte", "Impossible d'ouvrir cette classe", "Vérifie ta connexion, puis réessaie.");
     return;
   }
+  // les devoirs : sans réseau, on garde la dernière liste connue
+  let devs = DEVCLS[c.id] || [];
+  try{ devs = (await chargerDevoirs([c.id]))[c.id] || []; }catch(e){}
+  appliquerDevoirsSuivis();
+  if(curClass !== c) return;                 // on a changé de page entre-temps
   box.innerHTML = "";
-
-  // le code, visible du seul créateur : c'est lui qui le distribue
-  if(c.code){
-    const cd = el("div","cls-code");
-    cd.textContent = c.code;
-    box.appendChild(cd);
-    const h = el("div","fs-hint");
-    h.textContent = "Donne ce code à ta classe. Chaque demande devra être validée ici.";
-    h.style.margin = "-6px 4px 4px";
-    box.appendChild(h);
-  }
-
-  // demandes en attente et gestion des rôles
+  CLS_ITEMS[c.id] = items;
   const gere = monRole === "owner" || monRole === "adjoint";
-  const attente = membres.filter(m=>m.role === "pending");
-  if(gere && attente.length){
-    const t = el("div","kind-head"); t.textContent = "Demandes en attente";
-    box.appendChild(t);
-    attente.forEach(m=>{
-      const row = el("div","mem-row");
-      const nm = el("div","mem-name"); nm.textContent = m.pseudo;
-      const ok = el("button","mem-act go"); ok.textContent = "Accepter";
-      ok.addEventListener("click",()=>setRole(c, m.pseudo, "membre"));
-      const no = el("button","mem-act"); no.textContent = "Refuser";
-      no.addEventListener("click",()=>setRole(c, m.pseudo, "retire"));
-      row.appendChild(nm); row.appendChild(ok); row.appendChild(no);
-      box.appendChild(row);
-    });
+
+  // sous le nom : les membres, en pastille. Une demande en attente y pose une pastille rose.
+  const attente = gere ? membres.filter(m=>m.role === "pending") : [];
+  CLS_ATTENTE[c.id] = attente.length;
+  const dedans = membres.filter(m=>m.role !== "pending" && m.role !== "retire");
+  const bar = el("div","cls-bar");
+  const mp = el("button","cls-pill"); mp.type = "button";
+  mp.innerHTML = `${IC_MEMBRES}${dedans.length} membre${dedans.length > 1 ? "s" : ""}`;
+  pastille(mp, attente.length, attente.length + " demande" + (attente.length > 1 ? "s" : "") + " en attente");
+  mp.addEventListener("click",()=>{ haptic(); ouvrirMembres(c, membres, monRole); });
+  bar.appendChild(mp);
+
+  // Cours / Devoirs : un seul bouton, comme le choix CM / TD d'une matière
+  const nouv = nouveauxClasse(c, items);
+  const nvDev = nouveauxDevoirs(c, devs);
+  const nMat = new Set(nouv.map(it=>it.subject_title)).size;
+  const vue = CLS_VUE[c.id] || "cours";
+  const autre = vue === "cours" ? nvDev.length : nouv.length;
+  const sel = el("button","chap-pick type-pick cls-vue"); sel.type = "button";
+  sel.innerHTML = `<span class="type-ic">${ICO(vue === "cours" ? "cm" : "calendrier")}</span><span class="chap-pick-txt">${vue === "cours" ? "Cours" : "Devoirs"}</span>` +
+    (autre ? '<span class="tp-pt" aria-label="Du nouveau dans l\'autre vue"></span>' : "") + `<span class="chap-pick-ic">${IC_CHEV_BAS}</span>`;
+  sel.addEventListener("click",()=>{ haptic(); choisirVueClasse(c, { nMat, nCours:nouv.length, nDev:nvDev.length, nAvenir:devs.filter(devoirAVenir).length, nItems:new Set(items.map(it=>it.subject_title)).size }); });
+  bar.appendChild(sel);
+  box.appendChild(bar);
+
+  if(vue === "devoirs"){
+    renderDevoirsClasse(c, box, gere, devs);
+    // vus en ouvrant la liste : la pastille des devoirs s'éteint
+    clsNbPoser(c.id, nMat + attente.length);
+    return;
   }
-  if(monRole === "owner"){
-    const valides = membres.filter(m=>m.role === "membre" || m.role === "adjoint");
-    if(valides.length){
-      const p = pli(c.id + "|membres", o => o ? "Masquer les membres" : "Voir les membres",
-                    { count: valides.length, flat:true });
-      p.wrap.style.marginTop = "16px";
-      box.appendChild(p.wrap);
-      valides.forEach(m=>{
-        const row = el("div","mem-row");
-        const nm = el("div","mem-name");
-        nm.textContent = m.pseudo + (m.role === "adjoint" ? "  ·  adjoint" : "");
-        const b = el("button","mem-act" + (m.role === "adjoint" ? "" : " go"));
-        b.textContent = m.role === "adjoint" ? "Retirer l'adjoint" : "Nommer adjoint";
-        b.addEventListener("click",()=>setRole(c, m.pseudo, m.role === "adjoint" ? "membre" : "adjoint"));
-        row.appendChild(nm); row.appendChild(b);
-        p.inner.appendChild(row);
+  clsNbPoser(c.id, nMat + attente.length + nvDev.length);
+
+  if(!items.length){
+    const e = el("div");
+    e.innerHTML = vide("vide", "Aucun cours publié", gere ? "Touche « Publier un de mes cours » pour en partager un." : "Les cours partagés dans cette classe apparaîtront ici.");
+    box.appendChild(e);
+  }else{
+    const parMatiere = {};
+    items.forEach(it=>{ (parMatiere[it.subject_title] ||= []).push(it); });
+    Object.keys(parMatiere)
+      .sort((x,y)=>x.localeCompare(y,"fr",{ sensitivity:"base" }))
+      .forEach(mat=>{
+        const tous = parMatiere[mat];
+        const nv = nouv.filter(it=>it.subject_title === mat);
+        const tout = tous.every(possedeItem);
+        const nCh = tous.filter(it=>it.kind !== "revision").length;
+        const aRev = tous.some(it=>it.kind === "revision");
+        const detail = [nCh ? nCh + " chapitre" + (nCh > 1 ? "s" : "") : "", aRev ? "révisions" : ""].filter(Boolean).join(" · ");
+        const card = el("button","ecue-card cls-mat" + (nv.length ? " a-nouveau" : ""));
+        card.type = "button";
+        card.innerHTML = `<div class="ecue-top"><div class="ecue-info"><div class="ecue-name">${esc(mat)}</div>
+          <div class="ecue-meta">${tout ? `<span class="ecue-status ajour">✓ Dans tes cours</span>` : `<span class="cls-mat-n">${esc(detail)}</span>`}${isSubFollowed(c.id, mat) ? `<span class="cls-mat-n">· suivie</span>` : ""}</div></div>
+          <span class="ecue-arrow">→</span></div>`;
+        card.addEventListener("click",()=>{ haptic(); ouvrirMatiereClasse(c, mat, tous, monRole); });
+        // comme dans « Tes matières » : un bandeau rose qui mène droit au nouveau
+        if(nv.length){
+          const bd = el("div","ecue-nouveau");
+          bd.innerHTML = `<span>✦ ${nv.length === 1 ? "Nouveau" : nv.length + " nouveaux"} : ${esc(nv.map(nomCourtItem).join(", "))}</span><b>›</b>`;
+          bd.addEventListener("click", ev=>{ ev.stopPropagation(); haptic(); openSharedItem(nv[0]); });
+          card.appendChild(bd);
+        }
+        box.appendChild(card);
       });
-    }
   }
 
   // publier sans quitter la classe
   if(gere){
-    const add = el("button","add-inline");
+    const add = el("button","add-inline cls-publier");
+    add.type = "button";
     add.textContent = "+  Publier un de mes cours";
-    add.style.marginTop = "20px";
     add.addEventListener("click",()=>{ haptic(); publishFromClass(c); });
     box.appendChild(add);
   }
+}
 
-  // les cours, groupés par matière puis séparés CM / TD / Devoirs
-  if(!items.length){
-    const e = el("div");
-    e.innerHTML = vide("vide", "Aucun cours publié", gere ? "Ouvre un de tes chapitres et touche « Publier »." : "Les cours partagés dans cette classe apparaîtront ici.");
-    e.style.marginTop = "22px";
-    box.appendChild(e);
-    return;
-  }
-  const parMatiere = {};
-  items.forEach(it=>{ (parMatiere[it.subject_title] ||= []).push(it); });
-  // « déjà chez moi » : ajouté à mes cours, ou publié par moi. Hachuré, pour voir d'un coup d'œil ce qui manque.
-  const possede = it => isFollowed(it.id) || !!subFollowOf(it) || it.author === whoAmI();
-  if(items.some(possede)){
-    const lg = el("div","pick-legend");
-    lg.innerHTML = "<i></i><span>Hachuré : déjà dans tes cours. Le reste, c'est ce qui te manque.</span>";
-    lg.style.margin = "18px 4px 2px";
-    box.appendChild(lg);
-  }
-  Object.keys(parMatiere)
-    .sort((x,y)=>x.localeCompare(y,"fr",{ sensitivity:"base" }))
-    .forEach(mat=>{
-    const suivie = isSubFollowed(c.id, mat);
-    const tous = parMatiere[mat];
-    const nPossede = tous.filter(possede).length;
-    const pm = pli(c.id + "|" + mat, mat, {
-      style:"mat", count: nPossede && nPossede < tous.length ? nPossede + "/" + tous.length : tous.length,
-      tag: suivie ? "Suivie" : "", deja: nPossede === tous.length
-    });
-    box.appendChild(pm.wrap);
-    // suivre toute la matière : dans le bloc, pour garder l'en-tête lisible
-    const fl = el("div","pli-follow");
-    const b = el("button","mem-act" + (suivie ? "" : " go"));
-    b.textContent = suivie ? "Suivie" : "Tout suivre";
-    b.addEventListener("click",()=>{ haptic(); followSubject(c, mat, tous[0] && tous[0].id); });
-    fl.appendChild(b); pm.inner.appendChild(fl);
-    ["cm","td","devoir","revision"].forEach(k=>{
-      const list = tous.filter(x=>x.kind === k);
-      if(!list.length) return;
-      const pk = pli(c.id + "|" + mat + "|" + k, KIND_LABEL[k], { style:"kind", count: list.length, flat:true,
-                                                                   deja: list.every(possede) });
-      pk.wrap.style.marginTop = "4px";
-      pm.inner.appendChild(pk.wrap);
-      list.forEach(it=>{
-        const parMatiere = !!subFollowOf(it);
-        const dansMesCours = isFollowed(it.id) || parMatiere;
-        const aMoi = it.author === whoAmI() || monRole === "owner";
-        const row = el("button","cal-row" + (possede(it) ? " deja" : ""));
-        row.type = "button";
-        row.innerHTML = `<div class="cal-txt"><div class="cal-name">${esc(it.label)}</div>
-          <div class="cal-url">par ${esc(it.author)}${dansMesCours ? " · dans tes cours" : ""}</div></div>`;
-        row.addEventListener("click",()=>{ haptic(); openSharedItem(it); });
-        // glissement vers la gauche : retirer de chez soi, et dépublier si c'est le sien
-        const actions = [];
-        if(parMatiere) actions.push({ label:"Ne plus suivre\ncette matière", doux:true, fn:()=>{
-          USER_SETTINGS.follows = follows().filter(f=>
-            !(f.type === "subject" && f.class_id === it.class_id && f.subject_title === it.subject_title));
-          saveContent();
-          syncFollows().then(()=>{ toast("Matière retirée."); openClass(c); });
-        }});
-        else if(dansMesCours) actions.push({ label:"Retirer\nde mes cours", doux:true, fn:()=>{
-          unfollowItem(it.id); toast("Retiré de tes cours."); openClass(c);
-        }});
-        if(aMoi) actions.push({ label:"Dépublier", fn:()=>depublier(c, it) });
-        const ligne = actions.length ? swipeRow(row, actions) : row;
-        ligne.style.marginBottom = "8px";
-        pk.inner.appendChild(ligne);
-      });
+const CLS_VUE = {};      // classId → « cours » ou « devoirs »
+function choisirVueClasse(c, n){
+  document.querySelectorAll("#pick-sheet .pick-actions").forEach(x=>x.remove());
+  document.getElementById("pick-title").textContent = c.name;
+  const box = document.getElementById("pick-list");
+  box.innerHTML = "";
+  const vue = CLS_VUE[c.id] || "cours";
+  const lignes = [
+    { v:"cours", ic:"cm", nom:"Cours", sub:n.nItems + " matière" + (n.nItems > 1 ? "s" : ""), nv:n.nCours, txt:n.nCours ? n.nCours + " nouveau" + (n.nCours > 1 ? "x" : "") : "" },
+    { v:"devoirs", ic:"calendrier", nom:"Devoirs", sub:n.nAvenir ? n.nAvenir + " à venir" : "Aucun à venir", nv:n.nDev,
+      txt:n.nDev ? n.nDev + " nouveau" + (n.nDev > 1 ? "x" : "") : "" }
+  ];
+  lignes.forEach(l=>{
+    const r = el("button","cal-row chap-ligne" + (l.v === vue ? " actif" : "")); r.type = "button";
+    r.innerHTML = `<span class="type-ic ic-box">${ICO(l.ic)}</span><div class="cal-txt"><div class="cal-name">${l.nom}</div><div class="cal-url">${esc(l.sub)}${l.txt ? ` · <span class="nv-txt">${esc(l.txt)}</span>` : ""}</div></div>` +
+      (l.nv ? `<span class="nb-ligne">${l.nv}</span>` : "") + (l.v === vue ? `<span class="chap-ligne-ok">${COCHE_SVG}</span>` : "");
+    r.addEventListener("click",()=>{ haptic(); closePicker(); if(l.v !== vue){ CLS_VUE[c.id] = l.v; openClass(c); } });
+    box.appendChild(r);
+  });
+  document.getElementById("pick-sheet").classList.add("open");
+}
+
+// Une matière de la classe : ses chapitres, dans la même feuille que le choix d'un CM.
+// Point rose : nouveau. Point vert : déjà dans tes cours.
+function ouvrirMatiereClasse(c, mat, tous, monRole){
+  document.querySelectorAll("#pick-sheet .pick-actions").forEach(n=>n.remove());
+  document.getElementById("pick-title").textContent = mat;
+  const box = document.getElementById("pick-list");
+  box.innerHTML = "";
+  const suivie = isSubFollowed(c.id, mat);
+  const ts = el("button","cal-row chap-ligne" + (suivie ? " actif" : ""));
+  ts.type = "button";
+  ts.innerHTML = `<span class="type-ic ic-box">${ICO(suivie ? "valide" : "groupe")}</span><div class="cal-txt"><div class="cal-name">${suivie ? "Matière suivie" : "Tout suivre"}</div>
+    <div class="cal-url">${suivie ? "Les prochains chapitres arrivent seuls dans tes cours" : "Tout ajouter à tes cours, et les prochains aussi"}</div></div>`;
+  ts.addEventListener("click",()=>{ haptic(); closePicker(); setTimeout(()=>followSubject(c, mat, tous[0] && tous[0].id), 320); });
+  box.appendChild(ts);
+  const vus = clsVus().vus;
+  ["cm","td","devoir","revision"].forEach(k=>{
+    const list = tous.filter(x=>x.kind === k);
+    if(!list.length) return;
+    const t = el("div","cls-kind"); t.textContent = KIND_LABEL[k] || k;
+    box.appendChild(t);
+    list.forEach(it=>{
+      const parMatiere = !!subFollowOf(it);
+      const dansMesCours = isFollowed(it.id) || parMatiere;
+      const amoi = it.author === whoAmI();
+      const nouveau = !possedeItem(it) && !vus[it.id];
+      const r = el("button","cal-row chap-ligne" + (dansMesCours || amoi ? " revise" : "") + (nouveau ? " nouveau" : ""));
+      r.type = "button";
+      const etat = nouveau ? "Nouveau" : amoi ? "Publié par toi" : dansMesCours ? "Dans tes cours" : "";
+      r.innerHTML = `<span class="rv-dot"></span><div class="cal-txt"><div class="cal-name">${esc(it.label ? libelleChapitre(it.label) : KIND_LABEL[it.kind] || "")}</div>
+        <div class="cal-url">${etat ? etat + (amoi ? "" : " · ") : ""}${amoi ? "" : "par " + esc(it.author)}</div></div>`;
+      r.addEventListener("click",()=>{ haptic(); closePicker(); setTimeout(()=>openSharedItem(it), 250); });
+      // glisser vers la gauche : retirer de chez soi, et dépublier si c'est le sien
+      const actions = [];
+      if(parMatiere) actions.push({ label:"Ne plus suivre\ncette matière", doux:true, fn:()=>{
+        closePicker();
+        USER_SETTINGS.follows = follows().filter(f=>
+          !(f.type === "subject" && f.class_id === it.class_id && f.subject_title === it.subject_title));
+        saveContent();
+        syncFollows().then(()=>{ toast("Matière retirée."); openClass(c); });
+      }});
+      else if(isFollowed(it.id)) actions.push({ label:"Retirer\nde mes cours", doux:true, fn:()=>{
+        closePicker(); unfollowItem(it.id); toast("Retiré de tes cours."); openClass(c);
+      }});
+      if(amoi || monRole === "owner") actions.push({ label:"Dépublier", fn:()=>{ closePicker(); setTimeout(()=>depublier(c, it), 320); } });
+      box.appendChild(actions.length ? swipeRow(r, actions) : r);
     });
   });
+  if(tous.some(it=>it.author === whoAmI() || monRole === "owner")){
+    const lg = el("div","pick-legend");
+    lg.innerHTML = "<span>Glisse un chapitre vers la gauche pour le retirer.</span>";
+    lg.style.margin = "12px 4px 2px";
+    box.appendChild(lg);
+  }
+  document.getElementById("pick-sheet").classList.add("open");
+}
+
+// Les membres : la liste, les demandes à valider, les adjoints.
+function ouvrirMembres(c, membres, monRole){
+  document.querySelectorAll("#pick-sheet .pick-actions").forEach(n=>n.remove());
+  document.getElementById("pick-title").textContent = "Membres";
+  const box = document.getElementById("pick-list");
+  box.innerHTML = "";
+  const gere = monRole === "owner" || monRole === "adjoint";
+  const role = (cible, r)=>{ closePicker(); setTimeout(()=>setRole(c, cible, r), 250); };
+  const attente = gere ? membres.filter(m=>m.role === "pending") : [];
+  if(attente.length){
+    const t = el("div","cls-kind"); t.textContent = "Demandes en attente"; box.appendChild(t);
+    attente.forEach(m=>{
+      const row = el("div","mem-row nouveau");
+      const nm = el("div","mem-name"); nm.textContent = m.pseudo;
+      const ok = el("button","mem-act go"); ok.type = "button"; ok.textContent = "Accepter";
+      ok.addEventListener("click",()=>role(m.pseudo, "membre"));
+      const no = el("button","mem-act"); no.type = "button"; no.textContent = "Refuser";
+      no.addEventListener("click",()=>role(m.pseudo, "retire"));
+      row.appendChild(nm); row.appendChild(ok); row.appendChild(no);
+      box.appendChild(row);
+    });
+  }
+  const dedans = membres.filter(m=>m.role !== "pending" && m.role !== "retire");
+  if(dedans.length){
+    const t = el("div","cls-kind"); t.textContent = "Dans la classe"; box.appendChild(t);
+    const ordre = { owner:0, adjoint:1, membre:2 };
+    dedans.slice().sort((a,b)=>(ordre[a.role] ?? 3) - (ordre[b.role] ?? 3) || String(a.pseudo).localeCompare(String(b.pseudo), "fr"))
+      .forEach(m=>{
+        const row = el("div","mem-row");
+        const nm = el("div","mem-name");
+        nm.innerHTML = esc(m.pseudo) + (m.pseudo === whoAmI() ? " <small>(toi)</small>" : "") +
+          (m.role === "owner" ? '<small class="mem-role">créateur</small>' : m.role === "adjoint" ? '<small class="mem-role">adjoint</small>' : "");
+        row.appendChild(nm);
+        if(monRole === "owner" && m.role !== "owner"){
+          const b = el("button","mem-act"); b.type = "button";
+          b.textContent = m.role === "adjoint" ? "Retirer l'adjoint" : "Nommer adjoint";
+          b.addEventListener("click",()=>role(m.pseudo, m.role === "adjoint" ? "membre" : "adjoint"));
+          row.appendChild(b);
+        }
+        box.appendChild(row);
+      });
+  }
+  if(!attente.length && !dedans.length) box.innerHTML = vide("groupe", "Personne pour l'instant", "Donne le code de la classe pour que d'autres la rejoignent.");
+  if(monRole === "owner"){
+    const lg = el("div","pick-legend");
+    lg.innerHTML = "<span>Les adjoints peuvent publier et valider les demandes.</span>";
+    lg.style.margin = "12px 4px 2px";
+    box.appendChild(lg);
+  }
+  document.getElementById("pick-sheet").classList.add("open");
+}
+
+// ══════════════════════════════════════════════════
+// DEVOIRS PARTAGÉS : l'agenda d'une classe
+// ══════════════════════════════════════════════════
+// Un devoir partagé est posé sur un cours précis de l'emploi du temps (jour, cours, heure).
+// Ceux qui suivent les devoirs de la classe le reçoivent comme une annotation de ce cours.
+// L'annotation garde le lien : src (id du devoir), cls (classe), v (version reçue), base (contenu reçu).
+// Tant qu'on n'y touche pas, elle suit les mises à jour. Modifiée, elle devient la tienne :
+// une nouvelle version de la classe ne l'écrase plus, elle se pose à côté (N.autres).
+// Un cours déjà annoté garde ta note, et le devoir de la classe s'ajoute à côté.
+const DEVCLS_KEY = "revision_devoirs_classes_v1";
+let DEVCLS = {};                         // classId → devoirs de la classe (gardés pour le hors ligne)
+try{ DEVCLS = JSON.parse(localStorage.getItem(DEVCLS_KEY) || "{}") || {}; }catch(e){ DEVCLS = {}; }
+function devclsSave(){ try{ localStorage.setItem(DEVCLS_KEY, JSON.stringify(DEVCLS)); }catch(e){} }
+function agendaSuivi(){
+  if(!USER_SETTINGS.agendaSuivi || typeof USER_SETTINGS.agendaSuivi !== "object") USER_SETTINGS.agendaSuivi = {};
+  return USER_SETTINGS.agendaSuivi;
+}
+function suitAgenda(cid){ return !!agendaSuivi()[cid]; }
+function peutPublier(c){ return !!c && (c.role === "owner" || c.role === "adjoint"); }
+function jourIso(d){ return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); }
+function devoirAVenir(it){ return !!(it.payload && it.payload.date && it.payload.date >= jourIso(new Date())); }
+function sigDevoir(p){ return [p.type || "", String(p.note || "").trim(), p.date || "", p.heure || ""].join("|"); }
+function memeContenu(a, b){ return (a.type || "") === (b.type || "") && String(a.note || "").trim() === String(b.note || "").trim(); }
+const LIEN_DEVOIR = ["src","cls","v","base","auteur","moi"];
+function couperLien(N){ LIEN_DEVOIR.forEach(f=>delete N[f]); }
+// « Garder les deux » : le devoir de la classe reste à côté du tien, dans N.autres.
+// Il y suit les mises à jour de son auteur ; le tien ne bouge pas.
+function autresDe(N){ return N && Array.isArray(N.autres) ? N.autres : []; }
+// mis de côté (effacé, « garder le mien », retiré) tant que l'auteur n'a rien changé
+function estIgnore(N, id, sig){
+  if(!N) return false;
+  if(N.ignore && N.ignore.id === id && N.ignore.v === sig) return true;
+  return Array.isArray(N.ignores) && N.ignores.some(x=>x.id === id && x.v === sig);
+}
+function ignorer(N, id, sig){
+  N.ignores = (Array.isArray(N.ignores) ? N.ignores : []).filter(x=>x.id !== id).concat([{ id, v:sig }]);
+}
+function noteVide(N){ return !N.type && !String(N.note || "").trim() && !N.subj && !N.done && !autresDe(N).length; }
+
+async function chargerDevoirs(ids){
+  ids = ids.filter(Boolean);
+  if(!ids.length) return {};
+  const out = await api("agenda_fetch", { class_ids:ids });
+  const par = {};
+  ids.forEach(id=>{ par[id] = []; });
+  (out.items || []).forEach(it=>{ (par[it.class_id] ||= []).push(it); });
+  Object.assign(DEVCLS, par);
+  devclsSave();
+  return par;
+}
+
+// le cours de MON emploi du temps qui correspond au devoir : même cours, sinon même matière
+function creneauDuDevoir(it){
+  const p = it.payload || {};
+  if(!p.date) return null;
+  const evs = eventsOn(new Date(p.date + "T12:00:00"));
+  if(!evs.length) return null;
+  const cours = plat(p.cours || ""), mat = plat(it.subject_title || "");
+  const heure = l => l.find(e=>hhmm(e.start) === p.heure) || l[0];
+  let l = cours ? evs.filter(e=>plat(nomCourt(e.title)) === cours) : [];
+  if(l.length) return heure(l);
+  l = evs.filter(e=>{ const sj = matiereDuCours(e); return sj && plat(sj.title) === mat; });
+  return l.length ? heure(l) : null;
+}
+
+// Pose les devoirs suivis dans l'agenda. Appelé quand les devoirs ou l'emploi du temps changent.
+function appliquerDevoirsSuivis(){
+  if(typeof EDT === "undefined") return;
+  const suivis = Object.keys(agendaSuivi()).filter(k=>agendaSuivi()[k]);
+  const presents = new Set();            // devoirs encore publiés dans une classe suivie
+  let change = false;
+  suivis.forEach(cid=>(DEVCLS[cid] || []).forEach(it=>{
+    presents.add(it.id);
+    if(!devoirAVenir(it)) return;
+    const e = creneauDuDevoir(it);
+    if(!e) return;
+    const k = evKey(e), p = it.payload, sig = sigDevoir(p);
+    const N = EDTNOTES[k];
+    const lien = { src:it.id, cls:it.class_id, v:sig, base:{ type:p.type || "", note:p.note || "" }, auteur:it.author, moi:it.author === whoAmI() };
+    const aCote = { src:it.id, cls:it.class_id, auteur:it.author, type:p.type || "", note:p.note || "", v:sig };
+    // effacé exprès, ou « garder le mien » : on ne revient pas tant que l'auteur n'a rien changé
+    if(estIgnore(N, it.id, sig)) return;
+    // déjà gardé à côté de ta note : il suit simplement les mises à jour
+    const a = autresDe(N).find(x=>x.src === it.id);
+    if(a){
+      if(a.v !== sig){ Object.assign(a, { type:p.type || "", note:p.note || "", v:sig, auteur:it.author }); change = true; }
+      return;
+    }
+    if(!N || (!N.type && !String(N.note || "").trim())){
+      EDTNOTES[k] = Object.assign({ type:p.type || "", note:p.note || "", subj:(N && N.subj) || "", done:!!(N && N.done) }, lien);
+      change = true; return;
+    }
+    if(N.src === it.id){
+      if(N.v === sig) return;
+      // pas retouché depuis la dernière version reçue : on suit
+      if(memeContenu(N, N.base || {}) || memeContenu(N, p)){
+        Object.assign(N, { type:p.type || "", note:p.note || "" }, lien); change = true;
+        return;
+      }
+      // retouché : ta version devient la tienne, la nouvelle de la classe se pose à côté
+      couperLien(N);
+    }else if(memeContenu(N, p)){ Object.assign(N, lien); change = true; return; }
+    // déjà une note sur ce cours : les deux coexistent, chacun retire ce qu'il veut
+    N.autres = autresDe(N).concat([aCote]);
+    change = true;
+  }));
+  // ce qui n'est plus là : devoir retiré par l'auteur, ou classe plus suivie
+  const charge = cid => Array.isArray(DEVCLS[cid]);
+  Object.keys(EDTNOTES).forEach(k=>{
+    const N = EDTNOTES[k];
+    if(!N || typeof N !== "object") return;
+    if(N.conflit){ delete N.conflit; change = true; }     // ancien modèle, sans objet
+    // les devoirs gardés à côté : partis avec la classe, ou plus suivis
+    if(autresDe(N).length){
+      const reste = N.autres.filter(a=>suitAgenda(a.cls) && !(charge(a.cls) && !presents.has(a.src)));
+      if(reste.length !== N.autres.length){
+        N.autres = reste; change = true;
+        if(!reste.length) delete N.autres;
+        if(noteVide(N)){ delete EDTNOTES[k]; return; }
+      }
+    }
+    if(!N.src || !N.cls) return;
+    const parti = charge(N.cls) && !(DEVCLS[N.cls] || []).some(it=>it.id === N.src);
+    const lache = !N.moi && !suitAgenda(N.cls);
+    if(!parti && !lache) return;
+    // reçu et jamais retouché : il part avec la classe. Retouché ou à moi : il reste, sans lien.
+    if(!N.moi && memeContenu(N, N.base || {})){ N.type = ""; N.note = ""; }
+    couperLien(N);
+    if(noteVide(N)) delete EDTNOTES[k];
+    change = true;
+  });
+  if(change){
+    notesSave();
+    try{ renderDashboard(); }catch(e){}
+    const scr = document.getElementById("screen-edt");
+    if(scr && scr.classList.contains("active")) renderEDT();
+  }
+  return change;
+}
+// l'emploi du temps vient d'arriver : on y pose les devoirs suivis
+loadEDT = (orig => async function(force){ const r = await orig(force); try{ appliquerDevoirsSuivis(); }catch(e){} return r; })(loadEDT);
+
+// devoirs à venir publiés par d'autres et jamais vus
+function nouveauxDevoirs(c, items){
+  const v = clsVus();
+  if(!v.initDev || typeof v.initDev !== "object") v.initDev = {};
+  if(!v.initDev[c.id]){ v.initDev[c.id] = 1; items.forEach(it=>{ v.vus[it.id] = 1; }); clsVusSave(); }
+  return items.filter(it=>devoirAVenir(it) && it.author !== whoAmI() && !v.vus[it.id]);
+}
+const TAG_DEVOIR = { controle:"Contrôle", devoir:"À rendre", "":"Note" };
+
+// ── Partager depuis l'annotation d'un cours ──
+let evPartage = null;                 // classe choisie dans la feuille du cours
+function classesPublication(){ return MY_CLASSES.filter(peutPublier); }
+function renderEvPartage(e, n, opts){
+  const box = document.getElementById("ev-partage");
+  if(!box) return;
+  box.innerHTML = "";
+  const k = evKey(e);
+  // les devoirs de la classe gardés à côté du tien
+  autresDe(n).forEach(a=>{
+    const c = MY_CLASSES.find(x=>x.id === a.cls);
+    const r = el("div","ev-autre");
+    r.innerHTML = `<div class="ev-autre-t"><small>Aussi pour ce cours · ${esc(c ? c.name : "ta classe")} · par ${esc(a.auteur || "?")}</small>
+      <p><b class="cf-tag ${a.type || "note"}">${TAG_DEVOIR[a.type || ""]}</b>${a.note ? " " + esc(a.note) : ""}</p></div>`;
+    const x = el("button","ev-autre-x"); x.type = "button"; x.textContent = "Retirer";
+    x.addEventListener("click",()=>{
+      haptic();
+      const N = EDTNOTES[k];
+      if(!N) return;
+      N.autres = autresDe(N).filter(y=>y.src !== a.src);
+      if(!N.autres.length) delete N.autres;
+      ignorer(N, a.src, a.v);
+      notesSave(); r.remove(); renderEDT(); renderDashboard();
+      toast("Retiré. Il reviendra seulement s'il est modifié.");
+    });
+    r.appendChild(x);
+    box.appendChild(r);
+  });
+  // reçu d'une classe
+  if(n && n.src && !n.moi){
+    const c = MY_CLASSES.find(x=>x.id === n.cls);
+    const i = el("div","ev-recu");
+    i.textContent = "Reçu de " + (c ? c.name : "ta classe") + " · par " + (n.auteur || "?") + ". Si tu le modifies, il devient le tien.";
+    box.appendChild(i);
+    evPartage = null;
+    return;                              // un devoir reçu ne se repartage pas : il existe déjà dans la classe
+  }
+  const cls = classesPublication();
+  evPartage = (opts && opts.partager) || (n && n.moi && n.src ? n.cls : null);
+  if(!cls.length) return;
+  const lbl = el("div","ev-label"); lbl.textContent = "Partager";
+  box.appendChild(lbl);
+  cls.forEach(c=>{
+    const r = el("button","ev-share" + (evPartage === c.id ? " on" : "")); r.type = "button";
+    r.innerHTML = `<span class="ev-share-t"><b>Avec ${esc(c.name)}</b><small>Ceux qui suivent les devoirs le recevront</small></span><span class="ev-sw"></span>`;
+    r.addEventListener("click",()=>{
+      haptic();
+      evPartage = evPartage === c.id ? null : c.id;
+      box.querySelectorAll(".ev-share").forEach(x=>x.classList.remove("on"));
+      if(evPartage) r.classList.add("on");
+    });
+    box.appendChild(r);
+  });
+}
+async function partagerAnnotation(k, e, cid){
+  const N = EDTNOTES[k];
+  const plein = !!(N && (N.type || String(N.note || "").trim()));
+  const nomCls = id => (MY_CLASSES.find(x=>x.id === id) || {}).name || "la classe";
+  try{
+    // retiré du partage, déplacé vers une autre classe, ou vidé : on dépublie
+    if(N && N.moi && N.src && (cid !== N.cls || !plein)){
+      const ancien = N.src, acls = N.cls;
+      await api("item_delete", { item_id:ancien });
+      DEVCLS[acls] = (DEVCLS[acls] || []).filter(it=>it.id !== ancien); devclsSave();
+      couperLien(N);
+      if(!cid || !plein) toast("Retiré de " + nomCls(acls) + ".");
+    }
+    if(!cid || !plein) return;
+    const sj = matiereDuCours(e);
+    const payload = { label:jourIso(e.start), date:jourIso(e.start), heure:hhmm(e.start), type:N.type || "", note:String(N.note || "").trim().slice(0, 400), cours:nomCourt(e.title) };
+    const titre = sj ? sj.title : nomCourt(e.title).replace(/\s+(CM|TD)(\s*\d+)?$/i, "");
+    let id = N.moi && N.src && N.cls === cid ? N.src : null;
+    if(id) await api("item_update", { item_id:id, payload });
+    else id = ((await api("item_publish", { class_id:cid, kind:"agenda", subject_title:titre, payload })).item || {}).id;
+    if(!id) throw new Error("sans id");
+    Object.assign(N, { src:id, cls:cid, moi:true, auteur:whoAmI(), v:sigDevoir(payload), base:{ type:payload.type, note:payload.note } });
+    const it = { id, class_id:cid, author:whoAmI(), kind:"agenda", subject_title:titre, label:payload.label, payload };
+    DEVCLS[cid] = (DEVCLS[cid] || []).filter(x=>x.id !== id).concat([it]); devclsSave();
+    clsVus().vus[id] = 1; clsVusSave();
+    toast("Partagé avec " + nomCls(cid) + ".");
+  }catch(err){
+    toast("Le partage n'a pas marché. Vérifie ta connexion, puis réessaie.");
+  }finally{
+    notesSave();
+  }
+}
+
+// ── La vue Devoirs d'une classe ──
+function renderDevoirsClasse(c, box, gere, devs){
+  const cid = c.id;
+  const suit = suitAgenda(cid);
+  const sw = el("button","cls-suivre" + (suit ? " on" : "")); sw.type = "button";
+  sw.innerHTML = `<span class="ev-share-t"><b>Suivre les devoirs</b><small>Ils arrivent dans ton agenda. Tu peux toujours les modifier.</small></span><span class="ev-sw"></span>`;
+  sw.addEventListener("click",()=>{
+    haptic();
+    agendaSuivi()[cid] = !suit;
+    if(suit) delete agendaSuivi()[cid];
+    saveContent();
+    appliquerDevoirsSuivis();
+    toast(suit ? "Tu ne suis plus les devoirs de cette classe." : "Les devoirs arrivent dans ton agenda.");
+    openClass(c);
+  });
+  box.appendChild(sw);
+
+  const avenir = devs.filter(devoirAVenir).sort((a,b)=>(a.payload.date + (a.payload.heure || "")).localeCompare(b.payload.date + (b.payload.heure || "")));
+  const vus = clsVus().vus;
+  if(!avenir.length){
+    const e = el("div");
+    e.innerHTML = vide("calendrier", "Aucun devoir à venir", gere ? "Touche « Ajouter un devoir » pour en partager un." : "Les devoirs partagés dans cette classe apparaîtront ici.");
+    box.appendChild(e);
+  }
+  let jour = null, carte = null;
+  avenir.forEach(it=>{
+    const p = it.payload;
+    if(p.date !== jour){
+      jour = p.date;
+      const d = new Date(p.date + "T12:00:00");
+      const l = el("div","av-lbl"); l.textContent = JOURS[d.getDay()] + " " + d.getDate() + " " + MOIS[d.getMonth()];
+      box.appendChild(l);
+      carte = el("div","av-carte"); box.appendChild(carte);
+    }
+    const cle = p.type === "controle" ? "controle" : p.type === "devoir" ? "devoir" : "note";
+    const nouveau = it.author !== whoAmI() && !vus[it.id];
+    const row = el("button","av-row " + cle); row.type = "button";
+    const note = String(p.note || "").split("\n")[0];
+    row.innerHTML = `<span class="av-dot"></span><span class="av-txt"><b>${esc(it.subject_title)}</b>
+      <small><i>${TAG_DEVOIR[p.type || ""]}</i>${note ? " · " + esc(note) : ""}</small><small>${it.author === whoAmI() ? "par toi" : "par " + esc(it.author)}${p.heure ? " · cours de " + esc(p.heure) : ""}</small></span>` +
+      (nouveau ? `<span class="chap-pick-new">Nouveau</span>` : `<span class="av-fl">›</span>`);
+    row.addEventListener("click",()=>{
+      haptic();
+      const e = creneauDuDevoir(it);
+      if(e) return openEvSheet(e);
+      toast("Ce cours n'est pas dans ton emploi du temps.");
+    });
+    carte.appendChild(row);
+  });
+  if(gere){
+    const add = el("button","add-inline cls-publier"); add.type = "button";
+    add.textContent = "+  Ajouter un devoir";
+    add.addEventListener("click",()=>{ haptic(); choisirCoursDevoir(c); });
+    box.appendChild(add);
+  }
+  // vus : la pastille s'éteint, l'étiquette « Nouveau » reste jusqu'à la prochaine visite
+  let marque = false;
+  avenir.forEach(it=>{ if(!vus[it.id]){ vus[it.id] = 1; marque = true; } });
+  if(marque) clsVusSave();
+}
+// Ajouter un devoir : on choisit le cours, puis on l'annote comme d'habitude.
+function choisirCoursDevoir(c){
+  const auj = new Date(); auj.setHours(0,0,0,0);
+  const jours = [];
+  for(let i = 0; i < 28; i++){ const d = new Date(auj); d.setDate(d.getDate() + i); const evs = eventsOn(d); if(evs.length) jours.push([d, evs]); }
+  if(!jours.length){ toast("Ajoute d'abord ton emploi du temps pour poser un devoir sur un cours."); return; }
+  document.querySelectorAll("#pick-sheet .pick-actions").forEach(n=>n.remove());
+  document.getElementById("pick-title").textContent = "Pour quel cours ?";
+  const box = document.getElementById("pick-list");
+  box.innerHTML = "";
+  jours.forEach(([d, evs])=>{
+    const t = el("div","cls-kind"); t.textContent = JOURS[d.getDay()] + " " + d.getDate() + " " + MOIS[d.getMonth()];
+    box.appendChild(t);
+    evs.forEach(e=>{
+      const n = evNote(e);
+      const r = el("button","cal-row chap-ligne"); r.type = "button";
+      r.innerHTML = `<div class="cal-txt"><div class="cal-name">${esc(nomCourt(e.title))}</div><div class="cal-url">${hhmm(e.start)}${e.end ? " → " + hhmm(e.end) : ""}${n && (n.type || n.note) ? " · déjà annoté" : ""}</div></div>`;
+      r.addEventListener("click",()=>{ haptic(); closePicker(); setTimeout(()=>openEvSheet(e, { partager:c.id }), 320); });
+      box.appendChild(r);
+    });
+  });
+  document.getElementById("pick-sheet").classList.add("open");
 }
 
 // Retirer plusieurs publications d'un coup (un chapitre publié deux fois, ou toute une matière).
@@ -3165,35 +3703,60 @@ async function publishFromClass(c){
   // tout ce que j'ai publié pour une matière
   const miensDe = sj => Object.values(dejaPar).flatMap(d=>d.miens).filter(it=>it.subject_title === sj.title);
 
-  openMultiPicker("Quelle matière ?", mats.map(sj=>{
-    const l = lignesDe(sj);
-    const nDeja = l.filter(x=>x.deja).length;
-    return {
-      label: sj.title,
-      sub: nDeja ? `${nDeja} sur ${l.length} déjà publiés` : `${l.length} à publier`,
-      deja: l.length > 0 && nDeja === l.length,        // tout est déjà dans la classe
-      value: sj.id,
-      actions: miensDe(sj).length ? [{ label:"Tout\ndépublier", fn:()=>{
-        closePicker(); setTimeout(()=>depublierPlusieurs(c, miensDe(sj), sj.title), 320);
-      } }] : undefined
-    };
-  }), { tout:"Tout", sel:"Publier" },
-  // plusieurs matières cochées : on publie ou met à jour tous leurs chapitres
-  ids=>{
-    const taches = [];
-    ids.forEach(id=>{
-      const sj = SUBJECTS.find(x=>x.id === id);
-      if(sj) lignesDe(sj).forEach(l=>taches.push({ sj, val:l.value }));
+  // ── d'abord le semestre, qui se déplie sur ses matières ; toute la ligne est cliquable ──
+  const choisirChapitres = sj => openMultiPicker("Quoi publier ?", lignesDe(sj),
+    { tout:"Tout publier", sel:"Publier" }, vals=>publierLot(c, sj, vals, dejaPar));
+  const sheet = document.getElementById("pick-sheet");
+  sheet.querySelectorAll(".pick-actions").forEach(n=>n.remove());
+  const box = document.getElementById("pick-list");
+  document.getElementById("pick-title").textContent = "Que publier ?";
+  box.innerHTML = "";
+  const groupes = new Map();
+  mats.forEach(sj=>{ const k = SEMESTRES[sj.id] || 0; if(!groupes.has(k)) groupes.set(k, []); groupes.get(k).push(sj); });
+  const cles = [...groupes.keys()].sort((x,y)=>(x || 99) - (y || 99));
+  const CHEV = '<svg class="pk-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
+  cles.forEach(sem=>{
+    const liste = groupes.get(sem);
+    const etatMat = sj => { const l = lignesDe(sj); return { n:l.length, deja:l.filter(x=>x.deja).length }; };
+    const reste = liste.filter(sj=>{ const e = etatMat(sj); return e.deja < e.n; }).length;
+    const t = sem ? tuileDe("sem:" + sem) : {};
+    const tete = el("button","pk-sem"); tete.type = "button";
+    tete.innerHTML = `<span class="ic-box pk-sem-ic">${esc(t.icone || (sem ? (sem % 2 ? "📚" : "🧠") : "📂"))}</span>
+      <span class="pk-sem-t"><span class="pk-sem-n">${esc(sem ? titreSemestre(sem) : "Autres matières")}</span>
+      <span class="pk-sem-s">${liste.length} matière${liste.length > 1 ? "s" : ""}${t.sous ? " · " + esc(t.sous) : ""}</span></span>
+      <span class="pk-badge${reste ? "" : " ok"}">${reste ? reste + " à publier" : "✓ à jour"}</span>${CHEV}`;
+    const corps = el("div","pk-mats"); corps.hidden = cles.length > 1;
+    if(!corps.hidden) tete.classList.add("open");
+    tete.addEventListener("click",()=>{ haptic(); corps.hidden = !corps.hidden; tete.classList.toggle("open", !corps.hidden); });
+    liste.forEach(sj=>{
+      const e = etatMat(sj);
+      const r = el("button","pk-mat" + (e.n && e.deja === e.n ? " deja" : "")); r.type = "button";
+      r.innerHTML = `<span class="pk-mat-t"><span class="pk-mat-n">${esc(sj.title)}</span>
+        <span class="pk-mat-s">${!e.deja ? e.n + " à publier" : e.deja === e.n ? "Tout est publié" : e.deja + " sur " + e.n + " publiés"}</span></span><span class="pk-fl">›</span>`;
+      r.addEventListener("click",()=>{ haptic(); closePicker(); setTimeout(()=>choisirChapitres(sj), 320); });
+      // ce que j'ai déjà publié de cette matière : glisser vers la gauche pour tout retirer
+      if(miensDe(sj).length){
+        corps.appendChild(swipeRow(r, [{ label:"Tout\ndépublier", fn:()=>{ closePicker(); setTimeout(()=>depublierPlusieurs(c, miensDe(sj), sj.title), 320); } }], true));
+      } else corps.appendChild(r);
     });
-    publierTaches(c, taches, dejaPar);
-  },
-  // toucher le nom : choisir parmi les chapitres de cette matière
-  subjId=>{
-    const sj = SUBJECTS.find(x=>x.id === subjId);
-    setTimeout(()=>openMultiPicker("Quoi publier ?", lignesDe(sj),
-      { tout:"Tout publier", sel:"Publier" },
-      vals=>publierLot(c, sj, vals, dejaPar)), 320);   // on laisse la première feuille se refermer
+    const tout = el("button","pk-tout"); tout.type = "button";
+    tout.textContent = sem ? "Publier tout le " + titreSemestre(sem).replace(/^Semestre/, "semestre") : "Tout publier";
+    tout.addEventListener("click",()=>{
+      haptic(); closePicker();
+      const taches = [];
+      liste.forEach(sj=>lignesDe(sj).forEach(l=>taches.push({ sj, val:l.value })));
+      publierTaches(c, taches, dejaPar);
+    });
+    corps.appendChild(tout);
+    box.appendChild(tete); box.appendChild(corps);
   });
+  if(Object.values(dejaPar).some(d=>d.miens.length)){
+    const lg = el("div","pick-legend");
+    lg.innerHTML = "<span>Glisse une matière vers la gauche pour retirer ce que tu as publié.</span>";
+    lg.style.margin = "10px 4px 2px";
+    box.appendChild(lg);
+  }
+  sheet.classList.add("open");
 }
 // Publie une liste d'éléments d'une matière, l'un après l'autre.
 function publierLot(c, sj, vals, dejaPar){
@@ -3231,6 +3794,7 @@ async function publierTaches(c, taches, dejaPar){
 
 // ── Lecture d'un chapitre partagé ──
 async function openSharedItem(it){
+  marquerItemVu(it);
   showScreen("shared");
   document.getElementById("shared-title").textContent = it.label;
   document.getElementById("shared-sub").textContent =
@@ -5548,12 +6112,15 @@ function lieuEtProf(e){
 function courseCard(e){
   const n = evNote(e);
   // un cours peut être marqué (contrôle / à rendre) ou simplement annoté
-  const kind = n ? (n.type || ((n.note || n.subj) ? "note" : "")) : "";
+  const aut = autresDe(n);
+  const kind = n ? (n.type || ((n.note || n.subj) ? "note" : "") || (aut[0] ? aut[0].type || "note" : "")) : "";
   const maint = new Date(), enCours = e.start <= maint && (e.end || e.start) > maint;
   const c = el("div","edt-course" + (kind ? " flagged "+kind : "") + (n && n.done ? " done" : "") + (enCours ? " live" : ""));
-  const badge = kind
-    ? `<span class="ev-badge ${kind}">${kind==="controle"?"Contrôle":kind==="devoir"?"À rendre":"Note"}</span>` : "";
-  const note = n && n.note ? `<div class="edt-note">${esc(n.note)}</div>` : "";
+  const badge = (kind
+    ? `<span class="ev-badge ${kind}">${kind==="controle"?"Contrôle":kind==="devoir"?"À rendre":"Note"}</span>` : "") +
+    aut.filter(a=>(a.type || "note") !== kind).map(a=>`<span class="ev-badge ${a.type || "note"}">${TAG_DEVOIR[a.type || ""]}</span>`).join("");
+  const note = (n && n.note ? `<div class="edt-note">${esc(n.note)}</div>` : "") +
+    aut.map(a=>`<div class="edt-note edt-note-cls">${a.note ? esc(a.note) : TAG_DEVOIR[a.type || ""]}<small> · par ${esc(a.auteur || "?")}</small></div>`).join("");
   c.innerHTML = `
     <div class="edt-time"><span>${hhmm(e.start)}</span><span class="edt-time-end">${hhmm(e.end)}</span></div>
     <div class="edt-info">
@@ -5567,7 +6134,7 @@ function courseCard(e){
 
 // ── Feuille : annoter un créneau ──
 let evEditing = null;
-function openEvSheet(e){
+function openEvSheet(e, opts){
   evEditing = e;
   const n = evNote(e) || { type:"", note:"", subj:"", done:false };
   document.getElementById("ev-title").textContent = e.title ? nomCourt(e.title) : "Cours";
@@ -5587,6 +6154,7 @@ function openEvSheet(e){
   sel.value = n.subj || "";
   document.getElementById("ev-note").value = n.note || "";
   renderEvProf(e, false);
+  renderEvPartage(e, evNote(e), opts);
 
   document.getElementById("ev-overlay").classList.add("open");
 }
@@ -5644,14 +6212,28 @@ function saveEvSheet(){
       profsSave();
     }
   }
-  if(!type && !subj && !note){ delete EDTNOTES[k]; }
-  else {
-    const prev = EDTNOTES[k] || {};
-    EDTNOTES[k] = { type, subj, note, done: !!prev.done };
+  const prev = EDTNOTES[k] || {};
+  // le lien avec un devoir de classe est gardé : c'est lui qui dit si on l'a retouché
+  const garde = {};
+  ["src","cls","v","base","auteur","moi","ignore","ignores","autres"].forEach(f=>{ if(prev[f] !== undefined) garde[f] = prev[f]; });
+  if(!type && !subj && !note && !prev.src && !autresDe(prev).length){ delete EDTNOTES[k]; }
+  else EDTNOTES[k] = Object.assign({ type, subj, note, done: !!prev.done }, garde);
+  // un devoir reçu qu'on vide : on le met de côté, il ne revient que s'il change
+  if(!type && !note && prev.src && !prev.moi){
+    const N0 = { type:"", subj, note:"", done:false };
+    if(autresDe(prev).length) N0.autres = prev.autres;
+    if(prev.ignores) N0.ignores = prev.ignores;
+    ignorer(N0, prev.src, prev.v);
+    EDTNOTES[k] = N0;
   }
+  const e = evEditing, cid = evPartage;
   notesSave();
   closeEvSheet();
   renderEDT(); renderDashboard();
+  const N = EDTNOTES[k];
+  if(N && (cid || (N.moi && N.src))) partagerAnnotation(k, e, cid).then(()=>{
+    if(document.documentElement.getAttribute("data-screen") === "class" && curClass) openClass(curClass);
+  });
 }
 
 // ── Bloc "cours du jour" sur l'accueil ──
@@ -5808,7 +6390,7 @@ function pendingAlerts(){
   // marqués (contrôle / à rendre) OU simplement annotés (note, matière liée)
   const hasSomething = e => {
     const n = evNote(e);
-    return !!(n && (n.type || n.note || n.subj));
+    return !!(n && (n.type || n.note || n.subj || autresDe(n).length));
   };
   const all = EDT
     .filter(e => e.start >= now && hasSomething(e))
@@ -5959,7 +6541,8 @@ function renderKnowBlock(){
   const lbl = el("div","av-lbl"); lbl.textContent = "À venir"; box.appendChild(lbl);
   const card = el("div","av-carte");
   alerts.slice(0,5).forEach(e=>{
-    const t = (evNote(e)||{}).type;
+    const nn = evNote(e) || {};
+    const t = nn.type || ((!nn.note && autresDe(nn)[0]) ? autresDe(nn)[0].type : "");
     const cle = t === "controle" ? "controle" : t === "devoir" ? "devoir" : "note";
     const tag = cle === "controle" ? "Contrôle" : cle === "devoir" ? "À rendre" : "Note";
     const j = Math.max(0, Math.round((new Date(e.start).setHours(0,0,0,0) - new Date(now).setHours(0,0,0,0)) / 86400000));
@@ -8687,6 +9270,7 @@ async function refreshPartage(){
   if(Date.now() - dernierRefresh < 8000) return;   // on évite les rafales
   dernierRefresh = Date.now();
   await syncFollows();
+  rafraichirNouveautesClasses();
   const scr = document.documentElement.getAttribute("data-screen");
   if(scr === "class" && curClass) openClass(curClass);
   else if(scr === "classes") openClasses();
@@ -8783,7 +9367,25 @@ document.getElementById("ev-overlay").addEventListener("click", e=>{
 document.getElementById("ev-save").addEventListener("click", ()=>{ haptic(); saveEvSheet(); });
 document.getElementById("ev-clear").addEventListener("click", ()=>{
   haptic();
-  if(evEditing){ delete EDTNOTES[evKey(evEditing)]; notesSave(); }
+  if(evEditing){
+    const k = evKey(evEditing), N = EDTNOTES[k];
+    if(N && N.src && N.moi){
+      // effacer un devoir que j'ai partagé : il quitte aussi la classe
+      N.type = ""; N.note = "";
+      partagerAnnotation(k, evEditing, null).then(()=>{ delete EDTNOTES[k]; notesSave(); });
+    }else if(N && N.src){
+      // reçu d'une classe : mis de côté, il ne revient que si son auteur le change
+      const N0 = { type:"", subj:"", note:"", done:false };
+      if(autresDe(N).length) N0.autres = N.autres;
+      if(N.ignores) N0.ignores = N.ignores;
+      ignorer(N0, N.src, N.v);
+      EDTNOTES[k] = N0;
+    }else if(N && autresDe(N).length){
+      // ta note part, les devoirs de la classe gardés à côté restent
+      EDTNOTES[k] = { type:"", subj:"", note:"", done:false, autres:N.autres, ignores:N.ignores };
+    }else delete EDTNOTES[k];
+    notesSave();
+  }
   closeEvSheet(); renderEDT(); renderDashboard();
 });
 document.querySelectorAll("#ev-types .ev-type").forEach(b=>{
@@ -9007,7 +9609,7 @@ async function pushState(){
     PSYCHO_STEPS.forEach(s=>{ psy[s.id] = !!s.done; });
     const patch = {
       theme: document.documentElement.getAttribute("data-theme") || "girly",
-      srs: Object.assign({}, SRS, { __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP, __revises: REVISES, __vus: vusCharger(), __profs: PROFS, __notes: CHNOTES, __errexam: ERREXAM }),
+      srs: Object.assign({}, SRS, { __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP, __revises: REVISES, __vus: vusCharger(), __clsvus: clsVus(), __profs: PROFS, __notes: CHNOTES, __errexam: ERREXAM }),
       psycho: psy,
       settings: USER_SETTINGS
     };
@@ -9067,6 +9669,13 @@ function applyRemote(row){
       VUS = Object.assign({}, vusCharger(), incoming.__vus);
       try{ localStorage.setItem(VUS_KEY, JSON.stringify(VUS)); }catch(e){}
     }
+    if(incoming.__clsvus && typeof incoming.__clsvus === "object"){
+      // on fusionne : vu sur un appareil, vu partout
+      const v = clsVus();
+      Object.assign(v.init, incoming.__clsvus.init || {});
+      Object.assign(v.vus, incoming.__clsvus.vus || {});
+      clsVusSave(false);
+    }
     if(incoming.__profs && typeof incoming.__profs === "object"){
       PROFS = incoming.__profs;
       try{ localStorage.setItem(PROFS_KEY, JSON.stringify(PROFS)); }catch(e){}
@@ -9098,7 +9707,7 @@ function applyRemote(row){
   USER_SETTINGS = (row.settings && typeof row.settings === "object") ? row.settings : {};
   applyContent(row);
   // les chapitres suivis sont rechargés depuis leur classe : c'est le lien vivant
-  if(syncOn) syncFollows().then(()=>renderSemestres());
+  if(syncOn) syncFollows().then(()=>{ renderSemestres(); rafraichirNouveautesClasses(); });
 }
 // synchro silencieuse : plus aucun badge affiché
 function setSyncBadge(state){ /* volontairement vide */ }
