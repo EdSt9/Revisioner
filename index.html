@@ -216,6 +216,28 @@ html[data-theme="purple"] .motiv{display:none!important;}
 .sr-num{border:1px solid var(--border-strong);border-radius:5px;padding:1px 5px;font-weight:700;font-size:10.5px;color:var(--text-soft);}
 .sr-title{font-family:var(--font-display);font-weight:500;font-size:15.5px;color:var(--text);line-height:1.35;margin-bottom:5px;}
 .sr-snip{font-size:12.5px;color:var(--text-soft);line-height:1.55;}
+/* loupe dans l'en-tête d'une matière */
+.head-row .head-search{margin-left:auto;width:36px;height:36px;border-radius:50%;border:0;background:none;color:var(--text-soft);
+  display:grid;place-items:center;cursor:pointer;}
+.head-row .head-search svg{width:19px;height:19px;}
+.head-row .head-search+.chap-pick.type-pick{margin-left:2px;}
+/* section ouverte depuis la recherche ou le lexique */
+.section.sec-flash .card{animation:secFlash 2.6s ease;}
+@keyframes secFlash{0%,40%{box-shadow:0 0 0 2px var(--accent),0 6px 24px var(--shadow);}100%{box-shadow:0 0 0 0 transparent;}}
+/* lexique */
+.lex-sous{font-size:14px;color:var(--text-soft);margin-bottom:4px;}
+.lex-lettres{display:flex;flex-wrap:wrap;gap:4px;margin:-6px 0 18px;}
+.lex-lettres button{min-width:30px;height:30px;padding:0 6px;border-radius:9px;border:0;background:var(--surface-2);color:var(--accent);
+  font-family:var(--font-text);font-weight:700;font-size:13px;cursor:pointer;}
+.lex-lettre{font-family:var(--font-display);font-size:22px;font-weight:600;color:var(--accent);margin:22px 4px 10px;scroll-margin-top:16px;}
+.lex-item{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 16px 12px;margin-bottom:10px;}
+.lex-terme{font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--text);margin-bottom:5px;}
+.lex-def{font-size:calc(14px * var(--zt,1));line-height:1.55;color:var(--text-soft);}
+.lex-def b{color:var(--text);}
+.lex-src{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:5px 10px 5px 9px;border-radius:999px;border:0;
+  background:var(--accent-soft);color:var(--accent);font-family:var(--font-text);font-size:12px;font-weight:700;cursor:pointer;max-width:100%;}
+.lex-src span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.lex-src svg{width:12px;height:12px;flex-shrink:0;}
 mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding:0 2px;font-weight:600;}
 
 /* ── ÉCRAN PSEUDO ── */
@@ -581,6 +603,12 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 .sem-tile .sem-meta{font-size:12px;color:var(--text-mute);margin:3px 0 14px;}
 .sem-tile .sem-sous{font-size:12.5px;font-weight:600;color:var(--accent);margin-top:4px;}
 .sem-tile .sem-sous + .sem-meta{margin-top:2px;}
+/* semestres rangés par sous-titre (ex. L1 Humanités, L3 SESS), Projet Psycho à part */
+.sem-groupe{grid-column:1/-1;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--accent);margin:10px 2px -12px;display:flex;align-items:center;gap:10px;}
+.sem-groupe::after{content:"";flex:1;height:1px;background:var(--border);}
+.sem-groupe:first-child{margin-top:0;}
+.sem-grid.groupee .sem-tile .sem-sous{display:none;}
 .pen.pen-bas{top:auto;bottom:8px;right:8px;}
 .sem-tile .sem-bar{height:5px;background:var(--surface-2,rgba(255,255,255,.06));border-radius:3px;overflow:hidden;}
 .sem-tile .sem-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:3px;
@@ -819,6 +847,13 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
   transition:background .2s,color .2s;}
 .home-btn svg{width:18px;height:18px;}
 .home-btn:active{background:var(--accent-soft);color:var(--accent);}
+/* « Revenir à l'accueil », en haut de la feuille Changer de matière */
+.sheet-home{display:flex;align-items:center;gap:12px;width:calc(100% - 28px);flex-shrink:0;margin:0 14px 14px;box-sizing:border-box;padding:12px 14px;
+  border-radius:14px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;
+  font-family:var(--font-text);font-size:15px;font-weight:600;text-align:left;transition:background .2s,transform .18s var(--ease-spring);}
+.sheet-home:active{transform:scale(.98);background:var(--accent-soft);}
+.sheet-home-ic{width:34px;height:34px;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex-shrink:0;}
+.sheet-home-ic svg{width:18px;height:18px;}
 .fab.show{display:flex;}
 .fab:active{transform:scale(.92);}
 /* crayon d'édition, posé sur la zone qu'il modifie */
@@ -914,6 +949,35 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 .lec-calque.lec-phrase>div{background:var(--accent);opacity:.10;}
 .lec-calque.lec-mot>div{background:var(--accent);opacity:.42;}
 .lec-start:active{transform:scale(.97);}
+/* onglet « Sommaire » collé au bord droit, et panneau latéral */
+.somm-flot{position:fixed;left:0;top:50%;transform:translate(-100%,-50%);opacity:0;pointer-events:none;z-index:30;
+  display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 8px 10px 6px;border-radius:0 14px 14px 0;
+  background:var(--accent);color:#fff;border:0;font-family:var(--font-text);font-weight:700;font-size:11.5px;line-height:1;
+  box-shadow:4px 6px 18px var(--shadow);transition:opacity .2s,transform .28s var(--ease-spring);}
+.somm-flot.on{opacity:.92;pointer-events:auto;transform:translate(0,-50%);}
+.somm-flot svg{width:16px;height:16px;}
+.somm-flot{touch-action:none;user-select:none;-webkit-user-select:none;}
+.somm-flot.drag{opacity:1;transition:opacity .2s;box-shadow:6px 10px 26px var(--shadow);}
+.somm-flot.drag::after{content:"";position:absolute;inset:-6px -10px -6px 0;}
+.somm-flot .somm-fl{width:14px;height:14px;opacity:.85;}
+.somm-voile{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .25s;}
+.somm-voile.open{opacity:1;pointer-events:auto;}
+.somm-panneau{position:fixed;top:0;left:0;bottom:0;width:min(84vw,330px);z-index:61;background:var(--surface-solid);
+  border-radius:0 20px 20px 0;box-shadow:10px 0 30px var(--shadow);transform:translateX(-105%);
+  transition:transform .3s var(--ease-spring);display:flex;flex-direction:column;
+  padding:calc(env(safe-area-inset-top) + 16px) 14px calc(env(safe-area-inset-bottom) + 12px) 12px;}
+.somm-panneau.open{transform:translateX(0);}
+.somm-tete{display:flex;align-items:center;gap:10px;margin:0 2px 12px;}
+.somm-tete-txt{flex:1;min-width:0;}
+.somm-titre{font-family:var(--font-title,inherit);font-weight:800;font-size:18px;color:var(--text);}
+.somm-sous{font-size:12.5px;color:var(--text-soft);margin-top:2px;}
+.somm-fermer{width:34px;height:34px;border-radius:50%;border:0;background:var(--surface-2);color:var(--text);display:grid;place-items:center;cursor:pointer;}
+.somm-fermer svg{width:16px;height:16px;}
+.somm-liste{flex:1;overflow-y:auto;overscroll-behavior:contain;margin:0 -4px;padding:0 4px;}
+.somm-liste .cal-row{margin-bottom:6px;padding:9px 12px;gap:10px;border-radius:14px;}
+.somm-liste .cal-name{font-size:14px;}
+.somm-liste .cal-url{font-size:11.5px;}
+.pane[data-somm]{padding-bottom:24px;}
 .lec-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 14px;}
 .lec-row .lec-start{margin:0;}
 .lec-start.partage{background:var(--surface);color:var(--text-soft);}
@@ -1162,6 +1226,18 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .segment-thumb{position:absolute;top:3px;bottom:3px;width:calc((100% - 6px)/3);border-radius:9px;background:var(--seg-thumb);box-shadow:0 2px 8px var(--shadow);transition:transform .32s var(--ease-spring);}
 .seg-btn{position:relative;z-index:1;border:none;background:none;cursor:pointer;font-family:var(--font-text);font-size:13px;font-weight:600;color:var(--text-soft);padding:9px 4px;border-radius:9px;transition:color .25s;display:flex;align-items:center;justify-content:center;gap:5px;}
 .seg-btn.active{color:var(--accent);}
+.segment[hidden]{display:none;}
+/* CM / TD / S'entraîner : un seul bouton, comme le sélecteur de chapitre */
+.chap-pick.type-pick{flex:0 0 auto;width:fit-content;margin:0 auto;gap:6px;padding:6px 8px 6px 12px;
+  border-radius:999px;background:transparent;border:1px solid var(--border);box-shadow:none;font-size:14px;font-weight:600;}
+.type-pick .chap-pick-txt{flex:0 0 auto;}
+.head-row .chap-pick.type-pick{margin:0 0 0 auto;border:0;background:none;padding:4px 0 4px 6px;font-size:15px;color:var(--text-soft);}
+.head-row .type-pick .chap-pick-ic{color:var(--text-mute);}
+.subj-chip[hidden]{display:none;}
+.pick-sep{height:1px;background:var(--border);margin:6px 4px 10px;}
+.type-pick .type-ic{font-size:14px;line-height:1;flex-shrink:0;}
+.type-pick .chap-pick-ic{width:20px;height:20px;border-radius:999px;background:transparent;}
+.type-pick .chap-pick-ic svg{width:14px;height:14px;}
 .content-scroll{position:relative;z-index:1;width:100%;max-width:600px;margin:0 auto;
   box-sizing:border-box;
   padding:22px 18px calc(env(safe-area-inset-bottom) + 180px);
@@ -1207,7 +1283,27 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .chap-pick-ic{flex-shrink:0;width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;
   background:var(--accent-soft);color:var(--accent);}
 .chap-pick-ic svg{width:16px;height:16px;}
-.chap-row>.chap-pick{margin-bottom:0;}
+/* en-tête d'un chapitre : pilule « CM 1 » à gauche, ronds écouter et partager à droite, titre dessous */
+.chap-row>.chap-pick{margin-bottom:0;flex:0 1 auto;height:38px;padding:0 8px 0 12px;border-radius:999px;box-shadow:none;
+  background:var(--surface-2);font-size:13.5px;gap:6px;}
+.chap-row>.chap-pick .chap-pick-txt{flex:0 1 auto;}
+.chap-row>.chap-pick .chap-pick-ic{background:none;width:18px;height:18px;}
+.chap-row>.chap-pick .chap-pick-ic svg{width:14px;height:14px;}
+.chap-row>.chap-share{min-width:38px;width:38px;height:38px;border-radius:50%;box-shadow:none;background:var(--surface-2);}
+.chap-row>.chap-share svg{width:17px;height:17px;}
+.chap-row>.chap-pick+.chap-share{margin-left:auto;}
+.chap-titre{font-family:var(--font-display);font-weight:600;font-size:calc(25px * var(--zt,1));line-height:1.2;letter-spacing:-.015em;
+  color:var(--text);margin:0 0 26px;overflow-wrap:break-word;}
+/* partager : un carré de la même hauteur que le sélecteur, aligné avec lui */
+.chap-row:has(>.chap-pick){align-items:center;}
+.chap-share{flex-shrink:0;aspect-ratio:1;min-width:50px;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  background:var(--seg-thumb);border:1px solid var(--border);border-radius:14px;box-shadow:0 2px 8px var(--shadow);
+  color:var(--text-soft);transition:transform .18s var(--ease-spring),color .2s;}
+.chap-share svg{width:20px;height:20px;}
+.chap-ecoute{color:var(--accent);}
+.chap-share:active{transform:scale(.94);color:var(--accent);}
+/* ajouter un chapitre : en bas de la liste des chapitres */
+#pick-list .chap-ajout{width:100%;margin:4px 0 0;}
 .chap-ligne{display:flex;align-items:center;gap:12px;}
 .chap-ligne .rv-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;background:var(--text-mute);opacity:.55;}
 .chap-ligne.revise .rv-dot{background:var(--ok);opacity:1;box-shadow:0 0 7px var(--ok);}
@@ -1226,21 +1322,21 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .rv-switch.on .sw{background:var(--ok);}
 .rv-switch.on .sw::after{left:22px;}
 .section{margin-bottom:26px;width:100%;}
-.section-title{font-family:var(--font-display);font-weight:500;font-size:19px;letter-spacing:-.01em;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:10px;overflow-wrap:break-word;word-break:break-word;}
+.section-title{font-family:var(--font-display);font-weight:500;font-size:calc(19px * var(--zt,1));letter-spacing:-.01em;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:10px;overflow-wrap:break-word;word-break:break-word;}
 .section-title::before{content:"";width:4px;height:20px;border-radius:4px;background:var(--accent);flex-shrink:0;}
 /* width:100% et non max-width : sinon une carte au contenu court
    rétrécit et la page paraît plus étroite d'un TD à l'autre. */
 .card{background:var(--surface);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px 22px;box-shadow:0 4px 20px var(--shadow);width:100%;box-sizing:border-box;overflow:hidden;}
-.card-body{font-size:14.5px;line-height:1.95;color:var(--text);white-space:pre-line;overflow-wrap:break-word;word-break:break-word;}
+.card-body{font-size:calc(14.5px * var(--zt,1));line-height:1.95;color:var(--text);white-space:pre-line;overflow-wrap:break-word;word-break:break-word;}
 .chunk-highlight{background:var(--hl-bg);color:var(--hl-text);border-radius:5px;padding:1px 6px;font-weight:600;}
 .card-list{list-style:none;margin-top:14px;display:flex;flex-direction:column;gap:2px;}
-.card-list li{font-size:14px;line-height:1.7;color:var(--text);padding:11px 0;border-bottom:1px solid var(--border);display:flex;gap:11px;min-width:0;overflow-wrap:break-word;word-break:break-word;}
+.card-list li{font-size:calc(14px * var(--zt,1));line-height:1.7;color:var(--text);padding:11px 0;border-bottom:1px solid var(--border);display:flex;gap:11px;min-width:0;overflow-wrap:break-word;word-break:break-word;}
 .card-list li:last-child{border:none;padding-bottom:0;}
 .card-list li>.li-text{flex:1;min-width:0;}
-.card-list li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:8px;}
+.card-list li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:calc(9px * var(--zt,1) - 1px);}
 .recap{margin-top:16px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px 20px;}
 .recap-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;}
-.recap-item{display:flex;gap:12px;margin-bottom:11px;font-size:13.5px;line-height:1.6;color:var(--text);}
+.recap-item{display:flex;gap:12px;margin-bottom:11px;font-size:calc(13.5px * var(--zt,1));line-height:1.6;color:var(--text);}
 .recap-item:last-child{margin-bottom:0;}
 .recap-num{font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--accent);line-height:1.3;flex-shrink:0;font-variant-numeric:tabular-nums;}
 .empty-note{font-size:14px;color:var(--text-soft);font-style:italic;padding:20px;text-align:center;}
@@ -1277,9 +1373,91 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .chap-prog-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:8px;transition:width .6s var(--ease-spring);}
 .chap-prog.valide .chap-prog-bar i{background:var(--ok);}
 .chap-prog-txt{font-size:12.5px;line-height:1.55;color:var(--text-soft);}
+/* mes notes, en bas d'un chapitre */
+.mes-notes{margin-top:22px;}
+.mn-ouvrir{display:flex;align-items:center;gap:10px;width:100%;padding:13px 16px;border-radius:var(--r-lg);border:1.5px dashed var(--border-strong);
+  background:none;color:var(--text-soft);font-family:var(--font-text);font-size:14px;font-weight:600;cursor:pointer;text-align:left;}
+.mn-carte{border-radius:var(--r-lg);border:1px solid var(--border);background:var(--surface);padding:14px 16px 10px;}
+.mn-tete{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
+.mn-etat{margin-left:auto;font-size:11.5px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--text-mute);}
+.mn-carte textarea{width:100%;min-height:72px;resize:none;border:0;outline:0;background:none;color:var(--text);font-family:var(--font-text);
+  font-size:calc(14.5px * var(--zt,1));line-height:1.6;padding:0;overflow:hidden;}
+.mn-carte textarea::placeholder{color:var(--text-mute);}
+/* fiche de synthèse */
+.syn-groupe{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-mute);margin:26px 4px 10px;}
+.syn-chap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 16px 14px;margin-bottom:12px;}
+.syn-tete{display:flex;align-items:center;gap:8px;width:100%;border:0;background:none;padding:0 0 10px;margin-bottom:12px;border-bottom:1px solid var(--border);
+  color:var(--text);font-family:var(--font-display);font-size:17px;font-weight:600;text-align:left;cursor:pointer;}
+.syn-tete span{flex:1;min-width:0;}
+.syn-tete svg{width:16px;height:16px;color:var(--text-mute);flex-shrink:0;}
+.syn-chap .recap-item:last-child{margin-bottom:0;}
+.syn-note{margin-top:12px;padding:10px 12px;border-radius:12px;background:var(--accent-soft);font-size:calc(13px * var(--zt,1));line-height:1.55;color:var(--text);white-space:pre-line;}
+.syn-note b{color:var(--accent);}
+/* taille du texte, dans le menu */
+.taille-row{display:flex;align-items:center;gap:12px;padding:10px 14px;margin-bottom:8px;}
+.taille-row .cal-txt{flex:1;}
+.taille-btns{display:flex;gap:6px;}
+.taille-btns button{width:38px;height:38px;border-radius:11px;border:1px solid var(--border);background:var(--surface);color:var(--text-soft);
+  font-family:var(--font-display);font-weight:600;cursor:pointer;padding:0;}
+.taille-btns button.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);}
+/* fin d'un chapitre : trois étapes dans une carte */
+.fin-chap{margin-top:26px;padding:16px 14px 10px;border-radius:var(--r-lg);border:1px solid var(--border);background:var(--surface);}
+.fin-titre{font-family:var(--font-display);font-size:19px;font-weight:600;color:var(--text);margin:0 4px 12px;}
+.fin-etape{display:flex;align-items:center;gap:12px;width:100%;padding:12px 6px;border:0;border-top:1px solid var(--border);background:none;
+  color:var(--text);font-family:var(--font-text);text-align:left;cursor:pointer;transition:transform .2s var(--ease-spring);}
+.fin-titre+.fin-etape{border-top:0;}
+.fin-etape:active{transform:scale(.98);}
+.fin-num{flex-shrink:0;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;
+  background:var(--accent-soft);color:var(--accent);}
+.fin-num svg{width:15px;height:15px;}
+.fin-etape.fait .fin-num{background:var(--ok-soft);color:var(--ok);}
+.fin-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+.fin-nom{font-size:14.5px;font-weight:650;}
+.fin-sub{font-size:12px;color:var(--text-soft);}
+.fin-etape.fait .fin-sub{color:var(--ok);}
+.fin-suite .fin-nom{color:var(--accent);}
+.fin-fl{flex-shrink:0;color:var(--text-mute);display:grid;place-items:center;}
+.fin-fl svg{width:16px;height:16px;}
+.fin-etape .sw{flex-shrink:0;width:48px;height:29px;border-radius:20px;background:var(--border-strong);position:relative;transition:background .25s;}
+.fin-etape .sw::after{content:"";position:absolute;top:3px;left:3px;width:23px;height:23px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25);transition:left .28s var(--ease-spring);}
+.fin-etape.fait .sw{background:var(--ok);}
+.fin-etape.fait .sw::after{left:22px;}
 .chap-qcm-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:16px;padding:14px 18px;border-radius:var(--r-lg);border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);font-family:var(--font-text);font-size:14.5px;font-weight:600;cursor:pointer;transition:transform .25s var(--ease-spring);}
 .chap-qcm-btn:active{transform:scale(.98);}
 .chap-qcm-btn .cq-sub{font-weight:500;font-size:12.5px;opacity:.85;}
+/* mode examen */
+.ex-chips{display:flex;gap:8px;flex-wrap:wrap;}
+.ex-chip{flex:1;min-width:70px;padding:12px 10px;border-radius:14px;border:1px solid var(--border);background:var(--surface);color:var(--text-soft);
+  font-family:var(--font-text);font-size:15px;font-weight:700;cursor:pointer;}
+.ex-chip.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);}
+.ex-row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;cursor:pointer;font-family:var(--font-text);color:var(--text);
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:11px 14px;margin-bottom:8px;}
+.ex-check{flex-shrink:0;width:22px;height:22px;border-radius:7px;border:2px solid var(--border-strong);display:grid;place-items:center;color:#fff;}
+.ex-check svg{width:13px;height:13px;opacity:0;}
+.ex-row.on .ex-check{background:var(--accent);border-color:var(--accent);}
+.ex-row.on .ex-check svg{opacity:1;}
+.ex-row-txt{flex:1;min-width:0;}
+.ex-row-nom{font-size:14px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ex-row-sub{font-size:12px;color:var(--text-mute);margin-top:1px;}
+.ex-tout{background:none;border:0;color:var(--accent);font-family:var(--font-text);font-size:12.5px;font-weight:700;cursor:pointer;padding:0;margin-left:auto;}
+.ex-groupe{display:flex;align-items:center;}
+.ex-go{width:100%;margin-top:22px;}
+.ex-go:disabled{opacity:.45;box-shadow:none;}
+.opt.choisie{border-color:var(--accent);background:var(--accent-soft);}
+.opt.choisie .opt-letter{background:var(--accent);color:#fff;}
+.ex-grille{display:flex;flex-wrap:wrap;gap:6px;margin-top:22px;justify-content:center;}
+.ex-grille button{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:none;color:var(--text-mute);
+  font-family:var(--font-text);font-size:11.5px;font-weight:700;cursor:pointer;padding:0;}
+.ex-grille button.fait{background:var(--surface-2);color:var(--text-soft);border-color:var(--border-strong);}
+.ex-grille button.ici{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft);}
+.nav-score.ex-chrono.red{color:var(--ko);}
+.ex-note{font-family:var(--font-display);font-size:54px;font-weight:600;color:var(--accent);line-height:1;margin:6px 0 8px;}
+.ex-note small{font-size:24px;color:var(--text-mute);font-weight:500;}
+.ex-err{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 16px;margin-bottom:10px;text-align:left;}
+.ex-err-q{font-size:14.5px;font-weight:650;color:var(--text);margin-bottom:8px;line-height:1.4;}
+.ex-err-l{font-size:13px;line-height:1.45;margin-top:4px;}
+.ex-err-l.ko{color:var(--ko);} .ex-err-l.ok{color:var(--ok);}
+.ex-err-e{font-size:12.5px;color:var(--text-soft);line-height:1.5;margin-top:8px;}
 .qc-group{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-mute);margin:22px 0 9px 4px;}
 .qc-card{display:flex;align-items:center;gap:14px;text-align:left;width:100%;cursor:pointer;font-family:var(--font-text);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:15px 18px;margin-bottom:10px;box-shadow:0 4px 20px var(--shadow);transition:transform .3s var(--ease-spring),border-color .3s;}
 .qc-card:active{transform:scale(.985);}
@@ -1622,16 +1800,15 @@ textarea::placeholder{color:var(--text-mute);}
   <div class="split-head">
     <div class="head-row">
       <button class="back-btn" id="btn-split-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Matières</button>
-      <button class="home-btn" id="btn-split-home" aria-label="Accueil">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5"/><path d="M5.5 9.5V20h13V9.5"/><path d="M9.5 20v-6h5v6"/></svg>
-      </button>
-      <button class="subj-chip" id="split-chip"></button>
+      <button class="subj-chip" id="split-chip" hidden></button>
+      <button class="head-search" id="btn-split-search" type="button" aria-label="Rechercher dans mes cours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+      <button class="chap-pick type-pick" id="type-pick" type="button"></button>
     </div>
-    <div class="segment">
+    <div class="segment" hidden>
       <div class="segment-thumb" id="seg-thumb" style="transform:translateX(0)"></div>
       <button class="seg-btn active">📖 Cours</button>
       <button class="seg-btn">📝 TD</button>
-      <button class="seg-btn">✏️ Réviser</button>
+      <button class="seg-btn">✏️ S'entraîner</button>
     </div>
   </div>
   <div class="content-scroll">
@@ -1743,6 +1920,10 @@ textarea::placeholder{color:var(--text-mute);}
   <div class="sheet">
     <div class="sheet-grip"></div>
     <div class="sheet-title">Changer de matière</div>
+    <button class="sheet-home" id="btn-split-home" type="button">
+      <span class="sheet-home-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5"/><path d="M5.5 9.5V20h13V9.5"/><path d="M9.5 20v-6h5v6"/></svg></span>
+      <span class="sheet-home-txt">Revenir à l'accueil</span>
+    </button>
     <div class="sheet-list" id="sheet-list"></div>
   </div>
 </div>
@@ -1823,6 +2004,31 @@ textarea::placeholder{color:var(--text-mute);}
       <button class="search-clear" id="search-clear" aria-label="Effacer">✕</button>
     </div>
     <div id="search-results"></div>
+  </div>
+</div>
+
+<div id="screen-synthese" class="screen">
+  <div class="wrap">
+    <button class="back-btn rise" id="btn-syn-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
+    <div class="page-eyebrow rise" id="syn-eyebrow" style="animation-delay:.03s"></div>
+    <h1 class="page-title rise" style="animation-delay:.05s">Fiche de synthèse</h1>
+    <p class="page-sub rise" id="syn-sub" style="animation-delay:.07s"></p>
+    <div id="syn-liste"></div>
+  </div>
+</div>
+
+<div id="screen-lexique" class="screen">
+  <div class="wrap">
+    <button class="back-btn rise" id="btn-lex-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
+    <h1 class="page-title rise" style="animation-delay:.03s">Lexique</h1>
+    <div class="lex-sous rise" id="lex-sous" style="animation-delay:.05s"></div>
+    <div class="search-box rise" style="animation-delay:.07s">
+      <svg class="search-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input type="text" id="lex-input" placeholder="Filtrer les termes…" autocomplete="off"/>
+      <button class="search-clear" id="lex-clear" aria-label="Effacer">✕</button>
+    </div>
+    <div class="lex-lettres" id="lex-lettres"></div>
+    <div id="lex-liste"></div>
   </div>
 </div>
 
@@ -1949,6 +2155,12 @@ try{ REVISES = JSON.parse(localStorage.getItem(REVISES_KEY) || "{}") || {}; }cat
 function revisesSave(){ try{ localStorage.setItem(REVISES_KEY, JSON.stringify(REVISES)); }catch(e){} scheduleSync(); }
 function cleRevise(subj, type, ch){ return subj.id + "|" + type + "|" + (ch && ch.label || ""); }
 function estRevise(subj, type, ch){ return !!REVISES[cleRevise(subj, type, ch)]; }
+// Mes notes sur un chapitre : { "matière|cm|libellé": { t:texte, d:date } }
+var CHNOTES_KEY = "revision_notes_chap_v1";
+var CHNOTES = {};
+try{ CHNOTES = JSON.parse(localStorage.getItem(CHNOTES_KEY) || "{}") || {}; }catch(e){ CHNOTES = {}; }
+function chNotesSave(){ try{ localStorage.setItem(CHNOTES_KEY, JSON.stringify(CHNOTES)); }catch(e){} scheduleSync(); }
+function noteDe(cle){ return (CHNOTES[cle] && CHNOTES[cle].t) || ""; }
 // Profs saisis par moi : { "id matière|cm": { nom, mail } }.
 // Une entrée vide masque le prof prévu par défaut.
 var PROFS_KEY = "revision_profs_v1";
@@ -2091,6 +2303,12 @@ function totalCards(subj){
 }
 // notions "en cours d'acquisition" : révisées au moins une fois avec succès.
 // (donne un feedback immédiat ; une notion vraiment ancrée a un intervalle long)
+// avancement d'une liste de matières : chapitres de cours (CM, TD) marqués révisés
+function avancementCours(list){
+  let lus = 0, tot = 0;
+  (list||[]).forEach(s=>["cm","td"].forEach(t=>(s[t]||[]).forEach(ch=>{ tot++; if(estRevise(s, t, ch)) lus++; })));
+  return { lus, tot };
+}
 function learnedCount(subj){
   let n=0;
   ["fc","qcm","oq","tr"].forEach(m=>{
@@ -3030,7 +3248,7 @@ async function publishFromClass(c){
     if(n("fc") + n("qcm") + n("oq") + n("dev") + n("tr")){
       const k = cleEnvoi("revision", sj.title), e = etat(k);
       out.push({ label:"Exercices de révision",
-        sub:`${n("fc")} fiches · ${n("qcm")} QCM · ${n("tr")} trous · ${n("oq")} questions` + (e.sub ? " · " + e.sub : ""),
+        sub:`${n("fc")} fiches · ${nbQCM(r.qcm)} QCM · ${n("tr")} trous · ${n("oq")} questions ouvertes` + (e.sub ? " · " + e.sub : ""),
         deja:e.deja, value:"revision", actions:retirer(k, "les exercices de révision") });
     }
     return out;
@@ -3123,7 +3341,7 @@ async function openSharedItem(it){
   if(it.kind === "revision"){
     const n = c => (payload[c]||[]).length;
     const d = el("div","empty-note");
-    d.innerHTML = `${n("fc")} fiches · ${n("qcm")} QCM · ${n("tr")} textes à trous · ${n("oq")} questions · ${n("dev")} devoirs<br>
+    d.innerHTML = `${n("fc")} fiches · ${nbQCM(payload.qcm)} QCM · ${n("tr")} textes à trous · ${n("oq")} questions ouvertes · ${n("dev")} devoirs<br>
       Ajoute-les à une de tes matières pour les réviser.`;
     box.appendChild(d);
   }else{
@@ -3664,10 +3882,11 @@ function lecMajBarre(){
   LEC.bar.querySelector(".lec-speed").textContent = String(LEC.vitesse).replace(".", ",") + "×";
 }
 // Le bouton posé en haut d'un chapitre.
-function lecteurBouton(root){
-  const x = el("button","lec-start");
+function lecteurBouton(root, icone){
+  const x = el("button", icone ? "chap-share chap-ecoute" : "lec-start");
   x.type = "button";
-  x.innerHTML = LEC_ICO.voix + "<span>Écouter ce chapitre</span>";
+  x.innerHTML = icone ? LEC_ICO.voix : LEC_ICO.voix + "<span>Écouter ce chapitre</span>";
+  x.setAttribute("aria-label", "Écouter ce chapitre");
   x.addEventListener("click",()=>{ haptic(); lecteurStart(root); });
   return x;
 }
@@ -3723,10 +3942,12 @@ async function partagerTexte(titre, texte){
   try{ await navigator.clipboard.writeText(texte); toast("Copié. Colle-le où tu veux."); }
   catch(e){ toast("Impossible de partager depuis ce navigateur."); }
 }
-function boutonPartager(type, ch){
-  const b = el("button","lec-start partage");
+function boutonPartager(type, ch, icone){
+  const b = el("button", icone ? "chap-share" : "lec-start partage");
   b.type = "button";
-  b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M7.5 7.5L12 3l4.5 4.5"/><path d="M5 12v6.5A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V12"/></svg><span>Partager</span>';
+  const svg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M7.5 7.5L12 3l4.5 4.5"/><path d="M5 12v6.5A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V12"/></svg>';
+  b.innerHTML = icone ? svg : svg + '<span>Partager</span>';
+  b.setAttribute("aria-label", "Partager ce chapitre");
   b.addEventListener("click",()=>{
     haptic();
     const sj = curSubj;
@@ -3734,7 +3955,7 @@ function boutonPartager(type, ch){
     if(!nQ){ partagerTexte(sj.title + " · " + ch.label, texteChapitre(sj, type, ch, false)); return; }
     openPicker("Partager « " + ch.label + " »", [
       { label:"Le cours", sub:"Les sections et « À retenir »", value:"cours" },
-      { label:"Le cours et ses QCM", sub:nQ + " QCM avec les bonnes réponses, pour les faire vérifier", value:"qcm" }
+      { label:"Le cours et son QCM", sub:"Avec les bonnes réponses, pour le faire vérifier", value:"qcm" }
     ], v=>partagerTexte(sj.title + " · " + ch.label, texteChapitre(sj, type, ch, v === "qcm")));
   });
   return b;
@@ -4339,6 +4560,7 @@ function showScreen(id){
   document.documentElement.setAttribute("data-screen", id);
   refreshFab(id);
   window.scrollTo(0,0);
+  requestAnimationFrame(()=>majProgression());   // l'onglet sommaire n'existe que dans un cours
 }
 
 // ── THEME ──
@@ -4423,9 +4645,9 @@ function buildIndex(){
     // chapitres CM et TD → sections
     [["cm","Cours"],["td","TD"]].forEach(([k,lbl])=>{
       (s[k]||[]).forEach((ch,ci)=>{
-        (ch.sections||[]).forEach(sec=>{
+        (ch.sections||[]).forEach((sec,si)=>{
           const txt = [sec.title, sec.body, ...(sec.list||[])].filter(Boolean).join(" ");
-          idx.push({ subj:s, type:lbl, tab:(k==="cm"?0:1), chap:ci,
+          idx.push({ subj:s, type:lbl, tab:(k==="cm"?0:1), chap:ci, sec:si,
                      title:sec.title||ch.label, text:stripTags(txt), icon:(k==="cm"?"📖":"📝") });
         });
       });
@@ -4490,8 +4712,9 @@ function doSearch(q){
     card.addEventListener("click",()=>{
       curSemestre = SEMESTRES[it.subj.id];
       openSubject(it.subj.id);
-      if(it.tab === 0)      { curCmIdx = it.chap||0; setTab(0); }
-      else if(it.tab === 1) { curTdIdx = it.chap||0; setTab(1); }
+      // on ouvre le chapitre directement à la bonne section, mots surlignés
+      if(it.tab === 0)      { curCmIdx = it.chap||0; allerDemande = { sec:it.sec, mots:words }; setTab(0); }
+      else if(it.tab === 1) { curTdIdx = it.chap||0; allerDemande = { sec:it.sec, mots:words }; setTab(1); }
       else if(it.auteur)    { setTab(2); renderAuteurs(); }
       else                  { setTab(2); }
     });
@@ -4541,7 +4764,145 @@ function highlight(text, words){
   out += esc(src.slice(cur));
   return out;
 }
-function openSearch(){
+// ══════════════════════════════════════════════════
+// LEXIQUE : les « <b>terme</b> : définition » des cours, rangés de A à Z
+// ══════════════════════════════════════════════════
+const LEX_RE = /^\s*<b>([^<]{2,60})<\/b>\s*(\([^)]{1,60}\)\s*)?:\s*([\s\S]{8,})$/;
+// sections sur l'organisation du cours : on ne les prend pas
+const LEX_SEC_EXCLUE = /pr[ée]sentation|modalit|[ée]valuation|au programme|organisation|calendrier|consigne|devoir|s[ée]ances?\b|plan du cours/i;
+const LEX_TERME_EXCLU = /^([^a-zà-ÿ]|(cm|td)\b|(le|la|les|un|une|ce|ces|des|du)\s|l'|l’|(à|avant|apr[èe]s|aujourd'hui|hier|dans|pour|chez|sur|en|pendant|trois|deux|quatre|cat[ée]gorie)(?=[\s,]|$)|articulation\b|mcf\b|contexte|d[ée]finition|premier|deuxi[èe]me|second|troisi[èe]me|exemple|conclusion|introduction|bilan|enjeux?\b|objectifs?\b|limites?\b|id[ée]e|point|remarque|rappel|attention|[àa] retenir|en r[ée]sum[ée]|synth[èe]se|[ée]crit\b|oral\b|partiel|contr[ôo]le|dst\b|[ée]valuation|diversit[ée])|\?$|\b(janvier|f[ée]vrier|mars|avril|mai|juin|juillet|ao[ûu]t|septembre|octobre|novembre|d[ée]cembre)\b/i;
+function lexique(subj){
+  const vus = new Set(), out = [];
+  [["cm",0],["td",1]].forEach(([type,tab])=>(subj[type]||[]).forEach((ch,ci)=>(ch.sections||[]).forEach((sec,si)=>{
+    if(LEX_SEC_EXCLUE.test(sec.title || "")) return;
+    [...(sec.list||[]), sec.body||""].forEach(it=>{
+      const m = String(it).match(LEX_RE); if(!m) return;
+      const terme = m[1].trim();
+      if(LEX_TERME_EXCLU.test(terme) || terme.split(/\s+/).length > 6) return;
+      const k = norm(terme).trim(); if(vus.has(k)) return; vus.add(k);
+      out.push({ terme, prec:(m[2]||"").trim(), def:m[3].trim(), type, tab, ci, si, label:ch.label });
+    });
+  })));
+  return out.sort((a,b)=>a.terme.localeCompare(b.terme, "fr", { sensitivity:"base" }));
+}
+function ouvrirLexique(){
+  if(!curSubj) return;
+  document.getElementById("lex-sous").textContent = (curSubj.ecue ? curSubj.ecue + " · " : "") + curSubj.title;
+  document.getElementById("lex-input").value = "";
+  renderLexique("");
+  showScreen("lexique");
+}
+function renderLexique(q){
+  const liste = document.getElementById("lex-liste"), lettres = document.getElementById("lex-lettres");
+  liste.innerHTML = ""; lettres.innerHTML = "";
+  const f = norm(q || "").trim();
+  const xs = lexique(curSubj).filter(x=>!f || norm(x.terme + " " + x.def).includes(f));
+  if(!xs.length){ liste.innerHTML = `<div class="search-hint">Aucun terme pour « ${esc(q)} ».</div>`; return; }
+  const cnt = el("div","search-count"); cnt.textContent = xs.length + " terme" + (xs.length > 1 ? "s" : ""); liste.appendChild(cnt);
+  let lettre = "";
+  xs.forEach(x=>{
+    const L = norm(x.terme).trim().charAt(0).toUpperCase();
+    if(L !== lettre){
+      lettre = L;
+      const h = el("div","lex-lettre"); h.textContent = L; h.id = "lex-" + L; liste.appendChild(h);
+      const b = el("button"); b.type = "button"; b.textContent = L;
+      b.addEventListener("click",()=>{ haptic(); h.scrollIntoView({ behavior:"smooth", block:"start" }); });
+      lettres.appendChild(b);
+    }
+    const it = el("div","lex-item");
+    const pc = partiesChapitre(x.label);
+    it.innerHTML = `<div class="lex-terme">${esc(x.terme)}${x.prec ? ` <span style="font-weight:400;color:var(--text-soft);font-size:14px">${esc(x.prec)}</span>` : ""}</div>
+      <div class="lex-def">${texteCours(x.def)}</div>`;
+    const src = el("button","lex-src"); src.type = "button";
+    src.innerHTML = `${x.type === "cm" ? "📖" : "📝"}<span>${esc(pc.court)}${pc.titre ? " · " + esc(pc.titre) : ""}</span>${IC_CHEV_DROITE}`;
+    src.addEventListener("click",()=>{
+      haptic();
+      if(x.type === "cm") curCmIdx = x.ci; else curTdIdx = x.ci;
+      allerDemande = { sec:x.si, mots:[norm(x.terme).trim()] };
+      showScreen("split"); setTab(x.tab);
+    });
+    it.appendChild(src);
+    liste.appendChild(it);
+  });
+}
+// ══════════════════════════════════════════════════
+// MES NOTES sur un chapitre
+// ══════════════════════════════════════════════════
+function blocNotes(cle){
+  const box = el("div","mes-notes");
+  const carte = ()=>{
+    box.innerHTML = `<div class="mn-carte"><div class="mn-tete">📝 Mes notes<span class="mn-etat"></span></div>
+      <textarea rows="3" placeholder="Une remarque, une question pour le prof, un exemple…"></textarea></div>`;
+    const ta = box.querySelector("textarea"), etat = box.querySelector(".mn-etat");
+    const hauteur = ()=>{ ta.style.height = "auto"; ta.style.height = Math.max(72, ta.scrollHeight) + "px"; };
+    ta.value = noteDe(cle);
+    let t = null;
+    ta.addEventListener("input",()=>{
+      hauteur(); etat.textContent = "…";
+      clearTimeout(t);
+      t = setTimeout(()=>{
+        const v = ta.value.trim();
+        if(v) CHNOTES[cle] = { t:ta.value, d:Date.now() }; else delete CHNOTES[cle];
+        chNotesSave(); etat.textContent = v ? "Enregistré" : "";
+      }, 600);
+    });
+    ta.addEventListener("blur",()=>{ if(!ta.value.trim()) setTimeout(()=>{ if(document.activeElement !== ta && !ta.value.trim()) bouton(); }, 150); });
+    requestAnimationFrame(hauteur);
+    return ta;
+  };
+  const bouton = ()=>{
+    box.innerHTML = "";
+    const b = el("button","mn-ouvrir"); b.type = "button"; b.textContent = "📝  Ajouter une note";
+    b.addEventListener("click",()=>{ haptic(); carte().focus(); });
+    box.appendChild(b);
+  };
+  if(noteDe(cle)) carte(); else bouton();
+  return box;
+}
+
+// ══════════════════════════════════════════════════
+// FICHE DE SYNTHÈSE : tous les « À retenir » d'une matière, plus mes notes
+// ══════════════════════════════════════════════════
+function nbPointsSynthese(subj){ return ["cm","td"].reduce((k,t)=>k + (subj[t]||[]).reduce((j,ch)=>j + (ch.recap||[]).length, 0), 0); }
+function ouvrirSynthese(){
+  if(!curSubj) return;
+  document.getElementById("syn-eyebrow").textContent = curSubj.title;
+  const n = nbPointsSynthese(curSubj);
+  document.getElementById("syn-sub").textContent = n + " points à retenir, repris des blocs « À retenir » de tes cours. Tes notes apparaissent sous chaque cours.";
+  const liste = document.getElementById("syn-liste"); liste.innerHTML = "";
+  [["cm","CM",0],["td","TD",1]].forEach(([type,nom,tab])=>{
+    const chs = (curSubj[type]||[]).map((ch,ci)=>({ ch, ci })).filter(x=>(x.ch.recap||[]).length || noteDe(cleVu(curSubj, type, x.ch)));
+    if(!chs.length) return;
+    const g = el("div","syn-groupe"); g.textContent = nom; liste.appendChild(g);
+    chs.forEach(({ch,ci})=>{
+      const pc = partiesChapitre(ch.label);
+      const c = el("div","syn-chap");
+      const t = el("button","syn-tete"); t.type = "button";
+      t.innerHTML = `<span>${esc(pc.court)}${pc.titre ? " · " + esc(pc.titre) : ""}</span>${IC_CHEV_DROITE}`;
+      t.addEventListener("click",()=>{ haptic(); if(type === "cm") curCmIdx = ci; else curTdIdx = ci; showScreen("split"); setTab(tab); });
+      c.appendChild(t);
+      (ch.recap||[]).forEach((x,i)=>{ const r = el("div","recap-item"); r.innerHTML = `<span class="recap-num">${i + 1}</span><span>${esc(x)}</span>`; c.appendChild(r); });
+      const note = noteDe(cleVu(curSubj, type, ch));
+      if(note){ const d = el("div","syn-note"); d.innerHTML = "<b>📝 Ma note</b>\n" + esc(note.trim()); c.appendChild(d); }
+      liste.appendChild(c);
+    });
+  });
+  showScreen("synthese");
+}
+
+// ══════════════════════════════════════════════════
+// TAILLE DU TEXTE des cours (sur cet appareil)
+// ══════════════════════════════════════════════════
+const TAILLES = { petit:0.92, normal:1, grand:1.15 };
+function tailleTexte(){ let t = null; try{ t = localStorage.getItem("tailleTexte"); }catch(_){} return TAILLES[t] ? t : "normal"; }
+function appliquerTaille(t){
+  document.documentElement.style.setProperty("--zt", TAILLES[t] || 1);
+  try{ localStorage.setItem("tailleTexte", t); }catch(_){}
+}
+appliquerTaille(tailleTexte());
+var rechercheDepuis = "semestres";
+function openSearch(depuis){
+  rechercheDepuis = depuis === "split" ? "split" : "semestres";
   resolveAllLangs();             // titres/contenus dans la bonne langue selon le thème
   SEARCH_INDEX = buildIndex();  // reconstruit à chaque ouverture (le contenu peut changer)
   const inp = document.getElementById("search-input");
@@ -5002,15 +5363,25 @@ function renderEDT(){
 // « TD 1 · 15/09 » s'affiche « TD 1 • 15/09 » : seulement à l'écran, le libellé reste la clé.
 function libelleChapitre(l){ return String(l||"").replace(/^(CM|TD)\s*(\d)/i, "$1 $2").replace(/\s*·\s*/g, " • "); }
 const IC_HAUT_BAS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9.5l5-5 5 5"/><path d="M7 14.5l5 5 5-5"/></svg>';
+// « CM 1 · Qu'est-ce qu'une religion ? » : « CM 1 » dans le sélecteur, le reste en titre au-dessus du cours
+function partiesChapitre(l){
+  const lib = libelleChapitre(l);
+  const m = lib.match(/^(.*?)\s*•\s*(.+)$/);
+  if(!m) return { court:lib, titre:"" };
+  const reste = m[2];
+  return { court:m[1], titre:/^\d{1,2}\/\d{1,2}(\/\d{2,4})?$/.test(reste) ? "Séance du " + reste : reste };
+}
 function boutonChapitre(type, chapters, chIdx){
   const ch = chapters[chIdx];
   const nouveaux = chapters.filter((c,i)=>i !== chIdx && chapitreNouveau(curSubj, type, c)).length;
   const b = el("button","chap-pick" + (estRevise(curSubj, type, ch) ? " revise" : ""));
   b.type = "button";
-  b.innerHTML = `<span class="rv-dot"></span><span class="chap-pick-txt">${esc(libelleChapitre(ch.label))}</span>` +
+  b.innerHTML = `<span class="rv-dot"></span><span class="chap-pick-txt">${esc(partiesChapitre(ch.label).court)}</span>` +
     (nouveaux ? `<span class="chap-pick-new">${nouveaux} nouveau${nouveaux > 1 ? "x" : ""}</span>` : "") +
-    (chapters.length > 1 ? `<span class="chap-pick-nb">${chIdx + 1}/${chapters.length}</span><span class="chap-pick-ic">${IC_HAUT_BAS}</span>` : "");
-  if(chapters.length > 1) b.addEventListener("click",()=>{ haptic(); listeChapitres(type, chapters, chIdx); });
+    (chapters.length > 1 ? `<span class="chap-pick-nb">${chIdx + 1}/${chapters.length}</span>` : "") +
+    // la liste s'ouvre aussi avec un seul chapitre quand on peut en ajouter (le + est en bas)
+    (chapters.length > 1 || canEdit() ? `<span class="chap-pick-ic">${IC_HAUT_BAS}</span>` : "");
+  if(chapters.length > 1 || canEdit()) b.addEventListener("click",()=>{ haptic(); listeChapitres(type, chapters, chIdx); });
   return b;
 }
 function listeChapitres(type, chapters, chIdx){
@@ -5025,17 +5396,24 @@ function listeChapitres(type, chapters, chIdx){
     const r = el("button","cal-row chap-ligne" + (i === chIdx ? " actif" : "") + (rev ? " revise" : "") + (nouv ? " nouveau" : ""));
     r.type = "button";
     r.innerHTML = `<span class="rv-dot"></span><div class="cal-txt"><div class="cal-name">${esc(libelleChapitre(c.label))}</div>
-      <div class="cal-url">${etat}${nQ ? " · " + nQ + " QCM" : ""}</div></div>` +
+      <div class="cal-url">${etat}${nQ ? " · 1 QCM" : ""}</div></div>` +
       (i === chIdx ? `<span class="chap-ligne-ok">${COCHE_SVG}</span>` : "");
     r.addEventListener("click",()=>{
       haptic(); closePicker();
       if(i === chIdx) return;
       if(type === "cm") curCmIdx = i; else curTdIdx = i;
+      reprendreDemande = true;
       renderCoursePane(type);
-      window.scrollTo({ top:0, behavior:"smooth" });
     });
     box.appendChild(r);
   });
+  if(canEdit()){
+    const add = el("button","add-inline chap-ajout");
+    add.type = "button";
+    add.textContent = type === "cm" ? "+  Ajouter un CM" : "+  Ajouter un TD";
+    add.addEventListener("click",()=>{ haptic(); closePicker(); setTimeout(()=>addChapitre(type), 320); });
+    box.appendChild(add);
+  }
   document.getElementById("pick-sheet").classList.add("open");
 }
 
@@ -5139,7 +5517,7 @@ function openEvSheet(e){
   // liste des matières du site
   resolveAllLangs();
   const sel = document.getElementById("ev-subj");
-  sel.innerHTML = `<option value="">— aucune —</option>` +
+  sel.innerHTML = `<option value="">Aucune</option>` +
     SUBJECTS.map(x=>`<option value="${x.id}">${esc(x.ecue)} · ${esc(x.title)}</option>`).join("");
   sel.value = n.subj || "";
   document.getElementById("ev-note").value = n.note || "";
@@ -5658,7 +6036,7 @@ function renderMemo(box){
     row.querySelector(".mo-keep").addEventListener("click",()=>{
       haptic();
       const label = (o.note.type==="controle"?"Contrôle : ":o.note.type==="devoir"?"À rendre : ":"") +
-                    o.title + (o.note.note ? " — " + o.note.note : "");
+                    o.title + (o.note.note ? " · " + o.note.note : "");
       MEMO.todos.push({ text: label, done:false });
       memoSave();
       EDTNOTES[o.key] = Object.assign({}, o.note, { dismissed:true });
@@ -5889,12 +6267,12 @@ function renderSemestres(){
   const tuiles = [];
   sems.forEach((sem,si)=>{
     const list=SUBJECTS.filter(s=>(SEMESTRES[s.id]||0)===sem);
-    // progression réelle : notions acquises / notions totales
-    const tot   = list.reduce((n,s)=>n+totalCards(s),0);
-    const learn = list.reduce((n,s)=>n+learnedCount(s),0);
-    const pct   = tot ? Math.round(learn/tot*100) : 0;
+    // progression : CM et TD marqués révisés / tous les CM et TD (les QCM ne comptent pas)
+    const { lus, tot } = avancementCours(list);
+    const pct   = tot ? Math.round(lus/tot*100) : 0;
     // matières à revoir dans ce semestre (le détail vit ici, pas sur l'accueil)
-    const dues = list.map(x=>({x, d:dueCount(x)})).filter(o=>o.d>0).sort((a,b)=>b.d-a.d);
+    // matières dont au moins un CM ou TD n'est pas encore marqué révisé
+    const dues = list.filter(x=>["cm","td"].some(t=>(x[t]||[]).some(ch=>!estRevise(x, t, ch))));
     const t = tuileDe("sem:" + sem);
     const card=el("button","sem-tile rise");
     card.innerHTML=`
@@ -5904,11 +6282,12 @@ function renderSemestres(){
       </div>
       <div class="sem-name">${esc(titreSemestre(sem))}</div>
       ${t.sous ? `<div class="sem-sous">${esc(t.sous)}</div>` : ``}
-      <div class="sem-meta">${list.length} matières</div>
+      <div class="sem-meta">${list.length} matière${list.length > 1 ? "s" : ""}</div>
       <div class="sem-bar"><div class="sem-bar-fill" style="width:${pct}%"></div></div>
       <div class="sem-pct">${tot ? pct+" %" : "vide"}</div>`;
     card.addEventListener("click",()=>{ curSemestre=sem; renderSubjectCards(sem); showScreen("subjects"); });
-    tuiles.push({ cle:"sem:" + sem, el:card, defaut:"Semestre " + sem, icone:sem%2 ? "📚" : "🧠", sem });
+    tuiles.push({ cle:"sem:" + sem, el:card, defaut:"Semestre " + sem, icone:sem%2 ? "📚" : "🧠", sem,
+                  groupe:(t.sous || "").trim() });
   });
 
   // Projet Psycho : réservé à Civa et Nana, invisible pour les autres comptes
@@ -5922,13 +6301,34 @@ function renderSemestres(){
       <div class="sem-bar"><div class="sem-bar-fill" style="width:${psyProgress()}%"></div></div>
       <div class="sem-pct">${psyProgress()} %</div>`;
     psy.addEventListener("click",()=>{ haptic(); renderPsycho(); });
-    tuiles.push({ cle:"psy", el:psy, defaut:psyTitle(), icone:"💜", sousDefaut:"Passerelles · masters" });
+    tuiles.push({ cle:"psy", el:psy, defaut:psyTitle(), icone:"💜", sousDefaut:"Passerelles · masters", groupe:"\u0000psy" });
   }
 
   // l'ordre choisi d'abord, les nouvelles tuiles ensuite dans l'ordre naturel
   const ordre = Array.isArray(USER_SETTINGS.ordreTuiles) ? USER_SETTINGS.ordreTuiles : [];
   const rang = c => { const k = ordre.indexOf(c); return k < 0 ? 1000 : k; };
-  tuiles.map((t,k)=>({ t, k })).sort((a,b)=>(rang(a.t.cle) - rang(b.t.cle)) || (a.k - b.k)).forEach(({ t },si)=>{
+  const triees = tuiles.map((t,k)=>({ t, k })).sort((a,b)=>(rang(a.t.cle) - rang(b.t.cle)) || (a.k - b.k)).map(o=>o.t);
+  // regroupement par sous-titre : chaque groupe à la place de sa première tuile,
+  // les semestres sans sous-titre ensemble, le Projet Psycho toujours à part
+  const groupes = [];
+  triees.forEach(t=>{
+    let g = groupes.find(x=>x.cle === t.groupe);
+    if(!g){ g = { cle:t.groupe, tuiles:[] }; groupes.push(g); }
+    g.tuiles.push(t);
+  });
+  const avecTitres = groupes.length > 1;
+  wrap.classList.toggle("groupee", avecTitres);
+  const nomGroupe = c => c === "\u0000psy" ? "Projets" : (c || "Autres semestres");
+  let si = 0;
+  groupes.forEach(g=>{
+    if(avecTitres){
+      const h = el("div","sem-groupe rise"); h.textContent = nomGroupe(g.cle);
+      h.style.animationDelay = (0.12 + si*0.04) + "s";
+      wrap.appendChild(h);
+    }
+    g.tuiles.forEach(t=>placerTuile(t, si++));
+  });
+  function placerTuile(t, si){
     t.el.style.animationDelay = (0.14 + si*0.04) + "s";
     if(!canEdit()){ wrap.appendChild(t.el); return; }
     onLongPress(t.el, ()=>personnaliserTuile(t, tuiles));
@@ -5936,7 +6336,7 @@ function renderSemestres(){
     const pen = w.querySelector && w.querySelector(".pen");
     if(pen) pen.classList.add("pen-bas");
     wrap.appendChild(w);
-  });
+  }
 }
 
 // ── Personnaliser les tuiles de l'accueil : titre, sous-titre, icône, ordre ──
@@ -6010,7 +6410,9 @@ function renderSubjectCards(sem){
   // le cercle suit les matières « À jour » : tous leurs CM et TD marqués révisés
   const avecCours = list.filter(s=>(s.cm||[]).length + (s.td||[]).length > 0);
   const aJour = avecCours.filter(s=>["cm","td"].every(t=>(s[t]||[]).every(ch=>estRevise(s, t, ch)))).length;
-  const pct = avecCours.length ? Math.round(aJour/avecCours.length*100) : 0;
+  // le pourcentage suit les CM et TD lus, comme sur la tuile du semestre
+  const av = avancementCours(list);
+  const pct = av.tot ? Math.round(av.lus/av.tot*100) : 0;
   const ueCount=new Set(list.map(s=>s.ue)).size;
   const circ=2*Math.PI*18, offset=circ-(pct/100)*circ;
   document.getElementById("subjects-eyebrow").textContent=titreSemestre(sem);
@@ -6021,7 +6423,7 @@ function renderSubjectCards(sem){
     : aJour + " matière" + (aJour > 1 ? "s" : "") + " à jour sur " + avecCours.length;
   ov.innerHTML=`
     <div class="overview-ring"><svg width="44" height="44"><circle class="overview-ring-bg" cx="22" cy="22" r="18"/><circle class="overview-ring-fill" cx="22" cy="22" r="18" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/></svg><div class="overview-ring-num">${pct}%</div></div>
-    <div class="overview-text"><div class="overview-title">${msg}</div><div class="overview-sub">${list.length} matières${list.length > avecCours.length ? ", dont " + (list.length - avecCours.length) + " à remplir" : ""} · ${ueCount} UE</div></div>`;
+    <div class="overview-text"><div class="overview-title">${msg}</div><div class="overview-sub">${list.length} matière${list.length > 1 ? "s" : ""}${list.length > avecCours.length ? ", dont " + (list.length - avecCours.length) + " à remplir" : ""} · ${ueCount} UE</div></div>`;
   // UE rangées dans l'ordre croissant de leur numéro, quel que soit l'ordre de création
   // « 19.2 » se lit comme 19 puis 2, pas comme le nombre 19,2 :
   // sinon 2.10 passerait avant 2.2. On compare donc segment par segment.
@@ -6093,9 +6495,15 @@ function openSubject(id){
   curSubj=SUBJECTS.find(s=>s.id===id);
   resolveLang(curSubj);
   curCmIdx=0; curTdIdx=0; curTab=0;
+  // on rouvre le dernier CM ou TD lu dans cette matière
+  const der = lectureCharger().dernier[id];
+  if(der){
+    const i = (curSubj[der.type]||[]).findIndex(c=>c.label === der.label);
+    if(i >= 0){ if(der.type === "cm") curCmIdx = i; else { curTdIdx = i; curTab = 1; } }
+  }
   document.getElementById("split-chip").innerHTML=
     `<span class="chip-num">${esc(curSubj.ecue)}</span><span class="chip-label">${esc(curSubj.title)}</span><span class="chip-caret">▾</span>`;
-  setTab(0);
+  setTab(curTab);
   showScreen("split");
 }
 
@@ -6151,9 +6559,242 @@ function onSwipe(elm, opts){
   }, {passive:true});
 }
 
+// ── Sommaire et progression de lecture d'un chapitre ──
+const IC_SOMMAIRE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg>';
+const SOMMAIRE_MIN = 4;   // en dessous, pas de sommaire
+function minutesLecture(ch){
+  const mots = JSON.stringify(ch.sections||[]).replace(/<[^>]+>/g," ").split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(mots / 200));
+}
+function allerSection(pane, i, direct){
+  const b = pane.querySelector('.section[data-sec="' + i + '"]');
+  if(!b) return;
+  const h = document.querySelector("#screen-split .split-head").offsetHeight;
+  window.scrollTo({ top:b.getBoundingClientRect().top + window.scrollY - h - 12, behavior:direct ? "auto" : "smooth" });
+}
+// ── Reprendre la lecture : la section où on s'est arrêté, par chapitre (sur ce téléphone) ──
+var reprendreDemande = false;
+function lectureCharger(){
+  let L = null; try{ L = JSON.parse(localStorage.getItem("lecture") || "null"); }catch(_){}
+  if(!L || typeof L !== "object") L = {};
+  L.pos = L.pos || {}; L.dernier = L.dernier || {};
+  return L;
+}
+function lectureSauver(L){ try{ localStorage.setItem("lecture", JSON.stringify(L)); }catch(_){} }
+var allerDemande = null;   // { sec, mots } : ouvrir à cette section (recherche, lexique)
+function marquerMots(racine, mots){
+  if(!mots || !mots.length) return;
+  const w = document.createTreeWalker(racine, NodeFilter.SHOW_TEXT), nodes = [];
+  while(w.nextNode()) nodes.push(w.currentNode);
+  nodes.forEach(n=>{
+    const flat = normKeepLen(n.nodeValue);
+    if(!mots.some(m=>m && flat.includes(m))) return;
+    const sp = document.createElement("span"); sp.innerHTML = highlight(n.nodeValue, mots); n.replaceWith(sp);
+  });
+}
+function reprendreLecture(pane, cle, jeton){
+  if(pane.dataset.cle !== cle || (jeton && pane._jeton !== jeton)) return;
+  if(allerDemande){
+    const d = allerDemande; allerDemande = null;
+    const sec = pane.querySelector('.section[data-sec="' + d.sec + '"]');
+    if(sec){
+      marquerMots(sec, d.mots);
+      allerSection(pane, d.sec, true);
+      sec.classList.add("sec-flash"); setTimeout(()=>sec.classList.remove("sec-flash"), 2700);
+      requestAnimationFrame(()=>{ pane._pret = true; majProgression(); });
+      return;
+    }
+  }
+  const i = lectureCharger().pos[cle] || 0;
+  const sec = i > 0 && pane.dataset.somm ? pane.querySelector('.section[data-sec="' + i + '"]') : null;
+  if(sec){
+    allerSection(pane, i, true);
+    toast("Tu reprends à la section " + (i + 1));
+  } else window.scrollTo(0, 0);
+  requestAnimationFrame(()=>{ pane._pret = true; majProgression(); });
+}
+function sectionsVisibles(){
+  const scr = document.getElementById("screen-split");
+  if(!scr || !scr.classList.contains("active")) return null;
+  const pane = scr.querySelector(".pane.active");
+  if(!pane || pane.id === "pane-2" || !pane.dataset.somm) return null;
+  return { scr, pane, secs:[...pane.querySelectorAll(".section[data-sec]")] };
+}
+const IC_CHEV_G = '<svg class="somm-fl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
+const IC_CHEV_D = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>';
+function majProgression(){
+  const flot = document.getElementById("somm-flot");
+  if(!flot) return;
+  const v = sectionsVisibles();
+  if(!v || !v.secs.length){ flot.classList.remove("on"); fermerSommaire(); return; }
+  const h = v.scr.querySelector(".split-head").offsetHeight;
+  let cur = 0;
+  v.secs.forEach((s,i)=>{ if(s.getBoundingClientRect().top < h + 90) cur = i; });
+  if(!document.getElementById("somm-panneau").classList.contains("open")) flot.classList.add("on");
+  flot.querySelector(".somm-flot-txt").textContent = (cur + 1) + "/" + v.secs.length;
+  flot._cur = cur;
+  // la section où on en est ; arrivé à la fin du chapitre, on repartira du début
+  if(v.pane._pret !== false && v.pane.dataset.cle){
+    const fin = v.pane.querySelector(".fin-chap");
+    const pos = fin && fin.getBoundingClientRect().top < innerHeight ? 0 : cur;
+    const L = lectureCharger();
+    if((L.pos[v.pane.dataset.cle] || 0) !== pos){ if(pos) L.pos[v.pane.dataset.cle] = pos; else delete L.pos[v.pane.dataset.cle]; lectureSauver(L); }
+  }
+}
+// place le centre de l'onglet à la hauteur y, sans sortir de l'écran ni passer sous l'en-tête
+function placerFlot(y){
+  const f = document.getElementById("somm-flot"); if(!f) return;
+  const h = f.offsetHeight || 72;
+  const head = document.querySelector("#screen-split .split-head");
+  const min = (head && head.offsetHeight ? head.getBoundingClientRect().bottom : 70) + h / 2 + 8;
+  const max = innerHeight - h / 2 - 20;
+  f.style.top = Math.round(Math.max(min, Math.min(max, y))) + "px";
+}
+function fermerSommaire(){
+  const pn = document.getElementById("somm-panneau"); if(!pn || !pn.classList.contains("open")) return;
+  pn.classList.remove("open"); document.getElementById("somm-voile").classList.remove("open");
+  requestAnimationFrame(majProgression);
+}
+function listeSections(){
+  const v = sectionsVisibles(); if(!v) return;
+  const flot = document.getElementById("somm-flot");
+  const cur = flot._cur || 0;
+  const box = document.getElementById("somm-liste");
+  document.getElementById("somm-sous").textContent =
+    v.secs.length + " sections" + (v.pane.dataset.min ? " · " + v.pane.dataset.min + " min de lecture" : "");
+  box.innerHTML = "";
+  v.secs.forEach((s,i)=>{
+    const t = s.querySelector(".section-title");
+    const r = el("button","cal-row chap-ligne" + (i === cur ? " actif" : "") + (i < cur ? " revise" : ""));
+    r.type = "button";
+    r.innerHTML = `<span class="rv-dot"></span><div class="cal-txt"><div class="cal-name">${esc(t ? t.textContent : "Section " + (i + 1))}</div>
+      <div class="cal-url">${i < cur ? "Lu" : i === cur ? "Tu es ici" : "Section " + (i + 1)}</div></div>` +
+      (i === cur ? `<span class="chap-ligne-ok">${COCHE_SVG}</span>` : "");
+    r.addEventListener("click",()=>{ haptic(); fermerSommaire(); setTimeout(()=>allerSection(v.pane, i), 200); });
+    box.appendChild(r);
+  });
+  flot.classList.remove("on");
+  document.getElementById("somm-voile").classList.add("open");
+  document.getElementById("somm-panneau").classList.add("open");
+  const ici = box.querySelector(".actif");
+  if(ici) setTimeout(()=>ici.scrollIntoView({ block:"center" }), 60);
+}
+(function initProgression(){
+  const scr = document.getElementById("screen-split");
+  if(scr && !document.getElementById("somm-flot")){
+    const f = el("button","somm-flot"); f.id = "somm-flot"; f.type = "button";
+    f.setAttribute("aria-label","Ouvrir le sommaire");
+    f.innerHTML = IC_SOMMAIRE + '<span class="somm-flot-txt"></span>';
+    f.addEventListener("click",()=>{ if(f._glisse){ f._glisse = false; return; } haptic(); listeSections(); });
+    // on peut le faire glisser de haut en bas, il garde sa place
+    let y0 = null, top0 = 0;
+    f.addEventListener("pointerdown",e=>{
+      y0 = e.clientY; top0 = f.getBoundingClientRect().top + f.offsetHeight / 2;
+      try{ f.setPointerCapture(e.pointerId); }catch(_){}
+    });
+    f.addEventListener("pointermove",e=>{
+      if(y0 === null) return;
+      const dy = e.clientY - y0;
+      if(!f.classList.contains("drag") && Math.abs(dy) < 6) return;
+      f.classList.add("drag");
+      placerFlot(top0 + dy);
+    });
+    const finGlisse = ()=>{
+      if(y0 === null) return; y0 = null;
+      if(f.classList.contains("drag")){
+        f.classList.remove("drag"); f._glisse = true; setTimeout(()=>{ f._glisse = false; }, 400);
+        try{ localStorage.setItem("sommFlotY", String(parseFloat(f.style.top) / innerHeight)); }catch(_){}
+      }
+    };
+    f.addEventListener("pointerup", finGlisse);
+    f.addEventListener("pointercancel", finGlisse);
+    const voile = el("div","somm-voile"); voile.id = "somm-voile";
+    voile.addEventListener("click", fermerSommaire);
+    const pn = el("aside","somm-panneau"); pn.id = "somm-panneau";
+    pn.innerHTML = `<div class="somm-tete"><div class="somm-tete-txt"><div class="somm-titre">Sommaire</div><div class="somm-sous" id="somm-sous"></div></div>
+      <button type="button" class="somm-fermer" aria-label="Fermer le sommaire">${IC_CHEV_D}</button></div><div class="somm-liste" id="somm-liste"></div>`;
+    pn.querySelector(".somm-fermer").addEventListener("click",()=>{ haptic(); fermerSommaire(); });
+    // glisser vers la gauche pour refermer
+    let x0 = null;
+    pn.addEventListener("touchstart",e=>{ x0 = e.touches[0].clientX; },{ passive:true });
+    pn.addEventListener("touchend",e=>{ if(x0 !== null && x0 - e.changedTouches[0].clientX > 60) fermerSommaire(); x0 = null; },{ passive:true });
+    document.body.append(f, voile, pn);
+    let r = null; try{ r = parseFloat(localStorage.getItem("sommFlotY")); }catch(_){}
+    if(r > 0 && r < 1) placerFlot(r * innerHeight);
+  }
+  window.addEventListener("scroll", ()=>requestAnimationFrame(majProgression), { passive:true });
+  window.addEventListener("resize", ()=>requestAnimationFrame(()=>{
+    let r = null; try{ r = parseFloat(localStorage.getItem("sommFlotY")); }catch(_){}
+    if(r > 0 && r < 1) placerFlot(r * innerHeight);
+    majProgression();
+  }));
+})();
+
+// ── CM / TD / S'entraîner ──
+const TYPES_VUE = [
+  { ic:"📖", nom:"CM",          sub:s=>{ const n=(s.cm||[]).length; return n ? n + " CM" : "Aucun CM pour l'instant"; } },
+  { ic:"📝", nom:"TD",          sub:s=>{ const n=(s.td||[]).length; return n ? n + " TD" : "Aucun TD pour l'instant"; } },
+  { ic:"✏️", nom:"S'entraîner", sub:()=>"QCM, fiches, textes à trous, auteurs" }
+];
+const IC_CHEV_DROITE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
+const IC_CHEV_BAS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+function majTypePick(){
+  const b = document.getElementById("type-pick"); if(!b) return;
+  const t = TYPES_VUE[curTab || 0];
+  b.innerHTML = `<span class="type-ic">${t.ic}</span><span class="chap-pick-txt">${esc(t.nom)}</span><span class="chap-pick-ic">${IC_CHEV_BAS}</span>`;
+}
+function listeTypes(){
+  document.querySelectorAll("#pick-sheet .pick-actions").forEach(n=>n.remove());
+  const box = document.getElementById("pick-list");
+  document.getElementById("pick-title").textContent = curSubj ? ((curSubj.ecue ? curSubj.ecue + " · " : "") + curSubj.title) : "Aller à";
+  box.innerHTML = "";
+  TYPES_VUE.forEach((t,i)=>{
+    const r = el("button","cal-row chap-ligne" + (i === curTab ? " actif" : ""));
+    r.type = "button";
+    r.innerHTML = `<span class="type-ic" style="font-size:20px">${t.ic}</span><div class="cal-txt"><div class="cal-name">${esc(t.nom)}</div><div class="cal-url">${esc(t.sub(curSubj || {}))}</div></div>` +
+      (i === curTab ? `<span class="chap-ligne-ok">${COCHE_SVG}</span>` : "");
+    r.addEventListener("click",()=>{ haptic(); closePicker(); if(i !== curTab) setTab(i); });
+    box.appendChild(r);
+  });
+  // le lexique de la matière, s'il y a des termes
+  const nLex = curSubj ? lexique(curSubj).length : 0;
+  if(nLex){
+    const lx = el("button","cal-row chap-ligne"); lx.type = "button";
+    lx.innerHTML = `<span class="type-ic" style="font-size:20px">📚</span><div class="cal-txt"><div class="cal-name">Lexique</div><div class="cal-url">${nLex} terme${nLex > 1 ? "s" : ""} tirés de tes cours</div></div>`;
+    lx.addEventListener("click",()=>{ haptic(); closePicker(); setTimeout(ouvrirLexique, 250); });
+    box.appendChild(lx);
+  }
+  // la fiche de synthèse : tous les « À retenir »
+  const nSyn = curSubj ? nbPointsSynthese(curSubj) : 0;
+  if(nSyn){
+    const sy = el("button","cal-row chap-ligne"); sy.type = "button";
+    sy.innerHTML = `<span class="type-ic" style="font-size:20px">📌</span><div class="cal-txt"><div class="cal-name">Fiche de synthèse</div><div class="cal-url">Tous les « À retenir » sur une page</div></div>`;
+    sy.addEventListener("click",()=>{ haptic(); closePicker(); setTimeout(ouvrirSynthese, 250); });
+    box.appendChild(sy);
+  }
+  box.appendChild(el("div","pick-sep"));
+  // taille du texte des cours
+  const tl = el("div","cal-row taille-row");
+  tl.innerHTML = `<span class="type-ic" style="font-size:20px">🔠</span><div class="cal-txt"><div class="cal-name">Taille du texte</div><div class="cal-url">Pour lire les cours</div></div><div class="taille-btns"></div>`;
+  [["petit",13],["normal",16],["grand",20]].forEach(([t,px])=>{
+    const b = el("button", t === tailleTexte() ? "on" : ""); b.type = "button"; b.textContent = "A"; b.style.fontSize = px + "px";
+    b.setAttribute("aria-label", "Texte " + t);
+    b.addEventListener("click",()=>{ haptic(); appliquerTaille(t); tl.querySelectorAll(".taille-btns button").forEach(x=>x.classList.toggle("on", x === b)); requestAnimationFrame(majProgression); });
+    tl.querySelector(".taille-btns").appendChild(b);
+  });
+  box.appendChild(tl);
+  // en bas : revenir à l'accueil
+  const acc = el("button","cal-row chap-ligne"); acc.type = "button";
+  acc.innerHTML = `<span class="type-ic" style="font-size:20px">🏠</span><div class="cal-txt"><div class="cal-name">Revenir à l'accueil</div><div class="cal-url">L'écran principal de l'app</div></div>`;
+  acc.addEventListener("click",()=>{ haptic(); document.getElementById("btn-split-home").click(); });
+  box.appendChild(acc);
+  document.getElementById("pick-sheet").classList.add("open");
+}
 function setTab(i){
   curTab=i;
+  reprendreDemande = i < 2;
   document.querySelectorAll(".seg-btn").forEach((b,k)=>b.classList.toggle("active",k===i));
+  majTypePick();
   document.getElementById("seg-thumb").style.transform="translateX(calc("+i+" * (100% + 2px)))";
   document.querySelectorAll(".pane").forEach((p,k)=>p.classList.toggle("active",k===i));
   if(i===0) renderCoursePane("cm");
@@ -6162,6 +6803,7 @@ function setTab(i){
   const pane=document.getElementById("pane-"+i);
   if(pane){ pane.style.animation="none"; void pane.offsetWidth; pane.style.animation=""; }
   window.scrollTo(0,0);
+  requestAnimationFrame(majProgression);
 }
 function renderCoursePane(type){
   const chapters = type==="cm" ? (curSubj.cm||[]) : (curSubj.td||[]);
@@ -6184,14 +6826,10 @@ function renderCoursePane(type){
   const sel = boutonChapitre(type, chapters, chIdx);
   const row = el("div","chap-row");
   row.appendChild(sel);
-  if(canEdit()){
-    const addPill = el("button","chap-add");
-    addPill.type = "button";
-    addPill.textContent = "+";
-    addPill.setAttribute("aria-label","Ajouter un chapitre");
-    addPill.addEventListener("click",()=>{ haptic(); addChapitre(type); });
-    row.appendChild(addPill);
-  }
+  // écouter, puis partager : deux carrés à droite du sélecteur
+  if((chapters[chIdx].sections||[]).length && TTS_OK) row.appendChild(lecteurBouton(pane, true));
+  // seul l'auteur partage son cours : un chapitre reçu d'une classe reste dans l'app
+  if(!chapters[chIdx]._shared) row.appendChild(boutonPartager(type, chapters[chIdx], true));
   pane.appendChild(row);
   // un appui long sur le sélecteur ouvre la fiche du chapitre affiché.
   // Un chapitre partagé n'est pas modifiable ici, il se retire depuis sa classe.
@@ -6209,16 +6847,18 @@ function renderCoursePane(type){
     pane.appendChild(r);
   }
   const ch=chapters[chIdx];
+  pane.dataset.cle = cleVu(curSubj, type, ch);
+  { const L = lectureCharger(); L.dernier[curSubj.id] = { type, label:ch.label }; lectureSauver(L); }
+  if(reprendreDemande){ reprendreDemande = false; pane._pret = false; const cle = pane.dataset.cle, jeton = pane._jeton = (pane._jeton || 0) + 1;
+    setTimeout(()=>reprendreLecture(pane, cle, jeton), 60); }
+  const titreCh = partiesChapitre(ch.label).titre;
+  if(titreCh){ const h = el("h1","chap-titre"); h.textContent = titreCh; pane.appendChild(h); }
   marquerVu(curSubj, type, ch);
   lecteurStop();
-  // écouter et partager, côte à côte
-  if((ch.sections||[]).length){
-    const rangee = el("div","lec-row");
-    if(TTS_OK) rangee.appendChild(lecteurBouton(pane));
-    // seul l'auteur partage son cours : un chapitre reçu d'une classe reste dans l'app
-    if(!ch._shared) rangee.appendChild(boutonPartager(type, ch));
-    if(rangee.children.length) pane.appendChild(rangee);
-  }
+  // chapitres longs : le bouton flottant « Sommaire » donne accès aux sections
+  if((ch.sections||[]).length >= SOMMAIRE_MIN){ pane.dataset.somm = "1"; pane.dataset.min = minutesLecture(ch); }
+  else { delete pane.dataset.somm; delete pane.dataset.min; }
+  requestAnimationFrame(majProgression);
   (ch.sections||[]).forEach((sec,si)=>{
     const block=el("div","section");
     block.dataset.sec = si;
@@ -6236,13 +6876,20 @@ function renderCoursePane(type){
     r.innerHTML=`<div class="recap-label">📌 À retenir</div>`+ch.recap.map((x,i)=>`<div class="recap-item"><span class="recap-num">${i+1}</span><span>${esc(x)}</span></div>`).join("");
     pane.appendChild(r);
   }
-  // marquer le chapitre comme révisé
-  const rv = el("button","rv-switch" + (estRevise(curSubj, type, ch) ? " on" : ""));
-  rv.type = "button";
+  pane.appendChild(blocNotes(pane.dataset.cle));
+  // fin du chapitre : révisé, puis son QCM, puis le chapitre suivant
+  const fin = el("div","fin-chap");
+  const mot = type === "cm" ? "ce CM" : "ce TD";
+  fin.innerHTML = `<div class="fin-titre">Tu as fini ${mot} ?</div>`;
+  const etape = (k, cls)=>{ const r = el("button","fin-etape" + (cls ? " " + cls : "")); r.type = "button";
+    r.innerHTML = `<span class="fin-num">${k}</span>`; fin.appendChild(r); return r; };
+  // 1. révisé
+  const rv = etape(1, "fin-rv");
   const majRv = ()=>{
     const on = estRevise(curSubj, type, ch);
-    rv.classList.toggle("on", on);
-    rv.innerHTML = `<span>${on ? "Révisé ✓" : "Marquer comme révisé"}<span class="rv-sub">${on ? "Touche pour enlever" : "Le point devient vert dans la liste des chapitres"}</span></span><span class="sw"></span>`;
+    rv.classList.toggle("fait", on);
+    rv.innerHTML = `<span class="fin-num">${on ? COCHE_SVG : 1}</span><span class="fin-txt"><span class="fin-nom">${on ? "Révisé" : "Marquer comme révisé"}</span>
+      <span class="fin-sub">${on ? "Touche pour enlever" : "Le point devient vert dans la liste"}</span></span><span class="sw"></span>`;
   };
   majRv();
   rv.addEventListener("click",()=>{
@@ -6253,17 +6900,36 @@ function renderCoursePane(type){
     const pastille = pane.querySelector(".chap-pick");
     if(pastille) pastille.classList.toggle("revise", estRevise(curSubj, type, ch));
   });
-  pane.appendChild(rv);
-  // le QCM de ce chapitre, directement
+  // 2. le QCM de ce chapitre
+  let num = 2;
   const nQ = (curSubj.qcm||[]).filter(x=>x && x.ch === ch.label).length;
   if(nQ){
     const p = progressionScope(curSubj, "ch:" + ch.label, "qcm");
-    const b = el("button","chap-qcm-btn");
-    b.type = "button";
-    b.innerHTML = `⏱️ QCM de ce ${type === "cm" ? "cours" : "TD"} <span class="cq-sub">· ${p.ok === p.total ? "✓ validé" : p.ok + " / " + p.total + " validés"}</span>`;
-    b.addEventListener("click", ()=>{ haptic(); lancerQCMChapitre(ch.label); });
-    pane.appendChild(b);
+    const ok = p.ok === p.total;
+    const q = etape(num++, ok ? "fait" : "");
+    q.innerHTML = `<span class="fin-num">${ok ? COCHE_SVG : 2}</span><span class="fin-txt"><span class="fin-nom">Faire le QCM de ${mot}</span>
+      <span class="fin-sub">${ok ? "Validé" : p.ok ? p.ok + " questions validées sur " + p.total : p.total + " questions"}</span></span><span class="fin-fl">${IC_CHEV_DROITE}</span>`;
+    q.addEventListener("click", ()=>{ haptic(); lancerQCMChapitre(ch.label); });
   }
+  // 3. la suite
+  const suivant = chapters[chIdx + 1];
+  const s3 = etape(num, "fin-suite");
+  if(suivant){
+    const pc = partiesChapitre(suivant.label);
+    s3.innerHTML = `<span class="fin-num">${num}</span><span class="fin-txt"><span class="fin-sub">${type === "cm" ? "CM suivant" : "TD suivant"}</span>
+      <span class="fin-nom">${esc(pc.court)}${pc.titre ? " · " + esc(pc.titre) : ""}</span></span><span class="fin-fl">${IC_CHEV_DROITE}</span>`;
+    s3.addEventListener("click",()=>{
+      haptic();
+      if(type === "cm") curCmIdx = chIdx + 1; else curTdIdx = chIdx + 1;
+      reprendreDemande = true;
+      renderCoursePane(type);
+    });
+  } else {
+    s3.innerHTML = `<span class="fin-num">${num}</span><span class="fin-txt"><span class="fin-sub">C'était le dernier ${type === "cm" ? "CM" : "TD"}</span>
+      <span class="fin-nom">S'entraîner sur toute la matière</span></span><span class="fin-fl">${IC_CHEV_DROITE}</span>`;
+    s3.addEventListener("click",()=>{ haptic(); setTab(2); window.scrollTo({ top:0, behavior:"smooth" }); });
+  }
+  pane.appendChild(fin);
   if(modifiable(ch)){
     const addSec=el("button","add-inline");
     addSec.textContent = "+  Ajouter une section";
@@ -6361,6 +7027,8 @@ function masquerNom(txt, nom){
   return t;
 }
 function couper(t, n){ t = String(t||"").trim(); return t.length > n ? t.slice(0, n).replace(/\s+\S*$/,"") + "…" : t; }
+// nombre de QCM : un par chapitre qui a des questions (pas le nombre de questions)
+function nbQCM(liste){ return new Set((liste||[]).filter(Boolean).map(x=>x.ch || "")).size; }
 function quizAuteurs(subj){
   if(!subj) return [];
   const sig = subj.id + "|" + (subj.auteurs||[]).map(a=>a && a.nom).join("|");
@@ -6556,10 +7224,20 @@ function renderTrainPane(){
   const intro=el("div","train-intro");
   intro.innerHTML = dueTotal > 0
     ? `<span class="due-pill">📅 ${dueTotal} carte${dueTotal>1?"s":""} à revoir aujourd'hui</span>`
-    : `<span class="due-pill done">✓ Tout est à jour — tu peux réviser en libre</span>`;
+    : `<span class="due-pill done">✓ Tout est à jour, tu peux réviser en libre</span>`;
   pane.appendChild(intro);
   const scope = "all";
   const grid=el("div","mode-grid");
+  // mode examen : dès qu'il y a de quoi faire un vrai sujet
+  const nExam = examSources(curSubj).reduce((k,x)=>k + x.n, 0);
+  if(nExam >= 5){
+    const der = examNotes()[curSubj.id];
+    const card = el("button","mode-card");
+    card.innerHTML = `<div class="mode-icon">🎓</div>
+      <div class="mode-info"><div class="mode-name">Mode examen</div><div class="mode-desc">${der ? "Dernière note : " + noteFr(der.note) + " / 20" : "Chrono, pas de correction pendant, note sur 20"}</div></div>`;
+    card.addEventListener("click",()=>{ haptic(); renderExamenChoix(); });
+    grid.appendChild(card);
+  }
   const modes=[
     {m:"fc",icon:"🃏",title:"Flashcards",desc:"Question → retourne → tu te notes"},
     {m:"qcm",icon:"⏱️",title:"QCM",desc:"4 choix · 20 s · explication après"},
@@ -7114,7 +7792,178 @@ function melangerQCM(item){
   });
 }
 
+// ══════════════════════════════════════════════════
+// MODE EXAMEN : un sujet tiré au hasard, un chrono, la note à la fin
+// Les réponses ne touchent pas à ce qui est validé dans les QCM.
+// ══════════════════════════════════════════════════
+let exam = null;
+const EXAMEN = { subj:null, sel:null, nb:20 };
+const SEC_PAR_QUESTION = 30;
+function examNotes(){ try{ return JSON.parse(localStorage.getItem("examNotes") || "{}") || {}; }catch(_){ return {}; } }
+function noteFr(n){ return String(n).replace(".", ","); }
+function melange(a){ const b = a.slice(); for(let i = b.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; }
+function examSources(subj){
+  const out = [];
+  chapitresAReviser(subj).forEach(c=>{
+    const n = (subj.qcm||[]).filter(x=>x && x.ch === c.label).length;
+    if(n) out.push({ id:"ch:" + c.label, nom:c.label, type:c.type, n });
+  });
+  const na = (subj.auteurs && subj.auteurs.length) ? quizAuteurs(subj).length : 0;
+  if(na) out.push({ id:"auteurs", nom:"Auteurs", type:"aut", n:na });
+  return out;
+}
+function dureeFr(sec){ const m = Math.round(sec / 60); return m < 1 ? sec + " s" : m + " min"; }
+function renderExamenChoix(){
+  const src = examSources(curSubj);
+  if(EXAMEN.subj !== curSubj.id || !EXAMEN.sel){ EXAMEN.subj = curSubj.id; EXAMEN.sel = new Set(src.map(x=>x.id)); }
+  document.getElementById("qcmchoix-eyebrow").textContent = curSubj.title;
+  document.getElementById("qcmchoix-titre").textContent = "Mode examen";
+  document.getElementById("qcmchoix-sub").textContent = "Comme le jour du partiel : un chrono, pas de correction pendant, une note sur 20 à la fin. Ça ne change pas ce qui est validé dans tes QCM.";
+  const box = document.getElementById("qcmchoix-inner"); box.innerHTML = "";
+  const dispo = ()=>src.filter(x=>EXAMEN.sel.has(x.id)).reduce((k,x)=>k + x.n, 0);
+  const go = el("button","btn ex-go"); go.type = "button";
+  const maj = ()=>{
+    const d = dispo(), n = Math.min(EXAMEN.nb, d);
+    go.disabled = !n;
+    go.textContent = n ? "Commencer · " + n + " questions · " + dureeFr(n * SEC_PAR_QUESTION) : "Choisis au moins un cours";
+  };
+  // nombre de questions
+  const g1 = el("div","qc-group"); g1.textContent = "Nombre de questions"; box.appendChild(g1);
+  const chips = el("div","ex-chips");
+  [10,20,40].forEach(n=>{
+    const c = el("button","ex-chip" + (EXAMEN.nb === n ? " on" : "")); c.type = "button"; c.textContent = n;
+    c.addEventListener("click",()=>{ haptic(); EXAMEN.nb = n; chips.querySelectorAll(".ex-chip").forEach(x=>x.classList.toggle("on", x === c)); maj(); });
+    chips.appendChild(c);
+  });
+  box.appendChild(chips);
+  // sur quoi
+  const g2 = el("div","qc-group ex-groupe"); g2.innerHTML = `<span>Sur quoi</span>`;
+  const tout = el("button","ex-tout"); tout.type = "button";
+  const majTout = ()=>{ tout.textContent = EXAMEN.sel.size === src.length ? "Tout enlever" : "Tout prendre"; };
+  g2.appendChild(tout); box.appendChild(g2);
+  const lignes = [];
+  src.forEach(x=>{
+    const pc = x.type === "aut" ? { court:"👤 Auteurs", titre:"" } : partiesChapitre(x.nom);
+    const r = el("button","ex-row" + (EXAMEN.sel.has(x.id) ? " on" : "")); r.type = "button";
+    r.innerHTML = `<span class="ex-check">${COCHE_SVG}</span><span class="ex-row-txt"><div class="ex-row-nom">${esc(pc.court)}${pc.titre ? " · " + esc(pc.titre) : ""}</div>
+      <div class="ex-row-sub">${x.n} question${x.n > 1 ? "s" : ""}</div></span>`;
+    r.addEventListener("click",()=>{ haptic(); if(EXAMEN.sel.has(x.id)) EXAMEN.sel.delete(x.id); else EXAMEN.sel.add(x.id); r.classList.toggle("on"); majTout(); maj(); });
+    lignes.push([r, x.id]); box.appendChild(r);
+  });
+  tout.addEventListener("click",()=>{
+    haptic();
+    const tous = EXAMEN.sel.size === src.length;
+    EXAMEN.sel = new Set(tous ? [] : src.map(x=>x.id));
+    lignes.forEach(([r,id])=>r.classList.toggle("on", EXAMEN.sel.has(id))); majTout(); maj();
+  });
+  majTout(); maj();
+  go.addEventListener("click",()=>{ haptic(); startExamen(); });
+  box.appendChild(go);
+  showScreen("qcmchoix");
+}
+function startExamen(){
+  const pool = [];
+  EXAMEN.sel.forEach(id=>itemsDuScope(curSubj, "qcm", id).forEach(x=>{ if(x.item && Array.isArray(x.item.opts)) pool.push(x.item); }));
+  const qs = melange(pool).slice(0, EXAMEN.nb).map(melangerQCM);
+  if(!qs.length) return;
+  exam = { qs, rep:new Array(qs.length).fill(null), i:0, duree:qs.length * SEC_PAR_QUESTION, t0:Date.now(), fini:false };
+  clearInterval(timerInt);
+  timerInt = setInterval(tickExamen, 1000);
+  showScreen("session");
+  renderExamen();
+}
+function resteExamen(){ return Math.max(0, exam.duree - Math.floor((Date.now() - exam.t0) / 1000)); }
+function tickExamen(){
+  if(!exam || exam.fini) return;
+  const r = resteExamen();
+  const sc = document.getElementById("sess-score");
+  sc.textContent = "⏱ " + Math.floor(r / 60) + ":" + String(r % 60).padStart(2, "0");
+  sc.className = "nav-score ex-chrono" + (r <= 60 ? " red" : "");
+  if(r <= 0) finirExamen(true);
+}
+function renderExamen(){
+  const n = exam.qs.length, i = exam.i, q = exam.qs[i];
+  document.getElementById("sess-pos").textContent = "🎓 " + (i + 1) + " / " + n;
+  document.getElementById("sess-prog").style.width = (exam.rep.filter(x=>x !== null).length / n * 100) + "%";
+  tickExamen();
+  const body = document.getElementById("sess-body"); body.innerHTML = "";
+  const wrap = el("div","rise");
+  const qb = el("div","q-box"); qb.innerHTML = `<div class="q-text">${esc(q.q)}</div>`; wrap.appendChild(qb);
+  const opts = el("div","opts");
+  q.opts.forEach((o,k)=>{
+    const b = el("button","opt" + (exam.rep[i] === k ? " choisie" : ""));
+    b.innerHTML = `<span class="opt-letter">${String.fromCharCode(65 + k)}</span><span>${esc(o)}</span>`;
+    b.addEventListener("click",()=>{
+      haptic(); exam.rep[i] = k; renderExamen();
+      // on passe tout seul à la suivante, on peut toujours revenir
+      if(i < n - 1) setTimeout(()=>{ if(exam && !exam.fini && exam.i === i){ exam.i = i + 1; renderExamen(); } }, 350);
+    });
+    opts.appendChild(b);
+  });
+  wrap.appendChild(opts);
+  const row = el("div","btn-row");
+  const prev = el("button","btn ghost"); prev.textContent = "‹ Précédente"; prev.disabled = i === 0;
+  prev.addEventListener("click",()=>{ haptic(); exam.i = i - 1; renderExamen(); });
+  const next = el("button","btn" + (i < n - 1 ? " ghost" : ""));
+  next.textContent = i < n - 1 ? "Suivante ›" : "Terminer";
+  next.addEventListener("click",()=>{
+    haptic();
+    if(i < n - 1){ exam.i = i + 1; renderExamen(); return; }
+    const vides = exam.rep.filter(x=>x === null).length;
+    if(vides) confirmer("Terminer l'examen ?", vides + " question" + (vides > 1 ? "s sont" : " est") + " sans réponse.", "Terminer", ()=>finirExamen(false));
+    else finirExamen(false);
+  });
+  row.append(prev, next); wrap.appendChild(row);
+  // toutes les questions, pour sauter de l'une à l'autre
+  const grille = el("div","ex-grille");
+  exam.qs.forEach((_,k)=>{
+    const b = el("button",(exam.rep[k] !== null ? "fait" : "") + (k === i ? " ici" : "")); b.type = "button"; b.textContent = k + 1;
+    b.addEventListener("click",()=>{ haptic(); exam.i = k; renderExamen(); });
+    grille.appendChild(b);
+  });
+  wrap.appendChild(grille);
+  body.appendChild(wrap);
+}
+function finirExamen(tempsEcoule){
+  clearInterval(timerInt);
+  exam.fini = true;
+  const n = exam.qs.length;
+  const bonnes = exam.qs.filter((q,k)=>exam.rep[k] === q.c).length;
+  const note = Math.round(bonnes / n * 40) / 2;
+  const duree = Math.min(exam.duree, Math.floor((Date.now() - exam.t0) / 1000));
+  try{ const N = examNotes(); N[curSubj.id] = { note, date:Date.now() }; localStorage.setItem("examNotes", JSON.stringify(N)); }catch(_){}
+  document.getElementById("sess-pos").textContent = "Résultat";
+  const sc = document.getElementById("sess-score"); sc.className = "nav-score"; sc.textContent = "";
+  document.getElementById("sess-prog").style.width = "100%";
+  const body = document.getElementById("sess-body"); body.innerHTML = "";
+  const msg = note >= 16 ? "Très bien, tu es prête." : note >= 12 ? "Bien. Revois les quelques erreurs ci-dessous." : note >= 10 ? "C'est la moyenne. Encore un tour sur les points ratés." : "Pas encore. Relis les cours des questions ratées, puis retente.";
+  const wrap = el("div","results");
+  wrap.innerHTML = `<div class="ex-note">${noteFr(note)}<small> / 20</small></div>
+    <p class="results-msg">${msg}</p>
+    <p class="res-scope">${bonnes} bonne${bonnes > 1 ? "s" : ""} réponse${bonnes > 1 ? "s" : ""} sur ${n} · ${tempsEcoule ? "temps écoulé" : Math.floor(duree / 60) + " min " + String(duree % 60).padStart(2, "0") + " s"}</p>`;
+  const erreurs = exam.qs.map((q,k)=>({ q, r:exam.rep[k] })).filter(x=>x.r !== x.q.c);
+  if(erreurs.length){
+    const t = el("div","results-detail-label"); t.textContent = "À revoir (" + erreurs.length + ")"; t.style.margin = "22px 0 10px";
+    wrap.appendChild(t);
+    erreurs.forEach(({q,r})=>{
+      const d = el("div","ex-err");
+      d.innerHTML = `<div class="ex-err-q">${esc(q.q)}</div>
+        <div class="ex-err-l ko">✗ ${r === null ? "Pas de réponse" : esc(q.opts[r])}</div>
+        <div class="ex-err-l ok">✓ ${esc(q.opts[q.c])}</div>` + (q.e ? `<div class="ex-err-e">${esc(q.e)}</div>` : "");
+      wrap.appendChild(d);
+    });
+  }
+  const row = el("div","btn-row");
+  const b1 = el("button","btn ghost"); b1.textContent = "Réglages";
+  b1.addEventListener("click",()=>{ haptic(); exam = null; renderExamenChoix(); });
+  const b2 = el("button","btn"); b2.textContent = "🔁 Un autre sujet";
+  b2.addEventListener("click",()=>{ haptic(); startExamen(); });
+  row.append(b1, b2); wrap.appendChild(row);
+  body.appendChild(wrap);
+  window.scrollTo(0, 0);
+}
 function startSession(m){
+  exam = null; document.getElementById("sess-score").className = "nav-score";
   curMode=m; idx=0; score=0; answers=[];
   flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv=""; oqEcrit="";
   globalSession = false;
@@ -7148,6 +7997,7 @@ function startSession(m){
 
 // ── Session globale : toutes les cartes dues, toutes matières confondues ──
 function startGlobalSession(){
+  exam = null; document.getElementById("sess-score").className = "nav-score";
   idx=0; score=0; answers=[];
   flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv=""; oqEcrit="";
   globalSession = true;
@@ -7590,17 +8440,17 @@ function renderPsychoEtapes(){
   loadPsychoSteps();
   const inner=document.getElementById("psycho-inner"); inner.innerHTML="";
   psyBack(inner,renderPsycho);
-  const hero=el("div","psy-hero rise"); hero.innerHTML=`<div class="psy-hero-mark">📋</div><div class="psy-hero-title">Les étapes</div><div class="psy-hero-sub">Coche au fur et à mesure. Pas de pression — tu reviens quand tu veux. 💜</div>`; inner.appendChild(hero);
+  const hero=el("div","psy-hero rise"); hero.innerHTML=`<div class="psy-hero-mark">📋</div><div class="psy-hero-title">Les étapes</div><div class="psy-hero-sub">Coche au fur et à mesure. Pas de pression, tu reviens quand tu veux. 💜</div>`; inner.appendChild(hero);
   const done=PSYCHO_STEPS.filter(s=>s.done).length, total=PSYCHO_STEPS.length, pct=Math.round(done/total*100);
   const circ=2*Math.PI*24, offset=circ-(pct/100)*circ;
-  const pt=done===0?"C'est parti — première étape !":done===total?"Tout est fait 🎉 Bravo Nana !":done+" / "+total+" étapes complétées";
-  const ps=done===0?"Tu peux y aller à ton rythme 💜":done===total?"Le dossier est prêt. Tu l'as fait ! 🌸":"Tu avances bien — continue comme ça 🌸";
+  const pt=done===0?"C'est parti : première étape !":done===total?"Tout est fait 🎉 Bravo Nana !":done+" / "+total+" étapes complétées";
+  const ps=done===0?"Tu peux y aller à ton rythme 💜":done===total?"Le dossier est prêt. Tu l'as fait ! 🌸":"Tu avances bien, continue comme ça 🌸";
   const ph=el("div","psy-prog-head rise"); ph.style.animationDelay=".05s";
   ph.innerHTML=`<div class="psy-ring"><svg width="56" height="56"><circle class="psy-ring-bg" cx="28" cy="28" r="24"/><circle class="psy-ring-fill" cx="28" cy="28" r="24" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/></svg><div class="psy-ring-num">${pct}%</div></div><div><div class="psy-prog-title">${pt}</div><div class="psy-prog-sub">${ps}</div></div>`;
   inner.appendChild(ph);
   const phases=[
     {label:"🌱 Dès maintenant",motiv:"Le plus tôt tu te renseignes, le plus sereine tu seras. 🌸",ids:["s1","s2"]},
-    {label:"📅 Janvier 2027",motiv:"Parcoursup ouvre en janvier — juste un vœu à déposer en plus. 💜",ids:["s3","s4"]},
+    {label:"📅 Janvier 2027",motiv:"Parcoursup ouvre en janvier, juste un vœu à déposer en plus. 💜",ids:["s3","s4"]},
     {label:"✍️ Février → Avril 2027",motiv:"Cette étape prend du temps, mais tu as largement le tien. 🫂",ids:["s5","s6","s7","s7b"]},
     {label:"📬 Avant fin Mai 2027",motiv:"Tu auras tout bouclé un mois à l'avance. Sereine, promis. 🌸",ids:["s8"]},
     {label:"🎓 Juin → Septembre 2027",motiv:"Tu es presque au bout. Tout ce travail va payer. 💜",ids:["s9","s10","s11"]},
@@ -7622,7 +8472,7 @@ function renderPsychoEtapes(){
   });
   if(done===total && isNana()){
     const c=el("div","psy-congrats");
-    c.innerHTML=`<div class="psy-congrats-emoji">🎉💜🌸</div><div class="psy-congrats-title">Tu l'as fait, Nana.</div><div class="psy-congrats-text">Chaque étape cochée, c'était un pas de plus vers la version de toi que tu veux devenir.<br><br>Le dossier est prêt. Maintenant tu attends — et tu mérites d'être fière. 💜</div>`;
+    c.innerHTML=`<div class="psy-congrats-emoji">🎉💜🌸</div><div class="psy-congrats-title">Tu l'as fait, Nana.</div><div class="psy-congrats-text">Chaque étape cochée, c'était un pas de plus vers la version de toi que tu veux devenir.<br><br>Le dossier est prêt. Maintenant tu attends, et tu mérites d'être fière. 💜</div>`;
     inner.appendChild(c);
   }
   // Le carrousel de motivation n'existe que dans l'espace rose (Nana)
@@ -7655,10 +8505,10 @@ function renderPsychoInfos(){
 function renderPsychoSpecialite(){
   const inner=document.getElementById("psycho-inner"); inner.innerHTML="";
   psyBack(inner,renderPsycho);
-  const hero=el("div","psy-hero rise"); hero.innerHTML=`<div class="psy-hero-mark">🔍</div><div class="psy-hero-title">Quelle spécialité ?</div><div class="psy-hero-sub">Pas besoin de tout décider maintenant. Lis tranquillement — quelque chose va résonner en toi. 💜</div>`; inner.appendChild(hero);
+  const hero=el("div","psy-hero rise"); hero.innerHTML=`<div class="psy-hero-mark">🔍</div><div class="psy-hero-title">Quelle spécialité ?</div><div class="psy-hero-sub">Pas besoin de tout décider maintenant. Lis tranquillement, quelque chose va résonner en toi. 💜</div>`; inner.appendChild(hero);
   inner.appendChild(psyMini(motivDoux()));
   const intro=el("div","psy-info-card");
-  intro.innerHTML=`<div class="psy-info-header"><span class="psy-info-icon">💬</span><span class="psy-info-title">Comment ça fonctionne ?</span></div><div class="psy-info-lines"><div class="psy-info-line">En psychologie, on choisit sa spécialité au moment du Master — pas de la licence.</div><div class="psy-info-line">La licence donne les bases communes à toutes les branches.</div><div class="psy-info-line">Mais connaître les spécialités maintenant, c'est savoir vers où on marche. 🌸</div></div>`;
+  intro.innerHTML=`<div class="psy-info-header"><span class="psy-info-icon">💬</span><span class="psy-info-title">Comment ça fonctionne ?</span></div><div class="psy-info-lines"><div class="psy-info-line">En psychologie, on choisit sa spécialité au moment du Master, pas de la licence.</div><div class="psy-info-line">La licence donne les bases communes à toutes les branches.</div><div class="psy-info-line">Mais connaître les spécialités maintenant, c'est savoir vers où on marche. 🌸</div></div>`;
   inner.appendChild(intro);
   const st=el("div","psy-section-label"); st.textContent="Les grandes spécialités"; inner.appendChild(st);
   PSYCHO_SPES.forEach(s=>{
@@ -7725,13 +8575,20 @@ document.getElementById("btn-class-menu").addEventListener("click",()=>{ haptic(
 document.getElementById("pick-sheet").addEventListener("click",e=>{ if(e.target.id==="pick-sheet") closePicker(); });
 document.getElementById("fs-ok").addEventListener("click",()=>{ haptic(); if(fsSubmit) fsSubmit(); });
 document.getElementById("form-sheet").addEventListener("click",e=>{ if(e.target.id==="form-sheet") closeForm(); });
-document.getElementById("btn-session-back").addEventListener("click",()=>{ clearInterval(timerInt); if(globalSession){ renderSemestres(); showScreen("semestres"); } else if(retourSession){ quitterSession(); } else { showScreen("split"); } });
+document.getElementById("btn-session-back").addEventListener("click",()=>{
+  if(exam){
+    if(exam.fini){ exam = null; renderExamenChoix(); return; }
+    confirmer("Quitter l'examen ?", "Tes réponses ne seront pas gardées.", "Quitter", ()=>{ clearInterval(timerInt); exam = null; renderExamenChoix(); });
+    return;
+  }
+  clearInterval(timerInt); if(globalSession){ renderSemestres(); showScreen("semestres"); } else if(retourSession){ quitterSession(); } else { showScreen("split"); } });
 document.getElementById("btn-qcmchoix-back").addEventListener("click",()=>{ haptic(); setTab(2); showScreen("split"); });
 document.getElementById("btn-auteurs-back").addEventListener("click",()=>{ setTab(2); showScreen("split"); });
 document.getElementById("btn-dev-back").addEventListener("click",()=>{ setTab(2); showScreen("split"); });
 document.getElementById("btn-plan-back").addEventListener("click",()=>{ showScreen("edt"); });
 // recherche
-document.getElementById("btn-search").addEventListener("click",openSearch);
+document.getElementById("btn-search").addEventListener("click",()=>openSearch());
+document.getElementById("btn-split-search").addEventListener("click",()=>{ haptic(); openSearch("split"); });
 // sections repliables de l'accueil
 // le bouton Mémo ouvre la feuille mémo
 document.getElementById("btn-edt").addEventListener("click",()=>{ haptic(); openEDT(); });
@@ -7804,7 +8661,14 @@ onSwipe(document.getElementById("screen-edt"), {
 function edtGoToday(){ setEdtMode("day"); edtWeekOffset=0;
   document.querySelectorAll("#edt-seg .seg-opt").forEach(x=>x.classList.toggle("active", x.dataset.mode==="day"));
   renderEDT(); }
-document.getElementById("btn-search-back").addEventListener("click",()=>{ renderSemestres(); showScreen("semestres"); });
+document.getElementById("btn-search-back").addEventListener("click",()=>{
+  if(rechercheDepuis === "split" && curSubj){ showScreen("split"); setTab(curTab); }
+  else { renderSemestres(); showScreen("semestres"); }
+});
+document.getElementById("btn-syn-back").addEventListener("click",()=>{ haptic(); showScreen("split"); setTab(curTab); });
+document.getElementById("btn-lex-back").addEventListener("click",()=>{ haptic(); showScreen("split"); setTab(curTab); });
+document.getElementById("lex-input").addEventListener("input",e=>renderLexique(e.target.value));
+document.getElementById("lex-clear").addEventListener("click",()=>{ const i=document.getElementById("lex-input"); i.value=""; renderLexique(""); i.focus(); });
 (function(){
   const inp = document.getElementById("search-input");
   let t = null;
@@ -7812,6 +8676,7 @@ document.getElementById("btn-search-back").addEventListener("click",()=>{ render
   document.getElementById("search-clear").addEventListener("click",()=>{ inp.value=""; doSearch(""); inp.focus(); });
 })();
 document.querySelectorAll(".seg-btn").forEach((b,i)=>b.addEventListener("click",()=>{ haptic(); setTab(i); }));
+document.getElementById("type-pick").addEventListener("click",()=>{ haptic(); listeTypes(); });
 
 // ── Gestes ──
 // Balayer le contenu d'une matière : gauche/droite = onglet suivant/précédent
@@ -7849,7 +8714,7 @@ if("serviceWorker" in navigator){
 (function initOfflineBanner(){
   const b = document.createElement("div");
   b.id = "offline-banner";
-  b.textContent = "Hors ligne — tes révisions restent accessibles";
+  b.textContent = "Hors ligne : tes révisions restent accessibles";
   document.body.appendChild(b);
   const sync = ()=> b.classList.toggle("show", !navigator.onLine);
   window.addEventListener("online", sync);
@@ -7994,7 +8859,7 @@ async function pushState(){
     PSYCHO_STEPS.forEach(s=>{ psy[s.id] = !!s.done; });
     const patch = {
       theme: document.documentElement.getAttribute("data-theme") || "girly",
-      srs: Object.assign({}, SRS, { __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP, __revises: REVISES, __vus: vusCharger(), __profs: PROFS }),
+      srs: Object.assign({}, SRS, { __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP, __revises: REVISES, __vus: vusCharger(), __profs: PROFS, __notes: CHNOTES }),
       psycho: psy,
       settings: USER_SETTINGS
     };
@@ -8058,7 +8923,15 @@ function applyRemote(row){
       PROFS = incoming.__profs;
       try{ localStorage.setItem(PROFS_KEY, JSON.stringify(PROFS)); }catch(e){}
     }
-    delete incoming.__edtnotes; delete incoming.__memo; delete incoming.__devrep; delete incoming.__revises; delete incoming.__vus; delete incoming.__profs;
+    if(incoming.__notes && typeof incoming.__notes === "object"){
+      // on garde la note la plus récente de chaque chapitre
+      const L = Object.assign({}, CHNOTES);
+      Object.keys(incoming.__notes).forEach(k=>{ const n = incoming.__notes[k]; if(n && (!L[k] || (n.d || 0) >= (L[k].d || 0))) L[k] = n; });
+      Object.keys(L).forEach(k=>{ if(!L[k] || !L[k].t) delete L[k]; });
+      CHNOTES = L;
+      try{ localStorage.setItem(CHNOTES_KEY, JSON.stringify(CHNOTES)); }catch(e){}
+    }
+    delete incoming.__edtnotes; delete incoming.__memo; delete incoming.__devrep; delete incoming.__revises; delete incoming.__vus; delete incoming.__profs; delete incoming.__notes;
     SRS = incoming;
     try{ localStorage.setItem(SRS_KEY, JSON.stringify(SRS)); }catch(e){}
   }
