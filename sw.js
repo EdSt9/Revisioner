@@ -1,55 +1,61 @@
-// Service worker — permet d'utiliser le site hors ligne.
-// Stratégie : "network first, fallback cache" pour la page,
-// afin que tu aies toujours la dernière version quand tu as du réseau,
-// mais que le site reste utilisable sans connexion.
+// Service worker de Révision : l'app et les cours restent disponibles sans réseau.
+// Changer le numéro de version à chaque mise en ligne d'une nouvelle structure de cache.
+const CACHE = "revision-v9";
+const POLICES = "revision-polices-v1";
+const PRECACHE = ["./", "./index.html", "./data.js"];
 
-const CACHE = "revision-v8";
-const ASSETS = [
-  "./",
-  "./index.html",
-  "./data.js",
-];
+// Au-delà de ce délai, on n'attend plus le réseau (amphi, métro) : on sert la copie gardée.
+const DELAI_RESEAU = 3000;
 
-// À l'installation : on met la page en cache et on prend la main tout de suite.
-self.addEventListener("install", e => {
-  e.waitUntil(
-    caches.open(CACHE)
-      .then(c => c.addAll(ASSETS))
-      .then(() => self.skipWaiting())
-  );
+self.addEventListener("install", e=>{
+  e.waitUntil(caches.open(CACHE).then(c=>c.addAll(PRECACHE)).then(()=>self.skipWaiting()));
 });
 
-// À l'activation : on nettoie les anciens caches.
-self.addEventListener("activate", e => {
+self.addEventListener("activate", e=>{
   e.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(
-        keys.filter(k => k !== CACHE).map(k => caches.delete(k))
-      ))
-      .then(() => self.clients.claim())
+      .then(noms=>Promise.all(noms.filter(n=>n !== CACHE && n !== POLICES).map(n=>caches.delete(n))))
+      .then(()=>self.clients.claim())
   );
 });
 
-// À chaque requête : on tente le réseau, sinon on sert le cache.
-self.addEventListener("fetch", e => {
-  const req = e.request;
-  if (req.method !== "GET") return;
-  // on ne gère QUE les requêtes vers notre propre site :
-  // les appels externes (Supabase, emploi du temps…) passent sans interception,
-  // sinon leur échec renverrait index.html à la place de la vraie réponse.
-  if (new URL(req.url).origin !== self.location.origin) return;
+// Réseau d'abord, pour avoir la dernière version des cours.
+// Si le réseau ne répond pas à temps ou échoue, on sert la copie gardée.
+function reseauDabord(req){
+  return caches.open(CACHE).then(cache=>{
+    const reseau = fetch(req).then(rep=>{
+      if(rep && rep.ok) cache.put(req, rep.clone());
+      return rep;
+    });
+    const copie = new Promise(ok=>setTimeout(ok, DELAI_RESEAU)).then(()=>cache.match(req));
+    return Promise.race([reseau.catch(()=>null), copie]).then(rep=>{
+      if(rep) return rep;
+      // le délai a expiré sans copie : on attend quand même le réseau, puis la page d'accueil en dernier recours
+      return reseau.catch(()=>cache.match(req)).then(r=>r || cache.match("./index.html"));
+    });
+  });
+}
 
-  e.respondWith(
-    fetch(req)
-      .then(res => {
-        // on met à jour le cache avec la version fraîche
-        const copy = res.clone();
-        caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {});
-        return res;
-      })
-      .catch(() =>
-        // hors ligne : on sert depuis le cache
-        caches.match(req).then(hit => hit || caches.match("./index.html"))
-      )
-  );
+// Polices Google : la copie gardée tout de suite, mise à jour en arrière-plan.
+function polices(req){
+  return caches.open(POLICES).then(cache=>cache.match(req).then(garde=>{
+    const reseau = fetch(req).then(rep=>{
+      if(rep && (rep.ok || rep.type === "opaque")) cache.put(req, rep.clone());
+      return rep;
+    }).catch(()=>garde);
+    return garde || reseau;
+  }));
+}
+
+self.addEventListener("fetch", e=>{
+  const req = e.request;
+  if(req.method !== "GET") return;
+  const url = new URL(req.url);
+  if(url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com"){
+    e.respondWith(polices(req));
+    return;
+  }
+  // le reste des autres sites (Supabase, emploi du temps) passe sans toucher au cache
+  if(url.origin !== self.location.origin) return;
+  e.respondWith(reseauDabord(req));
 });
