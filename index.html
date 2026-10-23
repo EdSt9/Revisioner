@@ -649,7 +649,12 @@ div.av-tete{cursor:default;}
 .sem-tile .sem-sous + .sem-meta{margin-top:2px;}
 /* semestres rangés par sous-titre (ex. L1 Humanités, L3 SESS), Projet Psycho à part */.sem-groupe{grid-column:1/-1;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
   color:var(--accent);margin:10px 2px -12px;display:flex;align-items:center;gap:10px;}
-.sem-groupe::after{content:"";flex:1;height:1px;background:var(--border);}
+.sem-groupe::after{content:"";flex:1;height:1px;background:var(--border);order:2;}
+button.sem-groupe{width:100%;background:none;border:0;padding:0;cursor:pointer;font-family:var(--font-text);text-align:left;}
+.sem-groupe .sem-chev{order:3;width:22px;height:22px;flex-shrink:0;display:grid;place-items:center;color:var(--text-mute);transition:transform .3s var(--ease-spring),color .2s;}
+.sem-groupe .sem-chev svg{width:18px;height:18px;}
+.sem-groupe.ouvert .sem-chev{transform:rotate(180deg);color:var(--accent);}
+.sem-groupe:not(.ouvert){margin-bottom:-14px;}
 .sem-groupe:first-child{margin-top:0;}
 .sem-grid.groupee .sem-tile .sem-sous{display:none;}
 .pen.pen-bas{top:auto;bottom:8px;right:8px;}
@@ -880,6 +885,16 @@ div.av-tete{cursor:default;}
 .fp-etat.note{color:var(--info);background:var(--info-soft);}
 .fp-etat.mute{color:var(--text-mute);background:none;padding:0;}
 .fp-echeance{margin:4px 0 6px;}
+.od-row{display:flex;align-items:center;gap:12px;padding:12px 14px;margin-bottom:8px;background:var(--surface);border:1px solid var(--border);border-radius:14px;transition:border-color .2s,background .2s;}
+.od-row.on{border-color:var(--accent);background:var(--accent-soft);}
+.od-ic{font-size:20px;width:28px;text-align:center;flex-shrink:0;}
+.od-t{flex:1;min-width:0;}
+.od-t b{display:block;font-size:15px;font-weight:600;color:var(--text);}
+.od-t small{display:block;font-size:12px;color:var(--text-mute);margin-top:2px;}
+.od-bt{display:flex;gap:6px;flex-shrink:0;}
+.od-bt button{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;border:1px solid var(--border);background:none;color:var(--text-soft);font-size:16px;cursor:pointer;}
+.od-bt button:disabled{opacity:.3;cursor:default;}
+.fs-ranger{margin-top:6px;}
 #ev-date{display:block;width:100%;max-width:100%;min-width:0;box-sizing:border-box;-webkit-appearance:none;appearance:none;
   min-height:48px;text-align:left;color:var(--text);background:var(--surface);border:1px solid var(--border);font-family:var(--font-text);}
 #ev-date::-webkit-date-and-time-value{text-align:left;}
@@ -4916,7 +4931,7 @@ function withPen(card, label, onClick){
 
 // ── Modifier ou supprimer un semestre ──
 function editSemestre(sem){
-  openForm("Semestre " + sem, [
+  openForm(titreSemestre(sem), [
     { key:"num", label:"Numéro du semestre", type:"number", value:String(sem) }
   ], "Enregistrer", v=>{
     const n = parseInt(v.num, 10);
@@ -7261,7 +7276,7 @@ function renderSemestres(){
       <div class="sem-bar"><div class="sem-bar-fill" style="width:${pct}%"></div></div>
       <div class="sem-pct">${tot ? pct+" %" : "vide"}</div>`;
     card.addEventListener("click",()=>{ curSemestre=sem; renderSubjectCards(sem); showScreen("subjects"); });
-    tuiles.push({ cle:"sem:" + sem, el:card, defaut:"Semestre " + sem, icone:sem%2 ? "📚" : "🧠", sem,
+    tuiles.push({ cle:"sem:" + sem, el:card, defaut:(typeof TUILES_DEFAUT === "object" && TUILES_DEFAUT["sem:" + sem] && TUILES_DEFAUT["sem:" + sem].titre) || "Semestre " + sem, icone:sem%2 ? "📚" : "🧠", sem,
                   groupe:(t.sous || "").trim() });
   });
 
@@ -7279,10 +7294,7 @@ function renderSemestres(){
     tuiles.push({ cle:"psy", el:psy, defaut:psyTitle(), icone:"💜", sousDefaut:"Passerelles · masters", groupe:"\u0000psy" });
   }
 
-  // l'ordre choisi d'abord, les nouvelles tuiles ensuite dans l'ordre naturel
-  const ordre = Array.isArray(USER_SETTINGS.ordreTuiles) ? USER_SETTINGS.ordreTuiles : [];
-  const rang = c => { const k = ordre.indexOf(c); return k < 0 ? 1000 : k; };
-  const triees = tuiles.map((t,k)=>({ t, k })).sort((a,b)=>(rang(a.t.cle) - rang(b.t.cle)) || (a.k - b.k)).map(o=>o.t);
+  const triees = trierTuiles(tuiles);
   // regroupement par sous-titre : chaque groupe à la place de sa première tuile,
   // les semestres sans sous-titre ensemble, le Projet Psycho toujours à part
   const groupes = [];
@@ -7295,12 +7307,25 @@ function renderSemestres(){
   wrap.classList.toggle("groupee", avecTitres);
   const nomGroupe = c => c === "\u0000psy" ? "Projets" : (c || "Autres semestres");
   let si = 0;
+  // chaque section se plie : on garde ouvertes celles en cours, on plie les années terminées
+  let plies = {}; try{ plies = JSON.parse(localStorage.getItem("revision_sem_plies") || "{}") || {}; }catch(e){}
   groupes.forEach(g=>{
+    const plie = avecTitres && !!plies[g.cle || "\u0000autres"];
     if(avecTitres){
-      const h = el("div","sem-groupe rise"); h.textContent = nomGroupe(g.cle);
+      const h = el("button","sem-groupe rise" + (plie ? "" : " ouvert")); h.type = "button";
+      h.setAttribute("aria-expanded", plie ? "false" : "true");
+      h.innerHTML = `<span>${esc(nomGroupe(g.cle))}</span><span class="sem-chev">${IC_CHEV_BAS}</span>`;
       h.style.animationDelay = (0.12 + si*0.04) + "s";
+      h.addEventListener("click",()=>{
+        haptic();
+        const k = g.cle || "\u0000autres";
+        if(plies[k]) delete plies[k]; else plies[k] = 1;
+        try{ localStorage.setItem("revision_sem_plies", JSON.stringify(plies)); }catch(e){}
+        renderSemestres();
+      });
       wrap.appendChild(h);
     }
+    if(plie) return;
     g.tuiles.forEach(t=>placerTuile(t, si++));
   });
   function placerTuile(t, si){
@@ -7318,36 +7343,87 @@ function renderSemestres(){
 // Enregistré dans les réglages du compte : suit sur tous les appareils.
 function tuileDe(cle){
   const t = USER_SETTINGS.tuiles && USER_SETTINGS.tuiles[cle];
-  return (t && typeof t === "object") ? t : {};
+  const d = (typeof TUILES_DEFAUT === "object" && TUILES_DEFAUT[cle]) || {};
+  return Object.assign({}, d, (t && typeof t === "object") ? t : {});
 }
 function titreSemestre(sem){ return tuileDe("sem:" + sem).titre || ("Semestre " + sem); }
-const ICONES_TUILE = ["📚","🧠","💜","🎓","📖","✏️","🌱","⭐","🧩","🎯","🏛️","🌍"];
+// L'ordre rangé à la main d'abord. Une tuile pas encore rangée prend sa place chronologique :
+// juste avant le premier semestre rangé qui vient après elle. Le Projet Psycho, sans rang, va à la fin.
+function trierTuiles(tuiles){
+  const ordre = Array.isArray(USER_SETTINGS.ordreTuiles) ? USER_SETTINGS.ordreTuiles : [];
+  const semDe = c => /^sem:/.test(c) ? parseFloat(c.slice(4)) : NaN;
+  const rang = t => {
+    const k = ordre.indexOf(t.cle); if(k >= 0) return k;
+    if(t.sem == null) return 1e6;
+    const apres = ordre.map((c,i)=>({ i, s:semDe(c) })).filter(o=>o.s > t.sem).sort((a,b)=>a.s - b.s)[0];
+    return apres ? apres.i - 0.5 + t.sem / 1e4 : 1e5 + t.sem;
+  };
+  return tuiles.map(t=>({ t, r:rang(t) })).sort((a,b)=>a.r - b.r).map(o=>o.t);
+}
+// Ranger les tuiles : toute la liste sous les yeux, ↑ ↓ pour monter ou descendre d'un cran
+function rangerTuiles(tuiles){
+  let liste = trierTuiles(tuiles);
+  const rendre = (actif)=>{
+    document.querySelectorAll("#pick-sheet .pick-actions").forEach(n=>n.remove());
+    document.getElementById("pick-title").textContent = "Ranger les tuiles";
+    const box = document.getElementById("pick-list");
+    const haut = box.scrollTop;
+    box.innerHTML = `<div class="pick-legend"><span>Monte ou descends une tuile avec les flèches.</span></div>`;
+    liste.forEach((t,i)=>{
+      const d = tuileDe(t.cle);
+      const r = el("div","od-row" + (t.cle === actif ? " on" : ""));
+      r.innerHTML = `<span class="od-ic">${esc(d.icone || t.icone)}</span><span class="od-t"><b>${esc(d.titre || t.defaut)}</b><small>${esc(d.sous || t.sousDefaut || "")}</small></span>`;
+      const bt = el("span","od-bt");
+      [["↑",-1,"Monter"],["↓",1,"Descendre"]].forEach(([txt, sens, lab])=>{
+        const b = el("button"); b.type = "button"; b.textContent = txt; b.setAttribute("aria-label", lab + " " + (d.titre || t.defaut));
+        const j = i + sens;
+        b.disabled = j < 0 || j >= liste.length;
+        b.addEventListener("click",()=>{
+          haptic();
+          [liste[i], liste[j]] = [liste[j], liste[i]];
+          USER_SETTINGS.ordreTuiles = liste.map(x=>x.cle);
+          saveContent();
+          renderSemestres();
+          rendre(t.cle);
+        });
+        bt.appendChild(b);
+      });
+      r.appendChild(bt);
+      box.appendChild(r);
+    });
+    box.scrollTop = haut;
+    document.getElementById("pick-sheet").classList.add("open");
+  };
+  rendre(null);
+}
 function personnaliserTuile(t, tuiles){
   const cur = tuileDe(t.cle);
-  const ordreActuel = tuiles.map(x=>x.cle).sort((a,b)=>{
-    const o = Array.isArray(USER_SETTINGS.ordreTuiles) ? USER_SETTINGS.ordreTuiles : [];
-    const r = c => { const k = o.indexOf(c); return k < 0 ? 1000 : k; };
-    return (r(a) - r(b)) || (tuiles.findIndex(x=>x.cle===a) - tuiles.findIndex(x=>x.cle===b));
-  });
-  const icones = ICONES_TUILE.includes(cur.icone || t.icone) ? ICONES_TUILE : [cur.icone || t.icone].concat(ICONES_TUILE);
   const extra = t.sem && semIsOwn(t.sem) ? { label:"Changer le numéro ou supprimer", fn:()=>setTimeout(()=>editSemestre(t.sem), 320) } : null;
   openForm("Personnaliser", [
     { key:"titre", label:"Titre", value:cur.titre || "", placeholder:t.defaut },
     { key:"sous",  label:"Sous-titre", value:cur.sous || "", placeholder:t.sousDefaut || "ex. L3 SESS (UPEC)" },
-    { key:"icone", label:"Icône", type:"choice", value:cur.icone || t.icone, options:icones.map(x=>({ v:x, label:x })) },
-    { key:"pos",   label:"Position", type:"choice", value:String(ordreActuel.indexOf(t.cle) + 1),
-      options:ordreActuel.map((_,k)=>({ v:String(k+1), label:String(k+1) })) }
+    { key:"emoji", label:"Emoji", value:cur.icone || t.icone, placeholder:"Touche ici, puis choisis sur le clavier emoji" },
   ], "Enregistrer", v=>{
     USER_SETTINGS.tuiles = Object.assign({}, USER_SETTINGS.tuiles);
-    const n = { titre:v.titre, sous:v.sous, icone:v.icone === t.icone ? "" : v.icone };
+    // un emoji tapé passe devant la rangée : on garde le premier (drapeaux et emojis composés compris)
+    const tape = (v.emoji || "").trim();
+    let perso = "";
+    if(tape){
+      try{ perso = [...new Intl.Segmenter("fr", { granularity:"grapheme" }).segment(tape)][0].segment; }
+      catch(e){ perso = Array.from(tape).slice(0, 2).join(""); }
+    }
+    const ic = perso || t.icone;
+    const n = { titre:v.titre, sous:v.sous, icone:ic === t.icone ? "" : ic };
     if(!n.titre && !n.sous && !n.icone) delete USER_SETTINGS.tuiles[t.cle];
     else USER_SETTINGS.tuiles[t.cle] = n;
-    const o = ordreActuel.filter(c=>c !== t.cle);
-    o.splice(Math.max(0, parseInt(v.pos,10) - 1), 0, t.cle);
-    USER_SETTINGS.ordreTuiles = o;
     saveContent();
     renderSemestres();
   }, null, extra);
+  // en bas du formulaire : ranger toutes les tuiles, la liste sous les yeux
+  const rg = el("button","add-inline fs-ranger"); rg.type = "button";
+  rg.textContent = "↕  Ranger les tuiles";
+  rg.addEventListener("click",()=>{ haptic(); closeForm(); setTimeout(()=>rangerTuiles(tuiles), 320); });
+  document.getElementById("fs-body").appendChild(rg);
 }
 
 // avancement du Projet Psycho : étapes cochées / total
