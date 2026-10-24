@@ -649,7 +649,12 @@ div.av-tete{cursor:default;}
 .sem-tile .sem-sous + .sem-meta{margin-top:2px;}
 /* semestres rangés par sous-titre (ex. L1 Humanités, L3 SESS), Projet Psycho à part */.sem-groupe{grid-column:1/-1;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
   color:var(--accent);margin:10px 2px -12px;display:flex;align-items:center;gap:10px;}
-.sem-groupe::after{content:"";flex:1;height:1px;background:var(--border);}
+.sem-groupe::after{content:"";flex:1;height:1px;background:var(--border);order:2;}
+button.sem-groupe{width:100%;background:none;border:0;padding:0;cursor:pointer;font-family:var(--font-text);text-align:left;}
+.sem-groupe .sem-chev{order:3;width:22px;height:22px;flex-shrink:0;display:grid;place-items:center;color:var(--text-mute);transition:transform .3s var(--ease-spring),color .2s;}
+.sem-groupe .sem-chev svg{width:18px;height:18px;}
+.sem-groupe.ouvert .sem-chev{transform:rotate(180deg);color:var(--accent);}
+.sem-groupe:not(.ouvert){margin-bottom:-14px;}
 .sem-groupe:first-child{margin-top:0;}
 .sem-grid.groupee .sem-tile .sem-sous{display:none;}
 .pen.pen-bas{top:auto;bottom:8px;right:8px;}
@@ -880,6 +885,16 @@ div.av-tete{cursor:default;}
 .fp-etat.note{color:var(--info);background:var(--info-soft);}
 .fp-etat.mute{color:var(--text-mute);background:none;padding:0;}
 .fp-echeance{margin:4px 0 6px;}
+.od-row{display:flex;align-items:center;gap:12px;padding:12px 14px;margin-bottom:8px;background:var(--surface);border:1px solid var(--border);border-radius:14px;transition:border-color .2s,background .2s;}
+.od-row.on{border-color:var(--accent);background:var(--accent-soft);}
+.od-ic{font-size:20px;width:28px;text-align:center;flex-shrink:0;}
+.od-t{flex:1;min-width:0;}
+.od-t b{display:block;font-size:15px;font-weight:600;color:var(--text);}
+.od-t small{display:block;font-size:12px;color:var(--text-mute);margin-top:2px;}
+.od-bt{display:flex;gap:6px;flex-shrink:0;}
+.od-bt button{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;border:1px solid var(--border);background:none;color:var(--text-soft);font-size:16px;cursor:pointer;}
+.od-bt button:disabled{opacity:.3;cursor:default;}
+.fs-ranger{margin-top:6px;}
 #ev-date{display:block;width:100%;max-width:100%;min-width:0;box-sizing:border-box;-webkit-appearance:none;appearance:none;
   min-height:48px;text-align:left;color:var(--text);background:var(--surface);border:1px solid var(--border);font-family:var(--font-text);}
 #ev-date::-webkit-date-and-time-value{text-align:left;}
@@ -1095,6 +1110,88 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .dev-q .dev-corr{margin-top:10px;}
 .dev-show.ghost{background:var(--accent-soft);color:var(--accent);}
 .know-more{font-size:12px;color:var(--text-mute);text-align:center;padding:9px 0 2px;}
+/* recherche : année, filtre, voir plus */.sr-an{font-size:10.5px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:2px 7px;white-space:nowrap;}
+.sr-annees{margin:14px 0 6px;}
+.sr-an-n{font-size:11px;font-weight:600;color:var(--text-mute);margin-left:3px;font-variant-numeric:tabular-nums;}
+.sr-plus{display:block;width:100%;margin:14px 0 4px;padding:13px 16px;border-radius:14px;border:1px solid var(--border);background:var(--surface);color:var(--accent);font-family:var(--font-text);font-size:14px;font-weight:700;cursor:pointer;}
+/* index toutes années */.idx-entree{display:flex;align-items:center;gap:12px;width:100%;margin:2px 0 14px;padding:12px 14px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:var(--font-text);text-align:left;cursor:pointer;}
+.idx-entree-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-size:14.5px;}
+.idx-entree-txt small{font-size:12.5px;color:var(--text-soft);}
+.idx-entree svg:last-child{width:16px;height:16px;color:var(--text-mute);flex-shrink:0;}
+.idx-seg{margin:6px 0 12px;}
+.idx-multi{display:flex;align-items:center;gap:10px;width:100%;margin:10px 0 14px;padding:0 4px;border:0;background:none;color:var(--text-soft);font-family:var(--font-text);font-size:13.5px;text-align:left;cursor:pointer;}
+.idx-multi .sw{flex-shrink:0;width:42px;height:25px;border-radius:20px;background:var(--border-strong);position:relative;transition:background .25s;}
+.idx-multi .sw::after{content:"";position:absolute;top:3px;left:3px;width:19px;height:19px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25);transition:left .28s var(--ease-spring);}
+.idx-multi.on{color:var(--text);}
+.idx-multi.on .sw{background:var(--ok);}
+.idx-multi.on .sw::after{left:20px;}
+.idx-tete{display:flex;align-items:baseline;justify-content:space-between;gap:10px;width:100%;padding:0;border:0;background:none;text-align:left;cursor:pointer;color:inherit;font:inherit;}
+.idx-ans{display:flex;gap:4px;flex-shrink:0;}
+.idx-an{font-size:10.5px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:2px 6px;}
+.idx-meta{font-size:12.5px;color:var(--text-mute);margin-bottom:5px;}
+.idx-item .lex-def{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.idx-item.open .lex-def{display:block;}
+.idx-det{display:flex;flex-direction:column;align-items:flex-start;}
+.idx-src{margin-top:7px;border-radius:13px;padding:6px 11px 6px 10px;text-align:left;}
+.idx-src-txt{display:flex;flex-direction:column;min-width:0;line-height:1.3;}
+.idx-src-txt b,.idx-src-txt small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.idx-src-txt small{font-size:11.5px;font-weight:600;opacity:.85;}
+.idx-src b{font-weight:800;}
+/* affichage en blocs ou en liste */.vue-tete{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+.vue-tete>.page-title{flex:1;min-width:0;margin-bottom:0;}
+.vue-seg{flex:0 0 auto;margin:0;}
+.vue-seg .seg-opt{flex:0 0 auto;width:38px;height:32px;padding:0;display:grid;place-items:center;}
+.vue-seg .seg-opt svg{width:17px;height:17px;}
+.vue-seg .seg-opt.active{color:var(--accent);}
+.arch-lot{display:grid;grid-template-columns:1fr 1fr;gap:16px 14px;}
+.arch .sem-bar,.arch .sem-pct{display:none;}
+.arch .sem-tile .sem-meta{margin-bottom:0;}
+.sem-grid.liste{grid-template-columns:1fr;gap:10px;}
+.sem-grid.liste .arch-lot{grid-template-columns:1fr;gap:10px;}
+.sem-grid.liste .sem-tile{display:grid;grid-template-columns:auto 1fr auto;column-gap:14px;align-items:center;padding:12px 14px;border-radius:16px;}
+.sem-grid.liste .sem-tile-top{grid-column:1;grid-row:1 / span 4;margin:0;}
+.sem-grid.liste .sem-tile .sem-badge{width:40px;height:40px;border-radius:12px;font-size:20px;}
+.sem-grid.liste .sem-tile .sem-name{grid-column:2;font-size:17px;}
+.sem-grid.liste .sem-tile .sem-sous,.sem-grid.liste .sem-tile .sem-meta{grid-column:2;}
+.sem-grid.liste .sem-tile .sem-meta{margin:2px 0 7px;}
+.sem-grid.liste .arch .sem-tile .sem-meta{margin-bottom:0;}
+.sem-grid.liste .sem-tile .sem-bar{grid-column:2;height:4px;}
+.sem-grid.liste .sem-tile .sem-pct{grid-column:3;grid-row:1 / span 4;margin:0;font-size:13px;font-weight:600;color:var(--text-soft);}
+.sem-grid.liste .edit-wrap>.sem-tile{padding-right:46px;}
+.sem-grid.liste .pen.pen-bas{top:50%;bottom:auto;right:9px;transform:translateY(-50%);}
+.sem-grid.liste .sem-groupe{margin:16px 2px 2px;}
+.sem-grid.liste .sem-groupe:first-child{margin-top:0;}
+.sem-grid.liste .sem-groupe:not(.ouvert){margin-bottom:2px;}
+.sem-grid.liste .arch{margin-top:18px;}
+/* QCM d'un thème du fil psycho */.fil-qcm{display:flex;align-items:center;gap:12px;width:100%;margin:14px 0 12px;padding:12px 14px;border-radius:14px;border:0;background:var(--accent);color:#fff;font-family:var(--font-text);text-align:left;cursor:pointer;box-shadow:0 6px 18px var(--accent-glow);transition:transform .18s var(--ease-spring);}
+.fil-qcm:active{transform:scale(.98);}
+.fil-qcm-ic{width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.18);display:grid;place-items:center;flex-shrink:0;}
+.fil-qcm-ic .ico{width:18px;height:18px;}
+.fil-qcm-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-size:15px;}
+.fil-qcm-txt small{font-size:12.5px;opacity:.85;}
+.fil-qcm>svg:last-child{width:16px;height:16px;flex-shrink:0;opacity:.8;}
+/* archives */.arch{margin:26px 0 8px;grid-column:1 / -1;}
+.arch-tete{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border-radius:18px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:var(--font-text);text-align:left;cursor:pointer;}
+.arch-tete .sem-chev{margin-left:auto;transition:transform .25s;color:var(--accent);display:grid;place-items:center;}
+.arch-tete .sem-chev svg{width:18px;height:18px;}
+.arch-tete.ouvert .sem-chev{transform:rotate(180deg);}
+.arch-ic{width:40px;height:40px;border-radius:12px;background:var(--accent-soft);display:grid;place-items:center;font-size:20px;flex-shrink:0;}
+.arch-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-size:15px;}
+.arch-txt small{font-size:12.5px;color:var(--text-soft);}
+.arch-an{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin:18px 6px 8px;}
+/* fil psycho */.fil-theme{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:14px 16px 12px;margin:12px 0;}
+.fil-tete{display:flex;align-items:center;gap:12px;}
+.fil-ic{width:40px;height:40px;border-radius:12px;background:var(--accent-soft);display:grid;place-items:center;font-size:20px;flex-shrink:0;}
+.fil-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-size:15.5px;}
+.fil-txt small{font-size:12.5px;color:var(--text-soft);}
+.fil-liste{display:flex;flex-direction:column;align-items:flex-start;margin-top:6px;}
+/* déjà vu les années d'avant */.deja-vu{margin:26px 0 6px;padding:14px 16px 12px;border-radius:18px;background:var(--surface);border:1px solid var(--border);}
+.dv-tete{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;}
+.dv-ligne{display:flex;flex-direction:column;align-items:flex-start;padding:10px 0 4px;border-top:1px solid var(--border);margin-top:8px;}
+.dv-ligne:first-of-type{border-top:0;margin-top:0;}
+.dv-nom{font-family:var(--font-display);font-size:16px;font-weight:600;color:var(--text);}
+.dv-genre{font-family:var(--font-text);font-size:11px;font-weight:600;color:var(--text-mute);margin-left:8px;}
+.dv-tout{margin-top:8px;padding:0;border:0;background:none;color:var(--accent);font-family:var(--font-text);font-size:12.5px;font-weight:700;cursor:pointer;}
 .next-flag{display:inline-flex;align-items:center;gap:6px;border-radius:9px;
   padding:5px 10px;margin-bottom:10px;
   font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
@@ -1772,7 +1869,7 @@ textarea::placeholder{color:var(--text-mute);}
 <div id="screen-semchoice" class="screen">
   <div class="wrap">
     <button class="back-btn rise" id="btn-semchoice-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
-    <h1 class="page-title rise" style="animation-delay:.04s">Quel semestre&nbsp;?</h1>
+    <div class="vue-tete rise" style="animation-delay:.04s"><h1 class="page-title">Quel semestre&nbsp;?</h1><div class="seg vue-seg" id="vue-sem" role="group" aria-label="Affichage"><button type="button" class="seg-opt" data-vue="bloc" aria-label="Afficher en blocs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/></svg></button><button type="button" class="seg-opt" data-vue="liste" aria-label="Afficher en liste"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.5" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.5" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button></div></div>
     <div class="sem-grid rise" id="semchoice-inner" style="animation-delay:.08s"></div>
   </div>
 </div>
@@ -2052,6 +2149,26 @@ textarea::placeholder{color:var(--text-mute);}
   </div>
 </div>
 
+<div id="screen-index" class="screen">
+  <div class="wrap">
+    <button class="back-btn rise" id="btn-idx-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Rechercher</button>
+    <h1 class="page-title rise" style="animation-delay:.03s">Index</h1>
+    <div class="lex-sous rise" style="animation-delay:.05s">Tes auteurs et tes notions, de la L1 à la L3</div>
+    <div class="seg idx-seg rise" id="idx-genre" style="animation-delay:.06s">
+      <button type="button" class="seg-opt active" data-g="auteur">Auteurs</button>
+      <button type="button" class="seg-opt" data-g="notion">Notions</button>
+    </div>
+    <div class="search-box rise" style="animation-delay:.07s">
+      <svg class="search-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input type="text" id="idx-input" placeholder="Filtrer…" autocomplete="off"/>
+      <button class="search-clear" id="idx-clear" aria-label="Effacer">✕</button>
+    </div>
+    <button type="button" class="idx-multi rise" id="idx-multi" style="animation-delay:.08s"><span class="sw"></span>Seulement ce que j'ai vu sur plusieurs années</button>
+    <div class="lex-lettres" id="idx-lettres"></div>
+    <div id="idx-liste"></div>
+  </div>
+</div>
+
 <!-- AUTEURS -->
 <div id="screen-auteurs" class="screen">
   <div class="wrap">
@@ -2175,7 +2292,7 @@ try{ REVISES = JSON.parse(localStorage.getItem(REVISES_KEY) || "{}") || {}; }cat
 function revisesSave(){ try{ localStorage.setItem(REVISES_KEY, JSON.stringify(REVISES)); }catch(e){} scheduleSync(); }
 function cleRevise(subj, type, ch){ return subj.id + "|" + type + "|" + (ch && ch.label || ""); }
 function estRevise(subj, type, ch){ return !!REVISES[cleRevise(subj, type, ch)]; }
-// Questions ratées en mode examen : { clé de carte: date }. Elles rejoignent « Mes erreurs ».
+// Questions ratées (QCM et mode examen) : { clé de carte: date }. Elles forment « Mes erreurs ».
 var ERREXAM_KEY = "revision_erreurs_examen_v1";
 var ERREXAM = {};
 try{ ERREXAM = JSON.parse(localStorage.getItem(ERREXAM_KEY) || "{}") || {}; }catch(e){ ERREXAM = {}; }
@@ -2343,9 +2460,13 @@ let curSubj = null;
 let curTab = 0;                 // 0=CM 1=TD 2=Train
 let curCmIdx = 0, curTdIdx = 0;
 let curMode = null, queue = [], idx = 0, score = 0, answers = [];
+// les questions ratées pendant la session en cours : les réussir au second passage ne les sort pas de « Mes erreurs »
+let rateesSession = new Set();
 let flipped = false, selOpt = null, confirmed = false;
 let sessionDueOnly = false;
 let globalSession = false;
+// session lancée depuis un thème du fil psycho (questions de plusieurs matières)
+let sessionFil = null;
 let showAns = false, showHint = false, lastMotiv = "";
 let oqEcrit = "";   // ce qui est tapé dans une question ouverte, gardé le temps de la carte
 let timerVal = 20, timerInt = null;
@@ -4916,7 +5037,7 @@ function withPen(card, label, onClick){
 
 // ── Modifier ou supprimer un semestre ──
 function editSemestre(sem){
-  openForm("Semestre " + sem, [
+  openForm(titreSemestre(sem), [
     { key:"num", label:"Numéro du semestre", type:"number", value:String(sem) }
   ], "Enregistrer", v=>{
     const n = parseInt(v.num, 10);
@@ -5219,7 +5340,7 @@ if(window.ResizeObserver){
   if(pi && window.MutationObserver) new MutationObserver(()=>poserEntete(document.getElementById("screen-psycho"))).observe(pi, { childList:true });
 })();
 // à quelle profondeur est chaque écran : sert à savoir si on avance ou si on revient
-const PROFONDEUR = { login:0, pick:0, welcome:0, semestres:0, semchoice:1, edt:1, classes:1, search:1, planning:1, psycho:1,
+const PROFONDEUR = { login:0, pick:0, welcome:0, semestres:0, semchoice:1, edt:1, classes:1, search:1, index:2, planning:1, psycho:1,
   class:2, shared:3, subjects:2, split:3, qcmchoix:4, lexique:4, synthese:4, auteurs:4, devoirs:4, session:5 };
 function profondeurEcran(id){ return PROFONDEUR[id] ?? 2; }
 function showScreen(id){
@@ -5352,17 +5473,40 @@ function buildIndex(){
   });
   return idx;
 }
-function doSearch(q){
+// L1, L2, L3 : l'année d'une matière, d'après son semestre
+function anneeDe(sem){
+  if(sem === 1) return { cle:"L1", rang:1, court:"L1 · ICP" };
+  if(sem < 3)  return { cle:"L1", rang:1, court:"L1 · S" + (sem === 1.5 ? 1 : 2) };
+  if(sem < 5)  return { cle:"L2", rang:2, court:"L2 · S" + sem };
+  return { cle:"L3", rang:3, court:"L3 · S" + sem };
+}
+function anneeMatiere(subj){ return anneeDe(SEMESTRES[subj.id]); }
+// ouvrir un chapitre de n'importe quelle matière, à la bonne section, mots surlignés
+function allerAuChapitre(subj, type, idx, sec, mots){
+  curSemestre = SEMESTRES[subj.id];
+  openSubject(subj.id);
+  if(type === "cm") curCmIdx = idx; else curTdIdx = idx;
+  allerDemande = { sec: sec >= 0 ? sec : 0, mots: mots || [] };
+  setTab(type === "cm" ? 0 : 1);
+}
+// l'état de la recherche : le filtre d'année et le nombre de résultats montrés
+var RECH = { q:"", annee:"tout", limite:40 };
+function doSearch(q){ RECH = { q:String(q || ""), annee:"tout", limite:40 }; renderRecherche(true); }
+function renderRecherche(nouvelle){
+  const q = RECH.q;
   const box = document.getElementById("search-results");
+  // les résultats des classes arrivent à part : on les garde quand on change juste de filtre
+  const partages = nouvelle ? null : box.querySelector(".shared-results");
   box.innerHTML = "";
+  box.appendChild(entreeIndex());
   const query = norm(q).trim();
   if(query.length < 2){
-    box.innerHTML = vide("loupe", "Cherche dans tous tes cours", "Une notion, un auteur, un mot. Tape au moins 2 lettres.");
+    box.insertAdjacentHTML("beforeend", vide("loupe", "Cherche dans tous tes cours", "L1, L2 et L3 : une notion, un auteur, un mot. Tape au moins 2 lettres."));
     return;
   }
   if(!SEARCH_INDEX) SEARCH_INDEX = buildIndex();
   if(!SEARCH_INDEX.length){
-    box.innerHTML = vide("vide", "Aucun cours pour l'instant", "Ajoute une matière pour pouvoir chercher.");
+    box.insertAdjacentHTML("beforeend", vide("vide", "Aucun cours pour l'instant", "Ajoute une matière pour pouvoir chercher."));
     return;
   }
   const words = query.split(/\s+/).filter(Boolean);
@@ -5378,24 +5522,43 @@ function doSearch(q){
     });
     hits.push({ it, sc });
   });
-  searchShared(q, box);
+  if(nouvelle) searchShared(q, box);
   if(!hits.length){
-    box.innerHTML = vide("loupe", "Rien pour « " + esc(q) + " »", "Essaie un autre mot, ou une partie du mot.");
+    box.insertAdjacentHTML("beforeend", vide("loupe", "Rien pour « " + esc(q) + " »", "Essaie un autre mot, ou une partie du mot."));
+    if(partages) box.appendChild(partages);
     return;
   }
   hits.sort((a,b)=>b.sc-a.sc);
+  // filtre par année : Tout, L1, L2, L3 (seulement celles qui ont des résultats)
+  const parAn = {};
+  hits.forEach(h=>{ const a = anneeMatiere(h.it.subj).cle; parAn[a] = (parAn[a] || 0) + 1; });
+  const ans = ["L1","L2","L3"].filter(a=>parAn[a]);
+  if(RECH.annee !== "tout" && !parAn[RECH.annee]) RECH.annee = "tout";
+  const vis = RECH.annee === "tout" ? hits : hits.filter(h=>anneeMatiere(h.it.subj).cle === RECH.annee);
+  if(ans.length > 1){
+    const seg = el("div","seg sr-annees");
+    [["tout","Tout", hits.length], ...ans.map(a=>[a, a, parAn[a]])].forEach(([cle, nom, n])=>{
+      const b = el("button","seg-opt" + (RECH.annee === cle ? " active" : ""));
+      b.type = "button";
+      b.innerHTML = `${esc(nom)} <span class="sr-an-n">${n}</span>`;
+      b.addEventListener("click",()=>{ haptic(); RECH.annee = cle; RECH.limite = 40; renderRecherche(false); });
+      seg.appendChild(b);
+    });
+    box.appendChild(seg);
+  }
   // regroupés par matière, dans l'ordre du meilleur résultat de chacune
-  const top = hits.slice(0,40), groupes = new Map();
+  const top = vis.slice(0, RECH.limite), groupes = new Map();
   top.forEach(h=>{ const k = h.it.subj.id; if(!groupes.has(k)) groupes.set(k, []); groupes.get(k).push(h.it); });
+  const nMat = new Set(vis.map(h=>h.it.subj.id)).size;
   const head = el("div","search-count");
-  head.textContent = hits.length + " résultat" + (hits.length>1?"s":"") + " · " + groupes.size + " matière" + (groupes.size>1?"s":"");
+  head.textContent = vis.length + " résultat" + (vis.length>1?"s":"") + " · " + nMat + " matière" + (nMat>1?"s":"");
   box.appendChild(head);
   const icoType = it => it.matiere ? "semestres" : it.tab === 0 ? "cm" : it.tab === 1 ? "td"
     : it.auteur ? "auteurs" : it.mode === "fc" ? "fc" : it.mode === "qcm" ? "qcm" : it.mode === "oq" ? "oq" : "entrainer";
   groupes.forEach(items=>{
     const sj = items[0].subj;
     const g = el("div","sr-groupe");
-    g.innerHTML = `<span class="sr-num">${esc(sj.ecue || "")}</span><span>${esc(sj.title)}</span>`;
+    g.innerHTML = `<span class="sr-an">${esc(anneeMatiere(sj).court)}</span><span class="sr-num">${esc(sj.ecue || "")}</span><span>${esc(sj.title)}</span>`;
     box.appendChild(g);
     const carte = el("div","sr-carte");
     items.forEach(it=>{
@@ -5421,7 +5584,255 @@ function doSearch(q){
     });
     box.appendChild(carte);
   });
-  if(hits.length > 40){ const m = el("div","know-more"); m.textContent = "Les 40 premiers résultats. Précise ta recherche pour voir les autres."; box.appendChild(m); }
+  // tout est accessible : les résultats suivants se déplient par paquets de 40
+  if(vis.length > RECH.limite){
+    const reste = vis.length - RECH.limite;
+    const plus = el("button","sr-plus"); plus.type = "button";
+    plus.textContent = "Voir " + Math.min(40, reste) + " résultats de plus (encore " + reste + ")";
+    plus.addEventListener("click",()=>{ haptic(); const y = window.scrollY; RECH.limite += 40; renderRecherche(false); window.scrollTo(0, y); });
+    box.appendChild(plus);
+  }
+  if(partages) box.appendChild(partages);
+}
+// ══════════════════════════════════════════════════
+// INDEX DES AUTEURS ET DES NOTIONS, TOUTES ANNÉES
+// Les auteurs viennent des fiches auteurs, les notions des lexiques des matières.
+// Les endroits où ils sont cités sont repérés dans le texte des cours, pas devinés.
+// ══════════════════════════════════════════════════
+var INDEX_GLOBAL = null;
+function texteSection(sec){ return norm((sec.title||"") + " " + stripTags((sec.body||"") + " " + (sec.list||[]).join(" "))); }
+// toutes les sections de tous les cours, aplaties une fois pour toutes
+function sectionsGlobales(){
+  const out = [];
+  SUBJECTS.forEach(subj=>["cm","td"].forEach(type=>(subj[type]||[]).forEach((ch,ci)=>(ch.sections||[]).forEach((sec,si)=>{
+    out.push({ subj, type, ci, si, label:ch.label, t:" " + texteSection(sec) + " " });
+  }))));
+  return out;
+}
+function construireIndexGlobal(){
+  const sections = sectionsGlobales();
+  // les auteurs : une entrée par nom, même s'il a une fiche dans plusieurs matières
+  const auteurs = new Map();
+  SUBJECTS.forEach(subj=>(subj.auteurs||[]).forEach(a=>{
+    if(!a || !a.nom) return;
+    const termes = termesAuteur(a.nom);
+    // « Rousseau » et « Jean-Jacques Rousseau » : une seule entrée
+    const k = termes.length ? termes.slice().sort().join("|") : norm(a.nom).trim();
+    if(!auteurs.has(k)) auteurs.set(k, { genre:"auteur", nom:a.nom, fiches:[], termes });
+    const e = auteurs.get(k);
+    if(a.nom.length > e.nom.length) e.nom = a.nom;
+    e.fiches.push({ subj, a });
+  }));
+  // les notions : une entrée par terme, avec chaque matière où il est défini
+  const notions = new Map();
+  SUBJECTS.forEach(subj=>lexique(subj).forEach(x=>{
+    const k = norm(x.terme).trim();
+    if(k.length < 3) return;
+    if(!notions.has(k)) notions.set(k, { genre:"notion", nom:x.terme, defs:[], termes:[k] });
+    notions.get(k).defs.push({ subj, x });
+  }));
+  // le texte de chaque année d'un seul bloc, pour savoir vite où une entrée apparaît
+  const textesAn = {};
+  sections.forEach(s=>{ const a = anneeMatiere(s.subj).cle; textesAn[a] = (textesAn[a] || " ") + s.t; });
+  const entrees = [...auteurs.values(), ...notions.values()];
+  entrees.forEach(e=>{
+    // les années où l'entrée a une fiche, une définition, ou est simplement citée
+    const subs = e.genre === "auteur" ? e.fiches.map(f=>f.subj) : e.defs.map(d=>d.subj);
+    const ans = new Set(subs.map(sj=>anneeMatiere(sj).cle));
+    const res = e.termes.map(motEntier);
+    Object.keys(textesAn).forEach(a=>{
+      if(ans.has(a)) return;
+      const t = textesAn[a];
+      if(e.termes.some((x,i)=>t.includes(x) && res[i].test(t))) ans.add(a);
+    });
+    e.annees = [...ans].sort();
+  });
+  return { sections, entrees, auteurs:[...auteurs.values()], notions:[...notions.values()] };
+}
+// les noms à chercher : ceux des fiches auteurs, et les noms courts (Mead, Elias) en mot entier
+function termesAuteur(nom){
+  const n = String(nom || "").trim();
+  // une institution, une loi, un plan (« Plan Langevin-Wallon », « Haut-commissariat aux compétences ») : le nom entier
+  if(/^(plan|loi|rapport|circulaire|commission|conseil|haut|minist|charte|convention|d[ée]claration|agence|institut|comit|ordonnance|d[ée]cret)/i.test(n)
+     || (/\s(aux?|de|des|du|pour|sur|la|le|les)\s/i.test(" " + n + " ") && !/\s(de|du)\s[A-ZÉ]/.test(n))) return [norm(n)];
+  // une personne : le nom de famille entier, en mot entier (« Lévi-Strauss » ne doit pas trouver Strauss)
+  return n.split(/\s+et\s+|&|,/).map(p=>norm(p.trim().split(/\s+/).pop() || "")).filter(x=>x.length >= 4);
+}
+function indexGlobal(){ if(!INDEX_GLOBAL) INDEX_GLOBAL = construireIndexGlobal(); return INDEX_GLOBAL; }
+// un terme cherché comme mot entier (pas « norme » dans « énorme »)
+function motEntier(terme){ return new RegExp("(^|[^a-z0-9])" + terme.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "([^a-z0-9]|$)"); }
+// les chapitres où une entrée est citée, un résultat par chapitre (la 1re section qui la nomme)
+function citationsDe(e){
+  if(e._cit) return e._cit;
+  const res = e.termes.map(motEntier);
+  if(!res.length) return (e._cit = []);
+  const vus = new Set(), out = [];
+  indexGlobal().sections.forEach(s=>{
+    const k = s.subj.id + "|" + s.type + "|" + s.ci;
+    if(vus.has(k)) return;
+    if(!res.some(r=>r.test(s.t))) return;
+    vus.add(k); out.push(s);
+  });
+  out.sort((a,b)=>anneeMatiere(a.subj).rang - anneeMatiere(b.subj).rang || SEMESTRES[a.subj.id] - SEMESTRES[b.subj.id]);
+  return (e._cit = out);
+}
+// une pastille qui mène à un chapitre : « L2 · S3 · Normes et déviance · TD 3 »
+function pastilleChapitre(s, mots){
+  const b = el("button","lex-src idx-src"); b.type = "button";
+  const pc = partiesChapitre(s.label);
+  b.innerHTML = `${ICO(s.type === "cm" ? "cm" : "td").replace('class="ico"','class="ico ico-in"')}<span class="idx-src-txt"><b>${esc(anneeMatiere(s.subj).court)} · ${esc(s.subj.title)}</b><small>${esc(pc.court)}${pc.titre ? " · " + esc(pc.titre) : ""}</small></span>${IC_CHEV_DROITE}`;
+  b.addEventListener("click", e=>{ e.stopPropagation(); haptic(); allerAuChapitre(s.subj, s.type, s.ci, s.si, mots); });
+  return b;
+}
+// l'entrée vers l'index, en haut de la recherche
+function entreeIndex(){
+  const b = el("button","idx-entree"); b.type = "button";
+  b.innerHTML = `<span class="type-ic ic-box">${ICO("lexique")}</span><span class="idx-entree-txt"><b>Index des auteurs et des notions</b><small>L1, L2 et L3 réunies : où tu as vu quoi</small></span>${IC_CHEV_DROITE}`;
+  // on emporte la recherche en cours : vers les auteurs si elle en nomme un, sinon vers les notions
+  b.addEventListener("click",()=>{
+    haptic();
+    const q = norm(RECH.q || "").trim();
+    const genre = !q || indexGlobal().auteurs.some(e=>norm(e.nom).includes(q)) ? "auteur" : "notion";
+    ouvrirIndex(RECH.q || "", genre);
+  });
+  return b;
+}
+var IDX = { genre:"auteur", q:"", multi:false };
+function ouvrirIndex(q, genre){
+  IDX = { genre: genre || "auteur", q: q || "", multi:false };
+  document.getElementById("idx-input").value = IDX.q;
+  renderIndex();
+  showScreen("index");
+  window.scrollTo(0, 0);
+}
+function renderIndex(){
+  const I = indexGlobal();
+  const liste = document.getElementById("idx-liste"), lettres = document.getElementById("idx-lettres");
+  liste.innerHTML = ""; lettres.innerHTML = "";
+  // auteurs ou notions ; toutes, ou seulement celles vues sur plusieurs années
+  document.querySelectorAll("#idx-genre .seg-opt").forEach(b=>b.classList.toggle("active", b.dataset.g === IDX.genre));
+  document.getElementById("idx-multi").classList.toggle("on", IDX.multi);
+  const f = norm(IDX.q).trim();
+  const base = IDX.genre === "auteur" ? I.auteurs : I.notions;
+  let xs = base.filter(e=>!f || norm(e.nom).includes(f));
+  if(IDX.multi) xs = xs.filter(e=>e.annees.length > 1);
+  xs = xs.slice().sort((a,b)=>norm(a.nom).localeCompare(norm(b.nom), "fr"));
+  if(!xs.length){ liste.innerHTML = vide("loupe", f ? "Rien pour « " + esc(IDX.q) + " »" : "Rien ici pour l'instant", "Essaie un autre mot, ou passe à l'autre onglet."); return; }
+  const cnt = el("div","search-count");
+  cnt.textContent = xs.length + (IDX.genre === "auteur" ? " auteur" : " notion") + (xs.length > 1 ? "s" : "");
+  liste.appendChild(cnt);
+  let lettre = "";
+  xs.forEach(e=>{
+    const L = norm(e.nom).trim().charAt(0).toUpperCase();
+    if(L !== lettre){
+      lettre = L;
+      const h = el("div","lex-lettre"); h.textContent = L; liste.appendChild(h);
+      const b = el("button"); b.type = "button"; b.textContent = L;
+      b.addEventListener("click",()=>{ haptic(); h.scrollIntoView({ behavior:"smooth", block:"start" }); });
+      lettres.appendChild(b);
+    }
+    liste.appendChild(carteIndex(e));
+  });
+}
+function carteIndex(e){
+  const it = el("div","lex-item idx-item");
+  const ans = e.annees.map(a=>`<span class="idx-an">${a}</span>`).join("");
+  let corps = "";
+  if(e.genre === "auteur"){
+    const a = e.fiches[0].a;
+    const meta = [a.courant, a.periode].filter(Boolean).join(" · ");
+    corps = `${meta ? `<div class="idx-meta">${esc(meta)}</div>` : ""}${a.these ? `<div class="lex-def">${esc(a.these)}</div>` : ""}`;
+  } else {
+    // la définition la plus récente : celle de l'année la plus avancée
+    const d = e.defs.slice().sort((x,y)=>SEMESTRES[y.subj.id] - SEMESTRES[x.subj.id])[0];
+    corps = `<div class="lex-def">${texteCours(d.x.def)}</div>`;
+  }
+  it.innerHTML = `<button type="button" class="idx-tete"><span class="lex-terme">${esc(e.nom)}</span><span class="idx-ans">${ans}</span></button>${corps}`;
+  const det = el("div","idx-det"); det.hidden = true;
+  it.appendChild(det);
+  const ouvrir = ()=>{
+    if(!det.hidden){ det.hidden = true; it.classList.remove("open"); return; }
+    det.innerHTML = "";
+    const mots = e.termes.slice(0, 2);
+    // où l'entrée a sa fiche ou sa définition
+    const lbl1 = el("div","auteur-liens-lbl");
+    lbl1.textContent = e.genre === "auteur" ? (e.fiches.length > 1 ? "Fiches auteur" : "Fiche auteur") : (e.defs.length > 1 ? "Défini dans" : "Défini dans ce cours");
+    det.appendChild(lbl1);
+    if(e.genre === "auteur"){
+      e.fiches.forEach(f=>{
+        const b = el("button","lex-src idx-src"); b.type = "button";
+        b.innerHTML = `${ICO("auteurs").replace('class="ico"','class="ico ico-in"')}<span class="idx-src-txt"><b>${esc(anneeMatiere(f.subj).court)} · ${esc(f.subj.title)}</b><small>Fiche auteur</small></span>${IC_CHEV_DROITE}`;
+        b.addEventListener("click", ev=>{ ev.stopPropagation(); haptic(); curSemestre = SEMESTRES[f.subj.id]; openSubject(f.subj.id); setTab(2); renderAuteurs(); });
+        det.appendChild(b);
+      });
+    } else {
+      e.defs.forEach(d=>det.appendChild(pastilleChapitre({ subj:d.subj, type:d.x.type, ci:d.x.ci, si:d.x.si, label:d.x.label }, mots)));
+    }
+    // tous les chapitres qui le citent, de la L1 à la L3
+    const deja = new Set(e.genre === "notion" ? e.defs.map(d=>d.subj.id + "|" + d.x.type + "|" + d.x.ci) : []);
+    const cit = citationsDe(e).filter(s=>!deja.has(s.subj.id + "|" + s.type + "|" + s.ci));
+    if(cit.length){
+      const lbl2 = el("div","auteur-liens-lbl");
+      lbl2.textContent = (e.genre === "auteur" ? "Cité dans " : "Aussi dans ") + cit.length + " chapitre" + (cit.length > 1 ? "s" : "");
+      det.appendChild(lbl2);
+      cit.forEach(s=>det.appendChild(pastilleChapitre(s, mots)));
+    }
+    det.hidden = false; it.classList.add("open");
+  };
+  it.querySelector(".idx-tete").addEventListener("click",()=>{ haptic(); ouvrir(); });
+  return it;
+}
+// ══════════════════════════════════════════════════
+// DÉJÀ VU : dans un chapitre, les auteurs et notions déjà rencontrés les années d'avant
+// ══════════════════════════════════════════════════
+function blocDejaVu(subj, ch){
+  const an = anneeMatiere(subj);
+  if(an.rang < 2) return null;
+  const I = indexGlobal();
+  const texte = " " + (ch.sections||[]).map(texteSection).join(" ") + " ";
+  const avant = s=>anneeMatiere(s.subj).rang < an.rang;
+  const trouves = [];
+  // d'abord les auteurs, puis les notions définies une année d'avant
+  I.auteurs.forEach(e=>{
+    if(!e.termes.length || !e.termes.some(t=>motEntier(t).test(texte))) return;
+    const lieux = citationsDe(e).filter(avant);
+    if(lieux.length) trouves.push({ e, lieux });
+  });
+  // « Bourdieu et Passeron » est déjà couvert par Bourdieu et par Passeron
+  const seuls = trouves.filter(t=>t.e.termes.length === 1).map(t=>t.e.termes[0]);
+  for(let i = trouves.length - 1; i >= 0; i--){
+    const t = trouves[i].e.termes;
+    if(t.length > 1 && t.every(x=>seuls.includes(x))) trouves.splice(i, 1);
+  }
+  I.notions.forEach(e=>{
+    const defs = e.defs.filter(d=>anneeMatiere(d.subj).rang < an.rang);
+    if(!defs.length || e.termes[0].length < 5 || !motEntier(e.termes[0]).test(texte)) return;
+    // un mot seul, court ou très courant (« autonomie », « directe ») n'apprend rien : on le laisse à l'index
+    if(!/\s/.test(e.termes[0]) && (e.termes[0].length < 9 || citationsDe(e).length > 10)) return;
+    // déjà là comme auteur (Condorcet) : pas deux fois
+    if(trouves.some(t=>t.e.genre === "auteur" && t.e.termes.some(x=>e.termes[0].includes(x)))) return;
+    trouves.push({ e, lieux:defs.map(d=>({ subj:d.subj, type:d.x.type, ci:d.x.ci, si:d.x.si, label:d.x.label })) });
+  });
+  if(!trouves.length) return null;
+  const box = el("div","deja-vu");
+  box.innerHTML = `<div class="dv-tete">${ICO("lexique").replace('class="ico"','class="ico ico-in"')} Déjà vu les années d'avant</div>`;
+  const MAX = 6;
+  trouves.slice(0, MAX).forEach(({ e, lieux })=>{
+    const r = el("div","dv-ligne");
+    r.innerHTML = `<div class="dv-nom">${esc(e.nom)}<span class="dv-genre">${e.genre === "auteur" ? "auteur" : "notion"}</span></div>`;
+    lieux.slice(0, 2).forEach(s=>r.appendChild(pastilleChapitre(s, e.termes.slice(0, 2))));
+    if(lieux.length > 2){
+      const t = el("button","dv-tout"); t.type = "button";
+      t.textContent = "Tout voir dans l'index (" + lieux.length + ")";
+      t.addEventListener("click",()=>{ haptic(); ouvrirIndex(e.nom, e.genre); });
+      r.appendChild(t);
+    }
+    box.appendChild(r);
+  });
+  if(trouves.length > MAX){
+    const t = el("div","know-more"); t.textContent = "Et " + (trouves.length - MAX) + " autres : cherche-les dans l'index."; box.appendChild(t);
+  }
+  return box;
 }
 // extrait de texte autour du 1er mot trouvé
 function snippet(text, words){
@@ -5679,6 +6090,7 @@ function openSearch(depuis){
   rechercheDepuis = depuis === "split" ? "split" : "semestres";
   resolveAllLangs();             // titres/contenus dans la bonne langue selon le thème
   SEARCH_INDEX = buildIndex();  // reconstruit à chaque ouverture (le contenu peut changer)
+  INDEX_GLOBAL = null;
   const inp = document.getElementById("search-input");
   inp.value = "";
   doSearch("");
@@ -7233,6 +7645,17 @@ function renderSemestres(){
   renderSemEntry();
   updateMemoBadge();
   const wrap=document.getElementById("semchoice-inner"); wrap.innerHTML="";
+  // affichage en blocs ou en liste : un choix par appareil
+  const vue = vueSem();
+  wrap.classList.toggle("liste", vue === "liste");
+  const seg = document.getElementById("vue-sem");
+  if(seg){
+    seg.querySelectorAll(".seg-opt").forEach(b=>{
+      const on = b.dataset.vue === vue;
+      b.classList.toggle("active", on); b.setAttribute("aria-pressed", on ? "true" : "false");
+      b.onclick = ()=>{ if(on) return; haptic(); try{ localStorage.setItem("revision_vue_sem", b.dataset.vue); }catch(e){} renderSemestres(); };
+    });
+  }
   // les semestres ne sont plus figés à 5 et 6 : chacun crée les siens
   const sems = [...new Set(Object.values(UES).map(u=>u.sem))].filter(n=>n).sort((a,b)=>a-b);
   if(!sems.length && canEdit()){
@@ -7257,11 +7680,11 @@ function renderSemestres(){
       ${nvSem ? `<span class="nb" aria-label="${nvSem} matière${nvSem > 1 ? "s" : ""} avec du nouveau">${nvSem}</span>` : ``}
       <div class="sem-name">${esc(titreSemestre(sem))}</div>
       ${t.sous ? `<div class="sem-sous">${esc(t.sous)}</div>` : ``}
-      <div class="sem-meta">${list.length} matière${list.length > 1 ? "s" : ""}${dues.length ? " · " + dues.length + " à réviser" : ""}</div>
+      <div class="sem-meta">${list.length} matière${list.length > 1 ? "s" : ""}${dues.length && sem >= 5 ? " · " + dues.length + " à réviser" : ""}</div>
       <div class="sem-bar"><div class="sem-bar-fill" style="width:${pct}%"></div></div>
       <div class="sem-pct">${tot ? pct+" %" : "vide"}</div>`;
     card.addEventListener("click",()=>{ curSemestre=sem; renderSubjectCards(sem); showScreen("subjects"); });
-    tuiles.push({ cle:"sem:" + sem, el:card, defaut:"Semestre " + sem, icone:sem%2 ? "📚" : "🧠", sem,
+    tuiles.push({ cle:"sem:" + sem, el:card, defaut:(typeof TUILES_DEFAUT === "object" && TUILES_DEFAUT["sem:" + sem] && TUILES_DEFAUT["sem:" + sem].titre) || "Semestre " + sem, icone:sem%2 ? "📚" : "🧠", sem,
                   groupe:(t.sous || "").trim() });
   });
 
@@ -7279,10 +7702,9 @@ function renderSemestres(){
     tuiles.push({ cle:"psy", el:psy, defaut:psyTitle(), icone:"💜", sousDefaut:"Passerelles · masters", groupe:"\u0000psy" });
   }
 
-  // l'ordre choisi d'abord, les nouvelles tuiles ensuite dans l'ordre naturel
-  const ordre = Array.isArray(USER_SETTINGS.ordreTuiles) ? USER_SETTINGS.ordreTuiles : [];
-  const rang = c => { const k = ordre.indexOf(c); return k < 0 ? 1000 : k; };
-  const triees = tuiles.map((t,k)=>({ t, k })).sort((a,b)=>(rang(a.t.cle) - rang(b.t.cle)) || (a.k - b.k)).map(o=>o.t);
+  // la L1 et la L2 rejoignent les archives, repliées en bas : l'accueil reste sur l'année en cours
+  const archives = tuiles.filter(t=>t.sem && t.sem < 5);
+  const triees = trierTuiles(tuiles.filter(t=>!(t.sem && t.sem < 5)));
   // regroupement par sous-titre : chaque groupe à la place de sa première tuile,
   // les semestres sans sous-titre ensemble, le Projet Psycho toujours à part
   const groupes = [];
@@ -7291,18 +7713,32 @@ function renderSemestres(){
     if(!g){ g = { cle:t.groupe, tuiles:[] }; groupes.push(g); }
     g.tuiles.push(t);
   });
-  const avecTitres = groupes.length > 1;
+  const avecTitres = groupes.length > 1 || archives.length > 0;
   wrap.classList.toggle("groupee", avecTitres);
-  const nomGroupe = c => c === "\u0000psy" ? "Projets" : (c || "Autres semestres");
+  const nomGroupe = c => c === "\u0000psy" ? "Projets" : (c || "Licence 3");
   let si = 0;
+  // chaque section se plie : on garde ouvertes celles en cours, on plie les années terminées
+  let plies = {}; try{ plies = JSON.parse(localStorage.getItem("revision_sem_plies") || "{}") || {}; }catch(e){}
   groupes.forEach(g=>{
+    const plie = avecTitres && !!plies[g.cle || "\u0000autres"];
     if(avecTitres){
-      const h = el("div","sem-groupe rise"); h.textContent = nomGroupe(g.cle);
+      const h = el("button","sem-groupe rise" + (plie ? "" : " ouvert")); h.type = "button";
+      h.setAttribute("aria-expanded", plie ? "false" : "true");
+      h.innerHTML = `<span>${esc(nomGroupe(g.cle))}</span><span class="sem-chev">${IC_CHEV_BAS}</span>`;
       h.style.animationDelay = (0.12 + si*0.04) + "s";
+      h.addEventListener("click",()=>{
+        haptic();
+        const k = g.cle || "\u0000autres";
+        if(plies[k]) delete plies[k]; else plies[k] = 1;
+        try{ localStorage.setItem("revision_sem_plies", JSON.stringify(plies)); }catch(e){}
+        renderSemestres();
+      });
       wrap.appendChild(h);
     }
+    if(plie) return;
     g.tuiles.forEach(t=>placerTuile(t, si++));
   });
+  if(archives.length) wrap.appendChild(blocArchives(archives));
   function placerTuile(t, si){
     t.el.style.animationDelay = (0.14 + si*0.04) + "s";
     if(!canEdit()){ wrap.appendChild(t.el); return; }
@@ -7314,40 +7750,120 @@ function renderSemestres(){
   }
 }
 
+// ── ARCHIVES : les années terminées, en liste compacte, repliées par défaut ──
+function vueSem(){ try{ return localStorage.getItem("revision_vue_sem") === "liste" ? "liste" : "bloc"; }catch(e){ return "bloc"; } }
+function blocArchives(archives){
+  const box = el("div","arch rise");
+  let ouvert = false; try{ ouvert = localStorage.getItem("revision_archives_ouvert") === "1"; }catch(e){}
+  const sems = archives.map(t=>t.sem).sort((a,b)=>b-a);
+  const nMat = SUBJECTS.filter(s=>(SEMESTRES[s.id]||0) < 5).length;
+  const tete = el("button","arch-tete" + (ouvert ? " ouvert" : "")); tete.type = "button";
+  tete.innerHTML = `<span class="arch-ic">🗂️</span><span class="arch-txt"><b>Archives</b><small>L1 et L2 · ${sems.length} semestres · ${nMat} matières</small></span><span class="sem-chev">${IC_CHEV_BAS}</span>`;
+  tete.addEventListener("click",()=>{
+    haptic();
+    try{ localStorage.setItem("revision_archives_ouvert", ouvert ? "0" : "1"); }catch(e){}
+    renderSemestres();
+  });
+  box.appendChild(tete);
+  if(!ouvert) return box;
+  const annee = sem => sem >= 3 ? "Licence 2 · SESS (UPEC)" : sem === 1 ? "Licence 1 · Humanités (ICP)" : "Licence 1 · SESS (UPEC)";
+  let courant = "", lot = null, i = 0;
+  archives.slice().sort((x,y)=>y.sem - x.sem).forEach(t=>{
+    if(annee(t.sem) !== courant){
+      courant = annee(t.sem);
+      const h = el("div","arch-an"); h.textContent = courant; box.appendChild(h);
+      lot = el("div","arch-lot"); box.appendChild(lot);
+    }
+    t.el.style.animationDelay = (0.04 + (i++)*0.03) + "s";
+    lot.appendChild(t.el);
+  });
+  return box;
+}
 // ── Personnaliser les tuiles de l'accueil : titre, sous-titre, icône, ordre ──
 // Enregistré dans les réglages du compte : suit sur tous les appareils.
 function tuileDe(cle){
   const t = USER_SETTINGS.tuiles && USER_SETTINGS.tuiles[cle];
-  return (t && typeof t === "object") ? t : {};
+  const d = (typeof TUILES_DEFAUT === "object" && TUILES_DEFAUT[cle]) || {};
+  return Object.assign({}, d, (t && typeof t === "object") ? t : {});
 }
 function titreSemestre(sem){ return tuileDe("sem:" + sem).titre || ("Semestre " + sem); }
-const ICONES_TUILE = ["📚","🧠","💜","🎓","📖","✏️","🌱","⭐","🧩","🎯","🏛️","🌍"];
+// L'ordre rangé à la main d'abord. Une tuile pas encore rangée prend sa place chronologique :
+// juste avant le premier semestre rangé qui vient après elle. Le Projet Psycho, sans rang, va à la fin.
+function trierTuiles(tuiles){
+  const ordre = Array.isArray(USER_SETTINGS.ordreTuiles) ? USER_SETTINGS.ordreTuiles : [];
+  const semDe = c => /^sem:/.test(c) ? parseFloat(c.slice(4)) : NaN;
+  const rang = t => {
+    const k = ordre.indexOf(t.cle); if(k >= 0) return k;
+    if(t.sem == null) return 1e6;
+    const apres = ordre.map((c,i)=>({ i, s:semDe(c) })).filter(o=>o.s > t.sem).sort((a,b)=>a.s - b.s)[0];
+    return apres ? apres.i - 0.5 + t.sem / 1e4 : 1e5 + t.sem;
+  };
+  return tuiles.map(t=>({ t, r:rang(t) })).sort((a,b)=>a.r - b.r).map(o=>o.t);
+}
+// Ranger les tuiles : toute la liste sous les yeux, ↑ ↓ pour monter ou descendre d'un cran
+function rangerTuiles(tuiles){
+  let liste = trierTuiles(tuiles);
+  const rendre = (actif)=>{
+    document.querySelectorAll("#pick-sheet .pick-actions").forEach(n=>n.remove());
+    document.getElementById("pick-title").textContent = "Ranger les tuiles";
+    const box = document.getElementById("pick-list");
+    const haut = box.scrollTop;
+    box.innerHTML = `<div class="pick-legend"><span>Monte ou descends une tuile avec les flèches.</span></div>`;
+    liste.forEach((t,i)=>{
+      const d = tuileDe(t.cle);
+      const r = el("div","od-row" + (t.cle === actif ? " on" : ""));
+      r.innerHTML = `<span class="od-ic">${esc(d.icone || t.icone)}</span><span class="od-t"><b>${esc(d.titre || t.defaut)}</b><small>${esc(d.sous || t.sousDefaut || "")}</small></span>`;
+      const bt = el("span","od-bt");
+      [["↑",-1,"Monter"],["↓",1,"Descendre"]].forEach(([txt, sens, lab])=>{
+        const b = el("button"); b.type = "button"; b.textContent = txt; b.setAttribute("aria-label", lab + " " + (d.titre || t.defaut));
+        const j = i + sens;
+        b.disabled = j < 0 || j >= liste.length;
+        b.addEventListener("click",()=>{
+          haptic();
+          [liste[i], liste[j]] = [liste[j], liste[i]];
+          USER_SETTINGS.ordreTuiles = liste.map(x=>x.cle);
+          saveContent();
+          renderSemestres();
+          rendre(t.cle);
+        });
+        bt.appendChild(b);
+      });
+      r.appendChild(bt);
+      box.appendChild(r);
+    });
+    box.scrollTop = haut;
+    document.getElementById("pick-sheet").classList.add("open");
+  };
+  rendre(null);
+}
 function personnaliserTuile(t, tuiles){
   const cur = tuileDe(t.cle);
-  const ordreActuel = tuiles.map(x=>x.cle).sort((a,b)=>{
-    const o = Array.isArray(USER_SETTINGS.ordreTuiles) ? USER_SETTINGS.ordreTuiles : [];
-    const r = c => { const k = o.indexOf(c); return k < 0 ? 1000 : k; };
-    return (r(a) - r(b)) || (tuiles.findIndex(x=>x.cle===a) - tuiles.findIndex(x=>x.cle===b));
-  });
-  const icones = ICONES_TUILE.includes(cur.icone || t.icone) ? ICONES_TUILE : [cur.icone || t.icone].concat(ICONES_TUILE);
   const extra = t.sem && semIsOwn(t.sem) ? { label:"Changer le numéro ou supprimer", fn:()=>setTimeout(()=>editSemestre(t.sem), 320) } : null;
   openForm("Personnaliser", [
     { key:"titre", label:"Titre", value:cur.titre || "", placeholder:t.defaut },
     { key:"sous",  label:"Sous-titre", value:cur.sous || "", placeholder:t.sousDefaut || "ex. L3 SESS (UPEC)" },
-    { key:"icone", label:"Icône", type:"choice", value:cur.icone || t.icone, options:icones.map(x=>({ v:x, label:x })) },
-    { key:"pos",   label:"Position", type:"choice", value:String(ordreActuel.indexOf(t.cle) + 1),
-      options:ordreActuel.map((_,k)=>({ v:String(k+1), label:String(k+1) })) }
+    { key:"emoji", label:"Emoji", value:cur.icone || t.icone, placeholder:"Touche ici, puis choisis sur le clavier emoji" },
   ], "Enregistrer", v=>{
     USER_SETTINGS.tuiles = Object.assign({}, USER_SETTINGS.tuiles);
-    const n = { titre:v.titre, sous:v.sous, icone:v.icone === t.icone ? "" : v.icone };
+    // un emoji tapé passe devant la rangée : on garde le premier (drapeaux et emojis composés compris)
+    const tape = (v.emoji || "").trim();
+    let perso = "";
+    if(tape){
+      try{ perso = [...new Intl.Segmenter("fr", { granularity:"grapheme" }).segment(tape)][0].segment; }
+      catch(e){ perso = Array.from(tape).slice(0, 2).join(""); }
+    }
+    const ic = perso || t.icone;
+    const n = { titre:v.titre, sous:v.sous, icone:ic === t.icone ? "" : ic };
     if(!n.titre && !n.sous && !n.icone) delete USER_SETTINGS.tuiles[t.cle];
     else USER_SETTINGS.tuiles[t.cle] = n;
-    const o = ordreActuel.filter(c=>c !== t.cle);
-    o.splice(Math.max(0, parseInt(v.pos,10) - 1), 0, t.cle);
-    USER_SETTINGS.ordreTuiles = o;
     saveContent();
     renderSemestres();
   }, null, extra);
+  // en bas du formulaire : ranger toutes les tuiles, la liste sous les yeux
+  const rg = el("button","add-inline fs-ranger"); rg.type = "button";
+  rg.textContent = "↕  Ranger les tuiles";
+  rg.addEventListener("click",()=>{ haptic(); closeForm(); setTimeout(()=>rangerTuiles(tuiles), 320); });
+  document.getElementById("fs-body").appendChild(rg);
 }
 
 // avancement du Projet Psycho : étapes cochées / total
@@ -7476,6 +7992,8 @@ function openSubject(id){
     const i = (curSubj[der.type]||[]).findIndex(c=>c.label === der.label);
     if(i >= 0){ if(der.type === "cm") curCmIdx = i; else { curTdIdx = i; curTab = 1; } }
   }
+  // matière sans CM mais avec des TD : on ouvre directement les TD
+  if(!(curSubj.cm||[]).length && (curSubj.td||[]).length) curTab = 1;
   document.getElementById("split-chip").innerHTML=
     `<span class="chip-num">${esc(curSubj.ecue)}</span><span class="chip-label">${esc(curSubj.title)}</span><span class="chip-caret">▾</span>`;
   setTab(curTab);
@@ -7893,6 +8411,11 @@ function renderCoursePane(type){
     if(modifiable(ch)) onLongPress(block, ()=>editSection(type, ch, ch.sections.indexOf(sec)));
     pane.appendChild(block);
   });
+  // les auteurs et notions déjà vus les années d'avant, avec un lien vers le chapitre
+  // calculé juste après l'affichage, pour ne pas retarder l'ouverture du chapitre
+  { const place = el("div"), cle = pane.dataset.cle, sj = curSubj; pane.appendChild(place);
+    setTimeout(()=>{ if(pane.dataset.cle !== cle || !place.isConnected) return;
+      let dv = null; try{ dv = blocDejaVu(sj, ch); }catch(_){} if(dv) place.replaceWith(dv); else place.remove(); }, 40); }
   // les « À retenir » ne s'affichent plus ici : ils sont tous dans la fiche de synthèse
   pane.appendChild(blocNotes(pane.dataset.cle));
   // fin du chapitre : révisé, puis son QCM, puis le chapitre suivant
@@ -8883,6 +9406,7 @@ function startExamen(){
   EXAMEN.sel.forEach(id=>itemsDuScope(curSubj, "qcm", id).forEach(x=>{ if(x.item && Array.isArray(x.item.opts)) pool.push(Object.assign(melangerQCM(x.item), { _key:cardKey(curSubj.id, "qcm", x.item, x.i) })); }));
   const qs = melange(pool).slice(0, EXAMEN.nb);
   if(!qs.length) return;
+  sessionFil = null;
   exam = { qs, rep:new Array(qs.length).fill(null), i:0, duree:qs.length * SEC_PAR_QUESTION, t0:Date.now(), fini:false };
   clearInterval(timerInt);
   timerInt = setInterval(tickExamen, 1000);
@@ -8984,7 +9508,7 @@ function finirExamen(tempsEcoule){
 }
 function startSession(m){
   exam = null; document.getElementById("sess-score").className = "nav-score";
-  curMode=m; idx=0; score=0; answers=[];
+  curMode=m; idx=0; score=0; answers=[]; rateesSession = new Set(); sessionFil = null;
   flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv=""; oqEcrit="";
   globalSession = false;
   sessionScope = scopeCourant();
@@ -9021,7 +9545,7 @@ function startSession(m){
 // ── Session globale : toutes les cartes dues, toutes matières confondues ──
 function startGlobalSession(){
   exam = null; document.getElementById("sess-score").className = "nav-score";
-  idx=0; score=0; answers=[];
+  idx=0; score=0; answers=[]; rateesSession = new Set(); sessionFil = null;
   flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv=""; oqEcrit="";
   globalSession = true;
   sessionScope = "all";
@@ -9044,6 +9568,7 @@ function startGlobalSession(){
 // le titre court d'une session : « CM 3 », « Grand QCM », « Mes erreurs »…
 function titreSession(mode){
   const noms = { qcm:"QCM", fc:"Flashcards", tr:"Textes à trous", oq:"Questions" };
+  if(sessionFil) return sessionFil.nom;
   if(globalSession) return "Révision";
   const sc = sessionScope || "all";
   if(sc.startsWith("ch:")) return partiesChapitre(sc.slice(3)).court;
@@ -9068,7 +9593,7 @@ function renderSess(){
   document.getElementById("sess-prog").style.width=(idx/queue.length*100)+"%";
   const body=document.getElementById("sess-body"); body.innerHTML="";
   // en session globale, on rappelle de quelle matière vient la carte
-  if(globalSession){
+  if(globalSession || sessionFil){
     const tag=el("div","sess-subj");
     tag.innerHTML=`<span class="ss-num">${esc(entry.subj.ecue)}</span>${esc(entry.subj.title)}`;
     body.appendChild(tag);
@@ -9307,7 +9832,7 @@ function showResults(){
   // le score d'un chapitre ne doit pas écraser celui de la matière entière
   if(!globalSession && curSubj && (sessionScope === "all" || sessionScope === "grand")) stats[curSubj.id+"_"+curMode]={score,total:queue.length};
   // reste à revoir : sur la matière (session simple) ou sur tout (session globale)
-  const restant = globalSession
+  const restant = sessionFil ? 0 : globalSession
     ? SUBJECTS.reduce((n,s)=>n+dueCount(s),0)
     : dueCount(curSubj);
   const wrap=el("div","results");
@@ -9328,7 +9853,14 @@ function showResults(){
       <div><div class="t">${titre}</div><div class="s">${esc(sous)}</div></div></div>
     ${aRevoir.length ? `<div class="results-detail"><div class="results-detail-label">À revoir</div>${aRevoir.map(a=>`<div class="result-row ko"><span class="result-ic">✕</span><span class="result-q">${esc(a.q)}</span></div>`).join("")}</div>` : ""}`;
   const row=el("div","btn-row");
-  if(globalSession){
+  if(sessionFil){
+    const th = sessionFil;
+    const b1=el("button","btn ghost"); b1.textContent="Recommencer";
+    b1.addEventListener("click",()=>startFilSession(th)); row.appendChild(b1);
+    const b2=el("button","btn"); b2.textContent="Terminer";
+    b2.addEventListener("click",()=>renderFilPsycho());
+    row.appendChild(b2);
+  } else if(globalSession){
     if(restant>0){
       const b1=el("button","btn ghost"); b1.textContent="Continuer";
       b1.addEventListener("click",startGlobalSession); row.appendChild(b1);
@@ -9350,7 +9882,11 @@ function showResults(){
 function doGrade(grade, question){
   const key = queue[idx].key;
   srsReview(key, grade);
-  if(grade > 0 && ERREXAM[key]){ delete ERREXAM[key]; errExamSave(); }
+  // une question ratée va dans « Mes erreurs » et y reste jusqu'à une bonne réponse du premier coup,
+  // dans une autre session : sinon la reprise en fin de session l'effaçait aussitôt
+  const modeQ = queue[idx].mode || curMode;
+  if(grade === 0 && modeQ === "qcm"){ rateesSession.add(key); ERREXAM[key] = Date.now(); errExamSave(); }
+  else if(grade > 0 && ERREXAM[key] && !rateesSession.has(key)){ delete ERREXAM[key]; errExamSave(); }
   const ok = grade > 0;
   if(ok) score++;
   lastMotiv = ok ? pick(MOTIV_OK) : pick(MOTIV_KO);
@@ -9466,6 +10002,7 @@ function renderPsycho(){
     {icon:"📋",title:"Les étapes",sub:"Ton chemin, étape par étape.\nJuste ce qu'il faut faire, quand il faut le faire.",fn:renderPsychoEtapes},
     {icon:"💡",title:"Infos utiles",sub:"Tout sur la VES, Parcoursup, les universités\net les délais. En clair, sans stress.",fn:renderPsychoInfos},
     {icon:"🔍",title:"Quelle spécialité ?",sub:"Vers quelle branche de la psycho aller ?\nOn explore ça ensemble, doucement.",fn:renderPsychoSpecialite},
+    {icon:"🧭",title:"Ton fil psycho",sub:"Tout ce que tu as déjà vu en psycho,\nde la L1 à la L3, rangé par thème.",fn:renderFilPsycho},
   ];
   cards.forEach((c,i)=>{
     const b=el("button","psy-nav-card rise"); b.style.animationDelay=(0.12+i*0.03)+"s";
@@ -9474,6 +10011,95 @@ function renderPsycho(){
   });
   document.getElementById("psy-back-home").addEventListener("click",()=>showScreen("semestres"));
   showScreen("psycho");
+}
+// ── FIL PSYCHO : les chapitres de psychologie de toutes les années, par thème ──
+// Un chapitre entre dans un thème s'il nomme au moins deux de ses repères (auteurs ou notions).
+const THEMES_PSY = [
+  { ic:"🛋️", nom:"Psychanalyse", mots:["freud","winnicott","klein","lacan","inconscient","pulsion","oedipe","narcissisme","refoulement","surmoi","transfert"] },
+  { ic:"👶", nom:"Développement de l'enfant", mots:["piaget","wallon","vygotski","attachement","bowlby","ainsworth","spitz","stade du miroir","zone proximale","hospitalisme"] },
+  { ic:"👥", nom:"Psychologie sociale et groupes", mots:["lewin","sherif","asch","milgram","festinger","moscovici","conformisme","influence sociale","dynamique de groupe","representation sociale","cohesion"] },
+  { ic:"🧩", nom:"Apprentissage et motivation", mots:["bandura","skinner","pavlov","behaviorisme","constructivisme","socioconstructivisme","motivation","sentiment d'efficacite","conflit sociocognitif","rogers"] },
+  { ic:"🌀", nom:"Adolescence et clinique", mots:["adolescence","adolescent","tdah","hyperactif","harcelement","dsm","phobie","carence affective","anorexie","regression"] },
+];
+function filPsycho(){
+  const I = indexGlobal();
+  const parChap = new Map();
+  I.sections.forEach(s=>{ const k = s.subj.id + "|" + s.type + "|" + s.ci; if(!parChap.has(k)) parChap.set(k, { s, t:"" }); parChap.get(k).t += s.t; });
+  return THEMES_PSY.map(th=>{
+    const res = th.mots.map(motEntier);
+    const chaps = [];
+    parChap.forEach(({ s, t })=>{
+      const n = res.filter(r=>r.test(t)).length;
+      if(n >= 2) chaps.push({ s, n });
+    });
+    chaps.sort((a,b)=>anneeMatiere(a.s.subj).rang - anneeMatiere(b.s.subj).rang || b.n - a.n);
+    return { th, chaps };
+  });
+}
+// les questions de QCM d'un thème : toutes celles qui nomment un de ses auteurs ou une de ses notions,
+// de la L1 à la L3. Ce sont les questions déjà là : leur validation est la même que dans la matière.
+function questionsDuTheme(th){
+  const res = th.mots.map(motEntier), out = [];
+  SUBJECTS.forEach(subj=>(subj.qcm||[]).forEach((q,i)=>{
+    if(!q || !q.q || !Array.isArray(q.opts)) return;
+    const t = norm(q.q + " " + q.opts.join(" ") + " " + (q.e || ""));
+    if(res.some(r=>r.test(t))) out.push({ subj, item:q, i, key:cardKey(subj.id, "qcm", q, i) });
+  }));
+  return out;
+}
+function startFilSession(th){
+  exam = null; document.getElementById("sess-score").className = "nav-score";
+  curMode = "qcm"; idx = 0; score = 0; answers = []; rateesSession = new Set();
+  flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv=""; oqEcrit="";
+  globalSession = false; sessionScope = "fil"; sessionFil = th; sessionDueOnly = false;
+  const all = questionsDuTheme(th).map(x=>({ item:melangerQCM(x.item), mode:"qcm", subj:x.subj, key:x.key }));
+  if(!all.length) return;
+  // comme le grand QCM : ce qui n'est pas validé d'abord, puis le reste
+  queue = shuffle(all.filter(x=>!estAcquise(x.key))).concat(shuffle(all.filter(x=>estAcquise(x.key))));
+  clearInterval(timerInt);
+  showScreen("session");
+  renderSess();
+}
+function carteQcmTheme(th){
+  const qs = questionsDuTheme(th);
+  if(!qs.length) return null;
+  const val = qs.filter(x=>estAcquise(x.key)).length, pct = Math.round(val / qs.length * 100);
+  const nMat = new Set(qs.map(x=>x.subj.id)).size;
+  const b = el("button","fil-qcm"); b.type = "button";
+  b.innerHTML = `<span class="fil-qcm-ic">${ICO("qcm")}</span><span class="fil-qcm-txt"><b>QCM ${esc(th.nom)}</b><small>Tiré de ${nMat} matière${nMat > 1 ? "s" : ""} · ${pct ? "validé à " + pct + "\u00a0%" : "pas encore commencé"}</small></span>${IC_CHEV_DROITE}`;
+  b.addEventListener("click",()=>{ haptic(); startFilSession(th); });
+  return b;
+}
+function renderFilPsycho(){
+  const inner = document.getElementById("psycho-inner"); inner.innerHTML = "";
+  psyBack(inner, renderPsycho);
+  const fil = filPsycho();
+  const total = new Set(fil.flatMap(f=>f.chaps.map(c=>c.s.subj.id + "|" + c.s.type + "|" + c.s.ci))).size;
+  const hero = el("div","psy-hero rise");
+  const ansFil = ["L1","L2","L3"].filter(a=>fil.some(f=>f.chaps.some(c=>anneeMatiere(c.s.subj).cle === a)));
+  hero.innerHTML = `<div class="psy-hero-mark">🧭</div><div class="psy-hero-title">Ton fil psycho</div><div class="psy-hero-sub">${total} chapitres de ta ${ansFil.join(", ").replace(/, ([^,]*)$/, " et $1")} parlent déjà de psycho. Les voici, rangés par thème.</div>`;
+  inner.appendChild(hero);
+  fil.forEach(({ th, chaps }, i)=>{
+    if(!chaps.length) return;
+    const c = el("div","fil-theme rise"); c.style.animationDelay = (0.06 + i*0.03) + "s";
+    const ans = ["L1","L2","L3"].filter(a=>chaps.some(x=>anneeMatiere(x.s.subj).cle === a));
+    c.innerHTML = `<div class="fil-tete"><span class="fil-ic">${th.ic}</span><span class="fil-txt"><b>${esc(th.nom)}</b><small>${chaps.length} chapitre${chaps.length > 1 ? "s" : ""}</small></span><span class="idx-ans">${ans.map(a=>`<span class="idx-an">${a}</span>`).join("")}</span></div>`;
+    const qb = carteQcmTheme(th); if(qb) c.appendChild(qb);
+    const liste = el("div","fil-liste");
+    const MAX = 4;
+    const montrer = n=>{ liste.innerHTML = ""; chaps.slice(0, n).forEach(x=>liste.appendChild(pastilleChapitre(x.s, []))); };
+    montrer(MAX);
+    c.appendChild(liste);
+    if(chaps.length > MAX){
+      const t = el("button","dv-tout"); t.type = "button";
+      t.textContent = "Voir les " + chaps.length + " chapitres";
+      t.addEventListener("click",()=>{ haptic(); montrer(chaps.length); t.remove(); });
+      c.appendChild(t);
+    }
+    inner.appendChild(c);
+  });
+  showScreen("psycho");
+  window.scrollTo(0, 0);
 }
 function psyBack(inner,fn){ const b=el("button","psy-back"); b.innerHTML=chevronL+psyTitle(); b.addEventListener("click",fn); inner.appendChild(b); }
 // En violet (ton espace) : pas de petits messages d'encouragement.
@@ -9643,7 +10269,7 @@ document.getElementById("btn-session-back").addEventListener("click",()=>{
     confirmer("Quitter l'examen ?", "Tes réponses ne seront pas gardées.", "Quitter", ()=>{ clearInterval(timerInt); exam = null; renderExamenChoix(); });
     return;
   }
-  clearInterval(timerInt); if(globalSession){ renderSemestres(); showScreen("semestres"); } else if(retourSession){ quitterSession(); } else { showScreen("split"); } });
+  clearInterval(timerInt); if(sessionFil){ renderFilPsycho(); } else if(globalSession){ renderSemestres(); showScreen("semestres"); } else if(retourSession){ quitterSession(); } else { showScreen("split"); } });
 document.getElementById("btn-qcmchoix-back").addEventListener("click",()=>{ haptic(); setTab(2); showScreen("split"); });
 document.getElementById("btn-auteurs-back").addEventListener("click",()=>{ setTab(2); showScreen("split"); });
 document.getElementById("btn-dev-back").addEventListener("click",()=>{ setTab(2); showScreen("split"); });
@@ -9771,6 +10397,14 @@ document.getElementById("btn-search-back").addEventListener("click",()=>{
 document.getElementById("btn-syn-back").addEventListener("click",()=>{ haptic(); showScreen("split"); setTab(curTab); });
 document.getElementById("btn-lex-back").addEventListener("click",()=>{ haptic(); showScreen("split"); setTab(curTab); });
 document.getElementById("lex-input").addEventListener("input",e=>renderLexique(e.target.value));
+document.getElementById("btn-idx-back").addEventListener("click",()=>{ haptic(); showScreen("search"); });
+document.querySelectorAll("#idx-genre .seg-opt").forEach(b=>b.addEventListener("click",()=>{ haptic(); IDX.genre = b.dataset.g; renderIndex(); }));
+document.getElementById("idx-multi").addEventListener("click",()=>{ haptic(); IDX.multi = !IDX.multi; renderIndex(); });
+(function(){
+  const i = document.getElementById("idx-input"); let t = null;
+  i.addEventListener("input",()=>{ clearTimeout(t); t = setTimeout(()=>{ IDX.q = i.value; renderIndex(); }, 160); });
+  document.getElementById("idx-clear").addEventListener("click",()=>{ i.value = ""; IDX.q = ""; renderIndex(); i.focus(); });
+})();
 document.getElementById("lex-clear").addEventListener("click",()=>{ const i=document.getElementById("lex-input"); i.value=""; renderLexique(""); i.focus(); });
 (function(){
   const inp = document.getElementById("search-input");
