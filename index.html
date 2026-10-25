@@ -1163,6 +1163,12 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .sem-grid.liste .sem-groupe:first-child{margin-top:0;}
 .sem-grid.liste .sem-groupe:not(.ouvert){margin-bottom:2px;}
 .sem-grid.liste .arch{margin-top:18px;}
+/* publier : semestre, matière, chapitres */.fp-retour{display:inline-flex;align-self:flex-start;align-items:center;gap:4px;margin:0 20px 0 15px;padding:6px 8px 6px 2px;border:0;background:none;cursor:pointer;color:var(--accent);font-family:var(--font-text);font-size:15px;font-weight:600;}
+.fp-retour svg{width:18px;height:18px;}
+.fp-chev{display:grid;place-items:center;flex-shrink:0;margin-left:6px;color:var(--text-mute);}
+.fp-chev svg{width:16px;height:16px;}
+.fp-ic{width:38px;height:38px;border-radius:11px;background:var(--surface-2,rgba(255,255,255,.05));display:grid;place-items:center;font-size:19px;flex-shrink:0;}
+.fp-ligne.fait .fp-ic{box-shadow:inset 0 0 0 1.5px var(--ok);}
 /* QCM d'un thème du fil psycho */.fil-qcm{display:flex;align-items:center;gap:12px;width:100%;margin:14px 0 12px;padding:12px 14px;border-radius:14px;border:0;background:var(--accent);color:#fff;font-family:var(--font-text);text-align:left;cursor:pointer;box-shadow:0 6px 18px var(--accent-glow);transition:transform .18s var(--ease-spring);}
 .fil-qcm:active{transform:scale(.98);}
 .fil-qcm-ic{width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.18);display:grid;place-items:center;flex-shrink:0;}
@@ -2887,6 +2893,7 @@ let SUB_ITEMS    = {};    // "classe|matière" → chapitres, pour les matières
 function openPicker(title, options, onPick){
   document.querySelectorAll("#pick-sheet .pick-actions").forEach(n=>n.remove());
   const box = document.getElementById("pick-list");
+  document.querySelectorAll("#pick-sheet .fp-retour").forEach(n=>n.remove());
   document.getElementById("pick-title").textContent = title;
   box.innerHTML = "";
   if(!options.length){
@@ -2908,7 +2915,7 @@ function openPicker(title, options, onPick){
 // tout valider d'un coup, ou valider seulement la sélection.
 // o.deja = déjà publié : la ligne est hachurée, mais reste cochable (pour mettre à jour).
 const COCHE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
-function closePicker(){ document.getElementById("pick-sheet").classList.remove("open"); }
+function closePicker(){ document.getElementById("pick-sheet").classList.remove("open"); setTimeout(()=>{ if(!document.getElementById("pick-sheet").classList.contains("open")) document.querySelectorAll("#pick-sheet .fp-retour").forEach(n=>n.remove()); }, 350); }
 
 const KIND_LABEL = { cm:"Cours magistraux", td:"Travaux dirigés", devoir:"Devoirs", revision:"Révisions" };
 
@@ -3860,12 +3867,20 @@ async function publierOuMettreAJour(classId, kind, subjectTitle, payload){
 // Point vert : déjà dans la classe. Point de couleur : prêt à partager.
 // Toucher une ligne la partage ; « Tout » dans l'en-tête fait tout le groupe.
 // ══════════════════════════════════════════════════
-function feuillePartage(titre, legende, groupes){
+function feuillePartage(titre, legende, groupes, nav){
   document.querySelectorAll("#pick-sheet .pick-actions").forEach(n=>n.remove());
   document.getElementById("pick-title").textContent = titre;
   const box = document.getElementById("pick-list");
-  const haut = box.scrollTop;
+  const haut = nav && nav.enHaut ? 0 : box.scrollTop;
   box.innerHTML = "";
+  // le retour au niveau d'avant, au-dessus du titre (comme en haut des pages)
+  document.querySelectorAll("#pick-sheet .fp-retour").forEach(n=>n.remove());
+  if(nav && nav.retour){
+    const b = el("button","fp-retour"); b.type = "button";
+    b.innerHTML = chevronL + esc(nav.retour.txt);
+    b.addEventListener("click",()=>{ haptic(); nav.retour.fn(); });
+    document.getElementById("pick-title").before(b);
+  }
   if(legende){ const lg = el("div","pick-legend"); lg.innerHTML = "<span>" + legende + "</span>"; box.appendChild(lg); }
   groupes.forEach(g=>{
     const h = el("div","fp-tete");
@@ -3879,7 +3894,9 @@ function feuillePartage(titre, legende, groupes){
     g.lignes.forEach(l=>{
       const r = el("button","cal-row chap-ligne fp-ligne" + (l.cls ? " " + l.cls : "")); r.type = "button";
       r.innerHTML = `<span class="rv-dot"></span><div class="cal-txt"><div class="cal-name">${esc(l.nom)}</div>${l.sous ? `<div class="cal-url">${esc(l.sous)}</div>` : ""}</div>` +
-        (l.etat ? `<span class="fp-etat ${l.etat.cls || ""}">${esc(l.etat.txt)}</span>` : "");
+        (l.etat ? `<span class="fp-etat ${l.etat.cls || ""}">${esc(l.etat.txt)}</span>` : "") +
+        (l.chev ? `<span class="fp-chev">${IC_CHEV_DROITE}</span>` : "");
+      if(l.ic){ r.classList.add("fp-avec-ic"); r.querySelector(".rv-dot").outerHTML = `<span class="fp-ic">${esc(l.ic)}</span>`; }
       r.addEventListener("click",()=>{ haptic(); l.onTap(r); });
       box.appendChild(l.actions && l.actions.length ? swipeRow(r, l.actions) : r);
     });
@@ -3973,12 +3990,17 @@ async function publishFromClass(c){
   };
   // semestre en cours d'abord, puis par nom
   const tri = mats.slice().sort((a,b)=>(SEMESTRES[b.id] || 0) - (SEMESTRES[a.id] || 0) || a.title.localeCompare(b.title, "fr", { sensitivity:"base" }));
-  const rendre = ()=>{
-    const groupes = tri.map(sj=>{
+  // comme sur l'accueil : d'abord le semestre, puis la matière, puis ses chapitres
+  const niv = { sem:null, mat:null };
+  const sems = [...new Set(tri.map(sj=>SEMESTRES[sj.id] || 0))].sort((a,b)=>b - a);
+  if(sems.length === 1) niv.sem = sems[0];
+  const compte = sj=>{ const ls = lignesDe(sj); return { n:ls.length, k:ls.filter(l=>dejaPar[l.cle]).length }; };
+  const etatDe = (n, k)=>!n ? null : k === n ? { txt:"✓ Tout publié", cls:"ok" } : k ? { txt:k + " sur " + n, cls:"mute" } : null;
+  const groupeMatiere = sj=>{
       const ls = lignesDe(sj);
       const reste = ls.filter(l=>!dejaPar[l.cle]);
       return {
-        titre:sj.title, sous:SEMESTRES[sj.id] ? "S" + SEMESTRES[sj.id] : "",
+        titre:"Chapitres", sous:"",
         tout:reste.length ? { label:reste.length > 1 ? "Tout publier (" + reste.length + ")" : "Publier", fn:async ()=>{
           let ok = 0;
           for(let i = 0; i < reste.length; i++){
@@ -4005,8 +4027,41 @@ async function publishFromClass(c){
           };
         })
       };
+  };
+  const rendre = (enHaut)=>{
+    // 3. les chapitres d'une matière
+    if(niv.mat){
+      const sj = niv.mat;
+      feuillePartage(sj.title, "Touche un chapitre pour le publier. En vert : déjà dans la classe, le retoucher le met à jour.", [groupeMatiere(sj)],
+        { enHaut, retour:{ txt:niv.sem ? titreSemestre(niv.sem) : "Matières", fn:()=>{ niv.mat = null; rendre(true); } } });
+      return;
+    }
+    // 2. les matières d'un semestre
+    if(niv.sem !== null){
+      const sem = niv.sem;
+      const lignes = tri.filter(sj=>(SEMESTRES[sj.id] || 0) === sem).map(sj=>{
+        const { n, k } = compte(sj);
+        const ls = lignesDe(sj), nCh = ls.filter(l=>l.kind !== "revision").length, rev = ls.length > nCh;
+        return { nom:sj.title, sous:nCh + " chapitre" + (nCh > 1 ? "s" : "") + (rev ? " · exercices" : ""), cls:n && k === n ? "fait" : "", etat:etatDe(n, k), chev:true,
+          onTap:()=>{ niv.mat = sj; rendre(true); } };
+      });
+      feuillePartage(sem ? titreSemestre(sem) : "Autres matières", "Choisis une matière. En vert : tout est déjà dans la classe.",
+        [{ titre:nomAnneeSem(sem), lignes }],
+        sems.length > 1 ? { enHaut, retour:{ txt:"Semestres", fn:()=>{ niv.sem = null; rendre(true); } } } : { enHaut });
+      return;
+    }
+    // 1. les semestres, rangés par année, du plus récent au plus ancien
+    const groupes = [];
+    sems.forEach(sem=>{
+      const nom = nomAnneeSem(sem);
+      let g = groupes.find(x=>x.titre === nom); if(!g){ g = { titre:nom, lignes:[] }; groupes.push(g); }
+      const ms = tri.filter(sj=>(SEMESTRES[sj.id] || 0) === sem);
+      let n = 0, k = 0; ms.forEach(sj=>{ const x = compte(sj); n += x.n; k += x.k; });
+      g.lignes.push({ nom:sem ? titreSemestre(sem) : "Autres matières", ic:sem ? (tuileDe("sem:" + sem).icone || (sem % 2 ? "📚" : "🧠")) : "📁",
+        sous:ms.length + " matière" + (ms.length > 1 ? "s" : ""), cls:n && k === n ? "fait" : "", etat:etatDe(n, k), chev:true,
+        onTap:()=>{ niv.sem = sem; rendre(true); } });
     });
-    feuillePartage("Que publier ?", "Touche un chapitre pour le publier. En vert : déjà dans la classe, le retoucher le met à jour.", groupes);
+    feuillePartage("Que publier ?", "Choisis un semestre, puis une matière.", groupes, { enHaut });
   };
   rendre();
 }
@@ -7751,6 +7806,12 @@ function renderSemestres(){
 }
 
 // ── ARCHIVES : les années terminées, en liste compacte, repliées par défaut ──
+// le nom de l'année d'un semestre, le même partout
+function nomAnneeSem(sem){
+  if(!sem) return "Autres";
+  if(sem >= 5) return (tuileDe("sem:" + sem).sous || "").trim() || "Licence 3";
+  return sem >= 3 ? "Licence 2 · SESS (UPEC)" : sem === 1 ? "Licence 1 · Humanités (ICP)" : "Licence 1 · SESS (UPEC)";
+}
 function vueSem(){ try{ return localStorage.getItem("revision_vue_sem") === "liste" ? "liste" : "bloc"; }catch(e){ return "bloc"; } }
 function blocArchives(archives){
   const box = el("div","arch rise");
@@ -7766,7 +7827,7 @@ function blocArchives(archives){
   });
   box.appendChild(tete);
   if(!ouvert) return box;
-  const annee = sem => sem >= 3 ? "Licence 2 · SESS (UPEC)" : sem === 1 ? "Licence 1 · Humanités (ICP)" : "Licence 1 · SESS (UPEC)";
+  const annee = nomAnneeSem;
   let courant = "", lot = null, i = 0;
   archives.slice().sort((x,y)=>y.sem - x.sem).forEach(t=>{
     if(annee(t.sem) !== courant){
