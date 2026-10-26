@@ -607,7 +607,7 @@ div.av-tete{cursor:default;}
 .next-tuile.live{border-color:var(--accent);box-shadow:0 4px 22px var(--accent-glow);}
 .next-tuile.alerte{border-color:var(--warn);}
 .next-tuile{overflow:hidden;grid-column:1 / -1;}
-/* prochain cours : le moment et l'icône en haut, le nom en grand, l'heure et la salle avec leurs icônes */
+/* prochain cours : l'icône et le moment en haut, le nom en grand, l'heure et la salle avec leurs icônes */
 .nc-haut{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;margin-bottom:auto;}
 .nc-haut .ht-lbl{margin:0;min-width:0;}
 .nc-haut .ht-ic.ic-box{margin:0;flex-shrink:0;}
@@ -7645,10 +7645,10 @@ function renderNextCourse(){
   const flag = n.type === "controle" ? { cls:"ctrl", txt:"⚠️ Contrôle" }
              : n.type === "devoir"   ? { cls:"devo", txt:"📎 À rendre" } : null;
 
-  // le nom du cours en grand ; au-dessus, le moment et l'icône ; dessous, l'heure et la salle
+  // le nom du cours en grand ; au-dessus, l'icône à gauche et le moment à droite ; dessous, l'heure et la salle
   box.className = "home-tuile next-tuile" + (live ? " live" : "") + (flag && flag.cls === "ctrl" ? " alerte" : "");
   const horaire = hhmm(ev.start) + (ev.end ? " → " + hhmm(ev.end) : "");
-  box.innerHTML = `<span class="nc-haut"><span class="ht-lbl">${live ? '<span class="next-dot"></span>En cours · ' + esc(quand) : "Prochain · " + esc(quand)}</span><span class="ht-ic ic-box">${ICO("calendrier")}</span></span>
+  box.innerHTML = `<span class="nc-haut"><span class="ht-ic ic-box">${ICO("calendrier")}</span><span class="ht-lbl">${live ? '<span class="next-dot"></span>En cours · ' + esc(quand) : "Prochain · " + esc(quand)}</span></span>
     <span class="ht-t">${esc(nomCourt(ev.title))}</span>
     <span class="nc-meta"><span>${IC_HORLOGE}${horaire}</span>${ev.place ? `<span>${IC_LIEU}${esc(ev.place)}</span>` : ""}${flag ? `<span class="nc-flag ${flag.cls}">${esc(flag.txt)}</span>` : ""}</span>`;
   if(live && ev.end){
