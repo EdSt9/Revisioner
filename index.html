@@ -536,8 +536,7 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 #screen-semestres .wrap.home-empty .sem-entry{margin-top:auto;margin-bottom:auto;}
 /* accueil : le prochain cours, puis Mes semestres, puis les nouveautés, bien espacés */#screen-semestres #next-course .next-card{margin-bottom:0;}
 #screen-semestres #next-course:not([hidden]){margin-bottom:24px;}  /* même écart que tuiles → « À venir » *//* accueil : deux tuiles côte à côte */
-.home-tuiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.home-tuiles:has(#home-reprise[hidden]){grid-template-columns:1fr;}
+.home-tuiles{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:12px;}
 .home-tuile{position:relative;display:flex;flex-direction:column;align-items:flex-start;text-align:left;min-height:120px;padding:16px;min-width:0;
   background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:0 4px 18px var(--shadow);
   font-family:var(--font-text);color:var(--text);cursor:pointer;transition:transform .18s var(--ease-spring);}
@@ -600,6 +599,8 @@ div.av-tete{cursor:default;}
 .av-fl{color:var(--text-mute);font-size:20px;line-height:1;}
 .av-row.controle{--c:var(--warn);} .av-row.devoir{--c:var(--danger);} .av-row.note{--c:var(--info);}
 #home-reprise[hidden]{display:none;}
+#mesdevoirs-ajout{margin-top:18px;}
+#sites-liste,#screen-mesdevoirs #home-know{margin-top:18px;}
 .sem-entry.reprise .sem-entry-ic{background:var(--accent-soft);}
 
 
@@ -694,7 +695,8 @@ button.sem-groupe{width:100%;background:none;border:0;padding:0;cursor:pointer;f
 .sem-pct{font-size:12px;font-weight:600;color:var(--text-soft);font-variant-numeric:tabular-nums;white-space:nowrap;}
 .project-title{color:#fff;font-family:var(--font-display);font-weight:500;font-size:17px;}
 
-/* overview ring (matières) */.overview{display:flex;align-items:center;gap:14px;background:var(--surface);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+/* overview ring (matières) */.overview[hidden]{display:none;}
+.overview{display:flex;align-items:center;gap:14px;background:var(--surface);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
   border:1px solid var(--border);border-radius:var(--r-md);padding:14px 18px;margin-bottom:24px;box-shadow:0 4px 20px var(--shadow);}
 .overview-ring{position:relative;width:44px;height:44px;flex-shrink:0;}
 .overview-ring svg{transform:rotate(-90deg);}
@@ -761,7 +763,8 @@ button.sem-groupe{width:100%;background:none;border:0;padding:0;cursor:pointer;f
 .head-row{display:flex;align-items:center;gap:10px;width:100%;max-width:600px;margin:0 auto 12px;box-sizing:border-box;}
 .head-row .back-btn{margin-bottom:0;padding:0;flex-shrink:0;}
 /* toutes les pages : le même en-tête que dans un cours, au même endroit */.page-head .head-row{min-height:36px;}
-.page-head .home-icons{margin:0 0 0 auto;gap:8px;}
+.page-head .home-icons{margin:0 0 0 auto;gap:8px;flex:1;}
+.compte-btn{margin-right:auto;border-radius:50% !important;background:var(--accent) !important;color:#fff !important;border:0 !important;font-family:var(--font-text);font-size:15px;font-weight:700;}
 .page-head .icon-btn{width:36px;height:36px;border-radius:11px;}
 .page-head .icon-btn svg{width:17px;height:17px;}
 .page-head .psy-back{margin:0;padding:0;}
@@ -968,6 +971,8 @@ button.sem-groupe{width:100%;background:none;border:0;padding:0;cursor:pointer;f
   background:var(--accent);color:#fff;border:0;font-family:var(--font-text);font-weight:700;font-size:11.5px;line-height:1;
   box-shadow:4px 6px 18px var(--shadow);transition:opacity .2s,transform .28s var(--ease-spring);}
 .somm-flot.on{opacity:.92;pointer-events:auto;transform:translate(0,-50%);}
+/* pendant qu'on lit en faisant défiler, l'onglet se range au bord pour ne pas cacher le texte */
+.somm-flot.on.range{transform:translate(-72%,-50%);opacity:.6;}
 .somm-flot svg{width:16px;height:16px;}
 .somm-flot{touch-action:none;user-select:none;-webkit-user-select:none;}
 .somm-flot.drag{opacity:1;transition:opacity .2s;box-shadow:6px 10px 26px var(--shadow);}
@@ -1120,6 +1125,7 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .idx-entree svg:last-child{width:16px;height:16px;color:var(--text-mute);flex-shrink:0;}
 .idx-seg{margin:6px 0 12px;}
 .idx-multi{display:flex;align-items:center;gap:10px;width:100%;margin:10px 0 14px;padding:0 4px;border:0;background:none;color:var(--text-soft);font-family:var(--font-text);font-size:13.5px;text-align:left;cursor:pointer;}
+.idx-multi[hidden]{display:none;}
 .idx-multi .sw{flex-shrink:0;width:42px;height:25px;border-radius:20px;background:var(--border-strong);position:relative;transition:background .25s;}
 .idx-multi .sw::after{content:"";position:absolute;top:3px;left:3px;width:19px;height:19px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25);transition:left .28s var(--ease-spring);}
 .idx-multi.on{color:var(--text);}
@@ -1140,21 +1146,17 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 /* affichage en blocs ou en liste */.vue-tete{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
 .vue-tete>.page-title{flex:1;min-width:0;margin-bottom:0;}
 .vue-seg{flex:0 0 auto;margin:0;}
+.vue-seg[hidden]{display:none;}
 .vue-seg .seg-opt{flex:0 0 auto;width:38px;height:32px;padding:0;display:grid;place-items:center;}
 .vue-seg .seg-opt svg{width:17px;height:17px;}
 .vue-seg .seg-opt.active{color:var(--accent);}
-.arch-lot{display:grid;grid-template-columns:1fr 1fr;gap:16px 14px;}
-.arch .sem-bar,.arch .sem-pct{display:none;}
-.arch .sem-tile .sem-meta{margin-bottom:0;}
 .sem-grid.liste{grid-template-columns:1fr;gap:10px;}
-.sem-grid.liste .arch-lot{grid-template-columns:1fr;gap:10px;}
 .sem-grid.liste .sem-tile{display:grid;grid-template-columns:auto 1fr auto;column-gap:14px;align-items:center;padding:12px 14px;border-radius:16px;}
 .sem-grid.liste .sem-tile-top{grid-column:1;grid-row:1 / span 4;margin:0;}
 .sem-grid.liste .sem-tile .sem-badge{width:40px;height:40px;border-radius:12px;font-size:20px;}
 .sem-grid.liste .sem-tile .sem-name{grid-column:2;font-size:17px;}
 .sem-grid.liste .sem-tile .sem-sous,.sem-grid.liste .sem-tile .sem-meta{grid-column:2;}
 .sem-grid.liste .sem-tile .sem-meta{margin:2px 0 7px;}
-.sem-grid.liste .arch .sem-tile .sem-meta{margin-bottom:0;}
 .sem-grid.liste .sem-tile .sem-bar{grid-column:2;height:4px;}
 .sem-grid.liste .sem-tile .sem-pct{grid-column:3;grid-row:1 / span 4;margin:0;font-size:13px;font-weight:600;color:var(--text-soft);}
 .sem-grid.liste .edit-wrap>.sem-tile{padding-right:46px;}
@@ -1162,13 +1164,68 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .sem-grid.liste .sem-groupe{margin:16px 2px 2px;}
 .sem-grid.liste .sem-groupe:first-child{margin-top:0;}
 .sem-grid.liste .sem-groupe:not(.ouvert){margin-bottom:2px;}
-.sem-grid.liste .arch{margin-top:18px;}
 /* publier : semestre, matière, chapitres */.fp-retour{display:inline-flex;align-self:flex-start;align-items:center;gap:4px;margin:0 20px 0 15px;padding:6px 8px 6px 2px;border:0;background:none;cursor:pointer;color:var(--accent);font-family:var(--font-text);font-size:15px;font-weight:600;}
 .fp-retour svg{width:18px;height:18px;}
 .fp-chev{display:grid;place-items:center;flex-shrink:0;margin-left:6px;color:var(--text-mute);}
 .fp-chev svg{width:16px;height:16px;}
 .fp-ic{width:38px;height:38px;border-radius:11px;background:var(--surface-2,rgba(255,255,255,.05));display:grid;place-items:center;font-size:19px;flex-shrink:0;}
 .fp-ligne.fait .fp-ic{box-shadow:inset 0 0 0 1.5px var(--ok);}
+/* aide du premier lancement */.aide-acc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 16px 12px;margin:4px 0 16px;box-shadow:0 4px 18px var(--shadow);}
+.aide-acc[hidden]{display:none;}
+.aide-acc-t{font-family:var(--font-display);font-size:17px;font-weight:600;margin-bottom:10px;}
+.aide-acc-l{display:flex;align-items:center;gap:12px;padding:7px 0;}
+.aide-acc-l b{display:block;font-size:14px;}
+.aide-acc-l small{display:block;font-size:12.5px;color:var(--text-mute);line-height:1.35;}
+.aide-acc-ic{width:34px;height:34px;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex-shrink:0;}
+.aide-acc-ic svg{width:17px;height:17px;}
+.aide-acc-ok{display:block;width:100%;margin-top:8px;padding:11px;border:0;border-radius:12px;background:var(--accent);color:#fff;font-family:var(--font-text);font-size:14.5px;font-weight:600;cursor:pointer;}
+/* coller un cours */.colle-carte{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;margin:18px 0 8px;padding:26px 20px 18px;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:0 4px 18px var(--shadow);}
+.colle-carte-ic{width:52px;height:52px;border-radius:16px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;}
+.colle-carte-ic .ico{width:24px;height:24px;}
+.colle-carte-t{font-family:var(--font-display);font-size:19px;font-weight:600;}
+.colle-carte-s{font-size:14px;line-height:1.55;color:var(--text-soft);max-width:320px;}
+.colle-go{margin-top:8px;width:100%;}
+.colle-ou{border:0;background:none;color:var(--accent);font-family:var(--font-text);font-size:13.5px;font-weight:600;padding:8px;cursor:pointer;}
+.ajout-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.ajout-row .add-inline{margin-left:0;margin-right:0;}
+.ajout-row.seul{grid-template-columns:1fr;}
+.exo-row{margin-top:18px;grid-template-columns:1fr;}
+.colle-zone{min-height:170px;font-size:14px;line-height:1.5;}
+.colle-presse{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:0 0 8px;padding:11px;border-radius:12px;border:1px dashed var(--border-strong,var(--border));
+  background:var(--accent-soft);color:var(--accent);font-family:var(--font-text);font-size:14px;font-weight:600;cursor:pointer;}
+.colle-presse .ico{width:17px;height:17px;}
+.colle-apercu{margin-top:14px;display:flex;flex-direction:column;gap:8px;}
+.colle-apercu[hidden]{display:none;}
+.colle-resume{font-size:13px;color:var(--text-soft);}
+.colle-resume b{color:var(--accent);}
+.colle-sec{border:1px solid var(--border);border-radius:12px;padding:10px 12px;background:var(--surface);}
+.colle-sec-t{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;font-size:14px;}
+.colle-sec-t b{font-weight:700;line-height:1.35;}
+.colle-sec-x{font-size:12.5px;color:var(--text-mute);line-height:1.45;margin-top:4px;}
+.colle-sec-n{font-size:11.5px;font-weight:700;color:var(--accent);margin-top:5px;}
+.colle-pas-titre{flex-shrink:0;border:1px solid var(--border);background:none;border-radius:999px;padding:3px 9px;font-family:var(--font-text);font-size:11.5px;font-weight:600;color:var(--text-soft);cursor:pointer;}
+.card-body .card-list{margin:8px 0 10px;white-space:normal;}
+/* mon compte */.compte-qui{display:flex;align-items:center;gap:14px;padding:4px 4px 14px;}
+.compte-qui b{display:block;font-size:17px;}
+.compte-qui small{display:block;font-size:12.5px;color:var(--text-mute);line-height:1.4;margin-top:2px;}
+.compte-av{width:46px;height:46px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:20px;font-weight:700;flex-shrink:0;}
+.compte-lab{margin:6px 4px 6px;}
+.compte-seg{margin:0 0 14px;}
+.compte-quitter .cal-name{color:var(--danger,#d33);}
+.vide-actions{display:flex;flex-direction:column;gap:8px;margin-top:16px;width:100%;max-width:280px;}
+/* projets */.projet-alerte{display:flex;gap:10px;align-items:flex-start;margin:0 0 16px;padding:12px 14px;border-radius:14px;background:var(--warn-soft,rgba(255,170,0,.12));color:var(--text);font-size:14px;line-height:1.45;font-weight:600;}
+.projet-liens{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
+.projet-liens a{color:var(--accent);font-weight:600;font-size:14px;text-decoration:none;}
+.projet-retirer{display:block;margin:18px auto 0;}
+.cls-projet .ecue-top{align-items:center;gap:12px;}
+.cls-projet-ic{width:40px;height:40px;border-radius:12px;background:var(--accent-soft);display:grid;place-items:center;font-size:20px;flex-shrink:0;}
+/* nouvelle version prête */#maj-bandeau{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 18px);transform:translate(-50%,140%);z-index:9500;
+  display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:999px;border:0;cursor:pointer;
+  background:var(--text);color:var(--bg);font-family:var(--font-text);font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.3);
+  transition:transform .35s var(--ease-spring);white-space:nowrap;}
+#maj-bandeau.on{transform:translate(-50%,0);}
+#maj-bandeau b{color:var(--accent);font-weight:700;}
 /* QCM d'un thème du fil psycho */.fil-qcm{display:flex;align-items:center;gap:12px;width:100%;margin:14px 0 12px;padding:12px 14px;border-radius:14px;border:0;background:var(--accent);color:#fff;font-family:var(--font-text);text-align:left;cursor:pointer;box-shadow:0 6px 18px var(--accent-glow);transition:transform .18s var(--ease-spring);}
 .fil-qcm:active{transform:scale(.98);}
 .fil-qcm-ic{width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.18);display:grid;place-items:center;flex-shrink:0;}
@@ -1176,6 +1233,15 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .fil-qcm-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-size:15px;}
 .fil-qcm-txt small{font-size:12.5px;opacity:.85;}
 .fil-qcm>svg:last-child{width:16px;height:16px;flex-shrink:0;opacity:.8;}
+/* la tuile Archives, sous son titre */.arch-tuile{grid-column:1;}
+.arch-tuile .sem-bar{visibility:hidden;}
+.arch-tuile.ouvert{border-color:var(--accent);}
+.arch-chev{position:absolute;right:12px;bottom:10px;width:24px;height:24px;display:grid;place-items:center;color:var(--accent);transition:transform .25s var(--ease-spring);}
+.arch-chev svg{width:18px;height:18px;}
+.arch-tuile.ouvert .arch-chev{transform:rotate(180deg);}
+.sem-grid.liste .arch-tuile{padding-right:46px;}
+.sem-grid.liste .arch-chev{top:50%;bottom:auto;margin-top:-12px;}
+.arch-an-g{pointer-events:none;}
 /* archives */.arch{margin:26px 0 8px;grid-column:1 / -1;}
 .arch-tete{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border-radius:18px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:var(--font-text);text-align:left;cursor:pointer;}
 .arch-tete .sem-chev{margin-left:auto;transition:transform .25s;color:var(--accent);display:grid;place-items:center;}
@@ -1402,7 +1468,8 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .recap-item:last-child{margin-bottom:0;}
 .recap-num{font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--accent);line-height:1.3;flex-shrink:0;font-variant-numeric:tabular-nums;}
 .empty-note{font-size:14px;color:var(--text-soft);padding:20px;text-align:center;line-height:1.55;}
-/* écrans vides, partout le même modèle */.etat-vide{display:flex;flex-direction:column;align-items:center;text-align:center;padding:34px 22px;}
+/* écrans vides, partout le même modèle */.sem-grid>.etat-vide{grid-column:1 / -1;}
+.etat-vide{display:flex;flex-direction:column;align-items:center;text-align:center;padding:34px 22px;}
 .vide-ic{width:52px;height:52px;border-radius:16px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;margin-bottom:14px;}
 .vide-ic .ico{width:24px;height:24px;}
 .vide-t{font-family:var(--font-display);font-size:18px;font-weight:600;color:var(--text);margin-bottom:6px;}
@@ -1624,6 +1691,8 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .q-box{background:var(--surface);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px 24px;margin-bottom:16px;box-shadow:0 4px 20px var(--shadow);}
 .q-text{font-family:var(--font-display);font-weight:500;font-size:19px;line-height:1.4;color:var(--text);}
 .timer-track{height:4px;border-radius:4px;background:var(--accent-soft);overflow:hidden;margin-bottom:16px;}
+/* le temps restant s'affiche déjà en haut à droite : une seule barre à l'écran, celle de la progression */
+.timer-track{display:none;}
 .timer-bar{height:100%;border-radius:4px;background:var(--accent);transition:width 1s linear,background .3s;}
 .timer-bar.red{background:var(--ko);}
 .opts{display:flex;flex-direction:column;gap:9px;}
@@ -1695,6 +1764,12 @@ textarea::placeholder{color:var(--text-mute);}
 .glisse-av{animation:glisseAv .45s cubic-bezier(.22,.61,.36,1) both;}
 .glisse-ar{animation:glisseAr .45s cubic-bezier(.22,.61,.36,1) both;}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}.fc{transition:none;}}
+/* Fluidité : les éléments n'apparaissent en glissant qu'à l'arrivée sur un écran.
+   Un rafraîchissement sur place (cocher, filtrer, publier) ne refait pas l'animation. */
+html.calme .rise{animation:none!important;}
+/* Fluidité : le flou d'arrière-plan reste sur les barres et les voiles, qui passent au-dessus du contenu.
+   Sur les cartes, il coûtait cher au défilement (surtout sur iPhone) sans rien changer à l'œil. */
+.card,.ecue-card,.mode-card,.q-box,.auteur,.overview,.psy-nav-card{backdrop-filter:none;-webkit-backdrop-filter:none;}
 
 /* ===== PSYCHO — toujours violet, indépendant du thème ===== */#screen-psycho{--pac:var(--accent);--pac2:var(--accent-2);--psoft:var(--accent-soft);--pglow:var(--accent-glow);
   --psurface:var(--surface);--psurface2:var(--surface-2);--pborder:var(--border);--pborder2:var(--border-strong);
@@ -1720,7 +1795,10 @@ textarea::placeholder{color:var(--text-mute);}
 .psy-nav-card:hover{border-color:var(--pborder2);}
 .psy-nav-card{align-items:center!important;border-radius:var(--r-lg)!important;}
 .psy-nav-icon{width:44px!important;height:44px!important;border-radius:13px!important;}
-.psy-nav-arrow{margin-top:0!important;}
+.psy-nav-arrow{margin-top:0!important;display:grid;place-items:center;align-self:center;}
+.psy-nav-arrow svg{width:16px;height:16px;}
+.edt-diag-d{margin-top:14px;font-size:12px;color:var(--text-mute);}
+.edt-diag-d summary{cursor:pointer;}
 .psy-step{border-radius:var(--r-lg)!important;}
 .psy-info-card,.psy-spe-card{box-shadow:none!important;}
 .psy-nav-card:active{transform:scale(.99);}
@@ -1827,6 +1905,7 @@ textarea::placeholder{color:var(--text-mute);}
 <div id="screen-semestres" class="screen">
   <div class="wrap">
     <div class="home-icons rise">
+      <button class="icon-btn compte-btn" id="btn-compte" aria-label="Mon compte"></button>
       <button class="icon-btn" id="btn-edt" aria-label="Emploi du temps">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
       </button>
@@ -1841,9 +1920,10 @@ textarea::placeholder{color:var(--text-mute);}
       </button>
     </div>
 
+    <div id="aide-accueil" hidden></div>
     <div id="next-course" hidden></div>
 
-    <!-- Deux tuiles : mes semestres (avec les nouveautés) et la lecture à reprendre -->
+    <!-- Des tuiles carrées, deux par ligne : mes semestres, mes devoirs, puis la lecture à reprendre -->
     <div class="home-tuiles rise" style="animation-delay:.06s">
       <button class="home-tuile" id="sem-entry" type="button">
         <span class="nb" id="sem-entry-nb" hidden></span>
@@ -1851,11 +1931,14 @@ textarea::placeholder{color:var(--text-mute);}
         <span class="ht-t">Mes semestres</span>
         <span class="ht-s" id="sem-entry-sub"></span>
       </button>
+      <button class="home-tuile" id="dev-entry" type="button">
+        <span class="nb" id="dev-entry-nb" hidden></span>
+        <span class="ht-ic ic-box" id="dev-entry-ic"></span>
+        <span class="ht-t">Mes devoirs</span>
+        <span class="ht-s" id="dev-entry-sub"></span>
+      </button>
       <button class="home-tuile" id="home-reprise" type="button" hidden></button>
     </div>
-
-    <!-- « À savoir » : nouveaux cours + échéances annotées, dans un seul bloc -->
-    <div id="home-know" class="rise" style="animation-delay:.04s"></div>
 
 
     <!-- Mémo : bouton flottant, toujours accessible au pouce -->
@@ -2155,11 +2238,28 @@ textarea::placeholder{color:var(--text-mute);}
   </div>
 </div>
 
+<div id="screen-sites" class="screen">
+  <div class="wrap">
+    <button class="back-btn rise" id="btn-sites-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Accueil</button>
+    <h1 class="page-title rise" style="animation-delay:.03s">Mes sites</h1>
+    <div class="lex-sous rise" style="animation-delay:.05s">Tes liens utiles, à un geste</div>
+    <div id="sites-liste" class="rise" style="animation-delay:.07s"></div>
+  </div>
+</div>
+<div id="screen-mesdevoirs" class="screen">
+  <div class="wrap">
+    <button class="back-btn rise" id="btn-mesdevoirs-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Accueil</button>
+    <h1 class="page-title rise" style="animation-delay:.03s">Mes devoirs</h1>
+    <div class="lex-sous rise" style="animation-delay:.05s">Tes contrôles, tes rendus et tes notes, semaine par semaine</div>
+    <div id="home-know" class="rise" style="animation-delay:.07s"></div>
+    <button class="add-inline rise" id="mesdevoirs-ajout" type="button" style="animation-delay:.09s">+  Ajouter un devoir</button>
+  </div>
+</div>
 <div id="screen-index" class="screen">
   <div class="wrap">
     <button class="back-btn rise" id="btn-idx-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Rechercher</button>
     <h1 class="page-title rise" style="animation-delay:.03s">Index</h1>
-    <div class="lex-sous rise" style="animation-delay:.05s">Tes auteurs et tes notions, de la L1 à la L3</div>
+    <div class="lex-sous rise" id="idx-sous" style="animation-delay:.05s">Tes auteurs et tes notions, de la L1 à la L3</div>
     <div class="seg idx-seg rise" id="idx-genre" style="animation-delay:.06s">
       <button type="button" class="seg-opt active" data-g="auteur">Auteurs</button>
       <button type="button" class="seg-opt" data-g="notion">Notions</button>
@@ -2445,7 +2545,7 @@ function aRevoir(key){ const c = SRS[key]; return !!c && c.due <= today0(); }
 function dueCount(subj){
   let n = 0;
   ["fc","qcm","oq","tr"].forEach(m=>{
-    (subj[m]||[]).forEach((item,i)=>{ if(aRevoir(cardKey(subj.id,m,item,i))) n++; });
+    exos(subj, m).forEach((item,i)=>{ if(aRevoir(cardKey(subj.id,m,item,i))) n++; });
   });
   return n;
 }
@@ -2769,8 +2869,8 @@ function editCalendar(id){
 // Toucher : ouvrir. Glisser vers la gauche : supprimer. Appui long : modifier.
 function mesSites(){
   if(!Array.isArray(USER_SETTINGS.sites)){
-    // première ouverture : on reprend la page d'actualités qui existait déjà
-    USER_SETTINGS.sites = [{ nom:"Scolarité", url:newsUrl() }];
+    // première ouverture : je retrouve ma page de scolarité ; un autre compte part d'une liste vide
+    USER_SETTINGS.sites = isCiva() ? [{ nom:"Scolarité", url:newsUrl() }] : [];
   }
   return USER_SETTINGS.sites;
 }
@@ -2782,35 +2882,25 @@ function normaliserUrl(u){
   if(u && !/^https?:\/\//i.test(u)) u = "https://" + u;
   return u;
 }
-function openSitesSheet(){
-  document.querySelectorAll("#pick-sheet .pick-actions").forEach(n=>n.remove());
-  const box = document.getElementById("pick-list");
-  document.getElementById("pick-title").textContent = "Mes sites";
+// Mes sites : une page entière, pour qu'on la retrouve en revenant d'un site
+function openSitesSheet(){ renderSites(); showScreen("sites"); window.scrollTo(0, 0); }
+function renderSites(){
+  const box = document.getElementById("sites-liste"); if(!box) return;
   box.innerHTML = "";
   const sites = mesSites();
-  if(!sites.length){
-    const p = el("div","fs-hint");
-    p.textContent = "Aucun site pour l'instant. Ajoute ceux où tu vas souvent : ENT, Eprel, scolarité…";
-    p.style.margin = "0 4px 12px";
-    box.appendChild(p);
-  }
+  if(!sites.length) box.innerHTML = vide("lien", "Aucun site pour l'instant", "Ajoute ceux où tu vas souvent : ENT, Moodle, scolarité, emploi du temps…");
   sites.forEach((site,i)=>{
     const row = el("button","cal-row");
     row.type = "button";
     row.innerHTML = `<div class="cal-txt"><div class="cal-name">${esc(site.nom || domaineDe(site.url))}</div>` +
       `<div class="cal-url">${esc(domaineDe(site.url))}</div></div><span class="site-go">${chevronR}</span>`;
-    row.addEventListener("click",()=>{
-      haptic(); closePicker();
-      window.open(site.url, "_blank", "noopener");
-    });
-    onLongPress(row, ()=>{ closePicker(); setTimeout(()=>editSite(i), 320); });
-    const ligne = swipeRow(row, [{ label:"Modifier", doux:true, fn:()=>{
-      closePicker(); setTimeout(()=>editSite(i), 320);
-    }}, { label:"Supprimer", fn:()=>{
+    row.addEventListener("click",()=>{ haptic(); window.open(site.url, "_blank", "noopener"); });
+    onLongPress(row, ()=>editSite(i));
+    const ligne = swipeRow(row, [{ label:"Modifier", doux:true, fn:()=>editSite(i) }, { label:"Supprimer", fn:()=>{
       sites.splice(i, 1);
       saveContent();
       toast("Site supprimé.");
-      openSitesSheet();
+      renderSites();
     }}]);
     ligne.style.marginBottom = "9px";
     box.appendChild(ligne);
@@ -2819,7 +2909,7 @@ function openSitesSheet(){
   add.type = "button";
   add.textContent = "+  Ajouter un site";
   add.style.marginTop = "4px";
-  add.addEventListener("click",()=>{ haptic(); closePicker(); setTimeout(()=>editSite(-1), 320); });
+  add.addEventListener("click",()=>{ haptic(); editSite(-1); });
   box.appendChild(add);
   if(sites.length){
     const h = el("div","fs-hint");
@@ -2827,7 +2917,6 @@ function openSitesSheet(){
     h.style.cssText = "margin:10px 4px 4px;text-align:center";
     box.appendChild(h);
   }
-  document.getElementById("pick-sheet").classList.add("open");
 }
 // i = -1 : nouveau site
 function editSite(i){
@@ -2843,11 +2932,11 @@ function editSite(i){
     const site = { nom:(v.nom || "").trim() || domaineDe(url), url };
     if(i >= 0) sites[i] = site; else sites.push(site);
     saveContent();
-    setTimeout(openSitesSheet, 320);
+    renderSites();
   }, i >= 0 ? ()=>{
     sites.splice(i, 1);
     saveContent();
-    setTimeout(openSitesSheet, 320);
+    renderSites();
   } : null);
 }
 
@@ -2978,7 +3067,10 @@ async function openClasses(){
   }
   box.innerHTML = "";
   if(!MY_CLASSES.length){
-    box.innerHTML = vide("groupe", "Aucune classe pour l'instant", "Crée la tienne avec la roue dentée, ou demande son code à quelqu'un.");
+    box.innerHTML = vide("groupe", "Aucune classe pour l'instant", "Une classe, c'est un dossier de cours partagé. Crée la tienne, ou rejoins celle de quelqu'un avec son code.",
+      `<div class="vide-actions"><button class="btn" type="button" id="cls-vide-new">Créer une classe</button><button class="btn ghost" type="button" id="cls-vide-join">Rejoindre avec un code</button></div>`);
+    document.getElementById("cls-vide-new").addEventListener("click",()=>{ haptic(); createClass(); });
+    document.getElementById("cls-vide-join").addEventListener("click",()=>{ haptic(); joinClass(); });
     return;
   }
   MY_CLASSES.forEach(c=>{
@@ -3171,10 +3263,11 @@ async function openClass(c){
   const box = document.getElementById("class-inner");
   box.innerHTML = `<div class="empty-note">Chargement…</div>`;
 
-  let items = [], membres = [], monRole = c.role;
+  let items = [], membres = [], monRole = c.role, projetsCls = [];
   try{
     const a = await api("class_items", { class_id:c.id });
     items = a.items || [];
+    projetsCls = (a.projets || []).filter(it=>PROJETS[projetDeItem(it)]);
     const b = await api("class_members", { class_id:c.id });
     membres = b.membres || []; monRole = b.monRole || monRole;
   }catch(e){
@@ -3253,6 +3346,27 @@ async function openClass(c){
   swc.style.marginBottom = "16px";
   box.appendChild(swc);
 
+  // les projets partagés ici : chacun les ajoute à ses projets s'il le veut
+  if(projetsCls.length){
+    const lab = el("div","qc-group"); lab.textContent = "Projets"; box.appendChild(lab);
+    projetsCls.forEach(it=>{
+      const pid = projetDeItem(it), pj = PROJETS[pid];
+      const dejaLa = mesProjets().includes(pid) || (pid === "psycho" && isCloseFriend());
+      const card = el("button","ecue-card cls-mat cls-projet"); card.type = "button";
+      card.innerHTML = `<div class="ecue-top"><div class="cls-projet-ic">${pj.icone}</div><div class="ecue-info"><div class="ecue-name">${esc(pj.titre)}</div>
+        <div class="ecue-meta">${dejaLa ? `<span class="ecue-status ajour">✓ Dans tes projets</span>` : `<span class="cls-mat-n">Partagé par ${esc(it.author)} · touche pour l'ajouter</span>`}</div></div><span class="ecue-arrow">${dejaLa ? "→" : "+"}</span></div>`;
+      card.addEventListener("click",()=>{
+        haptic();
+        if(dejaLa){ if(pid === "psycho" && isCloseFriend()) renderPsycho(); else renderProjet(pid); return; }
+        follows().push({ type:"projet", item_id:it.id, class_id:c.id, projet:pid });
+        saveContent();
+        toast("« " + pj.titre + " » est dans tes projets, sur l'écran des semestres.");
+        openClass(c);
+      });
+      box.appendChild(card);
+    });
+    const lab2 = el("div","qc-group"); lab2.textContent = "Cours"; box.appendChild(lab2);
+  }
   if(!items.length){
     const e = el("div");
     e.innerHTML = vide("vide", "Aucun cours publié", gere ? "Touche « Publier un de mes cours » pour en partager un." : "Les cours partagés dans cette classe apparaîtront ici.");
@@ -3965,9 +4079,10 @@ function choisirCoursDevoir(c){
 // ── Cours : tes matières, chapitre par chapitre, ce qui est déjà dans la classe en vert ──
 async function publishFromClass(c){
   const mats = SUBJECTS.filter(s=>((s.cm||[]).concat(s.td||[])).some(ch=>!ch._shared));
-  if(!mats.length){ toast("Aucun chapitre à publier pour l'instant."); return; }
+  const projs = projetsPubliables();
+  if(!mats.length && !projs.length){ toast("Aucun chapitre à publier pour l'instant."); return; }
   let items = [];
-  try{ items = (await api("class_items", { class_id:c.id })).items || []; }catch(e){}
+  try{ const o = await api("class_items", { class_id:c.id }); items = (o.items || []).concat(o.projets || []); }catch(e){}
   const dejaPar = {};                       // clé → { mien, miens, auteurs }
   items.forEach(it=>{
     const k = cleEnvoi(it.kind, it.subject_title, it.label);
@@ -3993,7 +4108,7 @@ async function publishFromClass(c){
   // comme sur l'accueil : d'abord le semestre, puis la matière, puis ses chapitres
   const niv = { sem:null, mat:null };
   const sems = [...new Set(tri.map(sj=>SEMESTRES[sj.id] || 0))].sort((a,b)=>b - a);
-  if(sems.length === 1) niv.sem = sems[0];
+  if(sems.length === 1 && !projs.length) niv.sem = sems[0];
   const compte = sj=>{ const ls = lignesDe(sj); return { n:ls.length, k:ls.filter(l=>dejaPar[l.cle]).length }; };
   const etatDe = (n, k)=>!n ? null : k === n ? { txt:"✓ Tout publié", cls:"ok" } : k ? { txt:k + " sur " + n, cls:"mute" } : null;
   // tout ce qui n'est pas encore dans la classe, pour une ou plusieurs matières
@@ -4067,7 +4182,25 @@ async function publishFromClass(c){
         sous:ms.length + " matière" + (ms.length > 1 ? "s" : ""), cls:n && k === n ? "fait" : "", etat:etatDe(n, k), chev:true,
         onTap:()=>{ niv.sem = sem; rendre(true); } });
     });
-    feuillePartage("Que publier ?", "Choisis un semestre, puis une matière.", groupes, { enHaut });
+    // les projets se publient d'un geste, comme une matière entière
+    if(projs.length){
+      groupes.push({ titre:"Projets", lignes:projs.map(pid=>{
+        const pj = PROJETS[pid], cle = cleEnvoi("revision", "projet:" + pid), d = dejaPar[cle];
+        return { nom:pj.titre, ic:pj.icone, sous:pj.sous, cls:d ? "fait" : "",
+          etat:d ? { txt:d.mien ? "✓ Publié" : "✓ Déjà là", cls:"ok" } : null,
+          onTap:async ()=>{
+            if(d){ toast(d.mien ? "Déjà publié. Glisse vers la gauche pour le retirer." : "Déjà publié par " + d.auteurs.join(", ") + "."); return; }
+            try{
+              const it = (await api("item_publish", { class_id:c.id, kind:"revision", subject_title:"projet:" + pid, payload:{ projet:pid, label:pj.titre } })).item || { id:"", author:whoAmI() };
+              dejaPar[cle] = { mien:it, miens:[it], auteurs:[whoAmI()] };
+              toast("Publié. Les membres peuvent l'ajouter à leurs projets.");
+              rendre(); openClass(c);
+            }catch(e){ toast("La publication n'a pas marché. Vérifie ta connexion."); }
+          },
+          actions:d && d.mien ? [{ label:"Dépublier", fn:()=>{ closePicker(); setTimeout(()=>depublierPlusieurs(c, d.miens, pj.titre), 320); } }] : null };
+      }) });
+    }
+    feuillePartage("Que publier ?", projs.length ? "Choisis un semestre, puis une matière. Ou partage un projet." : "Choisis un semestre, puis une matière.", groupes, { enHaut });
   };
   rendre();
 }
@@ -5219,8 +5352,12 @@ function newId(){ return "u" + Date.now().toString(36) + Math.floor(Math.random(
 // Un semestre a besoin d'au moins une UE pour accueillir des matières :
 // on en crée une par défaut, renommable plus tard.
 function addSemestre(){
+  // le prochain numéro libre, déjà écrit : on n'a plus qu'à toucher « Créer »
+  const pris = Object.values(UES).map(u=>u.sem).filter(Boolean);
+  let prochain = pris.length ? Math.floor(Math.max(...pris)) + 1 : 1;
+  if(prochain > 12) prochain = [...Array(12)].map((_,i)=>i + 1).find(k=>!pris.includes(k)) || 12;
   openForm("Nouveau semestre", [
-    { key:"num", label:"Numéro du semestre", type:"number", placeholder:"1" }
+    { key:"num", label:"Numéro du semestre", type:"number", value:String(prochain), hint:"Le semestre 5, c'est le premier de la L3." }
   ], "Créer", v=>{
     const n = parseInt(v.num, 10);
     if(!n || n < 1 || n > 12) return "Entre un numéro entre 1 et 12.";
@@ -5289,11 +5426,12 @@ function addMatiere(){
   if(!sem) return;
   openForm("Nouvelle matière", [
     { key:"title", label:"Nom de la matière", placeholder:"Sociologie de l'éducation" },
-    { key:"ecue",  label:"Code (facultatif)", placeholder:"19.2" },
-    { key:"ue",    label:"UE (facultatif)", placeholder:"Mes matières",
-      hint:"Laisse vide pour ranger la matière avec les autres." },
-    { key:"uenum", label:"Numéro de l'UE (facultatif)", placeholder:"19",
-      hint:"Sert à ranger les UE dans l'ordre croissant." }
+    { key:"ecue",  label:"Code (facultatif)", placeholder:"Ex. 5.2",
+      hint:"Le code de la matière sur ton relevé de notes." },
+    { key:"ue",    label:"UE (facultatif)", placeholder:"Ex. Sciences sociales",
+      hint:"L'unité d'enseignement. Laisse vide pour ranger la matière avec les autres." },
+    { key:"uenum", label:"Numéro de l'UE (facultatif)", placeholder:"Ex. 2",
+      hint:"Sert à ranger les UE dans l'ordre." }
   ], "Créer", v=>{
     if(!v.title) return "Donne un nom à la matière.";
     const ueKey = trouverOuCreerUE(sem, v.ue, v.uenum);
@@ -5310,17 +5448,265 @@ function addMatiere(){
 // ── Créer un chapitre (CM, TD, Devoir… le nom est libre) ──
 function addChapitre(type){
   if(!curSubj) return;
-  const arr = type === "cm" ? curSubj.cm : curSubj.td;
+  const n = ((type === "cm" ? curSubj.cm : curSubj.td) || []).length + 1;
   openForm("Nouveau chapitre", [
-    { key:"label", label:"Nom du chapitre", placeholder: type==="cm" ? "CM 1" : "TD 1",
-      hint:"Tu peux écrire ce que tu veux : CM 1, TD 3, Devoir, Révisions…" }
+    { key:"label", label:"Nom du chapitre", placeholder: (type === "cm" ? "CM " : "TD ") + n + " · 12/09",
+      hint:"Mets la date : tu verras d'un coup d'œil ce qui manque. Un nom qui commence par TD va dans les TD, par CM dans les CM." }
   ], "Créer", v=>{
     if(!v.label) return "Donne un nom au chapitre.";
+    // le nom décide : « TD 3 » écrit depuis les CM part dans les TD
+    const dest = /^\s*td\b/i.test(v.label) ? "td" : /^\s*cm\b/i.test(v.label) ? "cm" : type;
+    if(!curSubj[dest]) curSubj[dest] = [];
+    const arr = curSubj[dest];
     arr.push({ label:v.label, sections:[], recap:[], _own:true });
-    if(type === "cm") curCmIdx = arr.length - 1; else curTdIdx = arr.length - 1;
+    if(dest === "cm") curCmIdx = arr.length - 1; else curTdIdx = arr.length - 1;
+    saveContent();
+    if(dest !== type){ setTab(dest === "cm" ? 0 : 1); toast("Rangé dans les " + dest.toUpperCase() + "."); }
+    else renderCoursePane(dest);
+  });
+}
+
+// ══════════════════════════════════════════════════
+// COLLER UN COURS : un texte brut (Word, PDF, Notes, Google Docs…)
+// découpé en sections { title, body, list }, comme les cours écrits à la main.
+// Rien n'est inventé : on range le texte tel quel, on ne réécrit rien.
+// ══════════════════════════════════════════════════
+const COLLE_PUCE = /^\s*(?:[-=]+>|[-–—•●◦▪▫■□➢➤→►*·✓✔]|o(?=\s)|\d{1,2}[.)](?=\s)|[a-z][.)](?=\s))\s*(.*)$/;
+const COLLE_NUM_TITRE = /^\s*((?:[IVX]{1,5}|[A-H])\s*[.)\-–—:]|\d{1,2}(?:\.\d{1,2}){1,3}\s*[.)\-–—:]?|\d{1,2}\s*[.)\-–—:])\s+(\S.*)$/;
+const COLLE_MOT_TITRE = /^(introduction|conclusion|bibliographie|r[ée]f[ée]rences|plan( du cours)?|r[ée]sum[ée]|synth[èe]se|d[ée]finitions?|vocabulaire|lexique|[àa] retenir|partie\s+\S+|chapitre\s+\S+|th[èe]me\s+\S+|levier\s+\S+|axe\s+\S+|texte\s+\d+|exercice\s+\d+|question\s+\d+|s[ée]ance\s+\d+|cours\s+\d+|(cm|td)\s*\d+)\b/i;
+const COLLE_FIN_PHRASE = /[.!?…:;]\s*$/;
+const COLLE_FIN_TITRE = /[.!…:;,]\s*$/;
+const COLLE_MOT_VIDE = /(^|\s)(ne|de|du|des|la|le|les|l'|d'|un|une|et|ou|à|au|aux|en|que|qui|pour|par|sur|dans|avec|est|sont|son|sa|ses|leur|leurs|ce|cette|ces)$/i;
+const COLLE_PAGE = /^\s*(page\s*)?\d{1,3}(\s*(\/|sur)\s*\d{1,3})?\s*$/i;
+
+function colleNettoyer(t){
+  return String(t || "")
+    .replace(/\r\n?/g, "\n")
+    .replace(/[   ]/g, " ")
+    .replace(/[​-‍﻿]/g, "")
+    .replace(/\t+/g, " ")
+    .replace(/[ ]{2,}/g, " ")
+    .split("\n").map(l=>l.trim());
+}
+// « Terme : définition » (ou « Terme (précision) : … », « Terme = … ») sur une ligne
+function colleDefinition(l){
+  if(/https?:|www\./i.test(l)) return null;
+  const m = l.match(/^([^:=]{2,60}?)\s*(\([^)]{1,60}\))?\s*(?::|\s=\s)\s*(.{8,})$/);
+  if(!m) return null;
+  const terme = m[1].trim();
+  if(terme.split(/\s+/).length > 6 || /[.!?;]/.test(terme) || !/^[A-Za-zÀ-ÿ]/.test(terme)) return null;
+  if(typeof LEX_TERME_EXCLU !== "undefined" && LEX_TERME_EXCLU.test(terme)) return null;
+  return { terme, prec:(m[2] || "").trim(), def:m[3].trim() };
+}
+function colleMajuscules(l){
+  const lettres = l.replace(/[^A-Za-zÀ-ÿ]/g, "");
+  return lettres.length >= 4 && lettres === lettres.toUpperCase() && /[A-ZÀ-Þ]/.test(lettres);
+}
+// une ligne peut-elle être un titre ? (on vérifie ensuite qu'il a bien du contenu)
+function colleTitre(l, avant, apres, pasTitre){
+  const forcé = l.match(/^#{1,6}\s*(.+)$/);
+  if(forcé) return { titre:forcé[1].trim(), sur:true };
+  if(pasTitre && pasTitre.has(l)) return null;
+  if(l.length > 90 || /[.,;]$/.test(l)) return null;
+  // ce qui suit montre que la ligne annonce quelque chose : une phrase, une liste, une ligne plus longue
+  const apresOK = !!apres && (apres.length > l.length || /[.!?…:]$/.test(apres) || COLLE_PUCE.test(apres));
+  const avantOK = !avant || COLLE_FIN_PHRASE.test(avant) || COLLE_PUCE.test(avant) || /[)»"”]$/.test(avant);
+  // une puce (tiret, rond…) n'est jamais un titre ; « 1. » ou « A. » peut l'être
+  if(/^\s*(?:[-=]+>|[-–—•●◦▪▫■□➢➤→►*·✓✔]|o\s)/.test(l)) return null;
+  const n = l.match(COLLE_NUM_TITRE);
+  if(n && n[2].length <= 80 && !/[.;,:]$/.test(n[2]) && !/\.\s/.test(n[2]) && /^[A-ZÀ-Þ«"“]/.test(n[2])) return { titre:l, num:true };
+  if(COLLE_MOT_TITRE.test(l) && l.length <= 90) return { titre:l.replace(/\s*:\s*$/, ""), sur:true };
+  // la ligne suivante continue la phrase : ce n'est pas un titre
+  if(apres && /^[a-zà-ÿ]/.test(apres) && !colleMajuscules(l)) return null;
+  const d = colleDefinition(l);
+  // « Klein : deux positions » est un titre ; « Habitus : système de dispositions… » une définition
+  if(d && !(l.length <= 70 && d.def.length <= 45 && !COLLE_FIN_TITRE.test(l) && avantOK && apresOK && apres.length > l.length)) return null;
+  if(/:$/.test(l)) return null;                          // « Les trois formes : » annonce une liste
+  if(colleMajuscules(l) && l.length <= 80) return { titre:l };
+  // une ligne courte, isolée, qui commence par une majuscule et ne finit pas une phrase
+  const coeur = l.replace(/^[^\p{L}\p{N}«"“]+/u, "");
+  if(coeur.length <= 72 && coeur.split(/\s+/).length <= 11 && /^[A-ZÀ-Þ«"“0-9]/.test(coeur) && !COLLE_FIN_TITRE.test(l) && !COLLE_MOT_VIDE.test(l) && avantOK && apresOK)
+    return { titre:l };
+  return null;
+}
+function colleDecouper(texte, pasTitre){
+  let lignes = colleNettoyer(texte);
+  // en-têtes et pieds de page répétés (PDF), numéros de page : on les enlève
+  const vus = {};
+  lignes.forEach(l=>{ if(l && l.length <= 60) vus[l] = (vus[l] || 0) + 1; });
+  lignes = lignes.filter(l=>!(l && ((vus[l] >= 3 && !COLLE_PUCE.test(l)) || COLLE_PAGE.test(l))));
+
+  // 1. on étiquette chaque ligne : vide, titre, puce, définition, texte
+  const items = [];
+  const prochaine = i=>{ for(let k = i + 1; k < lignes.length; k++) if(lignes[k]) return lignes[k]; return ""; };
+  lignes.forEach((l,i)=>{
+    if(!l){ items.push({ t:"vide" }); return; }
+    const avant = i > 0 ? lignes[i - 1] : "";
+    // la ligne d'avant était pleine et sa phrase continue : c'est la suite, coupée par la mise en page
+    const ti = colleTitre(l, avant, prochaine(i), pasTitre);
+    if(avant && avant.length >= 55 && !COLLE_FIN_PHRASE.test(avant) && !/^#/.test(l) && !/^\s*(?:[-=]+>|[-–—•●◦▪▫■□➢➤→►*·✓✔])/.test(l)
+       && (!ti || /^[a-zà-ÿ]/.test(l) || COLLE_MOT_VIDE.test(avant))){
+      items.push({ t:"texte", txt:l }); return;
+    }
+    if(ti){ items.push({ t:"titre", txt:ti.titre, sur:!!ti.sur, num:!!ti.num, brut:l }); return; }
+    const p = l.match(COLLE_PUCE);
+    if(p && p[1]){ items.push({ t:"puce", txt:p[1] }); return; }
+    if(colleDefinition(l)){ items.push({ t:"puce", txt:l, def:true }); return; }
+    items.push({ t:"texte", txt:l });
+  });
+  // le niveau d'un titre numéroté : I. > A. > 1. > 1.1
+  const niveau = it=>{
+    const l = it.brut || "";
+    if(/^\s*[IVX]{1,5}\s*[.)\-–—:]/.test(l)) return 1;
+    if(/^\s*[A-H]\s*[.)\-–—:]/.test(l)) return 2;
+    if(/^\s*\d{1,2}\.\d/.test(l)) return 4;
+    if(/^\s*\d{1,2}/.test(l)) return 3;
+    return 0;
+  };
+  const versPuce = it=>{ const p = it.brut.match(COLLE_PUCE); return it.num || p ? { t:"puce", txt:p && p[1] ? p[1] : it.brut } : { t:"texte", txt:it.brut }; };
+  const suivant = i=>{ let k = i + 1; while(k < items.length && items[k].t === "vide") k++; return k; };
+  // « 1) … 2) … 3) … » à la suite, sans rien entre : une liste, pas des titres
+  for(let i = 0; i < items.length; i++){
+    if(items[i].t !== "titre" || !items[i].num) continue;
+    const run = [i]; let k = suivant(i);
+    while(k < items.length && items[k].t === "titre" && items[k].num && niveau(items[k]) === niveau(items[i])){ run.push(k); k = suivant(k); }
+    if(run.length > 1) run.forEach(j=>{ items[j] = versPuce(items[j]); });
+  }
+  // un titre suivi d'un titre plus précis est celui d'une partie : « I. … › A. … ».
+  // Un « titre » sans rien dessous n'en est pas un.
+  for(let i = items.length - 1; i >= 0; i--){
+    const it = items[i]; if(it.t !== "titre") continue;
+    const k = suivant(i);
+    const enfant = k < items.length && items[k].t === "titre" ? items[k] : null;
+    if(enfant && it.num && enfant.num && niveau(it) < niveau(enfant)){
+      enfant.txt = it.txt + " › " + enfant.txt; items[i] = { t:"vide" }; continue;
+    }
+    if(it.sur) continue;
+    if(k >= items.length || enfant) items[i] = versPuce(it);
+  }
+
+  // 2. on recolle les lignes coupées (PDF) et on range dans des sections
+  const sections = [];
+  let cur = null;
+  const nouvelle = titre=>{ cur = { title:titre, blocs:[] }; sections.push(cur); };
+  let dernier = null, videAvant = false;
+  items.forEach(it=>{
+    if(it.t === "vide"){ videAvant = true; return; }
+    if(it.t === "titre"){ nouvelle(it.txt); cur.brut = it.brut; dernier = null; videAvant = false; return; }
+    if(!cur) nouvelle("");
+    // une ligne coupée par la mise en page : la précédente était pleine et ne finissait pas la phrase
+    const pleine = dernier && dernier.der.length >= 55;
+    const suite = dernier && !videAvant && it.t === "texte" &&
+      ((/[a-zà-ÿ]-$/.test(dernier.txt) && /^[a-zà-ÿ]/.test(it.txt)) || (pleine && !COLLE_FIN_PHRASE.test(dernier.txt)));
+    if(suite){
+      dernier.txt = /[a-zà-ÿ]-$/.test(dernier.txt) && /^[a-zà-ÿ]/.test(it.txt) ? dernier.txt.slice(0, -1) + it.txt : dernier.txt + " " + it.txt;
+      dernier.der = it.txt; videAvant = false; return;
+    }
+    const b = { t:it.t === "puce" ? "puce" : "texte", txt:it.txt, der:it.txt, def:!!it.def, apresVide:videAvant };
+    cur.blocs.push(b); dernier = b; videAvant = false;
+  });
+
+  // le titre du document, seul avant le premier titre, redit le nom du chapitre : on le laisse
+  if(sections.length > 1 && !sections[0].title && sections[0].blocs.length === 1){
+    const l = sections[0].blocs[0].txt;
+    if(l.length <= 80 && !COLLE_FIN_PHRASE.test(l)) sections.shift();
+  }
+  // 3. chaque section : texte puis puces, ou les deux mêlés dans l'ordre
+  let nDef = 0;
+  const enPuce = txt=>{
+    const d = colleDefinition(txt);
+    if(d){ nDef++; return "<b>" + esc(d.terme) + "</b>" + (d.prec ? " " + esc(d.prec) : "") + " : " + esc(d.def); }
+    return esc(txt);
+  };
+  const out = sections.filter(s=>s.blocs.length || s.title).map((s,i)=>{
+    const sec = { title:s.title || (sections.length > 1 ? "Introduction" : "Le cours") };
+    if(s.brut) Object.defineProperty(sec, "_brut", { value:s.brut, enumerable:false });
+    const b = s.blocs;
+    const premPuce = b.findIndex(x=>x.t === "puce");
+    const melange = premPuce >= 0 && b.slice(premPuce).some(x=>x.t === "texte");
+    const texte = arr=>arr.map((x,k)=>(k && x.apresVide ? "\n\n" : k ? "\n" : "") + esc(x.txt)).join("");
+    if(!melange){
+      const txt = b.filter(x=>x.t === "texte"), puces = b.filter(x=>x.t === "puce");
+      if(txt.length) sec.body = texte(txt);
+      if(puces.length) sec.list = puces.map(x=>enPuce(x.txt));
+    } else {
+      // l'ordre compte : les puces restent à leur place dans le texte
+      let html = "", liste = null;
+      b.forEach(x=>{
+        if(x.t === "puce"){
+          if(!liste){ liste = []; }
+          liste.push("<li><span class=\"li-text\">" + enPuce(x.txt) + "</span></li>");
+        } else {
+          if(liste){ html += "<ul class=\"card-list\">" + liste.join("") + "</ul>"; liste = null; }
+          html += (html && !/<\/ul>$/.test(html) ? (x.apresVide ? "\n\n" : "\n") : "") + esc(x.txt);
+        }
+      });
+      if(liste) html += "<ul class=\"card-list\">" + liste.join("") + "</ul>";
+      sec.body = html;
+    }
+    return sec;
+  }).filter(s=>s.body || (s.list && s.list.length));
+  return { sections:out, nDef };
+}
+
+// La feuille « Coller ton cours » : on colle, on voit tout de suite le découpage, on ajoute.
+function collerCours(type, ch){
+  let pasTitre = new Set(), dernier = null;
+  openForm("Coller ton cours", [
+    { key:"txt", label:"Le texte de ton cours", type:"area", placeholder:"Colle ici ton cours : Word, PDF, Notes, Google Docs…",
+      hint:"Les titres, les listes et les définitions (« Terme : … ») sont repérés tout seuls. Pour forcer un titre, commence la ligne par #." }
+  ], "Ajouter au cours", v=>{
+    const r = colleDecouper(v.txt, pasTitre);
+    if(!r.sections.length) return "Colle d'abord le texte de ton cours.";
+    r.sections.forEach(sec=>{ const o = { title:sec.title }; if(sec.body) o.body = sec.body; if(sec.list) o.list = sec.list; ch.sections.push(o); });
+    marquerRetouche(type);
     saveContent();
     renderCoursePane(type);
+    toast(r.sections.length > 1 ? r.sections.length + " sections ajoutées." : "Section ajoutée.");
   });
+  const ta = document.getElementById("fs-f-txt");
+  ta.classList.add("colle-zone"); ta.rows = 9;
+  const champ = ta.parentElement;
+  // coller d'un geste, quand le téléphone le permet
+  if(navigator.clipboard && navigator.clipboard.readText){
+    const b = el("button","colle-presse"); b.type = "button";
+    b.innerHTML = ICO("presse") + "Coller depuis le presse-papiers";
+    b.addEventListener("click", async ()=>{
+      haptic();
+      try{ const t = await navigator.clipboard.readText(); if(t){ ta.value = t; majApercu(); } else toast("Le presse-papiers est vide."); }
+      catch(e){ toast("Appuie longuement dans la zone de texte, puis « Coller »."); }
+    });
+    champ.insertBefore(b, ta);
+  }
+  const ap = el("div","colle-apercu"); champ.appendChild(ap);
+  const majApercu = ()=>{
+    const r = colleDecouper(ta.value, pasTitre);
+    ap.innerHTML = "";
+    if(!r.sections.length){ ap.hidden = true; return; }
+    ap.hidden = false;
+    const nPuces = r.sections.reduce((k,x)=>k + (x.list||[]).length + ((x.body||"").match(/<li>/g)||[]).length, 0);
+    const t = el("div","colle-resume");
+    t.innerHTML = `<b>Aperçu</b> · ${r.sections.length} section${r.sections.length > 1 ? "s" : ""}` +
+      (nPuces ? ` · ${nPuces} puce${nPuces > 1 ? "s" : ""}` : "") + (r.nDef ? ` · ${r.nDef} définition${r.nDef > 1 ? "s" : ""}` : "");
+    ap.appendChild(t);
+    if(r.nDef){ const d = el("div","fs-hint"); d.textContent = "Les définitions iront aussi dans le lexique et les flashcards de la matière."; ap.appendChild(d); }
+    r.sections.forEach(sec=>{
+      const c = el("div","colle-sec");
+      const extrait = stripTags((sec.body || "") + " " + (sec.list || []).join(" · ")).replace(/\s+/g, " ").trim();
+      const nl = (sec.list||[]).length + ((sec.body||"").match(/<li>/g)||[]).length;
+      c.innerHTML = `<div class="colle-sec-t"><b>${esc(sec.title)}</b></div><div class="colle-sec-x">${esc(extrait.slice(0, 120))}${extrait.length > 120 ? "…" : ""}</div>` +
+        (nl ? `<div class="colle-sec-n">${nl} puce${nl > 1 ? "s" : ""}</div>` : "");
+      // un titre repéré à tort : on le rend au texte
+      if(sec._brut && !/^#/.test(sec._brut)){
+        const x = el("button","colle-pas-titre"); x.type = "button"; x.textContent = "Pas un titre";
+        x.addEventListener("click",()=>{ haptic(); pasTitre.add(sec._brut); majApercu(); });
+        c.querySelector(".colle-sec-t").appendChild(x);
+      }
+      ap.appendChild(c);
+    });
+  };
+  ta.addEventListener("input",()=>{ clearTimeout(dernier); dernier = setTimeout(majApercu, 180); });
+  ap.hidden = true;
 }
 
 // ── Ajouter une section à un chapitre ──
@@ -5401,11 +5787,28 @@ if(window.ResizeObserver){
   if(pi && window.MutationObserver) new MutationObserver(()=>poserEntete(document.getElementById("screen-psycho"))).observe(pi, { childList:true });
 })();
 // à quelle profondeur est chaque écran : sert à savoir si on avance ou si on revient
-const PROFONDEUR = { login:0, pick:0, welcome:0, semestres:0, semchoice:1, edt:1, classes:1, search:1, index:2, planning:1, psycho:1,
+const PROFONDEUR = { login:0, pick:0, welcome:0, semestres:0, semchoice:1, edt:1, classes:1, search:1, mesdevoirs:1, sites:1, index:2, planning:1, psycho:1,
   class:2, shared:3, subjects:2, split:3, qcmchoix:4, lexique:4, synthese:4, auteurs:4, devoirs:4, session:5 };
 function profondeurEcran(id){ return PROFONDEUR[id] ?? 2; }
+let CALME_T = null, SANS_ENTREE = false;
+// une page qui en remplace une autre dans le même écran (projets) : elle entre comme une page
+function entreeDansEcran(cible){
+  if(SANS_ENTREE){ SANS_ENTREE = false; return; }
+  if(document.documentElement.getAttribute("data-screen") !== "psycho") return;   // showScreen s'en charge
+  document.documentElement.classList.remove("calme");
+  clearTimeout(CALME_T); CALME_T = setTimeout(()=>document.documentElement.classList.add("calme"), 900);
+  window.scrollTo(0, 0);
+  if(cible){ cible.classList.remove("glisse-av"); void cible.offsetWidth; cible.classList.add("glisse-av");
+    cible.addEventListener("animationend", ()=>cible.classList.remove("glisse-av"), { once:true }); }
+}
 function showScreen(id){
   lecteurStop();
+  // arrivée sur un autre écran : les animations d'entrée jouent, puis on se calme.
+  // Le même écran redessiné (cocher une étape, filtrer) reste calme.
+  if(document.documentElement.getAttribute("data-screen") !== id){
+    document.documentElement.classList.remove("calme");
+    clearTimeout(CALME_T); CALME_T = setTimeout(()=>document.documentElement.classList.add("calme"), 900);
+  }
   if(id !== "split" && typeof fermerRecherchePage === "function") fermerRecherchePage();
   if(id === "semestres") renderReprise();
   requestAnimationFrame(()=>ajusterBas(document.querySelector("#screen-" + id + " > .wrap")));
@@ -5424,7 +5827,8 @@ function showScreen(id){
   // le canvas <html> peint toute la surface (sous les barres Safari + safe areas PWA)
   document.documentElement.setAttribute("data-screen", id);
   refreshFab(id);
-  window.scrollTo(0,0);
+  // un nouvel écran commence en haut ; le même écran redessiné garde sa place
+  if(avant !== id) window.scrollTo(0,0);
   requestAnimationFrame(()=>majProgression());   // l'onglet sommaire n'existe que dans un cours
 }
 
@@ -5562,7 +5966,7 @@ function renderRecherche(nouvelle){
   box.appendChild(entreeIndex());
   const query = norm(q).trim();
   if(query.length < 2){
-    box.insertAdjacentHTML("beforeend", vide("loupe", "Cherche dans tous tes cours", "L1, L2 et L3 : une notion, un auteur, un mot. Tape au moins 2 lettres."));
+    box.insertAdjacentHTML("beforeend", vide("loupe", "Cherche dans tous tes cours", (isCiva() ? "L1, L2 et L3 : " : "") + "une notion, un auteur, un mot. Tape au moins 2 lettres."));
     return;
   }
   if(!SEARCH_INDEX) SEARCH_INDEX = buildIndex();
@@ -5661,6 +6065,7 @@ function renderRecherche(nouvelle){
 // Les endroits où ils sont cités sont repérés dans le texte des cours, pas devinés.
 // ══════════════════════════════════════════════════
 var INDEX_GLOBAL = null;
+var SEARCH_SIG = "";
 function texteSection(sec){ return norm((sec.title||"") + " " + stripTags((sec.body||"") + " " + (sec.list||[]).join(" "))); }
 // toutes les sections de tous les cours, aplaties une fois pour toutes
 function sectionsGlobales(){
@@ -5670,8 +6075,14 @@ function sectionsGlobales(){
   }))));
   return out;
 }
-function construireIndexGlobal(){
-  const sections = sectionsGlobales();
+function* genIndexGlobal(){
+  const sections = [];
+  for(const subj of SUBJECTS){
+    ["cm","td"].forEach(type=>(subj[type]||[]).forEach((ch,ci)=>(ch.sections||[]).forEach((sec,si)=>{
+      sections.push({ subj, type, ci, si, label:ch.label, t:" " + texteSection(sec) + " " });
+    })));
+    yield;
+  }
   // les auteurs : une entrée par nom, même s'il a une fiche dans plusieurs matières
   const auteurs = new Map();
   SUBJECTS.forEach(subj=>(subj.auteurs||[]).forEach(a=>{
@@ -5686,17 +6097,29 @@ function construireIndexGlobal(){
   }));
   // les notions : une entrée par terme, avec chaque matière où il est défini
   const notions = new Map();
-  SUBJECTS.forEach(subj=>lexique(subj).forEach(x=>{
-    const k = norm(x.terme).trim();
-    if(k.length < 3) return;
-    if(!notions.has(k)) notions.set(k, { genre:"notion", nom:x.terme, defs:[], termes:[k] });
-    notions.get(k).defs.push({ subj, x });
-  }));
+  for(const subj of SUBJECTS){
+    lexique(subj).forEach(x=>{
+      const k = norm(x.terme).trim();
+      if(k.length < 3) return;
+      if(!notions.has(k)) notions.set(k, { genre:"notion", nom:x.terme, defs:[], termes:[k] });
+      notions.get(k).defs.push({ subj, x });
+    });
+    yield;
+  }
   // le texte de chaque année d'un seul bloc, pour savoir vite où une entrée apparaît
-  const textesAn = {};
+  const textesAn = {}, motsAn = {};
   sections.forEach(s=>{ const a = anneeMatiere(s.subj).cle; textesAn[a] = (textesAn[a] || " ") + s.t; });
+  // les mots de chaque année : un mot absent écarte l'entrée sans parcourir tout le texte
+  for(const a of Object.keys(textesAn)){ motsAn[a] = new Set(textesAn[a].split(/[^a-z0-9]+/)); yield; }
+  const presentDans = (a, x, re)=>{
+    const mots = x.split(/[^a-z0-9]+/).filter(Boolean);
+    if(!mots.length || !mots.every(m=>motsAn[a].has(m))) return false;
+    return mots.length === 1 || re.test(textesAn[a]);
+  };
   const entrees = [...auteurs.values(), ...notions.values()];
-  entrees.forEach(e=>{
+  let n = 0;
+  for(const e of entrees){
+    if(++n % 40 === 0) yield;
     // les années où l'entrée a une fiche, une définition, ou est simplement citée
     const subs = e.genre === "auteur" ? e.fiches.map(f=>f.subj) : e.defs.map(d=>d.subj);
     const ans = new Set(subs.map(sj=>anneeMatiere(sj).cle));
@@ -5704,12 +6127,35 @@ function construireIndexGlobal(){
     Object.keys(textesAn).forEach(a=>{
       if(ans.has(a)) return;
       const t = textesAn[a];
-      if(e.termes.some((x,i)=>t.includes(x) && res[i].test(t))) ans.add(a);
+      if(e.termes.some((x,i)=>presentDans(a, x, res[i]))) ans.add(a);
     });
     e.annees = [...ans].sort();
-  });
+  }
   return { sections, entrees, auteurs:[...auteurs.values()], notions:[...notions.values()] };
 }
+function construireIndexGlobal(){ const g = genIndexGlobal(); let r; while(!(r = g.next()).done); return r.value; }
+// L'index se fabrique en arrière-plan, par petites tranches : l'écran ne fige jamais.
+let INDEX_GEN = null, INDEX_SIG = "", INDEX_ATTENTE = [];
+function sigContenu(){ return SUBJECTS.map(x=>signatureCours(x) + "|" + (x.qcm||[]).length + "|" + (x.fc||[]).length + "|" + (x.auteurs||[]).length + "|" + x.title).join("#"); }
+// à l'entrée des écrans qui s'en servent : si les cours ont changé, l'index sera refait
+function indexAJour(){
+  const sg = sigContenu();
+  if(sg !== INDEX_SIG){ INDEX_SIG = sg; INDEX_GLOBAL = null; INDEX_GEN = null; }
+}
+function finirIndex(r){ INDEX_GLOBAL = r; INDEX_GEN = null; INDEX_ATTENTE.splice(0).forEach(f=>{ try{ f(); }catch(e){} }); }
+function indexEnFond(){
+  if(INDEX_GLOBAL || INDEX_GEN) return;
+  if(!INDEX_SIG) INDEX_SIG = sigContenu();
+  const g = INDEX_GEN = genIndexGlobal();
+  const pas = ()=>{
+    if(INDEX_GEN !== g) return;                 // refait entre-temps
+    const t = performance.now(); let r;
+    do{ r = g.next(); }while(!r.done && performance.now() - t < 8);
+    if(r.done) finirIndex(r.value); else setTimeout(pas, 16);
+  };
+  setTimeout(pas, 0);
+}
+function indexPret(fn){ if(INDEX_GLOBAL) fn(); else { INDEX_ATTENTE.push(fn); indexEnFond(); } }
 // les noms à chercher : ceux des fiches auteurs, et les noms courts (Mead, Elias) en mot entier
 function termesAuteur(nom){
   const n = String(nom || "").trim();
@@ -5719,7 +6165,15 @@ function termesAuteur(nom){
   // une personne : le nom de famille entier, en mot entier (« Lévi-Strauss » ne doit pas trouver Strauss)
   return n.split(/\s+et\s+|&|,/).map(p=>norm(p.trim().split(/\s+/).pop() || "")).filter(x=>x.length >= 4);
 }
-function indexGlobal(){ if(!INDEX_GLOBAL) INDEX_GLOBAL = construireIndexGlobal(); return INDEX_GLOBAL; }
+function indexGlobal(){
+  if(INDEX_GLOBAL) return INDEX_GLOBAL;
+  if(!INDEX_SIG) INDEX_SIG = sigContenu();
+  // quelqu'un en a besoin tout de suite : on finit d'un coup ce qui était commencé
+  const g = INDEX_GEN || genIndexGlobal(); let r;
+  while(!(r = g.next()).done);
+  finirIndex(r.value);
+  return INDEX_GLOBAL;
+}
 // un terme cherché comme mot entier (pas « norme » dans « énorme »)
 function motEntier(terme){ return new RegExp("(^|[^a-z0-9])" + terme.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "([^a-z0-9]|$)"); }
 // les chapitres où une entrée est citée, un résultat par chapitre (la 1re section qui la nomme)
@@ -5731,7 +6185,7 @@ function citationsDe(e){
   indexGlobal().sections.forEach(s=>{
     const k = s.subj.id + "|" + s.type + "|" + s.ci;
     if(vus.has(k)) return;
-    if(!res.some(r=>r.test(s.t))) return;
+    if(!res.some((r,i)=>s.t.includes(e.termes[i]) && r.test(s.t))) return;
     vus.add(k); out.push(s);
   });
   out.sort((a,b)=>anneeMatiere(a.subj).rang - anneeMatiere(b.subj).rang || SEMESTRES[a.subj.id] - SEMESTRES[b.subj.id]);
@@ -5748,7 +6202,7 @@ function pastilleChapitre(s, mots){
 // l'entrée vers l'index, en haut de la recherche
 function entreeIndex(){
   const b = el("button","idx-entree"); b.type = "button";
-  b.innerHTML = `<span class="type-ic ic-box">${ICO("lexique")}</span><span class="idx-entree-txt"><b>Index des auteurs et des notions</b><small>L1, L2 et L3 réunies : où tu as vu quoi</small></span>${IC_CHEV_DROITE}`;
+  b.innerHTML = `<span class="type-ic ic-box">${ICO("lexique")}</span><span class="idx-entree-txt"><b>Index des auteurs et des notions</b><small>${isCiva() ? "L1, L2 et L3 réunies : où tu as vu quoi" : "Tous tes cours réunis : où tu as vu quoi"}</small></span>${IC_CHEV_DROITE}`;
   // on emporte la recherche en cours : vers les auteurs si elle en nomme un, sinon vers les notions
   b.addEventListener("click",()=>{
     haptic();
@@ -5760,8 +6214,11 @@ function entreeIndex(){
 }
 var IDX = { genre:"auteur", q:"", multi:false };
 function ouvrirIndex(q, genre){
+  indexAJour();
   IDX = { genre: genre || "auteur", q: q || "", multi:false };
   document.getElementById("idx-input").value = IDX.q;
+  { const so = document.getElementById("idx-sous"); if(so) so.textContent = isCiva() ? "Tes auteurs et tes notions, de la L1 à la L3" : "Tes auteurs et tes notions, dans tous tes cours"; }
+  { const mu = document.getElementById("idx-multi"); if(mu) mu.hidden = !isCiva(); }
   renderIndex();
   showScreen("index");
   window.scrollTo(0, 0);
@@ -5855,7 +6312,7 @@ function blocDejaVu(subj, ch){
   const trouves = [];
   // d'abord les auteurs, puis les notions définies une année d'avant
   I.auteurs.forEach(e=>{
-    if(!e.termes.length || !e.termes.some(t=>motEntier(t).test(texte))) return;
+    if(!e.termes.length || !e.termes.some(t=>texte.includes(t) && motEntier(t).test(texte))) return;
     const lieux = citationsDe(e).filter(avant);
     if(lieux.length) trouves.push({ e, lieux });
   });
@@ -5867,7 +6324,7 @@ function blocDejaVu(subj, ch){
   }
   I.notions.forEach(e=>{
     const defs = e.defs.filter(d=>anneeMatiere(d.subj).rang < an.rang);
-    if(!defs.length || e.termes[0].length < 5 || !motEntier(e.termes[0]).test(texte)) return;
+    if(!defs.length || e.termes[0].length < 5 || !texte.includes(e.termes[0]) || !motEntier(e.termes[0]).test(texte)) return;
     // un mot seul, court ou très courant (« autonomie », « directe ») n'apprend rien : on le laisse à l'index
     if(!/\s/.test(e.termes[0]) && (e.termes[0].length < 9 || citationsDe(e).length > 10)) return;
     // déjà là comme auteur (Condorcet) : pas deux fois
@@ -5945,11 +6402,23 @@ const LEX_RE = /^\s*<b>([^<]{2,60})<\/b>\s*(\([^)]{1,60}\)\s*)?:\s*([\s\S]{8,})$
 // sections sur l'organisation du cours : on ne les prend pas
 const LEX_SEC_EXCLUE = /pr[ée]sentation|modalit|[ée]valuation|au programme|organisation|calendrier|consigne|devoir|s[ée]ances?\b|plan du cours/i;
 const LEX_TERME_EXCLU = /^([^a-zà-ÿ]|(cm|td)\b|(le|la|les|un|une|ce|ces|des|du)\s|l'|l’|(à|avant|apr[èe]s|aujourd'hui|hier|dans|pour|chez|sur|en|pendant|trois|deux|quatre|cat[ée]gorie)(?=[\s,]|$)|articulation\b|mcf\b|contexte|d[ée]finition|premier|deuxi[èe]me|second|troisi[èe]me|exemple|conclusion|introduction|bilan|enjeux?\b|objectifs?\b|limites?\b|id[ée]e|point|remarque|rappel|attention|[àa] retenir|en r[ée]sum[ée]|synth[èe]se|[ée]crit\b|oral\b|partiel|contr[ôo]le|dst\b|[ée]valuation|diversit[ée])|\?$|\b(janvier|f[ée]vrier|mars|avril|mai|juin|juillet|ao[ûu]t|septembre|octobre|novembre|d[ée]cembre)\b/i;
+const LEX_CACHE = {};
 function lexique(subj){
+  if(!subj) return [];
+  const sig = signatureCours(subj);
+  const c = LEX_CACHE[subj.id];
+  if(c && c.sig === sig) return c.out;
+  const out = lexiqueCalcule(subj);
+  LEX_CACHE[subj.id] = { sig, out };
+  return out;
+}
+function lexiqueCalcule(subj){
   const vus = new Set(), out = [];
   [["cm",0],["td",1]].forEach(([type,tab])=>(subj[type]||[]).forEach((ch,ci)=>(ch.sections||[]).forEach((sec,si)=>{
     if(LEX_SEC_EXCLUE.test(sec.title || "")) return;
-    [...(sec.list||[]), sec.body||""].forEach(it=>{
+    // les puces mêlées au texte d'un cours collé comptent comme les autres
+    const dansLeTexte = [...String(sec.body || "").matchAll(/<li><span class="li-text">([\s\S]*?)<\/span><\/li>/g)].map(m=>m[1]);
+    [...(sec.list||[]), ...dansLeTexte, sec.body||""].forEach(it=>{
       const m = String(it).match(LEX_RE); if(!m) return;
       const terme = m[1].trim();
       if(LEX_TERME_EXCLU.test(terme) || terme.split(/\s+/).length > 6) return;
@@ -6150,8 +6619,10 @@ var rechercheDepuis = "semestres";
 function openSearch(depuis){
   rechercheDepuis = depuis === "split" ? "split" : "semestres";
   resolveAllLangs();             // titres/contenus dans la bonne langue selon le thème
-  SEARCH_INDEX = buildIndex();  // reconstruit à chaque ouverture (le contenu peut changer)
-  INDEX_GLOBAL = null;
+  // les deux index ne sont refaits que si les cours ont changé depuis
+  const sg = sigContenu();
+  if(!SEARCH_INDEX || SEARCH_SIG !== sg){ SEARCH_INDEX = buildIndex(); SEARCH_SIG = sg; }
+  indexAJour();
   const inp = document.getElementById("search-input");
   inp.value = "";
   doSearch("");
@@ -6516,7 +6987,7 @@ function renderEDT(){
 
   if(edtState === "none"){
     label.textContent = "";
-    body.innerHTML = vide("calendrier", "Aucun calendrier", "Colle le lien iCal de ton université pour voir tes cours ici.",
+    body.innerHTML = vide("calendrier", "Aucun calendrier", "Colle le lien de ton emploi du temps pour voir tes cours ici. Sur l'ENT de ta fac, cherche « exporter », « s'abonner » ou « iCal ».",
       `<button class="btn" id="edt-import">Ajouter un calendrier</button>`);
     document.getElementById("edt-import").addEventListener("click",()=>{ haptic(); openCalSheet(); });
     return;
@@ -6524,7 +6995,7 @@ function renderEDT(){
   if(edtState === "error"){
     label.textContent = "";
     body.innerHTML = vide("alerte", "Emploi du temps indisponible", "Vérifie ta connexion, ou réessaie plus tard.",
-      `<button class="btn" id="edt-retry">Réessayer</button><span class="edt-diag">${esc(edtDiag||"")}</span>`);
+      `<button class="btn" id="edt-retry">Réessayer</button>${edtDiag ? `<details class="edt-diag-d"><summary>Détails techniques</summary><span class="edt-diag">${esc(edtDiag)}</span></details>` : ""}`);
     document.getElementById("edt-retry").addEventListener("click",async()=>{
       body.innerHTML = `<div class="edt-loading">Nouvelle tentative…</div>`;
       await loadEDT(true); renderEDT();
@@ -6534,7 +7005,7 @@ function renderEDT(){
   if(!EDT.length){
     label.textContent = "";
     const b = el("div");
-    b.innerHTML = vide("calendrier", "Calendrier vide", "Il ne contient aucun cours pour le moment.", `<span class="edt-diag">${esc(edtDiag||"")}</span>`);
+    b.innerHTML = vide("calendrier", "Calendrier vide", "Il ne contient aucun cours pour le moment.", edtDiag ? `<details class="edt-diag-d"><summary>Détails techniques</summary><span class="edt-diag">${esc(edtDiag)}</span></details>` : "");
     body.appendChild(b);
     return;
   }
@@ -6666,7 +7137,7 @@ function listeChapitres(type, chapters, chIdx){
   box.innerHTML = "";
   chapters.forEach((c,i)=>{
     const rev = estRevise(curSubj, type, c), nouv = i !== chIdx && chapitreNouveau(curSubj, type, c);
-    const nQ = (curSubj.qcm||[]).filter(x=>x && x.ch === c.label).length;
+    const nQ = exos(curSubj, "qcm").filter(x=>x && x.ch === c.label).length;
     const etat = rev ? "Révisé" : nouv ? "Nouveau" : "À réviser";
     const r = el("button","cal-row chap-ligne" + (i === chIdx ? " actif" : "") + (rev ? " revise" : "") + (nouv ? " nouveau" : ""));
     r.type = "button";
@@ -7280,6 +7751,41 @@ function ouvrirNouveau(sj){
 
 // Le bloc « À savoir » : nouveaux cours + échéances annotées, une ligne chacun.
 // Il apparaît quand il y a quelque chose, disparaît quand il n'y a rien.
+// Un devoir est nouveau quand il vient d'une classe et que je ne l'ai pas encore vu,
+// ou quand son auteur l'a modifié depuis : même logique que les cours de Mes semestres.
+function etatDevoir(e){
+  const N = evNote(e) || {}, v = clsVus().vus || {};
+  const recus = [N.src && !N.moi ? N.src : null, ...autresDe(N).map(a=>a.src)].filter(Boolean);
+  if(recus.some(id=>!v[id])) return "nouveau";
+  if(N.modifie || autresDe(N).some(a=>a.modifie)) return "modifie";
+  return "";
+}
+function devoirsNouveaux(alerts){ return (alerts || pendingAlerts(true, true)).filter(e=>etatDevoir(e)); }
+// ouvrir Mes devoirs, c'est les voir : la pastille s'éteint
+function marquerDevoirsVus(alerts){
+  const v = clsVus(); v.vus = v.vus || {};
+  let notes = false;
+  (alerts || []).forEach(e=>{
+    const N = evNote(e); if(!N) return;
+    if(N.src) v.vus[N.src] = 1;
+    autresDe(N).forEach(a=>{ if(a.src) v.vus[a.src] = 1; if(a.modifie){ a.modifie = false; notes = true; } });
+    if(N.modifie){ N.modifie = false; notes = true; }
+  });
+  clsVusSave();
+  if(notes) notesSave();
+}
+// La tuile « Mes devoirs » de l'accueil : ce qui reste à faire, le prochain, et la pastille des nouveaux
+function majTuileDevoirs(alerts){
+  const nb = document.getElementById("dev-entry-nb");
+  if(nb){ const k = devoirsNouveaux(alerts).length; nb.textContent = k; nb.hidden = !k; nb.setAttribute("aria-label", k + " devoir" + (k > 1 ? "s" : "") + " nouveau" + (k > 1 ? "x" : "")); }
+  const ic = document.getElementById("dev-entry-ic"); if(ic && !ic.firstChild) ic.innerHTML = ICO("devoirs");
+  const sub = document.getElementById("dev-entry-sub"); if(!sub) return;
+  const now = new Date(); now.setHours(0,0,0,0);
+  const reste = (alerts || []).filter(e=>!(evNote(e) || {}).done);
+  if(!reste.length){ sub.textContent = (alerts || []).length ? "Tout est fait" : "Rien à venir"; return; }
+  const j = Math.max(0, Math.round((new Date(reste[0].start).setHours(0,0,0,0) - now) / 86400000));
+  sub.textContent = reste.length + " à faire · " + (j === 0 ? "aujourd'hui" : j === 1 ? "demain" : "dans " + j + " j");
+}
 function renderKnowBlock(){
   const box = document.getElementById("home-know");
   if(!box) return;
@@ -7290,20 +7796,12 @@ function renderKnowBlock(){
   // Les nouveautés ne sont plus ici : une pastille sur Mes semestres les signale.
   // tout ce qui arrive. Déplié : tout. Plié : seulement le titre et sa flèche.
   const alerts = pendingAlerts(true, true);
-  if(!alerts.length) return;
+  majTuileDevoirs(alerts);
+  if(!alerts.length){
+    box.innerHTML = vide("calendrier", "Rien à venir", "Pose un devoir, un contrôle ou une note sur un cours de ton emploi du temps, ou ajoute-le ci-dessous. Il apparaîtra ici.");
+    return;
+  }
   const now = new Date();
-  let ouvert = true; try{ ouvert = localStorage.getItem("revision_avenir_plie") !== "1"; }catch(e){}
-  const tete = el("button","av-tete"); tete.type = "button";
-  tete.setAttribute("aria-expanded", ouvert ? "true" : "false");
-  tete.setAttribute("aria-label", ouvert ? "Replier À venir" : "Déplier À venir");
-  tete.innerHTML = `<span class="av-lbl">À venir</span><span class="av-plier${ouvert ? " ouvert" : ""}">${IC_CHEV_BAS}</span>`;
-  tete.addEventListener("click",()=>{
-    haptic();
-    try{ localStorage.setItem("revision_avenir_plie", ouvert ? "1" : "0"); }catch(e){}
-    renderKnowBlock();
-  });
-  box.appendChild(tete);
-  if(!ouvert) return;
   // une carte par semaine : cette semaine, la prochaine, puis « du 9 au 15 nov. »
   let card = null, semaine = null;
   alerts.forEach(e=>{
@@ -7328,7 +7826,7 @@ function renderKnowBlock(){
     const row = el("div","av-row " + cle + (fait ? " fait" : "")); row.setAttribute("role","button"); row.tabIndex = 0;
     row.innerHTML = `<button type="button" class="av-fait" aria-pressed="${fait}" aria-label="${fait ? "Marquer comme pas fait" : "Marquer comme fait"}">${COCHE_SVG}</button>` +
       `<span class="av-txt"><b>${esc(nomCourt(e.title))}</b><small><i>${fait ? "Fait" : tag}</i> · ${quand}</small>${apercu ? `<small class="av-note">${esc(apercu)}</small>` : ""}</span>` +
-      (nn.modifie || autresDe(nn).some(a=>a.modifie) ? `<span class="chap-pick-new">Modifié</span>` : `<span class="av-fl">›</span>`);
+      (etatDevoir(e) === "nouveau" ? `<span class="chap-pick-new">Nouveau</span>` : etatDevoir(e) === "modifie" ? `<span class="chap-pick-new">Modifié</span>` : `<span class="av-fl">›</span>`);
     // le rond coche ou décoche ; le reste de la ligne ouvre l'agenda à ce jour
     row.querySelector(".av-fait").addEventListener("click", ev=>{
       ev.stopPropagation(); haptic();
@@ -7370,7 +7868,7 @@ function renderSemEntry(){
   const sub = document.getElementById("sem-entry-sub");
   if(!sub) return;
   const n = SUBJECTS.length;
-  sub.textContent = n + " matière" + (n > 1 ? "s" : "");
+  sub.textContent = n ? n + " matière" + (n > 1 ? "s" : "") : "Commence ici : crée ton premier semestre";
   const ic = document.getElementById("sem-entry-ic"); if(ic && !ic.firstChild) ic.innerHTML = ICO("semestres");
   const nb = document.getElementById("sem-entry-nb");
   if(nb){ const k = newSubjects().length; nb.textContent = k; nb.hidden = !k; nb.setAttribute("aria-label", k + " matière" + (k > 1 ? "s" : "") + " avec du nouveau"); }
@@ -7701,6 +8199,8 @@ function renderReprise(){
   b.hidden = false;
 }
 function renderSemestres(){
+  majBoutonCompte();
+  renderAideAccueil();
   renderKnowBlock();
   renderReprise();
   renderSemEntry();
@@ -7720,8 +8220,9 @@ function renderSemestres(){
   // les semestres ne sont plus figés à 5 et 6 : chacun crée les siens
   const sems = [...new Set(Object.values(UES).map(u=>u.sem))].filter(n=>n).sort((a,b)=>a-b);
   if(!sems.length && canEdit()){
-    wrap.innerHTML = vide("semestres", "Aucun semestre pour l'instant", "Touche le + pour en créer un.");
+    wrap.innerHTML = vide("semestres", "Aucun semestre pour l'instant", "Touche le + en bas pour créer ton premier semestre. Tu y rangeras ensuite tes matières.");
   }
+  { const sg = document.getElementById("vue-sem"); if(sg) sg.hidden = !sems.length; }
   const tuiles = [];
   sems.forEach((sem,si)=>{
     const list=SUBJECTS.filter(s=>(SEMESTRES[s.id]||0)===sem);
@@ -7762,10 +8263,25 @@ function renderSemestres(){
     psy.addEventListener("click",()=>{ haptic(); renderPsycho(); });
     tuiles.push({ cle:"psy", el:psy, defaut:psyTitle(), icone:"💜", sousDefaut:"Passerelles · masters", groupe:"\u0000psy" });
   }
+  // les autres projets : reçus d'une classe (et Concours CPE chez Civa)
+  mesProjets().forEach(pid=>{
+    const pj = PROJETS[pid], t = tuileDe("projet:" + pid), pct = projetAvancement(pid);
+    const b = el("button","sem-tile psy-tile rise");
+    b.innerHTML = `
+      <div class="sem-tile-top"><div class="sem-badge">${esc(t.icone || pj.icone)}</div></div>
+      <div class="sem-name">${esc(t.titre || pj.titre)}</div>
+      <div class="sem-meta">${esc(t.sous || pj.sous)}</div>
+      <div class="sem-bar"><div class="sem-bar-fill" style="width:${pct}%"></div></div>
+      <div class="sem-pct">${pct} %</div>`;
+    b.addEventListener("click",()=>{ haptic(); renderProjet(pid); });
+    tuiles.push({ cle:"projet:" + pid, el:b, defaut:pj.titre, icone:pj.icone, sousDefaut:pj.sous, groupe:"\u0000psy" });
+  });
 
   // la L1 et la L2 rejoignent les archives, repliées en bas : l'accueil reste sur l'année en cours
-  const archives = tuiles.filter(t=>t.sem && t.sem < 5);
-  const triees = trierTuiles(tuiles.filter(t=>!(t.sem && t.sem < 5)));
+  // les archives (L1 et L2) ne concernent que mes cours : un autre compte voit tous ses semestres
+  const estArchive = t=>isCiva() && t.sem && t.sem < 5;
+  const archives = tuiles.filter(estArchive);
+  const triees = trierTuiles(tuiles.filter(t=>!estArchive(t)));
   // regroupement par sous-titre : chaque groupe à la place de sa première tuile,
   // les semestres sans sous-titre ensemble, le Projet Psycho toujours à part
   const groupes = [];
@@ -7776,7 +8292,7 @@ function renderSemestres(){
   });
   const avecTitres = groupes.length > 1 || archives.length > 0;
   wrap.classList.toggle("groupee", avecTitres);
-  const nomGroupe = c => c === "\u0000psy" ? "Projets" : (c || "Licence 3");
+  const nomGroupe = c => c === "\u0000psy" ? "Projets" : (c || (isCiva() ? "Licence 3" : "Autres semestres"));
   let si = 0;
   // chaque section se plie : on garde ouvertes celles en cours, on plie les années terminées
   let plies = {}; try{ plies = JSON.parse(localStorage.getItem("revision_sem_plies") || "{}") || {}; }catch(e){}
@@ -7799,7 +8315,7 @@ function renderSemestres(){
     if(plie) return;
     g.tuiles.forEach(t=>placerTuile(t, si++));
   });
-  if(archives.length) wrap.appendChild(blocArchives(archives));
+  if(archives.length) ajouterArchives(wrap, archives, t=>placerTuile(t, si++));
   function placerTuile(t, si){
     t.el.style.animationDelay = (0.14 + si*0.04) + "s";
     if(!canEdit()){ wrap.appendChild(t.el); return; }
@@ -7815,36 +8331,120 @@ function renderSemestres(){
 // le nom de l'année d'un semestre, le même partout
 function nomAnneeSem(sem){
   if(!sem) return "Autres";
+  // les noms d'années ne valent que pour mes cours ; les autres comptes ont leurs sous-titres
+  if(!isCiva()) return (tuileDe("sem:" + sem).sous || "").trim() || "Mes semestres";
   if(sem >= 5) return (tuileDe("sem:" + sem).sous || "").trim() || "Licence 3";
   return sem >= 3 ? "Licence 2 · SESS (UPEC)" : sem === 1 ? "Licence 1 · Humanités (ICP)" : "Licence 1 · SESS (UPEC)";
 }
+// ── Premier lancement : ce que font les icônes de l'accueil, une seule fois ──
+function renderAideAccueil(){
+  const box = document.getElementById("aide-accueil"); if(!box) return;
+  let vu = false; try{ vu = localStorage.getItem("revision_aide_accueil") === "1"; }catch(e){}
+  box.hidden = vu || isCiva(); if(box.hidden) return;
+  const ic = id=>{ const b = document.getElementById(id); const sv = b && b.querySelector("svg"); return sv ? sv.outerHTML : ""; };
+  const lignes = [
+    [ic("btn-edt"), "Emploi du temps", "Importe-le une fois, tes cours s'affichent chaque jour."],
+    [ic("btn-news"), "Mes sites", "Tes liens utiles : ENT, Moodle, scolarité…"],
+    [ic("btn-classes"), "Classes", "Partage tes cours et tes exercices avec d'autres."],
+    [ic("btn-search"), "Rechercher", "Retrouve un mot dans tous tes cours."],
+    [ic("btn-memo"), "Mémo", "Le bouton rond en bas : tes tâches et tes notes rapides."]
+  ];
+  box.className = "aide-acc rise";
+  box.innerHTML = `<div class="aide-acc-t">Bienvenue ! Voici ce que font les boutons</div>` +
+    lignes.map(([svg, nom, txt])=>`<div class="aide-acc-l"><span class="aide-acc-ic">${svg}</span><span><b>${nom}</b><small>${txt}</small></span></div>`).join("") +
+    `<button type="button" class="aide-acc-ok">J'ai compris</button>`;
+  box.querySelector(".aide-acc-ok").addEventListener("click",()=>{ haptic(); try{ localStorage.setItem("revision_aide_accueil","1"); }catch(e){} box.hidden = true; });
+}
+// ── Mon compte : qui est connecté, l'ambiance, l'aide, la déconnexion ──
+function majBoutonCompte(){
+  const b = document.getElementById("btn-compte"); if(!b) return;
+  const p = String(PSEUDO || "?");
+  b.textContent = p.charAt(0).toUpperCase();
+  b.setAttribute("aria-label", "Mon compte : " + p);
+}
+function ouvrirCompte(){
+  document.querySelectorAll("#pick-sheet .pick-actions, #pick-sheet .fp-retour").forEach(n=>n.remove());
+  document.getElementById("pick-title").textContent = "Mon compte";
+  const box = document.getElementById("pick-list"); box.innerHTML = "";
+  const qui = el("div","compte-qui");
+  qui.innerHTML = `<span class="compte-av">${esc(String(PSEUDO || "?").charAt(0).toUpperCase())}</span>
+    <span><b>${esc(PSEUDO || "")}</b><small>${syncOn ? "Tes révisions sont enregistrées en ligne, sur tous tes appareils." : "Hors ligne : tes révisions restent sur ce téléphone pour l'instant."}</small></span>`;
+  box.appendChild(qui);
+  const lab = el("div","fs-label compte-lab"); lab.textContent = "Ambiance"; box.appendChild(lab);
+  const seg = el("div","seg compte-seg");
+  const actuel = document.documentElement.getAttribute("data-theme") || "girly";
+  [["girly","Rose"],["purple","Violet"]].forEach(([v, nom])=>{
+    const o = el("button","seg-opt" + (v === actuel ? " active" : "")); o.type = "button"; o.textContent = nom;
+    o.addEventListener("click",()=>{
+      haptic(); applyTheme(v);
+      try{ localStorage.setItem(THEME_KEY, v); }catch(e){}
+      scheduleSync();
+      seg.querySelectorAll(".seg-opt").forEach(x=>x.classList.toggle("active", x === o));
+    });
+    seg.appendChild(o);
+  });
+  box.appendChild(seg);
+  const ligne = (nom, sous, fn, cls)=>{
+    const r = el("button","cal-row" + (cls ? " " + cls : "")); r.type = "button";
+    r.innerHTML = `<div class="cal-txt"><div class="cal-name">${esc(nom)}</div>${sous ? `<div class="cal-url">${esc(sous)}</div>` : ""}</div>`;
+    r.addEventListener("click",()=>{ haptic(); fn(); });
+    box.appendChild(r);
+  };
+  if(!isCiva()) ligne("Revoir l'aide de l'accueil", "Ce que font les boutons du haut", ()=>{
+    try{ localStorage.removeItem("revision_aide_accueil"); }catch(e){}
+    closePicker(); renderSemestres(); window.scrollTo(0, 0);
+  });
+  ligne("Se déconnecter", "Pour changer de compte sur ce téléphone", ()=>{ closePicker(); setTimeout(seDeconnecter, 320); }, "compte-quitter");
+  document.getElementById("pick-sheet").classList.add("open");
+}
+// On enregistre d'abord en ligne, puis on vide ce téléphone : le compte suivant repart de zéro.
+function seDeconnecter(){
+  const vider = ()=>{ try{ localStorage.clear(); }catch(e){} location.reload(); };
+  confirmer("Te déconnecter ?", syncOn
+    ? "Tes cours et ta progression restent enregistrés en ligne. Tu les retrouves avec ton pseudo et ton code."
+    : "Tu n'es pas connectée au serveur : ce qui est sur ce téléphone serait perdu.", "Se déconnecter", async ()=>{
+    if(!syncOn){ vider(); return; }
+    clearTimeout(saveTimer); saveTimer = null;
+    toast("Enregistrement…");
+    const ok = await pushState();
+    if(ok){ vider(); return; }
+    setTimeout(()=>confirmer("Pas de connexion", "Tes dernières révisions sur ce téléphone ne sont pas encore enregistrées en ligne. Te déconnecter quand même ?", "Me déconnecter", vider), 350);
+  });
+}
 function vueSem(){ try{ return localStorage.getItem("revision_vue_sem") === "liste" ? "liste" : "bloc"; }catch(e){ return "bloc"; } }
-function blocArchives(archives){
-  const box = el("div","arch rise");
+// Les archives prennent la forme des autres tuiles : un bloc en mode blocs, une ligne en mode liste.
+// Ouvertes, leurs semestres s'affichent comme ceux de l'année en cours, rangés par année.
+function ajouterArchives(wrap, archives, placer){
   let ouvert = false; try{ ouvert = localStorage.getItem("revision_archives_ouvert") === "1"; }catch(e){}
-  const sems = archives.map(t=>t.sem).sort((a,b)=>b-a);
   const nMat = SUBJECTS.filter(s=>(SEMESTRES[s.id]||0) < 5).length;
-  const tete = el("button","arch-tete" + (ouvert ? " ouvert" : "")); tete.type = "button";
-  tete.innerHTML = `<span class="arch-ic">🗂️</span><span class="arch-txt"><b>Archives</b><small>L1 et L2 · ${sems.length} semestres · ${nMat} matières</small></span><span class="sem-chev">${IC_CHEV_BAS}</span>`;
-  tete.addEventListener("click",()=>{
+  // un titre de section avec son trait, comme « Licence 3 » et « Projets »
+  const h = el("div","sem-groupe ouvert arch-an-g arch-titre rise"); h.innerHTML = `<span>Archives</span>`;
+  wrap.appendChild(h);
+  const tu = el("button","sem-tile arch-tuile rise" + (ouvert ? " ouvert" : "")); tu.type = "button";
+  tu.setAttribute("aria-expanded", ouvert ? "true" : "false");
+  tu.innerHTML = `<div class="sem-tile-top"><div class="sem-badge">🗂️</div></div>
+    <div class="sem-name">L1 et L2</div>
+    <div class="sem-meta">${nMat} matières</div>
+    <div class="sem-bar"></div>
+    <div class="sem-pct">${archives.length} semestres</div>
+    <span class="arch-chev">${IC_CHEV_BAS}</span>`;
+  tu.addEventListener("click",()=>{
     haptic();
     try{ localStorage.setItem("revision_archives_ouvert", ouvert ? "0" : "1"); }catch(e){}
     renderSemestres();
   });
-  box.appendChild(tete);
-  if(!ouvert) return box;
-  const annee = nomAnneeSem;
-  let courant = "", lot = null, i = 0;
+  wrap.appendChild(tu);
+  if(!ouvert) return;
+  let courant = "";
   archives.slice().sort((x,y)=>y.sem - x.sem).forEach(t=>{
-    if(annee(t.sem) !== courant){
-      courant = annee(t.sem);
-      const h = el("div","arch-an"); h.textContent = courant; box.appendChild(h);
-      lot = el("div","arch-lot"); box.appendChild(lot);
+    const an = nomAnneeSem(t.sem);
+    if(an !== courant){
+      courant = an;
+      const h = el("div","sem-groupe ouvert arch-an-g rise"); h.innerHTML = `<span>${esc(an)}</span>`;
+      wrap.appendChild(h);
     }
-    t.el.style.animationDelay = (0.04 + (i++)*0.03) + "s";
-    lot.appendChild(t.el);
+    placer(t);
   });
-  return box;
 }
 // ── Personnaliser les tuiles de l'accueil : titre, sous-titre, icône, ordre ──
 // Enregistré dans les réglages du compte : suit sur tous les appareils.
@@ -7979,6 +8579,8 @@ function renderSubjectCards(sem){
     : aJour === 0 ? "Prêt à commencer ?"
     : aJour === avecCours.length ? "Tout est à jour, bravo !"
     : aJour + " matière" + (aJour > 1 ? "s" : "") + " à jour sur " + avecCours.length;
+  ov.hidden = !list.length;
+  if(!list.length && canEdit()) wrap.innerHTML = vide("cm", "Aucune matière pour l'instant", "Touche le + en bas pour ajouter ta première matière.");
   ov.innerHTML=`
     <div class="overview-ring"><svg width="44" height="44"><circle class="overview-ring-bg" cx="22" cy="22" r="18"/><circle class="overview-ring-fill" cx="22" cy="22" r="18" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/></svg><div class="overview-ring-num">${pct}%</div></div>
     <div class="overview-text"><div class="overview-title">${msg}</div><div class="overview-sub">${list.length} matière${list.length > 1 ? "s" : ""}${list.length > avecCours.length ? ", dont " + (list.length - avecCours.length) + " à remplir" : ""} · ${ueCount} UE</div></div>`;
@@ -8182,6 +8784,13 @@ function sectionsVisibles(){
 }
 const IC_CHEV_G = '<svg class="somm-fl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
 const IC_CHEV_D = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>';
+// l'onglet Sommaire se range pendant le défilement, et revient dès qu'on s'arrête
+let RANGE_T = null;
+addEventListener("scroll", ()=>{
+  const f = document.getElementById("somm-flot"); if(!f || !f.classList.contains("on") || f.classList.contains("drag")) return;
+  f.classList.add("range");
+  clearTimeout(RANGE_T); RANGE_T = setTimeout(()=>f.classList.remove("range"), 900);
+}, { passive:true });
 function majProgression(){
   const flot = document.getElementById("somm-flot");
   if(!flot) return;
@@ -8305,6 +8914,8 @@ const P = {
   accueil:'<path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-5h4v5"/>',
   semestres:'<path d="M12 3l9 4.5-9 4.5-9-4.5z"/><path d="M3 12l9 4.5 9-4.5"/><path d="M3 16.5L12 21l9-4.5"/>',
   reprendre:'<path d="M7 3h10v18l-5-4-5 4z"/>',
+  lien:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.2 1.2"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.2-1.2"/>',
+  presse:'<rect x="6" y="4" width="12" height="17" rx="2.5"/><path d="M9 4.5V3h6v1.5"/><path d="M9.5 11h5M9.5 15h5"/>',
   examen:'<path d="M2.5 9L12 4.5 21.5 9 12 13.5z"/><path d="M6.5 11v5c2.5 2.5 8.5 2.5 11 0v-5"/><path d="M21.5 9v5"/>',
   fc:'<rect x="3" y="7" width="13" height="14" rx="2.5"/><path d="M8 4.5A2 2 0 0 1 10 3h9a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2"/>',
   qcm:'<path d="M4 6.5l1.5 1.5L8.5 5"/><path d="M4 12.5l1.5 1.5 3-3"/><path d="M4 18.5l1.5 1.5 3-3"/><path d="M12 7h8M12 13h8M12 19h8"/>',
@@ -8416,7 +9027,8 @@ function renderCoursePane(type){
   const pane = document.getElementById(type==="cm"?"pane-0":"pane-1");
   pane.innerHTML="";
   if(!chapters.length){
-    pane.innerHTML = vide(type === "cm" ? "cm" : "td", type === "cm" ? "Aucun CM pour l'instant" : "Aucun TD pour l'instant", "Ils apparaîtront ici dès qu'ils seront ajoutés.");
+    pane.innerHTML = vide(type === "cm" ? "cm" : "td", type === "cm" ? "Aucun CM pour l'instant" : "Aucun TD pour l'instant",
+      ajoutChapitrePossible() ? "Ajoute ton premier " + (type === "cm" ? "CM" : "TD") + " ci-dessous. Les " + (type === "cm" ? "TD" : "CM") + " sont dans le menu en haut à droite." : "Ils apparaîtront ici dès qu'ils seront ajoutés.");
     if(ajoutChapitrePossible()){
       const add=el("button","add-inline");
       add.textContent = "+  Ajouter un chapitre";
@@ -8478,11 +9090,27 @@ function renderCoursePane(type){
     if(modifiable(ch)) onLongPress(block, ()=>editSection(type, ch, ch.sections.indexOf(sec)));
     pane.appendChild(block);
   });
+  // un chapitre encore vide : le plus simple est d'y coller le cours
+  const peutEcrire = modifiable(ch) && !(isCiva() && !ch._own);
+  const chVide = !(ch.sections||[]).length;
+  if(chVide && peutEcrire){
+    const c = el("div","colle-carte rise");
+    c.innerHTML = `<div class="colle-carte-ic">${ICO("presse")}</div><div class="colle-carte-t">Ce ${type === "cm" ? "CM" : "TD"} est vide</div>
+      <div class="colle-carte-s">Copie le texte de ton cours (Word, PDF, Notes…) et colle-le : l'app le range en sections, avec ses titres et ses listes.</div>`;
+    const b1 = el("button","btn colle-go"); b1.type = "button"; b1.textContent = "Coller mon cours";
+    b1.addEventListener("click",()=>{ haptic(); collerCours(type, ch); });
+    const b2 = el("button","colle-ou"); b2.type = "button"; b2.textContent = "ou écrire une section à la main";
+    b2.addEventListener("click",()=>{ haptic(); addSection(type, ch); });
+    c.appendChild(b1); c.appendChild(b2);
+    pane.appendChild(c);
+    return;
+  }
   // les auteurs et notions déjà vus les années d'avant, avec un lien vers le chapitre
   // calculé juste après l'affichage, pour ne pas retarder l'ouverture du chapitre
   { const place = el("div"), cle = pane.dataset.cle, sj = curSubj; pane.appendChild(place);
-    setTimeout(()=>{ if(pane.dataset.cle !== cle || !place.isConnected) return;
-      let dv = null; try{ dv = blocDejaVu(sj, ch); }catch(_){} if(dv) place.replaceWith(dv); else place.remove(); }, 40); }
+    if(anneeMatiere(sj).rang < 2){ place.remove(); }
+    else { indexAJour(); indexPret(()=>setTimeout(()=>{ if(pane.dataset.cle !== cle || !place.isConnected) return;
+      let dv = null; try{ dv = blocDejaVu(sj, ch); }catch(_){} if(dv) place.replaceWith(dv); else place.remove(); }, 0)); } }
   // les « À retenir » ne s'affichent plus ici : ils sont tous dans la fiche de synthèse
   pane.appendChild(blocNotes(pane.dataset.cle));
   // fin du chapitre : révisé, puis son QCM, puis le chapitre suivant
@@ -8510,7 +9138,7 @@ function renderCoursePane(type){
   });
   // 2. le QCM de ce chapitre
   let num = 2;
-  const nQ = (curSubj.qcm||[]).filter(x=>x && x.ch === ch.label).length;
+  const nQ = exos(curSubj, "qcm").filter(x=>x && x.ch === ch.label).length;
   if(nQ){
     const p = progressionScope(curSubj, "ch:" + ch.label, "qcm");
     const ok = p.ok === p.total;
@@ -8518,6 +9146,11 @@ function renderCoursePane(type){
     q.innerHTML = `<span class="fin-num">${ok ? COCHE_SVG : 2}</span><span class="fin-txt"><span class="fin-nom">Faire le QCM de ${mot}</span>
       <span class="fin-sub">${ok ? "Validé" : p.ok ? p.ok + " questions validées sur " + p.total : p.total + " questions"}</span></span><span class="fin-fl">${IC_CHEV_DROITE}</span>`;
     q.addEventListener("click", ()=>{ haptic(); lancerQCMChapitre(ch.label); });
+  } else if(peutCreer(curSubj)){
+    const q = etape(num++, "");
+    q.innerHTML = `<span class="fin-num">2</span><span class="fin-txt"><span class="fin-nom">Créer le QCM de ${mot}</span>
+      <span class="fin-sub">Écris tes questions, ou colle des définitions</span></span><span class="fin-fl">${IC_CHEV_DROITE}</span>`;
+    q.addEventListener("click",()=>{ haptic(); formExo(curSubj, "qcm", null, ch.label, ()=>renderCoursePane(type)); });
   }
   // 3. la suite
   const suivant = chapters[chIdx + 1];
@@ -8540,11 +9173,16 @@ function renderCoursePane(type){
   }
   pane.appendChild(fin);
   // ajouter une section : pour ceux qui écrivent leurs cours. Les miens viennent de data.js.
-  if(modifiable(ch) && !(isCiva() && !ch._own)){
+  if(peutEcrire){
+    const row = el("div","ajout-row");
     const addSec=el("button","add-inline");
-    addSec.textContent = "+  Ajouter une section";
+    addSec.textContent = "+  Écrire une section";
     addSec.addEventListener("click",()=>{ haptic(); addSection(type, ch); });
-    pane.appendChild(addSec);
+    const coller = el("button","add-inline");
+    coller.textContent = "+  Coller du texte";
+    coller.addEventListener("click",()=>{ haptic(); collerCours(type, ch); });
+    row.appendChild(addSec); row.appendChild(coller);
+    pane.appendChild(row);
   }
 }
 // ══════════════════════════════════════════════════
@@ -8568,7 +9206,7 @@ function chapitresAReviser(subj){
   const out = [];
   ["cm","td"].forEach(type=>{
     (subj[type]||[]).forEach(ch=>{
-      const n = ["fc","qcm","tr","oq"].reduce((k,m)=>k + (subj[m]||[]).filter(x=>x && x.ch === ch.label).length, 0);
+      const n = ["fc","qcm","tr","oq"].reduce((k,m)=>k + exos(subj, m).filter(x=>x && x.ch === ch.label).length, 0);
       if(n) out.push({ type, label:ch.label, n });
     });
   });
@@ -8592,10 +9230,10 @@ function itemsDuScope(subj, m, scope){
   if(scope === "auteurs") return m === "qcm" ? quizAuteurs(subj).map((item,i)=>({ item, i })) : [];
   if(scope === "grand"){
     // tout dedans : les QCM de tous les CM et TD, plus ceux sur les auteurs
-    const reels = (subj[m]||[]).map((item,i)=>({ item, i }));
+    const reels = exos(subj, m).map((item,i)=>({ item, i }));
     return m === "qcm" ? reels.concat(quizAuteurs(subj).map((item,i)=>({ item, i }))) : reels;
   }
-  const arr = (subj[m]||[]).map((item,i)=>({ item, i }));
+  const arr = exos(subj, m).map((item,i)=>({ item, i }));
   if(!scope || scope === "all") return arr;
   const lab = scope.slice(3);
   return arr.filter(x=>x.item && x.item.ch === lab);
@@ -8616,6 +9254,147 @@ function nomScope(scope){
   if(scope === "grand") return "Le grand QCM";
   if(scope === "all") return "Toute la matière";
   return scope.slice(3);
+}
+
+
+// ══════════════════════════════════════════════════
+// EXERCICES TIRÉS DE TES COURS
+// Chaque définition (« Terme : … ») donne deux questions de QCM, rangées dans son chapitre :
+// « Que désigne ce terme ? » et « Quel terme correspond à cette définition ? ».
+// Les mauvaises réponses sont les autres définitions de tes cours : rien n'est inventé.
+// Mes cours de data.js ont déjà leurs QCM écrits à la main : on n'y ajoute rien.
+// ══════════════════════════════════════════════════
+const QCM_LEX_CACHE = {};
+function genereAuto(subj){ return !!subj && !(isCiva() && !subj._own); }
+function signatureCours(subj){
+  let n = 0, l = 0;
+  ["cm","td"].forEach(t=>(subj[t]||[]).forEach(ch=>(ch.sections||[]).forEach(sec=>{ n++; l += String(sec.body||"").length + (sec.list||[]).join("").length + String(sec.title||"").length; })));
+  return subj.id + "|" + n + "|" + l;
+}
+function qcmLexique(subj){
+  if(!genereAuto(subj)) return [];
+  const sig = signatureCours(subj);
+  if(QCM_LEX_CACHE[subj.id] && QCM_LEX_CACHE[subj.id].sig === sig) return QCM_LEX_CACHE[subj.id].qs;
+  const propre = x=>({ terme:x.terme, def:couper(texteSeul(x.def), 160), label:x.label, sec:x.sec, plein:texteSeul(x.def) });
+  const ici = lexique(subj).map(propre);
+  // les définitions des autres matières complètent les mauvaises réponses quand il en manque
+  const ailleurs = [];
+  if(ici.length < 4) SUBJECTS.forEach(s=>{ if(s !== subj && genereAuto(s)) lexique(s).forEach(x=>ailleurs.push(propre(x))); });
+  const qs = [];
+  if(ici.length + ailleurs.length >= 4){
+    const meme = (a,b)=>nzA(a) === nzA(b);
+    const tirer = (rng, x, champ, ok)=>{
+      // le même chapitre d'abord (plus difficile), puis la matière, puis le reste
+      const groupes = [ici.filter(y=>y.label === x.label), ici.filter(y=>y.label !== x.label), ailleurs];
+      const pris = [];
+      groupes.forEach(g=>{
+        const pool = g.filter(y=>y !== x && !meme(y.terme, x.terme) && !meme(y[champ], x[champ]) && ok(y));
+        while(pool.length && pris.length < 3){
+          const y = pool.splice(Math.floor(rng() * pool.length), 1)[0];
+          if(!pris.some(p=>meme(p[champ], y[champ]))) pris.push(y);
+        }
+      });
+      return pris;
+    };
+    ici.forEach(x=>{
+      const rng = graineDe(subj.id + "|lex|" + x.terme);
+      const e = couper(x.terme + " : " + x.plein, 320);
+      // 1. le terme → sa définition ; la bonne réponse ne doit pas être la plus longue
+      let d = tirer(rng, x, "def", y=>!nzA(y.def).includes(nzA(x.terme)));
+      if(d.length === 3 && !d.some(y=>y.def.length >= x.def.length)){
+        const plusLongue = tirer(rng, x, "def", y=>y.def.length >= x.def.length && !nzA(y.def).includes(nzA(x.terme)))[0];
+        if(plusLongue) d = [plusLongue, ...d.filter(y=>y !== plusLongue).slice(0, 2)];
+      }
+      if(d.length === 3 && d.some(y=>y.def.length >= x.def.length))
+        qs.push({ ch:x.label, q:"Que désigne « " + x.terme + " » ?", opts:[x.def, ...d.map(y=>y.def)], c:0, e, _auto:true });
+      // 2. la définition → le terme
+      let t = tirer(rng, x, "terme", y=>true);
+      if(t.length === 3 && !t.some(y=>y.terme.length >= x.terme.length)){
+        const plusLong = tirer(rng, x, "terme", y=>y.terme.length >= x.terme.length)[0];
+        if(plusLong) t = [plusLong, ...t.filter(y=>y !== plusLong).slice(0, 2)];
+      }
+      if(t.length === 3 && t.some(y=>y.terme.length >= x.terme.length))
+        qs.push({ ch:x.label, q:"Quel terme correspond à cette définition : « " + couper(x.plein, 220) + " » ?", opts:[x.terme, ...t.map(y=>y.terme)], c:0, e, _auto:true });
+    });
+  }
+  QCM_LEX_CACHE[subj.id] = { sig, qs };
+  return qs;
+}
+// les exercices d'une matière : ceux écrits, plus ceux tirés des définitions
+function exos(subj, m){
+  const reels = (subj && subj[m]) || [];
+  return m === "qcm" ? reels.concat(qcmLexique(subj)) : reels;
+}
+
+
+// ── Écrire ses propres questions et flashcards, rangées dans un chapitre ──
+// Mes matières de data.js ne sont pas concernées : leurs exercices viennent de data.js.
+function peutCreer(subj){ return canEdit() && !!subj && !subj._shared && !(isCiva() && !subj._own); }
+function mesExos(subj, m){ return (subj[m]||[]).map((x,i)=>({ x, i })).filter(o=>o.x && !o.x._shared && !o.x._auto); }
+function formExo(subj, m, idx, chDefaut, apres){
+  const chs = [...(subj.cm||[]), ...(subj.td||[])].filter(c=>!c._shared);
+  if(!chs.length){ toast("Ajoute d'abord un CM ou un TD : chaque question se range dans un chapitre."); return; }
+  const item = idx != null ? subj[m][idx] : null;
+  const options = chs.map(c=>({ v:c.label, label:partiesChapitre(c.label).court }));
+  const chOk = v=>chs.some(c=>c.label === v) ? v : null;
+  const ch = { key:"ch", label:"Chapitre", type:"choice", options, value:(item && chOk(item.ch)) || chOk(chDefaut) || chs[chs.length - 1].label };
+  const fini = ()=>{ saveContent(); if(apres) apres(); };
+  const suppr = item ? ()=>{ subj[m].splice(idx, 1); fini(); toast(m === "qcm" ? "Question supprimée." : "Carte supprimée."); } : null;
+  if(m === "fc"){
+    openForm(item ? "Modifier la flashcard" : "Nouvelle flashcard", [ch,
+      { key:"q", label:"Recto : la question", type:"area", placeholder:"Ex. Qu'est-ce que l'habitus ?", value:item ? item.q : "" },
+      { key:"a", label:"Verso : la réponse", type:"area", placeholder:"Ex. Un système de dispositions durables…", value:item ? item.a : "" }
+    ], item ? "Enregistrer" : "Ajouter", v=>{
+      if(!v.q || !v.a) return "Il faut une question et une réponse.";
+      const o = { ch:v.ch, q:v.q, a:v.a, _own:true };
+      if(item) subj.fc[idx] = o; else (subj.fc = subj.fc || []).push(o);
+      fini(); toast(item ? "Carte modifiée." : "Carte ajoutée.");
+    }, suppr);
+    return;
+  }
+  const mauvaises = item ? item.opts.filter((_,k)=>k !== item.c) : [];
+  let averti = false;
+  openForm(item ? "Modifier la question" : "Nouvelle question", [ch,
+    { key:"q", label:"La question", type:"area", placeholder:"Ex. Qui a écrit Les Héritiers ?", value:item ? item.q : "" },
+    { key:"bonne", label:"La bonne réponse", placeholder:"Ex. Bourdieu et Passeron", value:item ? item.opts[item.c] : "" },
+    { key:"m1", label:"Mauvaise réponse 1", placeholder:"Ex. Durkheim", value:mauvaises[0] || "" },
+    { key:"m2", label:"Mauvaise réponse 2", placeholder:"Ex. Boudon et Lahire", value:mauvaises[1] || "" },
+    { key:"m3", label:"Mauvaise réponse 3 (facultatif)", placeholder:"Ex. Dubet", value:mauvaises[2] || "" },
+    { key:"e", label:"Explication (facultatif)", type:"area", placeholder:"Ce qu'il faut retenir", value:item ? (item.e || "") : "",
+      hint:"Elle s'affiche après ta réponse, juste ou fausse. Les réponses sont mélangées à chaque fois." }
+  ], item ? "Enregistrer" : "Ajouter", v=>{
+    const faux = [v.m1, v.m2, v.m3].filter(Boolean);
+    if(!v.q) return "Écris la question.";
+    if(!v.bonne) return "Écris la bonne réponse.";
+    if(faux.length < 2) return "Il faut au moins deux mauvaises réponses.";
+    const tous = [v.bonne, ...faux].map(nzA);
+    if(new Set(tous).size !== tous.length) return "Deux réponses sont identiques.";
+    // une bonne réponse plus longue que les autres se devine : on prévient une fois
+    if(!averti && v.bonne.length > Math.max(...faux.map(x=>x.length)) + 4){
+      averti = true;
+      return "La bonne réponse est la plus longue : on risque de la deviner. Allonge une mauvaise réponse, ou touche encore « " + (item ? "Enregistrer" : "Ajouter") + " » pour garder comme ça.";
+    }
+    const o = { ch:v.ch, q:v.q, opts:[v.bonne, ...faux], c:0, _own:true };
+    if(v.e) o.e = v.e;
+    if(item) subj.qcm[idx] = o; else (subj.qcm = subj.qcm || []).push(o);
+    fini(); toast(item ? "Question modifiée." : "Question ajoutée.");
+  }, suppr);
+}
+// la liste de ce que j'ai écrit, rangée par chapitre : toucher pour modifier
+function listeMesExos(subj, m, apres){
+  const mes = mesExos(subj, m);
+  const ordre = [...(subj.cm||[]), ...(subj.td||[])].map(c=>c.label);
+  const groupes = [];
+  ordre.concat(["\u0000"]).forEach(lab=>{
+    const xs = mes.filter(o=>lab === "\u0000" ? !ordre.includes(o.x.ch) : o.x.ch === lab);
+    if(!xs.length) return;
+    groupes.push({ titre:lab === "\u0000" ? "Sans chapitre" : partiesChapitre(lab).court, lignes:xs.map(o=>({
+      nom:couper(o.x.q, 90),
+      sous:m === "qcm" ? "Bonne réponse : " + couper(o.x.opts[o.x.c], 60) : couper(o.x.a, 70),
+      onTap:()=>{ closePicker(); setTimeout(()=>formExo(subj, m, o.i, null, apres), 320); }
+    })) });
+  });
+  feuillePartage(m === "qcm" ? "Mes questions" : "Mes flashcards", "Touche-en une pour la modifier ou la supprimer.", groupes);
 }
 
 // ── QCM sur les auteurs, fabriqués à partir des fiches ──
@@ -8665,10 +9444,15 @@ function quizAuteurs(subj){
   const ailleurs = [];
   SUBJECTS.forEach(s=>{ if(s.id !== subj.id) (s.auteurs||[]).forEach(a=>{ if(a && a.nom) ailleurs.push(ficheAuteur(a)); }); });
   // les notions de la matière d'abord : des mauvaises réponses venues d'ailleurs seraient trop faciles
-  const notionsIci = [], notionsAilleurs = [];
-  fiches.forEach(f=>f.concepts.forEach(c=>{ if(!notionsIci.some(x=>nzA(x)===nzA(c))) notionsIci.push(c); }));
-  ailleurs.forEach(f=>f.concepts.forEach(c=>{ if(!notionsIci.some(x=>nzA(x)===nzA(c)) && !notionsAilleurs.some(x=>nzA(x)===nzA(c))) notionsAilleurs.push(c); }));
-  const texteComplet = f => nzA([f.texte, f.retenir, f.courant, f.concepts.join(" ")].join(" "));
+  const notionsIci = [], notionsAilleurs = [], vuesN = new Set();
+  // une notion normalisée → les fiches qui la portent (calculé une fois, pas à chaque tirage)
+  const porteurs = new Map();
+  [...fiches, ...ailleurs].forEach(f=>f.concepts.forEach(c=>{ const k = nzA(c); if(!porteurs.has(k)) porteurs.set(k, []); porteurs.get(k).push(f); }));
+  fiches.forEach(f=>f.concepts.forEach(c=>{ const k = nzA(c); if(!vuesN.has(k)){ vuesN.add(k); notionsIci.push(c); } }));
+  ailleurs.forEach(f=>f.concepts.forEach(c=>{ const k = nzA(c); if(!vuesN.has(k)){ vuesN.add(k); notionsAilleurs.push(c); } }));
+  const TC = new Map(), NP = new Map();
+  const texteComplet = f => { if(!TC.has(f)) TC.set(f, nzA([f.texte, f.retenir, f.courant, f.concepts.join(" ")].join(" "))); return TC.get(f); };
+  const nomsDe = f => { if(!NP.has(f)) NP.set(f, nomsPropres(f.nom)); return NP.get(f); };
   const tirer = (rng, liste, n, ok)=>{
     const pris = [];
     const pool = liste.slice();
@@ -8682,9 +9466,9 @@ function quizAuteurs(subj){
   const explication = f => couper(f.nom + " : " + (f.retenir || f.texte), 320);
   // deux auteurs qui se citent (Bourdieu et Passeron, par exemple) partagent leurs notions :
   // l'un ne doit jamais servir de mauvaise réponse à l'autre
-  const lies = (f, g)=> memePersonne(f.nom, g.nom)
-    || nomsPropres(g.nom).some(t=>texteComplet(f).includes(t))
-    || nomsPropres(f.nom).some(t=>texteComplet(g).includes(t));
+  const lies = (f, g)=> nomsDe(f).some(t=>nomsDe(g).includes(t))
+    || nomsDe(g).some(t=>texteComplet(f).includes(t))
+    || nomsDe(f).some(t=>texteComplet(g).includes(t));
   const motsForts = t => nzA(t).split(/[^a-z0-9]+/).filter(w=>w.length >= 7);
   const prochesDe = f => { const m = new Set(); f.concepts.forEach(c=>motsForts(c).forEach(w=>m.add(w))); return m; };
   const nomsDistincts = (f, rng, exclure)=>{
@@ -8708,7 +9492,7 @@ function quizAuteurs(subj){
       const bonne = f.concepts[f.concepts.length - 1];
       const siens = texteComplet(f);
       const proches = prochesDe(f);
-      const proprietaires = n => [...fiches, ...ailleurs].filter(g=>g.concepts.some(c=>nzA(c)===nzA(n)));
+      const proprietaires = n => porteurs.get(nzA(n)) || [];
       const okN = (n, pris)=> nzA(n) !== nzA(bonne) && !siens.includes(nzA(n))
         && !f.concepts.some(c=>nzA(c)===nzA(n))
         && !motsForts(n).some(w=>proches.has(w))
@@ -8799,7 +9583,7 @@ function renderChoix(m){
     if(nErr) e.addEventListener("click",()=>{ haptic(); choisirScope("erreurs"); retourSession = ()=>renderChoix(m); startSession(m); });
     box.appendChild(e);
   }
-  const chs = chapitresAReviser(curSubj).filter(c=>(curSubj[m]||[]).some(x=>x && x.ch === c.label));
+  const chs = chapitresAReviser(curSubj).filter(c=>exos(curSubj, m).some(x=>x && x.ch === c.label));
   [["cm","Cours",ICO("cm")],["td","TD",ICO("td")]].forEach(([type, nom, icone])=>{
     const liste = chs.filter(c=>c.type === type);
     if(!liste.length) return;
@@ -8819,6 +9603,28 @@ function renderChoix(m){
     box.appendChild(g);
     box.appendChild(carte("auteurs", ICO("auteurs"), "Les auteurs et leurs notions"));
   }
+  // écrire ses propres questions (ou cartes), et retrouver celles déjà écrites
+  if((m === "qcm" || m === "fc") && peutCreer(curSubj)){
+    if(!box.querySelector(".qc-card")){
+      const v = el("div"); v.innerHTML = vide(m, m === "qcm" ? "Aucun QCM pour l'instant" : "Aucune flashcard pour l'instant",
+        m === "qcm" ? "Écris tes questions ici. Les définitions de tes cours (« Terme : … ») donnent aussi des QCM tout seuls." : "Écris tes cartes ici. Les définitions de tes cours (« Terme : … ») donnent aussi des cartes toutes seules.");
+      box.appendChild(v.firstChild);
+    }
+    const apres = ()=>renderChoix(m);
+    const row = el("div","ajout-row exo-row");
+    const plus = el("button","add-inline"); plus.type = "button";
+    plus.textContent = m === "qcm" ? "+  Écrire une question" : "+  Écrire une carte";
+    plus.addEventListener("click",()=>{ haptic(); formExo(curSubj, m, null, null, apres); });
+    row.appendChild(plus);
+    const n = mesExos(curSubj, m).length;
+    if(n){
+      const mes = el("button","add-inline"); mes.type = "button";
+      mes.textContent = (m === "qcm" ? "Mes questions (" : "Mes cartes (") + n + ")";
+      mes.addEventListener("click",()=>{ haptic(); listeMesExos(curSubj, m, apres); });
+      row.appendChild(mes);
+    } else row.classList.add("seul");
+    box.appendChild(row);
+  }
   // les exercices sans chapitre (ajoutés à la main, partagés) restent dans « tout d'un coup »
   showScreen("qcmchoix");
   window.scrollTo(0,0);
@@ -8826,8 +9632,8 @@ function renderChoix(m){
 
 function renderTrainPane(){
   const pane=document.getElementById("pane-2"); pane.innerHTML="";
-  const hasTrain=(curSubj.fc&&curSubj.fc.length)||(curSubj.qcm&&curSubj.qcm.length)||(curSubj.oq&&curSubj.oq.length)||(curSubj.tr&&curSubj.tr.length)||(curSubj.auteurs&&curSubj.auteurs.length);
-  if(!hasTrain){ pane.innerHTML = vide("entrainer", "Rien à réviser pour l'instant", "Les QCM et les fiches arriveront avec les cours de cette matière."); return; }
+  const hasTrain=peutCreer(curSubj)||lexique(curSubj).length||(curSubj.fc&&curSubj.fc.length)||(curSubj.qcm&&curSubj.qcm.length)||(curSubj.oq&&curSubj.oq.length)||(curSubj.tr&&curSubj.tr.length)||(curSubj.auteurs&&curSubj.auteurs.length);
+  if(!hasTrain){ pane.innerHTML = vide("entrainer", "Rien à réviser pour l'instant", isCiva() ? "Les QCM et les fiches arriveront avec les cours de cette matière." : "Les QCM et les fiches arrivent par tes classes : quand quelqu'un y partage les exercices d'une matière, ils s'ajoutent ici."); return; }
   // Combien de cartes sont à revoir aujourd'hui ?
   const dueTotal = dueCount(curSubj);
   const intro=el("div","train-intro");
@@ -8855,16 +9661,25 @@ function renderTrainPane(){
   ];
   modes.forEach(mo=>{
     const arr=itemsDuScope(curSubj, mo.m, scope);
-    if(!arr.length) return;
+    if(!arr.length && !(mo.m === "fc" && lexique(curSubj).length)){
+      if(!((mo.m === "qcm" || mo.m === "fc") && peutCreer(curSubj))) return;
+      const card = el("button","mode-card");
+      card.innerHTML = `<div class="mode-icon">${mo.icon}</div>
+        <div class="mode-info"><div class="mode-name">${mo.title}</div><div class="mode-desc">Aucun pour l'instant · écris les tiens</div></div>
+        <span class="mode-count">0</span>`;
+      card.addEventListener("click",()=>{ haptic(); renderChoix(mo.m); });
+      grid.appendChild(card);
+      return;
+    }
     // un QCM (ou une série) par CM et TD, plus celui des auteurs : on compte ça, pas les questions
-    const series = chapitresAReviser(curSubj).filter(c=>(curSubj[mo.m]||[]).some(x=>x && x.ch === c.label)).map(c=>"ch:" + c.label);
+    const series = chapitresAReviser(curSubj).filter(c=>exos(curSubj, mo.m).some(x=>x && x.ch === c.label)).map(c=>"ch:" + c.label);
     if(mo.m === "qcm" && curSubj.auteurs && curSubj.auteurs.length && quizAuteurs(curSubj).length) series.push("auteurs");
     if(mo.m === "fc" && lexique(curSubj).length) series.push("lex", "lexinv");
     const n = series.length;
     const valides = series.filter(sc=>{ const p = progressionScope(curSubj, sc, mo.m); return p.total && p.ok === p.total; }).length;
     const nom = mo.m === "qcm" ? n + " QCM" : n + " série" + (n > 1 ? "s" : "");
     const detail = mo.m === "qcm" ? "un par CM/TD" + (series.includes("auteurs") ? ", plus les auteurs" : "")
-      : mo.m === "fc" && series.includes("lex") ? "une par CM/TD, plus le lexique" : (n > 1 ? "une par CM/TD" : "");
+      : mo.m === "fc" && series.includes("lex") ? (n > 2 ? "une par CM/TD, plus le lexique" : "le lexique, dans les deux sens") : (n > 1 ? "une par CM/TD" : "");
     const txt = nom + (valides && valides < n ? " · " + valides + " validé" + (mo.m === "qcm" ? "" : "e") + (valides > 1 ? "s" : "") : detail ? " · " + detail : "");
     const fini = n && valides === n;
     const card=el("button","mode-card");
@@ -9412,7 +10227,7 @@ function melange(a){ const b = a.slice(); for(let i = b.length - 1; i > 0; i--){
 function examSources(subj){
   const out = [];
   chapitresAReviser(subj).forEach(c=>{
-    const n = (subj.qcm||[]).filter(x=>x && x.ch === c.label).length;
+    const n = exos(subj, "qcm").filter(x=>x && x.ch === c.label).length;
     if(n) out.push({ id:"ch:" + c.label, nom:c.label, type:c.type, n });
   });
   const na = (subj.auteurs && subj.auteurs.length) ? quizAuteurs(subj).length : 0;
@@ -9619,7 +10434,7 @@ function startGlobalSession(){
   const all = [];
   SUBJECTS.forEach(s=>{
     ["fc","qcm","oq","tr"].forEach(m=>{
-      (s[m]||[]).forEach((item,i)=>{
+      exos(s, m).forEach((item,i)=>{
         const key = cardKey(s.id,m,item,i);
         if(srsIsDue(key)) all.push({ item: (m === "qcm" || m === "tr") ? melangerQCM(item) : item, mode:m, subj:s, key });
       });
@@ -9925,7 +10740,7 @@ function showResults(){
     const b1=el("button","btn ghost"); b1.textContent="Recommencer";
     b1.addEventListener("click",()=>startFilSession(th)); row.appendChild(b1);
     const b2=el("button","btn"); b2.textContent="Terminer";
-    b2.addEventListener("click",()=>renderFilPsycho());
+    b2.addEventListener("click",()=>(FIL_RETOUR || renderFilPsycho)());
     row.appendChild(b2);
   } else if(globalSession){
     if(restant>0){
@@ -10056,12 +10871,13 @@ function savePsychoSteps(){
 }
 
 function renderPsycho(){
+  entreeDansEcran(document.getElementById("psycho-inner"));
   const inner=document.getElementById("psycho-inner"); inner.innerHTML="";
   inner.innerHTML=`
     <button class="psy-back" id="psy-back-home">${chevronL}Retour</button>
     <div class="psy-hero rise"><div class="psy-hero-mark">🧠💜</div>
       <div class="psy-hero-title">${psyTitle()}</div>
-      <div class="psy-hero-sub">On est en L2. En septembre 2026, on attaque la L3. Objectif : intégrer la Licence de Psychologie à la rentrée 2027.${isNana()?" 🌸":""}</div></div>
+      <div class="psy-hero-sub">On est en L3. Objectif : intégrer la Licence de Psychologie à la rentrée 2027.${isNana()?" 🌸":""}</div></div>
     <div class="psy-message rise" style="animation-delay:.06s"><div class="psy-message-name">💌 Un message pour toi, Nana</div>
       <div class="psy-message-text">"Je sais que tu as les capacités pour aller en fac de Psycho, tout est listé et je serai là chaque étape si nécessaire. Tu vas réussir Nana 🫂"</div></div>
     <div class="psy-section-label rise" style="animation-delay:.09s">Par où tu veux commencer ?</div>`;
@@ -10073,7 +10889,7 @@ function renderPsycho(){
   ];
   cards.forEach((c,i)=>{
     const b=el("button","psy-nav-card rise"); b.style.animationDelay=(0.12+i*0.03)+"s";
-    b.innerHTML=`<div class="psy-nav-icon">${c.icon}</div><div class="psy-nav-info"><div class="psy-nav-title">${c.title}</div><div class="psy-nav-sub">${c.sub}</div></div><span class="psy-nav-arrow">→</span>`;
+    b.innerHTML=`<div class="psy-nav-icon">${c.icon}</div><div class="psy-nav-info"><div class="psy-nav-title">${c.title}</div><div class="psy-nav-sub">${c.sub.replace(/\n/g, " ")}</div></div><span class="psy-nav-arrow">${IC_CHEV_DROITE}</span>`;
     b.addEventListener("click",c.fn); inner.appendChild(b);
   });
   document.getElementById("psy-back-home").addEventListener("click",()=>showScreen("semestres"));
@@ -10088,15 +10904,16 @@ const THEMES_PSY = [
   { ic:"🧩", nom:"Apprentissage et motivation", mots:["bandura","skinner","pavlov","behaviorisme","constructivisme","socioconstructivisme","motivation","sentiment d'efficacite","conflit sociocognitif","rogers"] },
   { ic:"🌀", nom:"Adolescence et clinique", mots:["adolescence","adolescent","tdah","hyperactif","harcelement","dsm","phobie","carence affective","anorexie","regression"] },
 ];
-function filPsycho(){
+function filPsycho(){ return filThemes(THEMES_PSY); }
+function filThemes(themes){
   const I = indexGlobal();
   const parChap = new Map();
   I.sections.forEach(s=>{ const k = s.subj.id + "|" + s.type + "|" + s.ci; if(!parChap.has(k)) parChap.set(k, { s, t:"" }); parChap.get(k).t += s.t; });
-  return THEMES_PSY.map(th=>{
+  return themes.map(th=>{
     const res = th.mots.map(motEntier);
     const chaps = [];
     parChap.forEach(({ s, t })=>{
-      const n = res.filter(r=>r.test(t)).length;
+      const n = res.filter((r,i)=>t.includes(th.mots[i]) && r.test(t)).length;
       if(n >= 2) chaps.push({ s, n });
     });
     chaps.sort((a,b)=>anneeMatiere(a.s.subj).rang - anneeMatiere(b.s.subj).rang || b.n - a.n);
@@ -10107,7 +10924,7 @@ function filPsycho(){
 // de la L1 à la L3. Ce sont les questions déjà là : leur validation est la même que dans la matière.
 function questionsDuTheme(th){
   const res = th.mots.map(motEntier), out = [];
-  SUBJECTS.forEach(subj=>(subj.qcm||[]).forEach((q,i)=>{
+  SUBJECTS.forEach(subj=>exos(subj, "qcm").forEach((q,i)=>{
     if(!q || !q.q || !Array.isArray(q.opts)) return;
     const t = norm(q.q + " " + q.opts.join(" ") + " " + (q.e || ""));
     if(res.some(r=>r.test(t))) out.push({ subj, item:q, i, key:cardKey(subj.id, "qcm", q, i) });
@@ -10137,20 +10954,29 @@ function carteQcmTheme(th){
   b.addEventListener("click",()=>{ haptic(); startFilSession(th); });
   return b;
 }
-function renderFilPsycho(){
+// le fil d'un projet : les chapitres de tous tes cours qui parlent de ses thèmes
+let FIL_RETOUR = null;
+function renderFilPsycho(){ renderFil(THEMES_PSY, { mark:"🧭", titre:"Ton fil psycho", quoi:"de psycho" }, renderPsycho); }
+function renderFil(themes, o, retour){
+  entreeDansEcran(document.getElementById("psycho-inner"));
+  indexAJour();
+  FIL_RETOUR = ()=>renderFil(themes, o, retour);
   const inner = document.getElementById("psycho-inner"); inner.innerHTML = "";
-  psyBack(inner, renderPsycho);
-  const fil = filPsycho();
+  const back = el("button","psy-back"); back.innerHTML = chevronL + "Retour"; back.addEventListener("click", retour); inner.appendChild(back);
+  const fil = filThemes(themes);
   const total = new Set(fil.flatMap(f=>f.chaps.map(c=>c.s.subj.id + "|" + c.s.type + "|" + c.s.ci))).size;
   const hero = el("div","psy-hero rise");
   const ansFil = ["L1","L2","L3"].filter(a=>fil.some(f=>f.chaps.some(c=>anneeMatiere(c.s.subj).cle === a)));
-  hero.innerHTML = `<div class="psy-hero-mark">🧭</div><div class="psy-hero-title">Ton fil psycho</div><div class="psy-hero-sub">${total} chapitres de ta ${ansFil.join(", ").replace(/, ([^,]*)$/, " et $1")} parlent déjà de psycho. Les voici, rangés par thème.</div>`;
+  const ou = isCiva() && ansFil.length ? "de ta " + ansFil.join(", ").replace(/, ([^,]*)$/, " et $1") : "de tes cours";
+  hero.innerHTML = `<div class="psy-hero-mark">${o.mark}</div><div class="psy-hero-title">${esc(o.titre)}</div><div class="psy-hero-sub">${total
+    ? total + " chapitre" + (total > 1 ? "s " : " ") + ou + (total > 1 ? " parlent" : " parle") + " déjà " + o.quoi + ". Les voici, rangés par thème."
+    : "Aucun de tes chapitres n'en parle encore. Ils apparaîtront ici dès que tes cours en parleront."}</div>`;
   inner.appendChild(hero);
   fil.forEach(({ th, chaps }, i)=>{
     if(!chaps.length) return;
     const c = el("div","fil-theme rise"); c.style.animationDelay = (0.06 + i*0.03) + "s";
     const ans = ["L1","L2","L3"].filter(a=>chaps.some(x=>anneeMatiere(x.s.subj).cle === a));
-    c.innerHTML = `<div class="fil-tete"><span class="fil-ic">${th.ic}</span><span class="fil-txt"><b>${esc(th.nom)}</b><small>${chaps.length} chapitre${chaps.length > 1 ? "s" : ""}</small></span><span class="idx-ans">${ans.map(a=>`<span class="idx-an">${a}</span>`).join("")}</span></div>`;
+    c.innerHTML = `<div class="fil-tete"><span class="fil-ic">${th.ic}</span><span class="fil-txt"><b>${esc(th.nom)}</b><small>${chaps.length} chapitre${chaps.length > 1 ? "s" : ""}</small></span>${isCiva() ? `<span class="idx-ans">${ans.map(a=>`<span class="idx-an">${a}</span>`).join("")}</span>` : ""}</div>`;
     const qb = carteQcmTheme(th); if(qb) c.appendChild(qb);
     const liste = el("div","fil-liste");
     const MAX = 4;
@@ -10168,11 +10994,268 @@ function renderFilPsycho(){
   showScreen("psycho");
   window.scrollTo(0, 0);
 }
+// ══════════════════════════════════════════════════
+// PROJETS : Projet Psycho, Concours CPE…
+// Un projet, c'est des étapes à cocher, des infos et des outils. Il se partage dans une classe
+// comme une matière ; chacun coche ses propres étapes. Le contenu vit ici, dans l'app :
+// tous ceux qui l'ont reçu voient donc la même version, à jour.
+// Civa et Nana gardent leur Projet Psycho personnel ; les autres reçoivent une version neutre.
+// ══════════════════════════════════════════════════
+// la version neutre de Projet Psycho : sans dates qui ne valent que pour nous, sans tournures au féminin
+function psyNeutre(t){
+  return String(t || "")
+    .replace(/Dès maintenant \(L2\)/g, "Dès que possible")
+    .replace(/\s*2027/g, "")
+    .replace(/\(si convoquée\)/g, "(en cas de convocation)")
+    .replace(/si convoquée/g, "en cas de convocation")
+    .replace(/Sois concrète\./g, "Donne du concret.")
+    .replace(/Sois directe et confiante\./g, "Reste direct et confiant.");
+}
+const PROJETS = {
+  psycho: {
+    id:"psycho", titre:"Projet Psycho", icone:"💜", sous:"Passerelles · masters", mark:"🧠",
+    accroche:"Passer des Sciences de l'éducation à la psychologie : la VES pour entrer directement en L2, Parcoursup en plan B, puis le master.",
+    etapes:()=>PSYCHO_STEPS.map(s=>({ id:s.id, titre:psyNeutre(s.title), desc:psyNeutre(s.desc), date:psyNeutre(s.date) })),
+    phases:[
+      { label:"🌱 Dès que possible", ids:["s1","s2"] },
+      { label:"📅 Janvier", ids:["s3","s4"] },
+      { label:"✍️ Février → avril", ids:["s5","s6","s7","s7b"] },
+      { label:"📬 Avant fin mai", ids:["s8"] },
+      { label:"🎓 Juin → septembre", ids:["s9","s10","s11"] }
+    ],
+    rubriques:[
+      { type:"etapes", icon:"📋", titre:"Les étapes", sous:"Ton chemin, étape par étape." },
+      { type:"cartes", icon:"💡", titre:"Infos utiles", sous:"La VES, Parcoursup, les universités et les délais.",
+        cartes:()=>PSYCHO_INFOS.map(x=>({ icon:x.icon, titre:psyNeutre(x.title), lignes:x.lines.map(psyNeutre), tags:x.tags })) },
+      { type:"cartes", icon:"🔍", titre:"Quelle spécialité ?", sous:"Les grandes branches de la psychologie.",
+        intro:"En psychologie, la spécialité se choisit au master, pas en licence. La licence donne les bases communes à toutes les branches.",
+        cartes:()=>PSYCHO_SPES.map(x=>({ icon:x.icon, titre:x.nom, lignes:[x.desc, "Lien avec ton parcours : " + String(x.lien || "").replace(/^Lien avec ton parcours\s*:\s*/i, ""), "→ " + x.master] })) },
+      { type:"fil", icon:"🧭", titre:"Ton fil psycho", sous:"Ce que tes cours disent déjà de la psycho, rangé par thème.", themes:()=>THEMES_PSY, quoi:"de psycho" }
+    ]
+  },
+  cpe: {
+    id:"cpe", titre:"Concours CPE", icone:"🏫", sous:"Session 2027 · dès la L3", mark:"🏫",
+    accroche:"Devenir conseiller principal d'éducation. Depuis 2026, le concours externe se passe dès la L3. Tout ce qu'il faut pour la session 2027, vérifié sur les sites officiels.",
+    alerte:()=>Date.now() < Date.parse("2026-11-25T12:00:00+01:00") ? "Inscriptions ouvertes sur Cyclades jusqu'au mercredi 25 novembre 2026, midi." : "",
+    etapes:()=>[
+      { id:"c1", titre:"Lire la page officielle du concours", desc:"Sur education.gouv.fr : les conditions, les épreuves, le programme, les sujets et les rapports de jury. C'est la référence, avant tout autre site.", date:"Dès maintenant" },
+      { id:"c2", titre:"Vérifier que tu peux t'inscrire", desc:"Pour le concours externe bac+3, il suffit d'être en L3 ou d'avoir une licence.\nAvec un master, le concours bac+5 existe encore en 2027, pour la dernière fois.", date:"Avant l'inscription" },
+      { id:"c3", titre:"T'inscrire sur Cyclades", desc:"Cyclades est l'application officielle d'inscription. Crée ton compte, choisis le concours externe bac+3 de CPE et valide ton dossier. Garde ton numéro d'inscription.", date:"⚠️ Avant le mercredi 25 novembre 2026, midi" },
+      { id:"c4", titre:"Lire le programme et la bibliographie 2027", desc:"La dissertation porte sur deux thèmes : « Éduquer à la citoyenneté » et « Climat scolaire ». Le ministère publie une bibliographie générale et une bibliographie par thème.", date:"Novembre" },
+      { id:"c5", titre:"Maîtriser les textes de base", desc:"La circulaire de missions des CPE (n° 2015-139 du 10 août 2015), le référentiel de compétences de 2013 et le fonctionnement d'un établissement : projet d'établissement, CVL, CVC, CESCE, délégués.", date:"Novembre → janvier" },
+      { id:"c6", titre:"Lire le rapport du jury 2026", desc:"C'était la première session du concours bac+3. Le rapport donne les sujets, ce que le jury attend et les erreurs fréquentes, épreuve par épreuve.", date:"Décembre" },
+      { id:"c7", titre:"T'entraîner aux deux écrits", desc:"Dissertation et analyse de dossier, 4 heures chacune, en conditions réelles. Fais-toi un répertoire de définitions courtes des notions qui reviennent.", date:"Décembre → février" },
+      { id:"c8", titre:"Candidater au master M2E", desc:"Après le concours, la formation dure deux ans, en master à l'INSPE. La candidature se fait sur monmaster.gouv.fr. Il est conseillé de candidater sans attendre les résultats du concours.", date:"Au printemps, sur Mon Master" },
+      { id:"c9", titre:"Passer les deux écrits", desc:"La dissertation (4 h) et l'analyse d'un dossier documentaire (4 h). Une note de 5 ou moins est éliminatoire.", date:"Jeudi 4 et vendredi 5 mars 2027" },
+      { id:"c10", titre:"Préparer les oraux", desc:"Entraîne-toi à présenter une situation de vie scolaire en 15 minutes, puis à échanger. Prépare ta présentation de 5 minutes : ton parcours et pourquoi le métier de CPE. Le jury conseille de faire des immersions en établissement.", date:"Dès les résultats d'admissibilité" },
+      { id:"c11", titre:"Passer les oraux", desc:"L'étude d'une situation de vie scolaire (1 h 30 de préparation, 45 minutes d'épreuve), puis l'entretien (35 minutes). Les dates sont publiées sur Cyclades.", date:"Avant l'été 2027" },
+      { id:"c12", titre:"Entrer en formation", desc:"En cas de réussite, tu entres en master M2E à la rentrée, pour deux ans de formation rémunérée à l'INSPE.", date:"Rentrée 2027" }
+    ],
+    phases:[
+      { label:"⏳ Maintenant · octobre et novembre 2026", ids:["c1","c2","c3"] },
+      { label:"📚 Novembre → février · se préparer", ids:["c4","c5","c6","c7","c8"] },
+      { label:"✍️ Mars 2027 · les écrits", ids:["c9"] },
+      { label:"🗣️ Avant l'été 2027 · les oraux", ids:["c10","c11"] },
+      { label:"🎓 Rentrée 2027", ids:["c12"] }
+    ],
+    rubriques:[
+      { type:"etapes", icon:"📋", titre:"Les étapes", sous:"De l'inscription à la rentrée 2027." },
+      { type:"cartes", icon:"✍️", titre:"Les épreuves", sous:"Deux écrits, deux oraux, et ce que le jury attend.",
+        intro:"Quatre épreuves notées sur 20 : deux écrits d'admissibilité, puis deux oraux d'admission. Les conseils viennent du rapport du jury 2026.",
+        cartes:()=>[
+          { icon:"✍️", titre:"Écrit 1 · La dissertation", tags:["4 h","Coefficient 3"], lignes:[
+            "Une dissertation sur une question d'éducation et de formation des jeunes.",
+            "Elle s'appuie sur le programme : en 2027, « Éduquer à la citoyenneté » et « Climat scolaire », avec une bibliographie.",
+            "Ce que le jury attend :",
+            "→ Définir les termes du sujet avant de les relier.",
+            "→ Construire un raisonnement, pas un catalogue de réformes ou d'exemples.",
+            "→ Soigner la conclusion et relire l'orthographe." ] },
+          { icon:"📂", titre:"Écrit 2 · L'analyse de dossier", tags:["4 h","Coefficient 2"], lignes:[
+            "Un dossier documentaire sur une question de politique éducative, avec trois ou quatre questions.",
+            "Ce que le jury attend :",
+            "→ Répondre question par question, pas en une dissertation.",
+            "→ Citer les documents par leur numéro ou leur auteur, et les analyser au lieu de les paraphraser.",
+            "→ Définir les notions clés et partager le temps entre les questions." ] },
+          { icon:"🗣️", titre:"Oral 1 · La situation de vie scolaire", tags:["1 h 30 de préparation","45 min","Coefficient 5"], lignes:[
+            "Un dossier de cinq pages au plus sur une situation en collège ou en lycée.",
+            "15 minutes d'exposé, puis 30 minutes d'échange avec le jury. C'est l'épreuve qui compte le plus.",
+            "Ce que le jury attend :",
+            "→ Tenir dans le temps : beaucoup de candidats dépassent.",
+            "→ Analyser et poser le problème, pas seulement décrire, puis proposer des actions précises.",
+            "→ Citer les documents et se détacher de ses notes." ] },
+          { icon:"🤝", titre:"Oral 2 · L'entretien", tags:["35 min","Coefficient 3"], lignes:[
+            "5 minutes pour présenter ton parcours et ta motivation, 10 minutes d'échange, puis 20 minutes autour d'une mise en situation.",
+            "On y parle des valeurs de la République, dont la laïcité, du métier de CPE, des obligations du service public, de la transition écologique et du bien-être des élèves.",
+            "Ce que le jury attend :",
+            "→ Prendre un temps de réflexion sur les enjeux avant de répondre.",
+            "→ Savoir dire pourquoi tu veux être CPE.",
+            "→ Pas une réponse parfaite : une analyse, un raisonnement structuré et du bon sens." ] },
+          { icon:"📏", titre:"La notation", lignes:[
+            "Chaque épreuve est notée sur 20.",
+            "À l'écrit, une note de 5 ou moins est éliminatoire. À l'oral, un 0 est éliminatoire.",
+            "Les oraux pèsent 8 coefficients sur 13 : ils font souvent la différence." ] }
+        ] },
+      { type:"cartes", icon:"💡", titre:"Infos utiles", sous:"Les dates, les chiffres, les textes et l'après-concours.",
+        cartes:()=>[
+          { icon:"🎓", titre:"Le concours dès la L3", lignes:[
+            "Depuis la session 2026, le concours externe de CPE se passe au niveau bac+3.",
+            "Il suffit d'être en L3 ou d'avoir une licence.",
+            "Le concours bac+5 existe encore en 2027, pour la dernière fois.",
+            "Il existe aussi un concours interne et un troisième concours, pour ceux qui ont déjà une expérience professionnelle." ] },
+          { icon:"📅", titre:"Les dates de la session 2027", lignes:[
+            "Inscriptions sur Cyclades jusqu'au mercredi 25 novembre 2026, midi (heure de Paris).",
+            "Écrits : jeudi 4 et vendredi 5 mars 2027.",
+            "Oraux : le calendrier sera publié sur Cyclades.",
+            "Concours interne : dossier RAEP au plus tard le jeudi 3 décembre 2026, 23 h 59." ] },
+          { icon:"📊", titre:"Les chiffres de 2026", lignes:[
+            "200 postes au concours bac+3.",
+            "1 872 présents à l'écrit, 450 admissibles, 200 admis : environ 1 sur 10.",
+            "Moyenne du dernier admis : 13,43 sur 20.",
+            "Les postes de 2027 seront annoncés plus tard." ] },
+          { icon:"🏫", titre:"Après le concours", lignes:[
+            "Les reçus au concours bac+3 suivent une formation rémunérée de deux ans, de niveau master, à l'INSPE.",
+            "Ce master s'appelle M2E. La candidature se fait sur monmaster.gouv.fr.",
+            "Une plaquette d'INSPE indique environ 1 400 € par mois la première année, puis 1 800 € la seconde.",
+            "Après le master, on est titularisé, avec un engagement à servir l'État plusieurs années." ] },
+          { icon:"📚", titre:"Les textes à connaître", lignes:[
+            "→ La circulaire de missions des CPE : n° 2015-139 du 10 août 2015.",
+            "→ Le référentiel des compétences professionnelles des métiers du professorat et de l'éducation (2013).",
+            "→ Le Code de l'éducation, notamment l'article L111-1, cité dans le sujet de dissertation 2026.",
+            "→ Le fonctionnement d'un EPLE et ses instances : CVL, CVC, CESCE, projet d'établissement, délégués." ] },
+          { icon:"🧭", titre:"Les conseils du jury", lignes:[
+            "→ Faire des immersions en établissement, auprès d'un CPE.",
+            "→ Se faire un répertoire de définitions courtes des notions qui reviennent.",
+            "→ Lire les rapports de jury : sujets, attentes et erreurs fréquentes.",
+            "→ Le jury n'attend pas des réponses parfaites, mais une analyse, un raisonnement structuré et du bon sens." ] },
+          { icon:"🔗", titre:"Les sources officielles", lignes:["Toutes les infos de ce projet viennent de ces pages."], liens:[
+            { t:"Les concours de CPE (education.gouv.fr)", u:"https://www.education.gouv.fr/les-concours-de-recrutement-de-conseillers-principaux-d-education-cpe-6719" },
+            { t:"Les épreuves du concours externe bac+3", u:"https://www.education.gouv.fr/les-epreuves-du-concours-externe-bac-3-de-cpe-450225" },
+            { t:"Le programme de la session 2027 (PDF)", u:"https://www.education.gouv.fr/sites/default/files/document/programme-du-concours-externe-bac-3-de-recrutement-de-cpe-de-la-session-2027-519964.pdf" },
+            { t:"Le rapport du jury 2026, bac+3 (PDF)", u:"https://www.education.gouv.fr/sites/default/files/document/rapport-du-jury-du-concours-externe-bac-3-de-recrutement-de-cpe-de-la-session-2026-520510.pdf" },
+            { t:"Mon Master, pour le master M2E", u:"https://www.monmaster.gouv.fr" } ] }
+        ] },
+      { type:"fil", icon:"🧭", titre:"Le programme dans tes cours", sous:"Ce que tes cours disent déjà des thèmes du concours.", quoi:"des thèmes du concours",
+        themes:()=>[
+          { ic:"🗳️", nom:"Éduquer à la citoyenneté", mots:["citoyennete","citoyen","citoyens","laicite","democratie","cvl","cvc","delegues","engagement","participation","valeurs de la republique","emc","vie lyceenne","eco-delegues"] },
+          { ic:"🌤️", nom:"Climat scolaire", mots:["climat scolaire","harcelement","violence","violences","discipline","sanction","sanctions","punition","bien-etre","decrochage","absenteisme","exclusion","conflit","conflits"] },
+          { ic:"🏫", nom:"Le métier de CPE", mots:["cpe","conseiller principal","vie scolaire","eple","assistants d'education","suivi des eleves","projet d'etablissement","cesce","parents","familles"] }
+        ] }
+    ]
+  }
+};
+// les projets que j'ai : ceux reçus d'une classe ; Civa a aussi Concours CPE, qu'elle partage
+function projetsSuivis(){ return follows().filter(f=>f.type === "projet" && PROJETS[f.projet]); }
+function mesProjets(){
+  const ids = new Set(projetsSuivis().map(f=>f.projet));
+  if(isCiva()) ids.add("cpe");
+  if(isCloseFriend()) ids.delete("psycho");          // le nôtre est déjà là, en version perso
+  return [...ids].filter(id=>PROJETS[id]);
+}
+// ce que je peux publier dans une classe
+function projetsPubliables(){
+  const ids = new Set(mesProjets());
+  if(isCloseFriend()) ids.add("psycho");
+  return [...ids].filter(id=>PROJETS[id]);
+}
+function estProjetItem(it){ return !!it && /^projet:/.test(String(it.subject_title || "")); }
+function projetDeItem(it){ return String(it.subject_title || "").replace(/^projet:/, ""); }
+// mes étapes cochées, enregistrées avec mes réglages : elles suivent sur tous mes appareils
+function projetEtat(pid){
+  USER_SETTINGS.projets = USER_SETTINGS.projets || {};
+  return (USER_SETTINGS.projets[pid] = USER_SETTINGS.projets[pid] || {});
+}
+function projetAvancement(pid){
+  const p = PROJETS[pid]; if(!p) return 0;
+  const et = p.etapes(), e = projetEtat(pid);
+  return et.length ? Math.round(et.filter(s=>e[s.id]).length / et.length * 100) : 0;
+}
+function retirerProjet(pid){
+  USER_SETTINGS.follows = follows().filter(f=>!(f.type === "projet" && f.projet === pid));
+  saveContent();
+}
+function renderProjet(pid){
+  const p = PROJETS[pid]; if(!p) return;
+  entreeDansEcran(document.getElementById("psycho-inner"));
+  const inner = document.getElementById("psycho-inner"); inner.innerHTML = "";
+  const back = el("button","psy-back"); back.innerHTML = chevronL + "Retour";
+  back.addEventListener("click",()=>{ renderSemestres(); showScreen("semchoice"); });
+  inner.appendChild(back);
+  const hero = el("div","psy-hero rise");
+  hero.innerHTML = `<div class="psy-hero-mark">${p.mark}</div><div class="psy-hero-title">${esc(p.titre)}</div><div class="psy-hero-sub">${esc(p.accroche)}</div>`;
+  inner.appendChild(hero);
+  const al = p.alerte ? p.alerte() : "";
+  if(al){ const a = el("div","projet-alerte rise"); a.innerHTML = `<span>⏰</span><span>${esc(al)}</span>`; inner.appendChild(a); }
+  const lab = el("div","psy-section-label rise"); lab.textContent = "Par où tu veux commencer ?"; inner.appendChild(lab);
+  p.rubriques.forEach((r,i)=>{
+    const b = el("button","psy-nav-card rise"); b.style.animationDelay = (0.08 + i*0.03) + "s";
+    let sous = r.sous;
+    if(r.type === "etapes"){ const et = p.etapes(), e = projetEtat(pid), n = et.filter(s=>e[s.id]).length; sous = n ? n + " étape" + (n > 1 ? "s" : "") + " sur " + et.length + " · " + projetAvancement(pid) + " %" : r.sous; }
+    b.innerHTML = `<div class="psy-nav-icon">${r.icon}</div><div class="psy-nav-info"><div class="psy-nav-title">${esc(r.titre)}</div><div class="psy-nav-sub">${esc(sous)}</div></div><span class="psy-nav-arrow">${IC_CHEV_DROITE}</span>`;
+    b.addEventListener("click",()=>{ haptic(); ouvrirRubrique(pid, i); });
+    inner.appendChild(b);
+  });
+  // un projet reçu d'une classe peut se retirer ; celui de Civa vient de l'app
+  if(projetsSuivis().some(f=>f.projet === pid)){
+    const x = el("button","colle-ou projet-retirer"); x.type = "button"; x.textContent = "Retirer ce projet de mes projets";
+    x.addEventListener("click",()=>confirmer("Retirer « " + p.titre + " » ?", "Tes étapes cochées restent enregistrées si tu l'ajoutes à nouveau depuis ta classe.", "Retirer", ()=>{ retirerProjet(pid); renderSemestres(); showScreen("semchoice"); }));
+    inner.appendChild(x);
+  }
+  showScreen("psycho");
+  window.scrollTo(0, 0);
+}
+// les guillemets ne restent jamais seuls en bout de ligne
+function escFr(t){ return esc(t).replace(/« /g, "«\u00a0").replace(/ »/g, "\u00a0»").replace(/ ([:;?!])/g, "\u00a0$1"); }
+function ouvrirRubrique(pid, i){
+  entreeDansEcran(document.getElementById("psycho-inner"));
+  const p = PROJETS[pid], r = p.rubriques[i];
+  if(r.type === "fil") return renderFil(r.themes(), { mark:r.icon, titre:r.titre, quoi:r.quoi }, ()=>renderProjet(pid));
+  const inner = document.getElementById("psycho-inner"); inner.innerHTML = "";
+  const back = el("button","psy-back"); back.innerHTML = chevronL + esc(p.titre);
+  back.addEventListener("click",()=>{ haptic(); renderProjet(pid); });
+  inner.appendChild(back);
+  const hero = el("div","psy-hero rise");
+  hero.innerHTML = `<div class="psy-hero-mark">${r.icon}</div><div class="psy-hero-title">${esc(r.titre)}</div><div class="psy-hero-sub">${esc(r.type === "etapes" ? "Coche au fur et à mesure. Tes étapes suivent sur tous tes appareils." : (r.intro || r.sous))}</div>`;
+  inner.appendChild(hero);
+  if(r.type === "etapes"){
+    const et = p.etapes(), e = projetEtat(pid);
+    const done = et.filter(s=>e[s.id]).length, pct = et.length ? Math.round(done / et.length * 100) : 0;
+    const circ = 2*Math.PI*24, offset = circ - (pct/100)*circ;
+    const ph = el("div","psy-prog-head rise");
+    ph.innerHTML = `<div class="psy-ring"><svg width="56" height="56"><circle class="psy-ring-bg" cx="28" cy="28" r="24"/><circle class="psy-ring-fill" cx="28" cy="28" r="24" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/></svg><div class="psy-ring-num">${pct}%</div></div>
+      <div><div class="psy-prog-title">${done === 0 ? "C'est parti : première étape !" : done === et.length ? "Tout est fait, bravo !" : done + " / " + et.length + " étapes faites"}</div><div class="psy-prog-sub">${done === et.length ? "Tout est coché." : "À ton rythme."}</div></div>`;
+    inner.appendChild(ph);
+    p.phases.forEach(phase=>{
+      const st = et.filter(s=>phase.ids.includes(s.id)); if(!st.length) return;
+      const box = el("div","psy-phase"); box.innerHTML = `<div class="psy-phase-label">${esc(phase.label)}</div>`;
+      const sw = el("div","psy-steps");
+      st.forEach(s=>{
+        const fait = !!e[s.id];
+        const step = el("button","psy-step" + (fait ? " done" : ""));
+        step.innerHTML = `<span class="psy-check">${checkSvg}</span><span class="psy-step-content"><span class="psy-step-title">${esc(s.titre)}</span><span class="psy-step-desc">${s.desc.split("\n").map(l=>"<p>" + escFr(l) + "</p>").join("")}</span><span class="psy-step-date">📅 ${esc(s.date)}</span></span>`;
+        step.addEventListener("click",()=>{ haptic(); if(fait) delete e[s.id]; else e[s.id] = true; scheduleSync(); const y = window.scrollY; SANS_ENTREE = true; ouvrirRubrique(pid, i); window.scrollTo(0, y); });
+        sw.appendChild(step);
+      });
+      box.appendChild(sw); inner.appendChild(box);
+    });
+  } else {
+    r.cartes().forEach(c=>{
+      const box = el("div","psy-info-card");
+      const tags = c.tags ? '<div class="psy-info-tags">' + c.tags.map(t=>'<span class="psy-info-tag">' + esc(t) + '</span>').join("") + '</div>' : "";
+      const liens = c.liens ? '<div class="projet-liens">' + c.liens.map(l=>`<a href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.t)}</a>`).join("") + '</div>' : "";
+      box.innerHTML = `<div class="psy-info-header"><span class="psy-info-icon">${c.icon}</span><span class="psy-info-title">${esc(c.titre)}</span></div>${tags}<div class="psy-info-lines">${c.lignes.map(l=>'<div class="psy-info-line">' + escFr(l) + '</div>').join("")}</div>${liens}`;
+      inner.appendChild(box);
+    });
+  }
+  showScreen("psycho");
+  window.scrollTo(0, 0);
+}
+
 function psyBack(inner,fn){ const b=el("button","psy-back"); b.innerHTML=chevronL+psyTitle(); b.addEventListener("click",fn); inner.appendChild(b); }
 // En violet (ton espace) : pas de petits messages d'encouragement.
 function psyMini(text){ if(!isNana()) return document.createComment(""); const d=el("div","psy-mini-msg"); d.textContent=text; return d; }
 
 function renderPsychoEtapes(){
+  entreeDansEcran(document.getElementById("psycho-inner"));
   loadPsychoSteps();
   const inner=document.getElementById("psycho-inner"); inner.innerHTML="";
   psyBack(inner,renderPsycho);
@@ -10201,7 +11284,7 @@ function renderPsychoEtapes(){
       const descLines=s.desc.split("\n").map(l=>"<p>"+esc(l)+"</p>").join("");
       const step=el("button","psy-step"+(s.done?" done":""));
       step.innerHTML=`<span class="psy-check">${checkSvg}</span><span class="psy-step-content"><span class="psy-step-title">${esc(s.title)}</span><span class="psy-step-desc">${descLines}</span><span class="psy-step-date">📅 ${esc(s.date)}</span></span>`;
-      step.addEventListener("click",()=>{ haptic(); s.done=!s.done; savePsychoSteps(); renderPsychoEtapes(); });
+      step.addEventListener("click",()=>{ haptic(); s.done=!s.done; savePsychoSteps(); const y = window.scrollY; SANS_ENTREE = true; renderPsychoEtapes(); window.scrollTo(0, y); });
       sw.appendChild(step);
     });
     ph2.appendChild(sw); inner.appendChild(ph2);
@@ -10223,6 +11306,7 @@ function renderPsychoEtapes(){
 }
 
 function renderPsychoInfos(){
+  entreeDansEcran(document.getElementById("psycho-inner"));
   const inner=document.getElementById("psycho-inner"); inner.innerHTML="";
   psyBack(inner,renderPsycho);
   const hero=el("div","psy-hero rise"); hero.innerHTML=`<div class="psy-hero-mark">💡</div><div class="psy-hero-title">Infos utiles</div><div class="psy-hero-sub">Tout ce qu'il faut savoir, expliqué clairement. Pas de jargon, pas de pression. 🌸</div>`; inner.appendChild(hero);
@@ -10239,6 +11323,7 @@ function renderPsychoInfos(){
 }
 
 function renderPsychoSpecialite(){
+  entreeDansEcran(document.getElementById("psycho-inner"));
   const inner=document.getElementById("psycho-inner"); inner.innerHTML="";
   psyBack(inner,renderPsycho);
   const hero=el("div","psy-hero rise"); hero.innerHTML=`<div class="psy-hero-mark">🔍</div><div class="psy-hero-title">Quelle spécialité ?</div><div class="psy-hero-sub">Pas besoin de tout décider maintenant. Lis tranquillement, quelque chose va résonner en toi. 💜</div>`; inner.appendChild(hero);
@@ -10293,7 +11378,7 @@ document.getElementById("fs-cancel").addEventListener("click",()=>{ haptic(); cl
 let dernierRefresh = 0;
 async function refreshPartage(){
   if(!syncOn || !PSEUDO) return;
-  if(Date.now() - dernierRefresh < 8000) return;   // on évite les rafales
+  if(Date.now() - dernierRefresh < 60000) return;  // au plus une fois par minute : moins d'appels, moins de journaux
   dernierRefresh = Date.now();
   await syncFollows();
   rafraichirNouveautesClasses();
@@ -10305,6 +11390,15 @@ document.addEventListener("visibilitychange",()=>{ if(!document.hidden) refreshP
 window.addEventListener("focus", refreshPartage);
 
 document.getElementById("btn-classes").addEventListener("click",()=>{ haptic(); openClasses(); });
+document.getElementById("dev-entry").addEventListener("click",()=>{
+  haptic(); renderKnowBlock(); showScreen("mesdevoirs"); window.scrollTo(0, 0);
+  // les étiquettes « Nouveau » restent affichées pendant cette visite ; la pastille, elle, s'éteint
+  marquerDevoirsVus(pendingAlerts(true, true));
+});
+document.getElementById("btn-sites-back").addEventListener("click",()=>{ haptic(); renderSemestres(); showScreen("semestres"); });
+document.getElementById("btn-mesdevoirs-back").addEventListener("click",()=>{ haptic(); renderSemestres(); showScreen("semestres"); });
+document.getElementById("mesdevoirs-ajout").addEventListener("click",()=>{ haptic(); nouvelleEcheance(); });
+document.getElementById("btn-compte").addEventListener("click",()=>{ haptic(); ouvrirCompte(); });
 document.getElementById("btn-classes-back").addEventListener("click",()=>{ showScreen("semestres"); });
 document.getElementById("btn-class-back").addEventListener("click",()=>{ openClasses(); });
 document.getElementById("btn-shared-back").addEventListener("click",()=>{ if(curClass) openClass(curClass); else showScreen("search"); });
@@ -10336,7 +11430,7 @@ document.getElementById("btn-session-back").addEventListener("click",()=>{
     confirmer("Quitter l'examen ?", "Tes réponses ne seront pas gardées.", "Quitter", ()=>{ clearInterval(timerInt); exam = null; renderExamenChoix(); });
     return;
   }
-  clearInterval(timerInt); if(sessionFil){ renderFilPsycho(); } else if(globalSession){ renderSemestres(); showScreen("semestres"); } else if(retourSession){ quitterSession(); } else { showScreen("split"); } });
+  clearInterval(timerInt); if(sessionFil){ (FIL_RETOUR || renderFilPsycho)(); } else if(globalSession){ renderSemestres(); showScreen("semestres"); } else if(retourSession){ quitterSession(); } else { showScreen("split"); } });
 document.getElementById("btn-qcmchoix-back").addEventListener("click",()=>{ haptic(); setTab(2); showScreen("split"); });
 document.getElementById("btn-auteurs-back").addEventListener("click",()=>{ setTab(2); showScreen("split"); });
 document.getElementById("btn-dev-back").addEventListener("click",()=>{ setTab(2); showScreen("split"); });
@@ -10497,6 +11591,14 @@ onSwipe(document.querySelector("#screen-split .content-scroll"), {
 // ── HORS LIGNE ──
 // Le service worker met le site en cache : tu peux réviser sans réseau.
 if("serviceWorker" in navigator){
+  // L'app s'ouvre sur la copie gardée ; quand une version plus récente arrive (cours ou app) :
+  // tout juste ouverte et pas encore touchée, on recharge tout de suite ; sinon, un bandeau propose de le faire.
+  // Écouté dès le début : le message peut arriver avant la fin du chargement.
+  navigator.serviceWorker.addEventListener("message", ev=>{
+    if(!ev.data || ev.data.type !== "nouvelle-version") return;
+    if(!DEJA_TOUCHE && performance.now() < 6000){ location.reload(); return; }
+    bandeauNouvelleVersion();
+  });
   window.addEventListener("load",()=>{
     navigator.serviceWorker.register("sw.js").then(reg=>{
       // une app installée peut rester des semaines sur une ancienne version :
@@ -10514,6 +11616,17 @@ if("serviceWorker" in navigator){
       });
     }).catch(()=>{});
   });
+}
+let DEJA_TOUCHE = false;
+addEventListener("pointerdown", ()=>{ DEJA_TOUCHE = true; }, { once:true, capture:true });
+function bandeauNouvelleVersion(){
+  if(document.getElementById("maj-bandeau")) return;
+  const b = document.createElement("button");
+  b.id = "maj-bandeau"; b.type = "button";
+  b.innerHTML = `<span>Nouvelle version prête</span><b>Mettre à jour</b>`;
+  b.addEventListener("click", ()=>{ haptic(); location.reload(); });
+  document.body.appendChild(b);
+  requestAnimationFrame(()=>b.classList.add("on"));
 }
 // petit bandeau quand la connexion est coupée
 (function initOfflineBanner(){
@@ -10542,13 +11655,19 @@ let CODE = null;
 try{ CODE = localStorage.getItem(CODE_KEY); }catch(e){}
 
 // Tout passe par la fonction Edge : elle seule connaît la clé service.
-async function api(action, extra){
+async function api(action, extra, enPartant){
+  const body = JSON.stringify(Object.assign({ action, pseudo:PSEUDO, code:CODE }, extra||{}));
+  // en quittant l'app, keepalive laisse finir l'envoi (le navigateur le limite à 64 Ko)
   const r = await fetch(`${SUPA_URL}/functions/v1/${API_FN_NAME}`, {
     method:"POST",
     headers:{ apikey:SUPA_KEY, Authorization:"Bearer "+SUPA_KEY, "Content-Type":"application/json" },
-    body: JSON.stringify(Object.assign({ action, pseudo:PSEUDO, code:CODE }, extra||{}))
+    body, keepalive: !!enPartant && body.length < 60000
   });
   const out = await r.json().catch(()=>({}));
+  if((action === "class_items" || action === "search_shared") && Array.isArray(out.items)){
+    out.projets = out.items.filter(estProjetItem);
+    out.items = out.items.filter(it=>!estProjetItem(it));
+  }
   if(!r.ok) throw Object.assign(new Error(out.error||("http "+r.status)), { code: out.error });
   return out;
 }
@@ -10652,13 +11771,28 @@ function reparerMatieresSansCode(){
 
 // Sauvegarde (locale toujours, distante si dispo). Groupée pour ne pas spammer.
 let saveTimer = null;
+// Moins d'envois = moins de journaux côté Supabase. Pendant qu'on révise, les changements
+// s'accumulent et partent au plus une fois par minute ; tout part aussitôt quand l'app passe
+// en arrière-plan, pour ne rien perdre si iOS la ferme.
+const SYNC_ECART = 60000;
+let dernierEnvoi = 0, envoiEnAttente = false;
 function scheduleSync(){
   if(!syncOn || !PSEUDO) return;
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(pushState, 900);
+  envoiEnAttente = true;
+  if(saveTimer) return;                       // un envoi est déjà prévu : il emportera ce changement
+  const attente = Math.max(3000, SYNC_ECART - (Date.now() - dernierEnvoi));
+  saveTimer = setTimeout(()=>{ saveTimer = null; pushState(); }, attente);
 }
-async function pushState(){
+function envoyerMaintenant(){
+  if(!envoiEnAttente) return;
+  clearTimeout(saveTimer); saveTimer = null;
+  pushState(true);
+}
+document.addEventListener("visibilitychange",()=>{ if(document.hidden) envoyerMaintenant(); });
+window.addEventListener("pagehide", envoyerMaintenant);
+async function pushState(enPartant){
   if(!syncOn || !PSEUDO) return;
+  envoiEnAttente = false; dernierEnvoi = Date.now();
   try{
     const psy = {};
     PSYCHO_STEPS.forEach(s=>{ psy[s.id] = !!s.done; });
@@ -10692,9 +11826,10 @@ async function pushState(){
     }else{
       patch.content = { ues: UES, subjects: SUBJECTS };
     }
-    await api("save", { patch });
+    await api("save", { patch }, enPartant === true);
     setSyncBadge("ok");
-  }catch(e){ setSyncBadge("off"); }
+    return true;
+  }catch(e){ setSyncBadge("off"); return false; }
 }
 // Applique un état venu du serveur
 function applyRemote(row){
@@ -10879,6 +12014,8 @@ document.getElementById("login-code").addEventListener("keydown",e=>{ if(e.key==
 
   // emploi du temps : chargé en arrière-plan, sans bloquer l'affichage
   loadEDT().then(()=>renderTodayCourses());
+  // l'index des auteurs et des notions se prépare tranquillement, pour être prêt quand on ouvre un cours
+  setTimeout(()=>{ if(SUBJECTS.length) indexEnFond(); }, 2500);
 })();
 
 </script>
