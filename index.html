@@ -131,7 +131,7 @@ body{width:100%;min-height:100vh;min-height:100lvh;
 .screen.active{display:flex;flex-direction:column;}
 
 .wrap{position:relative;z-index:1;width:100%;max-width:600px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 20px) 18px calc(env(safe-area-inset-bottom) + 40px);}
-/* bas de page : juste la place du bouton flottant quand il y en a un, pas de vide en plus */#screen-semestres .wrap,#screen-semchoice .wrap,#screen-subjects .wrap{padding-bottom:calc(env(safe-area-inset-bottom) + 100px);}
+/* bas de page : juste la place du bouton flottant quand il y en a un, pas de vide en plus */#screen-semestres .wrap,#screen-semchoice .wrap,#screen-subjects .wrap,#screen-mesdevoirs .wrap,#screen-devoirs .wrap,#screen-sites .wrap,#screen-classes .wrap,#screen-planning .wrap,#screen-class .wrap{padding-bottom:calc(env(safe-area-inset-bottom) + 100px);}
 .back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:var(--font-text);font-size:14px;font-weight:500;color:var(--text-soft);padding:8px 0;margin-bottom:16px;transition:color .2s;}
 .back-btn:hover{color:var(--accent);}
 .back-btn svg{width:16px;height:16px;}
@@ -620,7 +620,7 @@ div.av-tete{cursor:default;}
 .nc-flag.devo{color:var(--accent);}
 .next-tuile .next-bar{position:absolute;left:0;right:0;bottom:0;height:4px;margin:0;border-radius:0;background:var(--accent-soft);}
 .next-tuile .next-bar>span{display:block;height:100%;background:var(--accent);}
-#mesdevoirs-ajout{margin-top:18px;}
+
 #sites-liste,#screen-mesdevoirs #home-know{margin-top:18px;}
 .sem-entry.reprise .sem-entry-ic{background:var(--accent-soft);}
 
@@ -2093,9 +2093,6 @@ html.calme .rise{animation:none!important;}
     <button class="back-btn rise" id="btn-classes-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
     <div class="edt-titlerow rise" style="animation-delay:.03s">
       <h1 class="page-title" style="margin:0">Mes classes</h1>
-      <button class="icon-btn" data-entete id="btn-class-menu" aria-label="Options">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 14.5a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-2.9-1.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9h-.2a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.3-2.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5v-.2a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
-      </button>
     </div>
     <p class="page-sub rise" style="animation-delay:.06s">Des dossiers de cours partagés. On y entre avec un code, après validation.</p>
     <div id="classes-list" class="rise" style="animation-delay:.1s"></div>
@@ -2290,7 +2287,6 @@ html.calme .rise{animation:none!important;}
     <h1 class="page-title rise" style="animation-delay:.03s">Mes devoirs</h1>
     <div class="lex-sous rise" style="animation-delay:.05s">Tes contrôles, tes rendus et tes notes, semaine par semaine</div>
     <div id="home-know" class="rise" style="animation-delay:.07s"></div>
-    <button class="add-inline rise" id="mesdevoirs-ajout" type="button" style="animation-delay:.09s">+  Ajouter un devoir</button>
   </div>
 </div>
 <div id="screen-index" class="screen">
@@ -2943,12 +2939,6 @@ function renderSites(){
     ligne.style.marginBottom = "9px";
     box.appendChild(ligne);
   });
-  const add = el("button","add-inline");
-  add.type = "button";
-  add.textContent = "+  Ajouter un site";
-  add.style.marginTop = "4px";
-  add.addEventListener("click",()=>{ haptic(); editSite(-1); });
-  box.appendChild(add);
   if(sites.length){
     const h = el("div","fs-hint");
     h.textContent = "Glisse un site vers la gauche pour le modifier ou le supprimer.";
@@ -3318,7 +3308,7 @@ function nomCourtItem(it){
 }
 
 async function openClass(c){
-  curClass = c;
+  curClass = c; CLS_GERE = c.role === "owner" || c.role === "adjoint";
   showScreen("class");
   document.getElementById("class-title").textContent = c.name;
   // le code, en pastille dans l'entête : seul le créateur le voit, c'est lui qui le donne
@@ -3363,6 +3353,7 @@ async function openClass(c){
   box.innerHTML = "";
   CLS_ITEMS[c.id] = items;
   const gere = monRole === "owner" || monRole === "adjoint";
+  CLS_GERE = gere; refreshFab("class");
 
   // sous le nom : les membres, en pastille. Une demande en attente y pose une pastille rose.
   const attente = gere ? membres.filter(m=>m.role === "pending") : [];
@@ -3483,14 +3474,7 @@ async function openClass(c){
       });
   }
 
-  // publier sans quitter la classe
-  if(gere){
-    const add = el("button","add-inline cls-publier");
-    add.type = "button";
-    add.textContent = "+  Publier un de mes cours";
-    add.addEventListener("click",()=>{ haptic(); publishFromClass(c); });
-    box.appendChild(add);
-  }
+  // publier sans quitter la classe : le + flottant
 }
 
 // ── Suivre tous les cours d'une classe ──
@@ -3994,12 +3978,6 @@ function renderDevoirsClasse(c, box, gere, devs){
 
   if(avenir.length){ const t = el("div","av-tete"); t.innerHTML = `<span class="av-lbl">À venir</span>`; box.appendChild(t); }
   lister(avenir, box, false);
-  if(gere){
-    const add = el("button","add-inline cls-publier"); add.type = "button";
-    add.textContent = "+  Ajouter un devoir";
-    add.addEventListener("click",()=>{ haptic(); choisirCoursDevoir(c); });
-    box.appendChild(add);
-  }
   // vus : la pastille s'éteint, l'étiquette « Nouveau » reste jusqu'à la prochaine visite
   let marque = false;
   avenir.forEach(it=>{ if(!vus[it.id]){ vus[it.id] = 1; marque = true; } });
@@ -5835,12 +5813,29 @@ function addSection(type, ch){
 }
 
 // Le « + » flottant n'apparaît que là où il veut dire quelque chose.
+// Une seule logique dans toute l'app : quand une page sert à ajouter quelque chose,
+// c'est le « + » flottant en bas à droite qui l'ajoute.
+let CLS_GERE = false;   // créateur ou adjoint de la classe ouverte
+const FAB_ACTIONS = {
+  semchoice:  { label:"Ajouter un semestre", fn:()=>addSemestre() },
+  subjects:   { label:"Ajouter une matière", fn:()=>addMatiere() },
+  mesdevoirs: { label:"Ajouter un devoir",   fn:()=>nouvelleEcheance() },
+  devoirs:    { label:"Ajouter un devoir",   fn:()=>editDevoir(null) },
+  sites:      { label:"Ajouter un site",     fn:()=>editSite(-1) },
+  classes:    { label:"Créer ou rejoindre une classe", fn:()=>classMenu() },
+  planning:   { label:"Ajouter un créneau",  fn:()=>editCoursPlanning(null) },
+  // dans une classe : publier un cours, ou poser un devoir, selon la vue ouverte
+  class:      { label:"Publier ou ajouter un devoir", si:()=>CLS_GERE && !!curClass,
+                fn:()=>{ if((CLS_VUE[curClass.id] || "cours") === "devoirs") choisirCoursDevoir(curClass); else publishFromClass(curClass); } }
+};
 function refreshFab(id){
   const fab = document.getElementById("fab-add");
   if(!fab) return;
-  const ok = canEdit() && (id === "semchoice" || id === "subjects");
+  const a = FAB_ACTIONS[id];
+  const ok = canEdit() && !!a && (!a.si || a.si());
   fab.classList.toggle("show", ok);
   fab.dataset.target = id;
+  if(a) fab.setAttribute("aria-label", a.label);
 }
 
 // ── En-tête commun : le bouton retour (ou les icônes de l'accueil) dans une barre fixe,
@@ -5875,7 +5870,7 @@ document.querySelectorAll(".screen").forEach(poserEntete);
 // Pas de jeu en bas des pages : la marge du bas sert à respirer quand la page défile.
 // Si tout tient presque sur l'écran, cette marge ne doit pas, à elle seule, faire défiler la page.
 // Avec le bouton flottant, on lui laisse sa place ; sans lui, juste la barre d'accueil de l'iPhone.
-const ECRANS_FAB = ["screen-semestres","screen-semchoice","screen-subjects"];
+const ECRANS_FAB = ["screen-semestres","screen-semchoice","screen-subjects","screen-mesdevoirs","screen-devoirs","screen-sites","screen-classes","screen-planning","screen-class"];
 let SAB_SONDE = null;
 function basSur(){
   if(!SAB_SONDE){ SAB_SONDE = el("div"); SAB_SONDE.style.cssText = "position:fixed;left:0;bottom:0;width:1px;height:env(safe-area-inset-bottom);visibility:hidden;pointer-events:none;"; document.body.appendChild(SAB_SONDE); }
@@ -7926,7 +7921,7 @@ function renderKnowBlock(){
   const alerts = pendingAlerts(true, true);
   majTuileDevoirs(alerts);
   if(!alerts.length){
-    box.innerHTML = vide("calendrier", "Rien à venir", "Pose un devoir, un contrôle ou une note sur un cours de ton emploi du temps, ou ajoute-le ci-dessous. Il apparaîtra ici.");
+    box.innerHTML = vide("calendrier", "Rien à venir", "Pose un devoir, un contrôle ou une note sur un cours de ton emploi du temps, ou touche le + en bas. Il apparaîtra ici.");
     return;
   }
   const now = new Date();
@@ -9958,10 +9953,6 @@ function renderPlanning(){
     });
   }
 
-  const add = el("button","add-inline");
-  add.textContent = "+  Ajouter un créneau";
-  add.addEventListener("click",()=>{ haptic(); editCoursPlanning(null); });
-  box.appendChild(add);
 }
 
 function editPlanningAB(){
@@ -10094,12 +10085,6 @@ function renderDevoirs(){
   }
   liste.forEach(({d,i})=> box.appendChild(onglet === "remplir" ? carteARemplir(d,i) : carteCorrigee(d,i)));
 
-  if(canEdit()){
-    const add = el("button","add-inline");
-    add.textContent = "+  Ajouter un devoir";
-    add.addEventListener("click",()=>{ haptic(); editDevoir(null); });
-    box.appendChild(add);
-  }
 }
 
 // en-tête commun : titre, document à lire, chapitre lié
@@ -11506,8 +11491,8 @@ document.getElementById("btn-split-home").addEventListener("click",()=>{
 });
 document.getElementById("fab-add").addEventListener("click",()=>{
   haptic();
-  if(document.getElementById("fab-add").dataset.target === "subjects") addMatiere();
-  else addSemestre();
+  const a = FAB_ACTIONS[document.getElementById("fab-add").dataset.target];
+  if(a) a.fn();
 });
 document.getElementById("fs-del").addEventListener("click",()=>{ haptic(); if(fsDelete) fsDelete(); });
 document.getElementById("fs-extra").addEventListener("click",()=>{ haptic(); if(fsExtra) fsExtra(); });
@@ -11536,12 +11521,12 @@ document.getElementById("dev-entry").addEventListener("click",()=>{
 });
 document.getElementById("btn-sites-back").addEventListener("click",()=>{ haptic(); renderSemestres(); showScreen("semestres"); });
 document.getElementById("btn-mesdevoirs-back").addEventListener("click",()=>{ haptic(); renderSemestres(); showScreen("semestres"); });
-document.getElementById("mesdevoirs-ajout").addEventListener("click",()=>{ haptic(); nouvelleEcheance(); });
+
 document.getElementById("btn-compte").addEventListener("click",()=>{ haptic(); ouvrirCompte(); });
 document.getElementById("btn-classes-back").addEventListener("click",()=>{ showScreen("semestres"); });
 document.getElementById("btn-class-back").addEventListener("click",()=>{ openClasses(); });
 document.getElementById("btn-shared-back").addEventListener("click",()=>{ if(curClass) openClass(curClass); else showScreen("search"); });
-document.getElementById("btn-class-menu").addEventListener("click",()=>{ haptic(); classMenu(); });
+
 document.getElementById("pick-sheet").addEventListener("click",e=>{ if(e.target.id==="pick-sheet") closePicker(); });
 document.getElementById("fs-ok").addEventListener("click",()=>{ haptic(); if(fsSubmit) fsSubmit(); });
 document.getElementById("form-sheet").addEventListener("click",e=>{ if(e.target.id==="form-sheet") closeForm(); });
