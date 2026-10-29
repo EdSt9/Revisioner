@@ -131,7 +131,7 @@ body{width:100%;min-height:100vh;min-height:100lvh;
 .screen.active{display:flex;flex-direction:column;}
 
 .wrap{position:relative;z-index:1;width:100%;max-width:600px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 20px) 18px calc(env(safe-area-inset-bottom) + 40px);}
-/* bas de page : juste la place du bouton flottant quand il y en a un, pas de vide en plus */#screen-semestres .wrap,#screen-semchoice .wrap,#screen-subjects .wrap{padding-bottom:calc(env(safe-area-inset-bottom) + 100px);}
+/* bas de page : juste la place du bouton flottant quand il y en a un, pas de vide en plus */#screen-semestres .wrap,#screen-semchoice .wrap,#screen-subjects .wrap,#screen-mesdevoirs .wrap,#screen-devoirs .wrap,#screen-sites .wrap,#screen-classes .wrap,#screen-planning .wrap,#screen-class .wrap{padding-bottom:calc(env(safe-area-inset-bottom) + 100px);}
 .back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:var(--font-text);font-size:14px;font-weight:500;color:var(--text-soft);padding:8px 0;margin-bottom:16px;transition:color .2s;}
 .back-btn:hover{color:var(--accent);}
 .back-btn svg{width:16px;height:16px;}
@@ -613,14 +613,18 @@ div.av-tete{cursor:default;}
 .nc-haut .ht-ic.ic-box{margin:0;flex-shrink:0;}
 .next-tuile .ht-t{font-size:24px;margin-top:10px;display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .next-tuile .ht-t.long{font-size:19px;}
-.nc-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-size:13px;color:var(--text-soft);margin-top:6px;}
-.nc-meta>span{display:flex;align-items:center;gap:5px;}
-.nc-meta svg{width:14px;height:14px;color:var(--text-mute);flex-shrink:0;}
+.nc-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;font-size:13px;color:var(--text-soft);margin-top:6px;}
+.nc-g{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;min-width:0;}
+.nc-meta span{display:flex;align-items:center;gap:5px;}
+.nc-meta svg,.nc-prof svg{width:14px;height:14px;color:var(--text-mute);flex-shrink:0;}
+/* la salle tout à droite, en gras : on la cherche des yeux en arrivant */
+.nc-salle{font-weight:600;color:var(--text);flex-shrink:0;white-space:nowrap;}
+.nc-prof{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text-soft);margin-top:4px;max-width:100%;}
 .nc-flag{font-weight:700;color:var(--warn);}
 .nc-flag.devo{color:var(--accent);}
 .next-tuile .next-bar{position:absolute;left:0;right:0;bottom:0;height:4px;margin:0;border-radius:0;background:var(--accent-soft);}
 .next-tuile .next-bar>span{display:block;height:100%;background:var(--accent);}
-#mesdevoirs-ajout{margin-top:18px;}
+
 #sites-liste,#screen-mesdevoirs #home-know{margin-top:18px;}
 .sem-entry.reprise .sem-entry-ic{background:var(--accent-soft);}
 
@@ -1475,6 +1479,15 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
    rétrécit et la page paraît plus étroite d'un TD à l'autre. */.card{background:var(--surface);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px 22px;box-shadow:0 4px 20px var(--shadow);width:100%;box-sizing:border-box;overflow:hidden;}
 .card-body{font-size:calc(14.5px * var(--zt,1));line-height:1.95;color:var(--text);white-space:pre-line;overflow-wrap:break-word;word-break:break-word;}
 .chunk-highlight{background:var(--hl-bg);color:var(--hl-text);border-radius:5px;padding:1px 6px;font-weight:600;}
+.cours-fig{margin:14px -6px 4px;}
+.cours-fig img{display:block;width:100%;height:auto;border-radius:12px;background:var(--surface-2);cursor:zoom-in;}
+.cours-fig figcaption{font-size:12px;color:var(--text-mute);margin-top:7px;text-align:center;line-height:1.4;}
+.img-voile{position:fixed;inset:0;z-index:300;background:rgba(5,4,10,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .25s;padding:calc(env(safe-area-inset-top) + 50px) 0 calc(env(safe-area-inset-bottom) + 24px);}
+.img-voile.on{opacity:1;}
+.img-zoom{width:100%;overflow:auto;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y pinch-zoom;}
+.img-zoom img{display:block;width:100%;height:auto;}
+.img-leg{color:#ddd;font-size:13px;margin-top:12px;padding:0 20px;text-align:center;}
+.img-fermer{position:absolute;top:calc(env(safe-area-inset-top) + 12px);right:16px;width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:16px;cursor:pointer;}
 .card-list{list-style:none;margin-top:14px;display:flex;flex-direction:column;gap:2px;}
 .card-list li{font-size:calc(14px * var(--zt,1));line-height:1.7;color:var(--text);padding:11px 0;border-bottom:1px solid var(--border);display:flex;gap:11px;min-width:0;overflow-wrap:break-word;word-break:break-word;}
 .card-list li:last-child{border:none;padding-bottom:0;}
@@ -2093,9 +2106,6 @@ html.calme .rise{animation:none!important;}
     <button class="back-btn rise" id="btn-classes-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
     <div class="edt-titlerow rise" style="animation-delay:.03s">
       <h1 class="page-title" style="margin:0">Mes classes</h1>
-      <button class="icon-btn" data-entete id="btn-class-menu" aria-label="Options">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 14.5a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-2.9-1.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9h-.2a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.3-2.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5v-.2a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
-      </button>
     </div>
     <p class="page-sub rise" style="animation-delay:.06s">Des dossiers de cours partagés. On y entre avec un code, après validation.</p>
     <div id="classes-list" class="rise" style="animation-delay:.1s"></div>
@@ -2290,7 +2300,6 @@ html.calme .rise{animation:none!important;}
     <h1 class="page-title rise" style="animation-delay:.03s">Mes devoirs</h1>
     <div class="lex-sous rise" style="animation-delay:.05s">Tes contrôles, tes rendus et tes notes, semaine par semaine</div>
     <div id="home-know" class="rise" style="animation-delay:.07s"></div>
-    <button class="add-inline rise" id="mesdevoirs-ajout" type="button" style="animation-delay:.09s">+  Ajouter un devoir</button>
   </div>
 </div>
 <div id="screen-index" class="screen">
@@ -2943,12 +2952,6 @@ function renderSites(){
     ligne.style.marginBottom = "9px";
     box.appendChild(ligne);
   });
-  const add = el("button","add-inline");
-  add.type = "button";
-  add.textContent = "+  Ajouter un site";
-  add.style.marginTop = "4px";
-  add.addEventListener("click",()=>{ haptic(); editSite(-1); });
-  box.appendChild(add);
   if(sites.length){
     const h = el("div","fs-hint");
     h.textContent = "Glisse un site vers la gauche pour le modifier ou le supprimer.";
@@ -3318,7 +3321,7 @@ function nomCourtItem(it){
 }
 
 async function openClass(c){
-  curClass = c;
+  curClass = c; CLS_GERE = c.role === "owner" || c.role === "adjoint";
   showScreen("class");
   document.getElementById("class-title").textContent = c.name;
   // le code, en pastille dans l'entête : seul le créateur le voit, c'est lui qui le donne
@@ -3363,6 +3366,7 @@ async function openClass(c){
   box.innerHTML = "";
   CLS_ITEMS[c.id] = items;
   const gere = monRole === "owner" || monRole === "adjoint";
+  CLS_GERE = gere; refreshFab("class");
 
   // sous le nom : les membres, en pastille. Une demande en attente y pose une pastille rose.
   const attente = gere ? membres.filter(m=>m.role === "pending") : [];
@@ -3483,14 +3487,7 @@ async function openClass(c){
       });
   }
 
-  // publier sans quitter la classe
-  if(gere){
-    const add = el("button","add-inline cls-publier");
-    add.type = "button";
-    add.textContent = "+  Publier un de mes cours";
-    add.addEventListener("click",()=>{ haptic(); publishFromClass(c); });
-    box.appendChild(add);
-  }
+  // publier sans quitter la classe : le + flottant
 }
 
 // ── Suivre tous les cours d'une classe ──
@@ -3994,12 +3991,6 @@ function renderDevoirsClasse(c, box, gere, devs){
 
   if(avenir.length){ const t = el("div","av-tete"); t.innerHTML = `<span class="av-lbl">À venir</span>`; box.appendChild(t); }
   lister(avenir, box, false);
-  if(gere){
-    const add = el("button","add-inline cls-publier"); add.type = "button";
-    add.textContent = "+  Ajouter un devoir";
-    add.addEventListener("click",()=>{ haptic(); choisirCoursDevoir(c); });
-    box.appendChild(add);
-  }
   // vus : la pastille s'éteint, l'étiquette « Nouveau » reste jusqu'à la prochaine visite
   let marque = false;
   avenir.forEach(it=>{ if(!vus[it.id]){ vus[it.id] = 1; marque = true; } });
@@ -5835,12 +5826,29 @@ function addSection(type, ch){
 }
 
 // Le « + » flottant n'apparaît que là où il veut dire quelque chose.
+// Une seule logique dans toute l'app : quand une page sert à ajouter quelque chose,
+// c'est le « + » flottant en bas à droite qui l'ajoute.
+let CLS_GERE = false;   // créateur ou adjoint de la classe ouverte
+const FAB_ACTIONS = {
+  semchoice:  { label:"Ajouter un semestre", fn:()=>addSemestre() },
+  subjects:   { label:"Ajouter une matière", fn:()=>addMatiere() },
+  mesdevoirs: { label:"Ajouter un devoir",   fn:()=>nouvelleEcheance() },
+  devoirs:    { label:"Ajouter un devoir",   fn:()=>editDevoir(null) },
+  sites:      { label:"Ajouter un site",     fn:()=>editSite(-1) },
+  classes:    { label:"Créer ou rejoindre une classe", fn:()=>classMenu() },
+  planning:   { label:"Ajouter un créneau",  fn:()=>editCoursPlanning(null) },
+  // dans une classe : publier un cours, ou poser un devoir, selon la vue ouverte
+  class:      { label:"Publier ou ajouter un devoir", si:()=>CLS_GERE && !!curClass,
+                fn:()=>{ if((CLS_VUE[curClass.id] || "cours") === "devoirs") choisirCoursDevoir(curClass); else publishFromClass(curClass); } }
+};
 function refreshFab(id){
   const fab = document.getElementById("fab-add");
   if(!fab) return;
-  const ok = canEdit() && (id === "semchoice" || id === "subjects");
+  const a = FAB_ACTIONS[id];
+  const ok = canEdit() && !!a && (!a.si || a.si());
   fab.classList.toggle("show", ok);
   fab.dataset.target = id;
+  if(a) fab.setAttribute("aria-label", a.label);
 }
 
 // ── En-tête commun : le bouton retour (ou les icônes de l'accueil) dans une barre fixe,
@@ -5875,7 +5883,7 @@ document.querySelectorAll(".screen").forEach(poserEntete);
 // Pas de jeu en bas des pages : la marge du bas sert à respirer quand la page défile.
 // Si tout tient presque sur l'écran, cette marge ne doit pas, à elle seule, faire défiler la page.
 // Avec le bouton flottant, on lui laisse sa place ; sans lui, juste la barre d'accueil de l'iPhone.
-const ECRANS_FAB = ["screen-semestres","screen-semchoice","screen-subjects"];
+const ECRANS_FAB = ["screen-semestres","screen-semchoice","screen-subjects","screen-mesdevoirs","screen-devoirs","screen-sites","screen-classes","screen-planning","screen-class"];
 let SAB_SONDE = null;
 function basSur(){
   if(!SAB_SONDE){ SAB_SONDE = el("div"); SAB_SONDE.style.cssText = "position:fixed;left:0;bottom:0;width:1px;height:env(safe-area-inset-bottom);visibility:hidden;pointer-events:none;"; document.body.appendChild(SAB_SONDE); }
@@ -6537,6 +6545,22 @@ function lexique(subj){
   const out = lexiqueCalcule(subj);
   LEX_CACHE[subj.id] = { sig, out };
   return out;
+}
+// Une image dans un cours : chargée seulement quand on arrive dessus, et touchée, elle s'ouvre en grand
+function figureCours(im){
+  const f = el("figure","cours-fig");
+  const ratio = im.w && im.h ? `aspect-ratio:${im.w}/${im.h};` : "";
+  f.innerHTML = `<img src="${esc(im.src)}" alt="${esc(im.alt || "")}" loading="lazy" decoding="async" style="${ratio}">` +
+    (im.legende ? `<figcaption>${esc(im.legende)}</figcaption>` : "");
+  f.querySelector("img").addEventListener("click", ev=>{ ev.stopPropagation(); haptic(); ouvrirImage(im); });
+  return f;
+}
+function ouvrirImage(im){
+  const v = el("div","img-voile");
+  v.innerHTML = `<div class="img-zoom"><img src="${esc(im.src)}" alt="${esc(im.alt || "")}"></div>${im.legende ? `<div class="img-leg">${esc(im.legende)}</div>` : ""}<button class="img-fermer" type="button" aria-label="Fermer">✕</button>`;
+  const fermer = ()=>{ v.classList.remove("on"); setTimeout(()=>v.remove(), 250); };
+  v.addEventListener("click", e=>{ if(e.target === v || e.target.closest(".img-fermer")) fermer(); });
+  document.body.appendChild(v); requestAnimationFrame(()=>v.classList.add("on"));
 }
 function lexiqueCalcule(subj){
   const vus = new Set(), out = [];
@@ -7648,9 +7672,12 @@ function renderNextCourse(){
   // le nom du cours en grand ; au-dessus, l'icône à gauche et le moment à droite ; dessous, l'heure et la salle
   box.className = "home-tuile next-tuile" + (live ? " live" : "") + (flag && flag.cls === "ctrl" ? " alerte" : "");
   const horaire = hhmm(ev.start) + (ev.end ? " → " + hhmm(ev.end) : "");
+  // le prof : celui noté sur le cours, sinon celui du calendrier de la fac, sinon celui de la matière
+  const pr = profDuCours(ev), prof = pr && pr.nom ? pr.nom : "";
   box.innerHTML = `<span class="nc-haut"><span class="ht-ic ic-box">${ICO("calendrier")}</span><span class="ht-lbl">${live ? '<span class="next-dot"></span>En cours · ' + esc(quand) : "Prochain · " + esc(quand)}</span></span>
     <span class="ht-t">${esc(nomCourt(ev.title))}</span>
-    <span class="nc-meta"><span>${IC_HORLOGE}${horaire}</span>${ev.place ? `<span>${IC_LIEU}${esc(ev.place)}</span>` : ""}${flag ? `<span class="nc-flag ${flag.cls}">${esc(flag.txt)}</span>` : ""}</span>`;
+    ${prof ? `<span class="nc-prof">${IC_PROF_MINI}${esc(prof)}</span>` : ""}
+    <span class="nc-meta"><span class="nc-g"><span>${IC_HORLOGE}${horaire}</span>${flag ? `<span class="nc-flag ${flag.cls}">${esc(flag.txt)}</span>` : ""}</span>${ev.place ? `<span class="nc-salle">${IC_LIEU}${esc(ev.place)}</span>` : ""}</span>`;
   if(live && ev.end){
     const fait = Math.max(0, Math.min(1, (now - ev.start) / (ev.end - ev.start)));
     const bar = el("span","next-bar"); bar.innerHTML = `<span style="width:${Math.round(fait*100)}%"></span>`;
@@ -7926,7 +7953,7 @@ function renderKnowBlock(){
   const alerts = pendingAlerts(true, true);
   majTuileDevoirs(alerts);
   if(!alerts.length){
-    box.innerHTML = vide("calendrier", "Rien à venir", "Pose un devoir, un contrôle ou une note sur un cours de ton emploi du temps, ou ajoute-le ci-dessous. Il apparaîtra ici.");
+    box.innerHTML = vide("calendrier", "Rien à venir", "Pose un devoir, un contrôle ou une note sur un cours de ton emploi du temps, ou touche le + en bas. Il apparaîtra ici.");
     return;
   }
   const now = new Date();
@@ -9223,6 +9250,7 @@ function renderCoursePane(type){
     const title=el("h2","section-title"); title.textContent=sec.title;
     const card=el("div","card");
     if(sec.body){ const b=el("div","card-body"); b.innerHTML=texteCours(sec.body); card.appendChild(b); }
+    if(sec.img && sec.img.src) card.appendChild(figureCours(sec.img));
     if(sec.list&&sec.list.length){ const ul=el("ul","card-list"); sec.list.forEach(it=>{const li=el("li"); li.innerHTML='<span class="li-text">'+texteCours(it)+'</span>'; ul.appendChild(li);}); card.appendChild(ul); }
     block.appendChild(title);
     block.appendChild(card);
@@ -9283,7 +9311,7 @@ function renderCoursePane(type){
     const ok = p.ok === p.total;
     const q = etape(num++, ok ? "fait" : "");
     q.innerHTML = `<span class="fin-num">${ok ? COCHE_SVG : 2}</span><span class="fin-txt"><span class="fin-nom">Faire le QCM de ${mot}</span>
-      <span class="fin-sub">${ok ? "Validé" : p.ok ? p.ok + " questions validées sur " + p.total : p.total + " questions"}</span></span><span class="fin-fl">${IC_CHEV_DROITE}</span>`;
+      <span class="fin-sub">${ok ? "Validé" : p.ok ? p.ok + " questions validées sur " + p.total : p.total + " questions"}${!ok && nbSeries(p.total) > 1 ? " · en " + nbSeries(p.total) + " séries" : ""}</span></span><span class="fin-fl">${IC_CHEV_DROITE}</span>`;
     q.addEventListener("click", ()=>{ haptic(); lancerQCMChapitre(ch.label); });
   } else if(peutCreer(curSubj)){
     const q = etape(num++, "");
@@ -9334,12 +9362,32 @@ var sessionScope = "all";
 function scopeCourant(){
   const v = curSubj && SCOPES[curSubj.id];
   if(!v || v === "all") return "all";
-  if(v === "auteurs") return quizAuteurs(curSubj).length ? v : "all";
-  if(v === "grand" || v === "erreurs" || v === "lex" || v === "lexinv") return v;
+  const base = scopeSansSerie(v);
+  if(base === "auteurs") return quizAuteurs(curSubj).length ? v : "all";
+  if(v === "grand" || v === "erreurs" || base === "lex" || base === "lexinv") return v;
   // le chapitre peut avoir disparu (renommé, supprimé)
-  return chapitresAReviser(curSubj).some(c=>"ch:"+c.label === v) ? v : "all";
+  return chapitresAReviser(curSubj).some(c=>"ch:"+c.label === scopeSansSerie(v)) ? v : "all";
 }
 function choisirScope(v){ if(curSubj) SCOPES[curSubj.id] = v; }
+// Au-delà de 25, un exercice est trop long d'une traite : on travaille par petits blocs.
+// Toute liste (un CM, un TD, le lexique, les auteurs) se coupe en séries égales
+// (50 → 2 × 25, 44 → 2 × 22, 109 → 5 × 21 ou 22), et aucune session ne dépasse 25 questions.
+// Vaut pour tous les exercices : QCM, flashcards, textes à trous, questions ouvertes.
+// Une série s'écrit « <périmètre>§<numéro> », par exemple « ch:CM4 · 27/10§2 » ou « lex§3 ».
+const SERIE_MAX = 25;
+function nbSeries(total){ return total > SERIE_MAX ? Math.ceil(total / SERIE_MAX) : 1; }
+function scopeSansSerie(sc){ return String(sc || "").replace(/§\d+$/, ""); }
+function numSerie(sc){ const m = String(sc || "").match(/§(\d+)$/); return m ? +m[1] : 0; }
+function scopesDe(subj, m, base){
+  const k = nbSeries(itemsDuScopeBrut(subj, m, base).length);
+  return k === 1 ? [base] : Array.from({ length:k }, (_, i)=>base + "§" + (i + 1));
+}
+function scopesDuChapitre(subj, m, label){ return scopesDe(subj, m, "ch:" + label); }
+// « série 1/2 » d'un périmètre, ou rien
+function libelleSerie(subj, m, sc){
+  const i = numSerie(sc); if(!i) return "";
+  return "série " + i + "/" + scopesDe(subj, m, scopeSansSerie(sc)).length;
+}
 // les chapitres qui ont au moins un exercice
 function chapitresAReviser(subj){
   const out = [];
@@ -9364,6 +9412,14 @@ function cartesLexique(subj, inverse){
   });
 }
 function itemsDuScope(subj, m, scope){
+  const i = numSerie(scope);
+  const tout = itemsDuScopeBrut(subj, m, scopeSansSerie(scope));
+  if(!i) return tout;
+  // la série i sur k : des parts égales, dans l'ordre du cours
+  const n = tout.length, k = nbSeries(n);
+  return tout.slice(Math.floor((i - 1) * n / k), Math.floor(i * n / k));
+}
+function itemsDuScopeBrut(subj, m, scope){
   if(scope === "lex" || scope === "lexinv") return m === "fc" ? cartesLexique(subj, scope === "lexinv").map((item,i)=>({ item, i })) : [];
   if(scope === "erreurs") return itemsDuScope(subj, m, "grand").filter(x=>estErreur(cardKey(subj.id, m, x.item, x.i)));
   if(scope === "auteurs") return m === "qcm" ? quizAuteurs(subj).map((item,i)=>({ item, i })) : [];
@@ -9386,6 +9442,8 @@ function progressionScope(subj, scope, m){
   return { ok, total:xs.length };
 }
 function nomScope(scope){
+  const ser = numSerie(scope) ? " · " + libelleSerie(curSubj, curMode || "qcm", scope) : "";
+  if(ser) return nomScope(scopeSansSerie(scope)) + ser;
   if(scope === "erreurs") return "Mes erreurs";
   if(scope === "lex") return "Lexique";
   if(scope === "lexinv") return "Lexique à l'envers";
@@ -9658,7 +9716,9 @@ function quizAuteurs(subj){
 // ── Barre des périmètres : Tout · CM · TD · Auteurs ──
 // lance directement le QCM d'un chapitre (bouton en bas du cours)
 function lancerQCMChapitre(label){
-  choisirScope("ch:" + label);
+  const scs = scopesDuChapitre(curSubj, "qcm", label);
+  const suivante = scs.find(sc=>{ const p = progressionScope(curSubj, sc, "qcm"); return p.ok < p.total; }) || scs[0];
+  choisirScope(suivante);
   const t = curTab;
   retourSession = ()=>{ setTab(t); showScreen("split"); };
   startSession("qcm");
@@ -9708,7 +9768,7 @@ function renderChoix(m){
   const grand = carte("grand", ICO("grand"), cfg.grand, "grand");
   if(grand){
     const sous = grand.querySelector(".qc-sub");
-    sous.textContent = sous.textContent + " · tout dedans";
+    sous.textContent = sous.textContent + " · " + SERIE_MAX + " à la fois, le non validé d'abord";
     box.appendChild(grand);
   }
   // mes erreurs : les questions ratées, ici ou en mode examen
@@ -9728,19 +9788,22 @@ function renderChoix(m){
     if(!liste.length) return;
     const g = el("div","qc-group"); g.textContent = nom;
     box.appendChild(g);
-    liste.forEach(c=>{ const b = carte("ch:" + c.label, icone, c.label); if(b) box.appendChild(b); });
+    liste.forEach(c=>scopesDuChapitre(curSubj, m, c.label).forEach(sc=>{
+      const ser = libelleSerie(curSubj, m, sc);
+      const b = carte(sc, icone, c.label + (ser ? " · " + ser : "")); if(b) box.appendChild(b);
+    }));
   });
   // les termes du lexique, en cartes, dans les deux sens
   if(m === "fc" && lexique(curSubj).length){
     const g = el("div","qc-group"); g.textContent = "Lexique";
     box.appendChild(g);
-    const a = carte("lex", ICO("lexique"), "Le terme → sa définition"); if(a) box.appendChild(a);
-    const b = carte("lexinv", ICO("inverse"), "La définition → le terme"); if(b) box.appendChild(b);
+    [["lex", ICO("lexique"), "Le terme → sa définition"], ["lexinv", ICO("inverse"), "La définition → le terme"]].forEach(([base, ic, nom])=>
+      scopesDe(curSubj, m, base).forEach(sc=>{ const ser = libelleSerie(curSubj, m, sc); const b = carte(sc, ic, nom + (ser ? " · " + ser : "")); if(b) box.appendChild(b); }));
   }
   if(m === "qcm" && quizAuteurs(curSubj).length){
     const g = el("div","qc-group"); g.textContent = "Auteurs";
     box.appendChild(g);
-    box.appendChild(carte("auteurs", ICO("auteurs"), "Les auteurs et leurs notions"));
+    scopesDe(curSubj, m, "auteurs").forEach(sc=>{ const ser = libelleSerie(curSubj, m, sc); const b = carte(sc, ICO("auteurs"), "Les auteurs et leurs notions" + (ser ? " · " + ser : "")); if(b) box.appendChild(b); });
   }
   // écrire ses propres questions (ou cartes), et retrouver celles déjà écrites
   if((m === "qcm" || m === "fc") && peutCreer(curSubj)){
@@ -9811,14 +9874,18 @@ function renderTrainPane(){
       return;
     }
     // un QCM (ou une série) par CM et TD, plus celui des auteurs : on compte ça, pas les questions
-    const series = chapitresAReviser(curSubj).filter(c=>exos(curSubj, mo.m).some(x=>x && x.ch === c.label)).map(c=>"ch:" + c.label);
-    if(mo.m === "qcm" && curSubj.auteurs && curSubj.auteurs.length && quizAuteurs(curSubj).length) series.push("auteurs");
-    if(mo.m === "fc" && lexique(curSubj).length) series.push("lex", "lexinv");
+    const series = chapitresAReviser(curSubj).filter(c=>exos(curSubj, mo.m).some(x=>x && x.ch === c.label)).flatMap(c=>scopesDuChapitre(curSubj, mo.m, c.label));
+    if(mo.m === "qcm" && curSubj.auteurs && curSubj.auteurs.length && quizAuteurs(curSubj).length) series.push(...scopesDe(curSubj, "qcm", "auteurs"));
+    if(mo.m === "fc" && lexique(curSubj).length) series.push(...scopesDe(curSubj, "fc", "lex"), ...scopesDe(curSubj, "fc", "lexinv"));
+    const decoupe = series.some(sc=>numSerie(sc));
+    const aAuteurs = series.some(sc=>scopeSansSerie(sc) === "auteurs"), aLex = series.some(sc=>scopeSansSerie(sc) === "lex");
     const n = series.length;
     const valides = series.filter(sc=>{ const p = progressionScope(curSubj, sc, mo.m); return p.total && p.ok === p.total; }).length;
     const nom = mo.m === "qcm" ? n + " QCM" : n + " série" + (n > 1 ? "s" : "");
-    const detail = mo.m === "qcm" ? "un par CM/TD" + (series.includes("auteurs") ? ", plus les auteurs" : "")
-      : mo.m === "fc" && series.includes("lex") ? (n > 2 ? "une par CM/TD, plus le lexique" : "le lexique, dans les deux sens") : (n > 1 ? "une par CM/TD" : "");
+    const unite = { qcm:"questions", fc:"cartes", tr:"phrases", oq:"questions" }[mo.m];
+    const detail = decoupe ? SERIE_MAX + " " + unite + " max par série"
+      : mo.m === "qcm" ? "un par CM/TD" + (aAuteurs ? ", plus les auteurs" : "")
+      : mo.m === "fc" && aLex ? (n > 2 ? "une par CM/TD, plus le lexique" : "le lexique, dans les deux sens") : (n > 1 ? "une par CM/TD" : "");
     const txt = nom + (valides && valides < n ? " · " + valides + " validé" + (mo.m === "qcm" ? "" : "e") + (valides > 1 ? "s" : "") : detail ? " · " + detail : "");
     const fini = n && valides === n;
     const card=el("button","mode-card");
@@ -9958,10 +10025,6 @@ function renderPlanning(){
     });
   }
 
-  const add = el("button","add-inline");
-  add.textContent = "+  Ajouter un créneau";
-  add.addEventListener("click",()=>{ haptic(); editCoursPlanning(null); });
-  box.appendChild(add);
 }
 
 function editPlanningAB(){
@@ -10094,12 +10157,6 @@ function renderDevoirs(){
   }
   liste.forEach(({d,i})=> box.appendChild(onglet === "remplir" ? carteARemplir(d,i) : carteCorrigee(d,i)));
 
-  if(canEdit()){
-    const add = el("button","add-inline");
-    add.textContent = "+  Ajouter un devoir";
-    add.addEventListener("click",()=>{ haptic(); editDevoir(null); });
-    box.appendChild(add);
-  }
 }
 
 // en-tête commun : titre, document à lire, chapitre lié
@@ -10391,7 +10448,7 @@ function renderExamenChoix(){
   // nombre de questions
   const g1 = el("div","qc-group"); g1.textContent = "Nombre de questions"; box.appendChild(g1);
   const chips = el("div","ex-chips");
-  [10,20,40].forEach(n=>{
+  [10,20,25].forEach(n=>{
     const c = el("button","ex-chip" + (EXAMEN.nb === n ? " on" : "")); c.type = "button"; c.textContent = n;
     c.addEventListener("click",()=>{ haptic(); EXAMEN.nb = n; chips.querySelectorAll(".ex-chip").forEach(x=>x.classList.toggle("on", x === c)); maj(); });
     chips.appendChild(c);
@@ -10541,21 +10598,21 @@ function startSession(m){
   }));
   if(!all.length) return;
   if(sessionScope === "erreurs"){
-    queue = shuffle(all);
+    queue = shuffle(all).slice(0, SERIE_MAX);
     sessionDueOnly = false;
   } else if(sessionScope === "grand"){
     // tout dedans : ce qui n'est pas validé d'abord, puis le reste
-    queue = shuffle(all.filter(x=> !estAcquise(x.key) )).concat(shuffle(all.filter(x=> estAcquise(x.key) )));
+    queue = shuffle(all.filter(x=> !estAcquise(x.key) )).concat(shuffle(all.filter(x=> estAcquise(x.key) ))).slice(0, SERIE_MAX);
     sessionDueOnly = false;
   } else if(sessionScope !== "all"){
     // un chapitre : on reprend ce qui n'est pas encore validé, sinon tout en libre
     const aValider = shuffle(all.filter(x=> !estAcquise(x.key) ));
-    queue = aValider.length ? aValider : shuffle(all);
+    queue = (aValider.length ? aValider : shuffle(all)).slice(0, SERIE_MAX);
     sessionDueOnly = false;
   } else {
     const due    = shuffle(all.filter(x=>  srsIsDue(x.key) ));
     const notDue = shuffle(all.filter(x=> !srsIsDue(x.key) ));
-    queue = (due.length ? due : notDue);
+    queue = (due.length ? due : notDue).slice(0, SERIE_MAX);
     sessionDueOnly = due.length > 0;
   }
   clearInterval(timerInt);
@@ -10580,7 +10637,7 @@ function startGlobalSession(){
     });
   });
   if(!all.length) return;
-  queue = shuffle(all);
+  queue = shuffle(all).slice(0, SERIE_MAX);
   sessionDueOnly = true;
   clearInterval(timerInt);
   showScreen("session");
@@ -10592,7 +10649,7 @@ function titreSession(mode){
   if(sessionFil) return sessionFil.nom;
   if(globalSession) return "Révision";
   const sc = sessionScope || "all";
-  if(sc.startsWith("ch:")) return partiesChapitre(sc.slice(3)).court;
+  if(sc.startsWith("ch:")){ const ser = libelleSerie(curSubj, mode, sc); return partiesChapitre(scopeSansSerie(sc).slice(3)).court + (ser ? " · " + ser : ""); }
   if(sc === "grand") return mode === "qcm" ? "Grand QCM" : "Tout";
   if(sc === "all") return noms[mode] || "Révision";
   return nomScope(sc);
@@ -11078,7 +11135,7 @@ function startFilSession(th){
   const all = questionsDuTheme(th).map(x=>({ item:melangerQCM(x.item), mode:"qcm", subj:x.subj, key:x.key }));
   if(!all.length) return;
   // comme le grand QCM : ce qui n'est pas validé d'abord, puis le reste
-  queue = shuffle(all.filter(x=>!estAcquise(x.key))).concat(shuffle(all.filter(x=>estAcquise(x.key))));
+  queue = shuffle(all.filter(x=>!estAcquise(x.key))).concat(shuffle(all.filter(x=>estAcquise(x.key)))).slice(0, SERIE_MAX);
   clearInterval(timerInt);
   showScreen("session");
   renderSess();
@@ -11506,8 +11563,8 @@ document.getElementById("btn-split-home").addEventListener("click",()=>{
 });
 document.getElementById("fab-add").addEventListener("click",()=>{
   haptic();
-  if(document.getElementById("fab-add").dataset.target === "subjects") addMatiere();
-  else addSemestre();
+  const a = FAB_ACTIONS[document.getElementById("fab-add").dataset.target];
+  if(a) a.fn();
 });
 document.getElementById("fs-del").addEventListener("click",()=>{ haptic(); if(fsDelete) fsDelete(); });
 document.getElementById("fs-extra").addEventListener("click",()=>{ haptic(); if(fsExtra) fsExtra(); });
@@ -11536,12 +11593,12 @@ document.getElementById("dev-entry").addEventListener("click",()=>{
 });
 document.getElementById("btn-sites-back").addEventListener("click",()=>{ haptic(); renderSemestres(); showScreen("semestres"); });
 document.getElementById("btn-mesdevoirs-back").addEventListener("click",()=>{ haptic(); renderSemestres(); showScreen("semestres"); });
-document.getElementById("mesdevoirs-ajout").addEventListener("click",()=>{ haptic(); nouvelleEcheance(); });
+
 document.getElementById("btn-compte").addEventListener("click",()=>{ haptic(); ouvrirCompte(); });
 document.getElementById("btn-classes-back").addEventListener("click",()=>{ showScreen("semestres"); });
 document.getElementById("btn-class-back").addEventListener("click",()=>{ openClasses(); });
 document.getElementById("btn-shared-back").addEventListener("click",()=>{ if(curClass) openClass(curClass); else showScreen("search"); });
-document.getElementById("btn-class-menu").addEventListener("click",()=>{ haptic(); classMenu(); });
+
 document.getElementById("pick-sheet").addEventListener("click",e=>{ if(e.target.id==="pick-sheet") closePicker(); });
 document.getElementById("fs-ok").addEventListener("click",()=>{ haptic(); if(fsSubmit) fsSubmit(); });
 document.getElementById("form-sheet").addEventListener("click",e=>{ if(e.target.id==="form-sheet") closeForm(); });
