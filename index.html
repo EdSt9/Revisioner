@@ -131,7 +131,7 @@ body{width:100%;min-height:100vh;min-height:100lvh;
 .screen.active{display:flex;flex-direction:column;}
 
 .wrap{position:relative;z-index:1;width:100%;max-width:600px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 20px) 18px calc(env(safe-area-inset-bottom) + 40px);}
-/* bas de page : juste la place du bouton flottant quand il y en a un, pas de vide en plus */#screen-semestres .wrap,#screen-semchoice .wrap,#screen-subjects .wrap{padding-bottom:calc(env(safe-area-inset-bottom) + 100px);}
+/* bas de page : juste la place du bouton flottant quand il y en a un, pas de vide en plus */#screen-semestres .wrap,#screen-semchoice .wrap,#screen-subjects .wrap,#screen-mesdevoirs .wrap,#screen-devoirs .wrap,#screen-sites .wrap,#screen-classes .wrap,#screen-planning .wrap,#screen-class .wrap{padding-bottom:calc(env(safe-area-inset-bottom) + 100px);}
 .back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:var(--font-text);font-size:14px;font-weight:500;color:var(--text-soft);padding:8px 0;margin-bottom:16px;transition:color .2s;}
 .back-btn:hover{color:var(--accent);}
 .back-btn svg{width:16px;height:16px;}
@@ -613,14 +613,55 @@ div.av-tete{cursor:default;}
 .nc-haut .ht-ic.ic-box{margin:0;flex-shrink:0;}
 .next-tuile .ht-t{font-size:24px;margin-top:10px;display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .next-tuile .ht-t.long{font-size:19px;}
-.nc-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-size:13px;color:var(--text-soft);margin-top:6px;}
-.nc-meta>span{display:flex;align-items:center;gap:5px;}
-.nc-meta svg{width:14px;height:14px;color:var(--text-mute);flex-shrink:0;}
+.nc-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;font-size:13px;color:var(--text-soft);margin-top:6px;}
+.nc-g{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;min-width:0;}
+.nc-meta span{display:flex;align-items:center;gap:5px;}
+.nc-meta svg,.nc-prof svg{width:14px;height:14px;color:var(--text-mute);flex-shrink:0;}
+/* la salle tout à droite, en gras : on la cherche des yeux en arrivant */
+.nc-salle{font-weight:600;color:var(--text);flex-shrink:0;white-space:nowrap;}
+.nc-prof{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text-soft);margin-top:4px;max-width:100%;}
 .nc-flag{font-weight:700;color:var(--warn);}
 .nc-flag.devo{color:var(--accent);}
+.pomo-tuile{overflow:hidden;}
+.pomo-tuile .next-bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--accent-soft);}
+.pomo-tuile .next-bar>span{display:block;height:100%;background:var(--accent);transition:width .9s linear;}
+.pomo-tuile.en-cours{border-color:var(--accent);}
+.pomo-tuile.en-cours .ht-t{font-variant-numeric:tabular-nums;font-size:24px;}
+.pomo-tuile.pause .next-bar>span{background:var(--ok);}
+.pomo-tuile.pause .ht-lbl{color:var(--ok);}
+.pomo-tuile.pause{border-color:var(--ok);}
+/* la pastille du minuteur, en bas à gauche, en face du bouton + */
+.pomo-pill{position:fixed;left:calc(env(safe-area-inset-left) + 16px);bottom:calc(env(safe-area-inset-bottom) + 30px);z-index:55;display:flex;align-items:center;gap:7px;height:44px;padding:0 16px 0 12px;border-radius:999px;border:1px solid var(--accent);background:var(--surface-solid);color:var(--text);font-family:var(--font-text);font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;box-shadow:0 6px 24px var(--accent-glow);cursor:pointer;}
+.pomo-pill .ico{width:18px;height:18px;color:var(--accent);}
+.pomo-pill.pause{border-color:var(--ok);box-shadow:0 6px 24px rgba(0,0,0,.25);}
+.pomo-pill.pause .ico{color:var(--ok);}
+.pomo-pill[hidden]{display:none;}
+.pomo-pill.repos{border-color:var(--border);box-shadow:0 4px 16px rgba(0,0,0,.18);color:var(--text-soft);font-weight:600;font-size:14px;}
+#pomo-body{padding:0 20px 4px;}
+#pomo-body .sheet-title,#pomo-body .sheet-sub{margin-left:0;margin-right:0;}
+.pomo-anneau{position:relative;width:200px;max-width:62vw;aspect-ratio:1;margin:8px auto 14px;}
+.pomo-anneau svg{width:100%;height:100%;transform:rotate(-90deg);}
+.pomo-anneau-bg{fill:none;stroke:var(--accent-soft);stroke-width:10;}
+.pomo-anneau-fill{fill:none;stroke:var(--accent);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .9s linear;}
+#pomo-body.pause .pomo-anneau-fill{stroke:var(--ok);}
+.pomo-centre{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.pomo-chiffre{font-family:var(--font-display);font-size:46px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums;color:var(--text);}
+.pomo-sous{font-size:13px;color:var(--text-mute);margin-top:8px;}
+.pomo-regles{list-style:none;display:flex;flex-direction:column;gap:8px;margin:4px 0 14px;padding:0;font-size:14px;color:var(--text-soft);line-height:1.45;}
+.pomo-regles b{color:var(--text);}
+.pomo-jour{display:flex;align-items:center;justify-content:center;gap:10px;font-size:13px;color:var(--text-mute);margin-bottom:14px;}
+.pomo-pts{display:flex;gap:5px;}
+.pomo-pts i{width:10px;height:10px;border-radius:50%;background:var(--accent-soft);border:1px solid var(--accent);}
+.pomo-pts i.on{background:var(--accent);}
+.pomo-rappel{display:flex;flex-direction:column;gap:4px;padding:12px 14px;border-radius:16px;background:var(--accent-soft);margin-bottom:14px;font-size:13.5px;color:var(--text-soft);line-height:1.45;}
+.pomo-rappel b{color:var(--accent);font-size:14.5px;}
+.pomo-actions{display:flex;flex-direction:column;gap:9px;}
+.pomo-bt{height:50px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:var(--font-text);font-size:15px;font-weight:600;cursor:pointer;}
+.pomo-bt.primaire{background:var(--accent);border-color:var(--accent);color:#fff;}
+.pomo-bt.discret{background:none;border-color:transparent;color:var(--text-mute);height:40px;}
 .next-tuile .next-bar{position:absolute;left:0;right:0;bottom:0;height:4px;margin:0;border-radius:0;background:var(--accent-soft);}
 .next-tuile .next-bar>span{display:block;height:100%;background:var(--accent);}
-#mesdevoirs-ajout{margin-top:18px;}
+
 #sites-liste,#screen-mesdevoirs #home-know{margin-top:18px;}
 .sem-entry.reprise .sem-entry-ic{background:var(--accent-soft);}
 
@@ -1233,6 +1274,8 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .compte-qui small{display:block;font-size:12.5px;color:var(--text-mute);line-height:1.4;margin-top:2px;}
 .compte-av{width:46px;height:46px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:20px;font-weight:700;flex-shrink:0;}
 .compte-lab{margin:6px 4px 6px;}
+.compte-hint{margin:8px 6px 4px;}
+.compte-version{text-align:center;margin-top:14px;opacity:.75;}
 .compte-seg{margin:0 0 14px;}
 .compte-quitter .cal-name{color:var(--danger,#d33);}
 .vide-actions{display:flex;flex-direction:column;gap:8px;margin-top:16px;width:100%;max-width:280px;}
@@ -1434,6 +1477,8 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .tp-pt{width:8px;height:8px;border-radius:50%;background:var(--new);flex-shrink:0;box-shadow:0 0 6px var(--new);}
 .nb-ligne{flex-shrink:0;min-width:22px;height:22px;padding:0 7px;border-radius:11px;background:var(--new);color:#fff;font-size:12px;font-weight:800;display:grid;place-items:center;}
 .nv-txt{color:var(--new);font-weight:600;}
+.chap-maj{display:flex;flex-direction:column;gap:3px;margin:0 0 18px;padding:11px 14px;border-radius:14px;background:var(--accent-soft);border:1px solid var(--new);font-size:13.5px;line-height:1.45;color:var(--text-soft);}
+.chap-maj b{color:var(--new);font-size:13px;}
 .chap-pick-new{flex-shrink:0;font-size:11px;font-weight:700;color:var(--new);background:var(--accent-soft);
   border-radius:999px;padding:3px 8px;}
 .chap-pick-nb{flex-shrink:0;font-size:12px;font-weight:600;color:var(--text-mute);}
@@ -1475,6 +1520,15 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
    rétrécit et la page paraît plus étroite d'un TD à l'autre. */.card{background:var(--surface);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px 22px;box-shadow:0 4px 20px var(--shadow);width:100%;box-sizing:border-box;overflow:hidden;}
 .card-body{font-size:calc(14.5px * var(--zt,1));line-height:1.95;color:var(--text);white-space:pre-line;overflow-wrap:break-word;word-break:break-word;}
 .chunk-highlight{background:var(--hl-bg);color:var(--hl-text);border-radius:5px;padding:1px 6px;font-weight:600;}
+.cours-fig{margin:14px -6px 4px;}
+.cours-fig img{display:block;width:100%;height:auto;border-radius:12px;background:var(--surface-2);cursor:zoom-in;}
+.cours-fig figcaption{font-size:12px;color:var(--text-mute);margin-top:7px;text-align:center;line-height:1.4;}
+.img-voile{position:fixed;inset:0;z-index:300;background:rgba(5,4,10,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .25s;padding:calc(env(safe-area-inset-top) + 50px) 0 calc(env(safe-area-inset-bottom) + 24px);}
+.img-voile.on{opacity:1;}
+.img-zoom{width:100%;overflow:auto;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y pinch-zoom;}
+.img-zoom img{display:block;width:100%;height:auto;}
+.img-leg{color:#ddd;font-size:13px;margin-top:12px;padding:0 20px;text-align:center;}
+.img-fermer{position:absolute;top:calc(env(safe-area-inset-top) + 12px);right:16px;width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:16px;cursor:pointer;}
 .card-list{list-style:none;margin-top:14px;display:flex;flex-direction:column;gap:2px;}
 .card-list li{font-size:calc(14px * var(--zt,1));line-height:1.7;color:var(--text);padding:11px 0;border-bottom:1px solid var(--border);display:flex;gap:11px;min-width:0;overflow-wrap:break-word;word-break:break-word;}
 .card-list li:last-child{border:none;padding-bottom:0;}
@@ -2093,9 +2147,6 @@ html.calme .rise{animation:none!important;}
     <button class="back-btn rise" id="btn-classes-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
     <div class="edt-titlerow rise" style="animation-delay:.03s">
       <h1 class="page-title" style="margin:0">Mes classes</h1>
-      <button class="icon-btn" data-entete id="btn-class-menu" aria-label="Options">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 14.5a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-2.9-1.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9h-.2a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.3-2.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5v-.2a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
-      </button>
     </div>
     <p class="page-sub rise" style="animation-delay:.06s">Des dossiers de cours partagés. On y entre avec un code, après validation.</p>
     <div id="classes-list" class="rise" style="animation-delay:.1s"></div>
@@ -2187,6 +2238,15 @@ html.calme .rise{animation:none!important;}
 </div>
 
 <!-- FEUILLE : éditer un créneau -->
+<!-- POMODORO : la feuille du minuteur, et la pastille qui le suit sur les autres pages -->
+<div id="pomo-overlay" class="sheet-overlay">
+  <div class="sheet" id="pomo-sheet" role="dialog" aria-modal="true">
+    <div class="sheet-grip"></div>
+    <div class="ev-scroll" id="pomo-body"></div>
+  </div>
+</div>
+<button id="pomo-pill" class="pomo-pill" type="button" aria-label="Minuteur Pomodoro" hidden></button>
+
 <div id="memo-overlay" class="sheet-overlay">
   <div class="sheet" id="memo-sheet" role="dialog" aria-modal="true">
     <div class="sheet-grip"></div>
@@ -2290,7 +2350,6 @@ html.calme .rise{animation:none!important;}
     <h1 class="page-title rise" style="animation-delay:.03s">Mes devoirs</h1>
     <div class="lex-sous rise" style="animation-delay:.05s">Tes contrôles, tes rendus et tes notes, semaine par semaine</div>
     <div id="home-know" class="rise" style="animation-delay:.07s"></div>
-    <button class="add-inline rise" id="mesdevoirs-ajout" type="button" style="animation-delay:.09s">+  Ajouter un devoir</button>
   </div>
 </div>
 <div id="screen-index" class="screen">
@@ -2943,12 +3002,6 @@ function renderSites(){
     ligne.style.marginBottom = "9px";
     box.appendChild(ligne);
   });
-  const add = el("button","add-inline");
-  add.type = "button";
-  add.textContent = "+  Ajouter un site";
-  add.style.marginTop = "4px";
-  add.addEventListener("click",()=>{ haptic(); editSite(-1); });
-  box.appendChild(add);
   if(sites.length){
     const h = el("div","fs-hint");
     h.textContent = "Glisse un site vers la gauche pour le modifier ou le supprimer.";
@@ -3318,7 +3371,7 @@ function nomCourtItem(it){
 }
 
 async function openClass(c){
-  curClass = c;
+  curClass = c; CLS_GERE = c.role === "owner" || c.role === "adjoint";
   showScreen("class");
   document.getElementById("class-title").textContent = c.name;
   // le code, en pastille dans l'entête : seul le créateur le voit, c'est lui qui le donne
@@ -3363,6 +3416,7 @@ async function openClass(c){
   box.innerHTML = "";
   CLS_ITEMS[c.id] = items;
   const gere = monRole === "owner" || monRole === "adjoint";
+  CLS_GERE = gere; refreshFab("class");
 
   // sous le nom : les membres, en pastille. Une demande en attente y pose une pastille rose.
   const attente = gere ? membres.filter(m=>m.role === "pending") : [];
@@ -3483,14 +3537,7 @@ async function openClass(c){
       });
   }
 
-  // publier sans quitter la classe
-  if(gere){
-    const add = el("button","add-inline cls-publier");
-    add.type = "button";
-    add.textContent = "+  Publier un de mes cours";
-    add.addEventListener("click",()=>{ haptic(); publishFromClass(c); });
-    box.appendChild(add);
-  }
+  // publier sans quitter la classe : le + flottant
 }
 
 // ── Suivre tous les cours d'une classe ──
@@ -3994,12 +4041,6 @@ function renderDevoirsClasse(c, box, gere, devs){
 
   if(avenir.length){ const t = el("div","av-tete"); t.innerHTML = `<span class="av-lbl">À venir</span>`; box.appendChild(t); }
   lister(avenir, box, false);
-  if(gere){
-    const add = el("button","add-inline cls-publier"); add.type = "button";
-    add.textContent = "+  Ajouter un devoir";
-    add.addEventListener("click",()=>{ haptic(); choisirCoursDevoir(c); });
-    box.appendChild(add);
-  }
   // vus : la pastille s'éteint, l'étiquette « Nouveau » reste jusqu'à la prochaine visite
   let marque = false;
   avenir.forEach(it=>{ if(!vus[it.id]){ vus[it.id] = 1; marque = true; } });
@@ -5835,12 +5876,29 @@ function addSection(type, ch){
 }
 
 // Le « + » flottant n'apparaît que là où il veut dire quelque chose.
+// Une seule logique dans toute l'app : quand une page sert à ajouter quelque chose,
+// c'est le « + » flottant en bas à droite qui l'ajoute.
+let CLS_GERE = false;   // créateur ou adjoint de la classe ouverte
+const FAB_ACTIONS = {
+  semchoice:  { label:"Ajouter un semestre", fn:()=>addSemestre() },
+  subjects:   { label:"Ajouter une matière", fn:()=>addMatiere() },
+  mesdevoirs: { label:"Ajouter un devoir",   fn:()=>nouvelleEcheance() },
+  devoirs:    { label:"Ajouter un devoir",   fn:()=>editDevoir(null) },
+  sites:      { label:"Ajouter un site",     fn:()=>editSite(-1) },
+  classes:    { label:"Créer ou rejoindre une classe", fn:()=>classMenu() },
+  planning:   { label:"Ajouter un créneau",  fn:()=>editCoursPlanning(null) },
+  // dans une classe : publier un cours, ou poser un devoir, selon la vue ouverte
+  class:      { label:"Publier ou ajouter un devoir", si:()=>CLS_GERE && !!curClass,
+                fn:()=>{ if((CLS_VUE[curClass.id] || "cours") === "devoirs") choisirCoursDevoir(curClass); else publishFromClass(curClass); } }
+};
 function refreshFab(id){
   const fab = document.getElementById("fab-add");
   if(!fab) return;
-  const ok = canEdit() && (id === "semchoice" || id === "subjects");
+  const a = FAB_ACTIONS[id];
+  const ok = canEdit() && !!a && (!a.si || a.si());
   fab.classList.toggle("show", ok);
   fab.dataset.target = id;
+  if(a) fab.setAttribute("aria-label", a.label);
 }
 
 // ── En-tête commun : le bouton retour (ou les icônes de l'accueil) dans une barre fixe,
@@ -5875,7 +5933,7 @@ document.querySelectorAll(".screen").forEach(poserEntete);
 // Pas de jeu en bas des pages : la marge du bas sert à respirer quand la page défile.
 // Si tout tient presque sur l'écran, cette marge ne doit pas, à elle seule, faire défiler la page.
 // Avec le bouton flottant, on lui laisse sa place ; sans lui, juste la barre d'accueil de l'iPhone.
-const ECRANS_FAB = ["screen-semestres","screen-semchoice","screen-subjects"];
+const ECRANS_FAB = ["screen-semestres","screen-semchoice","screen-subjects","screen-mesdevoirs","screen-devoirs","screen-sites","screen-classes","screen-planning","screen-class"];
 let SAB_SONDE = null;
 function basSur(){
   if(!SAB_SONDE){ SAB_SONDE = el("div"); SAB_SONDE.style.cssText = "position:fixed;left:0;bottom:0;width:1px;height:env(safe-area-inset-bottom);visibility:hidden;pointer-events:none;"; document.body.appendChild(SAB_SONDE); }
@@ -5956,6 +6014,7 @@ function showScreen(id){
   // un nouvel écran commence en haut ; le même écran redessiné garde sa place
   if(avant !== id) window.scrollTo(0,0);
   requestAnimationFrame(()=>majProgression());   // l'onglet sommaire n'existe que dans un cours
+  if(typeof pomoMaj === "function") pomoMaj();
 }
 
 // ── THEME ──
@@ -6537,6 +6596,22 @@ function lexique(subj){
   const out = lexiqueCalcule(subj);
   LEX_CACHE[subj.id] = { sig, out };
   return out;
+}
+// Une image dans un cours : chargée seulement quand on arrive dessus, et touchée, elle s'ouvre en grand
+function figureCours(im){
+  const f = el("figure","cours-fig");
+  const ratio = im.w && im.h ? `aspect-ratio:${im.w}/${im.h};` : "";
+  f.innerHTML = `<img src="${esc(im.src)}" alt="${esc(im.alt || "")}" loading="lazy" decoding="async" style="${ratio}">` +
+    (im.legende ? `<figcaption>${esc(im.legende)}</figcaption>` : "");
+  f.querySelector("img").addEventListener("click", ev=>{ ev.stopPropagation(); haptic(); ouvrirImage(im); });
+  return f;
+}
+function ouvrirImage(im){
+  const v = el("div","img-voile");
+  v.innerHTML = `<div class="img-zoom"><img src="${esc(im.src)}" alt="${esc(im.alt || "")}"></div>${im.legende ? `<div class="img-leg">${esc(im.legende)}</div>` : ""}<button class="img-fermer" type="button" aria-label="Fermer">✕</button>`;
+  const fermer = ()=>{ v.classList.remove("on"); setTimeout(()=>v.remove(), 250); };
+  v.addEventListener("click", e=>{ if(e.target === v || e.target.closest(".img-fermer")) fermer(); });
+  document.body.appendChild(v); requestAnimationFrame(()=>v.classList.add("on"));
 }
 function lexiqueCalcule(subj){
   const vus = new Set(), out = [];
@@ -7264,7 +7339,7 @@ function listeChapitres(type, chapters, chIdx){
   chapters.forEach((c,i)=>{
     const rev = estRevise(curSubj, type, c), nouv = i !== chIdx && chapitreNouveau(curSubj, type, c);
     const nQ = exos(curSubj, "qcm").filter(x=>x && x.ch === c.label).length;
-    const etat = rev ? "Révisé" : nouv ? "Nouveau" : "À réviser";
+    const etat = nouv && chapitreModifie(curSubj, type, c) ? "Mis à jour" : rev ? "Révisé" : nouv ? "Nouveau" : "À réviser";
     const r = el("button","cal-row chap-ligne" + (i === chIdx ? " actif" : "") + (rev ? " revise" : "") + (nouv ? " nouveau" : ""));
     r.type = "button";
     r.innerHTML = `<span class="rv-dot"></span><div class="cal-txt"><div class="cal-name">${esc(libelleChapitre(c.label))}</div>
@@ -7648,9 +7723,12 @@ function renderNextCourse(){
   // le nom du cours en grand ; au-dessus, l'icône à gauche et le moment à droite ; dessous, l'heure et la salle
   box.className = "home-tuile next-tuile" + (live ? " live" : "") + (flag && flag.cls === "ctrl" ? " alerte" : "");
   const horaire = hhmm(ev.start) + (ev.end ? " → " + hhmm(ev.end) : "");
+  // le prof : celui noté sur le cours, sinon celui du calendrier de la fac, sinon celui de la matière
+  const pr = profDuCours(ev), prof = pr && pr.nom ? pr.nom : "";
   box.innerHTML = `<span class="nc-haut"><span class="ht-ic ic-box">${ICO("calendrier")}</span><span class="ht-lbl">${live ? '<span class="next-dot"></span>En cours · ' + esc(quand) : "Prochain · " + esc(quand)}</span></span>
     <span class="ht-t">${esc(nomCourt(ev.title))}</span>
-    <span class="nc-meta"><span>${IC_HORLOGE}${horaire}</span>${ev.place ? `<span>${IC_LIEU}${esc(ev.place)}</span>` : ""}${flag ? `<span class="nc-flag ${flag.cls}">${esc(flag.txt)}</span>` : ""}</span>`;
+    ${prof ? `<span class="nc-prof">${IC_PROF_MINI}${esc(prof)}</span>` : ""}
+    <span class="nc-meta"><span class="nc-g"><span>${IC_HORLOGE}${horaire}</span>${flag ? `<span class="nc-flag ${flag.cls}">${esc(flag.txt)}</span>` : ""}</span>${ev.place ? `<span class="nc-salle">${IC_LIEU}${esc(ev.place)}</span>` : ""}</span>`;
   if(live && ev.end){
     const fait = Math.max(0, Math.min(1, (now - ev.start) / (ev.end - ev.start)));
     const bar = el("span","next-bar"); bar.innerHTML = `<span style="width:${Math.round(fait*100)}%"></span>`;
@@ -7847,11 +7925,20 @@ function vusCharger(){
 }
 function vusSave(sync){ try{ localStorage.setItem(VUS_KEY, JSON.stringify(VUS)); }catch(e){} if(sync !== false) scheduleSync(); }
 function cleVu(sj, type, ch){ return sj.id + "|" + type + "|" + (ch && ch.label || ""); }
-function chapitreNouveau(sj, type, ch){ return !!ch && !vusCharger()[cleVu(sj, type, ch)]; }
+function chapitreJamaisOuvert(sj, type, ch){ return !!ch && !vusCharger()[cleVu(sj, type, ch)]; }
+// Un chapitre mis à jour depuis ma dernière lecture (champ maj « AAAA-MM-JJ » dans data.js) :
+// on garde la date de la version lue, une plus récente rallume la pastille.
+function chapitreModifie(sj, type, ch){
+  if(!ch || !ch.maj) return false;
+  const v = vusCharger()[cleVu(sj, type, ch)];
+  return !!v && (v === 1 || String(v) < ch.maj);
+}
+// nouveau OU mis à jour : même pastille rose partout
+function chapitreNouveau(sj, type, ch){ return chapitreJamaisOuvert(sj, type, ch) || chapitreModifie(sj, type, ch); }
 function marquerVu(sj, type, ch){
   const v = vusCharger(), k = cleVu(sj, type, ch);
-  if(!ch || v[k]) return;
-  v[k] = 1; vusSave();
+  if(!ch || (v[k] && !chapitreModifie(sj, type, ch))) return;
+  v[k] = ch.maj || 1; vusSave();
 }
 // les chapitres jamais ouverts d'une matière : [{ type, idx, ch }]
 function nouveauxDe(sj){
@@ -7926,7 +8013,7 @@ function renderKnowBlock(){
   const alerts = pendingAlerts(true, true);
   majTuileDevoirs(alerts);
   if(!alerts.length){
-    box.innerHTML = vide("calendrier", "Rien à venir", "Pose un devoir, un contrôle ou une note sur un cours de ton emploi du temps, ou ajoute-le ci-dessous. Il apparaîtra ici.");
+    box.innerHTML = vide("calendrier", "Rien à venir", "Pose un devoir, un contrôle ou une note sur un cours de ton emploi du temps, ou touche le + en bas. Il apparaîtra ici.");
     return;
   }
   const now = new Date();
@@ -8285,7 +8372,8 @@ function makeEcueCard(s){
     card.classList.add("a-nouveau");
     const noms = nouveauxDe(s).map(n=>{ const pc = partiesChapitre(n.ch.label); return pc.court + (pc.titre ? " · " + pc.titre.replace(/^Séance du /, "") : ""); });
     const bd = el("div","ecue-nouveau");
-    bd.innerHTML = `<span>✦ ${nv === 1 ? "Nouveau" : nv + " nouveaux"} : ${esc(noms.join(", "))}</span><b>›</b>`;
+    const tousMaj = nouveauxDe(s).every(n=>chapitreModifie(s, n.type, n.ch));
+    bd.innerHTML = `<span>✦ ${tousMaj ? "Mis à jour" : nv === 1 ? "Nouveau" : nv + " nouveaux"} : ${esc(noms.join(", "))}</span><b>›</b>`;
     bd.addEventListener("click", ev=>{ ev.stopPropagation(); haptic(); ouvrirNouveau(s); });
     card.appendChild(bd);
   }
@@ -8490,6 +8578,7 @@ function majBoutonCompte(){
   b.textContent = p.charAt(0).toUpperCase();
   b.setAttribute("aria-label", "Mon compte : " + p);
 }
+const APP_VERSION = "29/10 · 18h40";
 function ouvrirCompte(){
   document.querySelectorAll("#pick-sheet .pick-actions, #pick-sheet .fp-retour").forEach(n=>n.remove());
   document.getElementById("pick-title").textContent = "Mon compte";
@@ -8512,6 +8601,22 @@ function ouvrirCompte(){
     seg.appendChild(o);
   });
   box.appendChild(seg);
+  // Pomodoro : une option, pas une tuile
+  const labP = el("div","fs-label compte-lab"); labP.textContent = "Pomodoro"; box.appendChild(labP);
+  const segP = el("div","seg compte-seg");
+  [[false,"Désactivé"],[true,"Activé"]].forEach(([v, nom])=>{
+    const o = el("button","seg-opt" + (v === pomoActif() ? " active" : "")); o.type = "button"; o.textContent = nom;
+    o.addEventListener("click",()=>{
+      haptic();
+      USER_SETTINGS.pomodoro = v; saveContent();
+      if(!v) pomoArreter(); else pomoMaj();
+      segP.querySelectorAll(".seg-opt").forEach(x=>x.classList.toggle("active", x === o));
+    });
+    segP.appendChild(o);
+  });
+  box.appendChild(segP);
+  const hP = el("div","fs-hint compte-hint"); hP.textContent = "25 min de travail, 5 min de pause. Un minuteur apparaît en bas à gauche : touche-le pour lancer un pomodoro.";
+  box.appendChild(hP);
   const ligne = (nom, sous, fn, cls)=>{
     const r = el("button","cal-row" + (cls ? " " + cls : "")); r.type = "button";
     r.innerHTML = `<div class="cal-txt"><div class="cal-name">${esc(nom)}</div>${sous ? `<div class="cal-url">${esc(sous)}</div>` : ""}</div>`;
@@ -8523,6 +8628,12 @@ function ouvrirCompte(){
     closePicker(); renderSemestres(); window.scrollTo(0, 0);
   });
   ligne("Se déconnecter", "Pour changer de compte sur ce téléphone", ()=>{ closePicker(); setTimeout(seDeconnecter, 320); }, "compte-quitter");
+  // la version de l'app et des cours : pour vérifier que la dernière est bien arrivée
+  const ver = el("div","fs-hint compte-hint compte-version");
+  const nCh = SUBJECTS.reduce((n,sj)=>n + (sj.cm||[]).length + (sj.td||[]).length, 0);
+  const nImg = SUBJECTS.reduce((n,sj)=>n + ["cm","td"].reduce((k,t)=>k + (sj[t]||[]).reduce((j,ch)=>j + (ch.sections||[]).filter(x=>x.img).length, 0), 0), 0);
+  ver.textContent = "Version de l'app : " + APP_VERSION + " · cours : " + nCh + " chapitres, " + nImg + " images";
+  box.appendChild(ver);
   document.getElementById("pick-sheet").classList.add("open");
 }
 // On enregistre d'abord en ligne, puis on vide ce téléphone : le compte suivant repart de zéro.
@@ -9210,6 +9321,12 @@ function renderCoursePane(type){
     setTimeout(()=>reprendreLecture(pane, cle, jeton), 60); }
   const titreCh = partiesChapitre(ch.label).titre;
   if(titreCh){ const h = el("h1","chap-titre"); h.textContent = titreCh; pane.appendChild(h); }
+  if(chapitreModifie(curSubj, type, ch)){
+    const m = el("div","chap-maj");
+    const [a, mo, j] = ch.maj.split("-");
+    m.innerHTML = `<b>✦ Mis à jour le ${j}/${mo}</b>${ch.majNote ? `<span>${esc(ch.majNote)}</span>` : ""}`;
+    pane.appendChild(m);
+  }
   marquerVu(curSubj, type, ch);
   majTypePick();
   lecteurStop();
@@ -9223,6 +9340,7 @@ function renderCoursePane(type){
     const title=el("h2","section-title"); title.textContent=sec.title;
     const card=el("div","card");
     if(sec.body){ const b=el("div","card-body"); b.innerHTML=texteCours(sec.body); card.appendChild(b); }
+    if(sec.img && sec.img.src) card.appendChild(figureCours(sec.img));
     if(sec.list&&sec.list.length){ const ul=el("ul","card-list"); sec.list.forEach(it=>{const li=el("li"); li.innerHTML='<span class="li-text">'+texteCours(it)+'</span>'; ul.appendChild(li);}); card.appendChild(ul); }
     block.appendChild(title);
     block.appendChild(card);
@@ -9283,7 +9401,7 @@ function renderCoursePane(type){
     const ok = p.ok === p.total;
     const q = etape(num++, ok ? "fait" : "");
     q.innerHTML = `<span class="fin-num">${ok ? COCHE_SVG : 2}</span><span class="fin-txt"><span class="fin-nom">Faire le QCM de ${mot}</span>
-      <span class="fin-sub">${ok ? "Validé" : p.ok ? p.ok + " questions validées sur " + p.total : p.total + " questions"}</span></span><span class="fin-fl">${IC_CHEV_DROITE}</span>`;
+      <span class="fin-sub">${ok ? "Validé" : p.ok ? p.ok + " questions validées sur " + p.total : p.total + " questions"}${!ok && nbSeries(p.total) > 1 ? " · en " + nbSeries(p.total) + " séries" : ""}</span></span><span class="fin-fl">${IC_CHEV_DROITE}</span>`;
     q.addEventListener("click", ()=>{ haptic(); lancerQCMChapitre(ch.label); });
   } else if(peutCreer(curSubj)){
     const q = etape(num++, "");
@@ -9334,12 +9452,32 @@ var sessionScope = "all";
 function scopeCourant(){
   const v = curSubj && SCOPES[curSubj.id];
   if(!v || v === "all") return "all";
-  if(v === "auteurs") return quizAuteurs(curSubj).length ? v : "all";
-  if(v === "grand" || v === "erreurs" || v === "lex" || v === "lexinv") return v;
+  const base = scopeSansSerie(v);
+  if(base === "auteurs") return quizAuteurs(curSubj).length ? v : "all";
+  if(v === "grand" || v === "erreurs" || base === "lex" || base === "lexinv") return v;
   // le chapitre peut avoir disparu (renommé, supprimé)
-  return chapitresAReviser(curSubj).some(c=>"ch:"+c.label === v) ? v : "all";
+  return chapitresAReviser(curSubj).some(c=>"ch:"+c.label === scopeSansSerie(v)) ? v : "all";
 }
 function choisirScope(v){ if(curSubj) SCOPES[curSubj.id] = v; }
+// Au-delà de 25, un exercice est trop long d'une traite : on travaille par petits blocs.
+// Toute liste (un CM, un TD, le lexique, les auteurs) se coupe en séries égales
+// (50 → 2 × 25, 44 → 2 × 22, 109 → 5 × 21 ou 22), et aucune session ne dépasse 25 questions.
+// Vaut pour tous les exercices : QCM, flashcards, textes à trous, questions ouvertes.
+// Une série s'écrit « <périmètre>§<numéro> », par exemple « ch:CM4 · 27/10§2 » ou « lex§3 ».
+const SERIE_MAX = 25;
+function nbSeries(total){ return total > SERIE_MAX ? Math.ceil(total / SERIE_MAX) : 1; }
+function scopeSansSerie(sc){ return String(sc || "").replace(/§\d+$/, ""); }
+function numSerie(sc){ const m = String(sc || "").match(/§(\d+)$/); return m ? +m[1] : 0; }
+function scopesDe(subj, m, base){
+  const k = nbSeries(itemsDuScopeBrut(subj, m, base).length);
+  return k === 1 ? [base] : Array.from({ length:k }, (_, i)=>base + "§" + (i + 1));
+}
+function scopesDuChapitre(subj, m, label){ return scopesDe(subj, m, "ch:" + label); }
+// « série 1/2 » d'un périmètre, ou rien
+function libelleSerie(subj, m, sc){
+  const i = numSerie(sc); if(!i) return "";
+  return "série " + i + "/" + scopesDe(subj, m, scopeSansSerie(sc)).length;
+}
 // les chapitres qui ont au moins un exercice
 function chapitresAReviser(subj){
   const out = [];
@@ -9364,6 +9502,14 @@ function cartesLexique(subj, inverse){
   });
 }
 function itemsDuScope(subj, m, scope){
+  const i = numSerie(scope);
+  const tout = itemsDuScopeBrut(subj, m, scopeSansSerie(scope));
+  if(!i) return tout;
+  // la série i sur k : des parts égales, dans l'ordre du cours
+  const n = tout.length, k = nbSeries(n);
+  return tout.slice(Math.floor((i - 1) * n / k), Math.floor(i * n / k));
+}
+function itemsDuScopeBrut(subj, m, scope){
   if(scope === "lex" || scope === "lexinv") return m === "fc" ? cartesLexique(subj, scope === "lexinv").map((item,i)=>({ item, i })) : [];
   if(scope === "erreurs") return itemsDuScope(subj, m, "grand").filter(x=>estErreur(cardKey(subj.id, m, x.item, x.i)));
   if(scope === "auteurs") return m === "qcm" ? quizAuteurs(subj).map((item,i)=>({ item, i })) : [];
@@ -9386,6 +9532,8 @@ function progressionScope(subj, scope, m){
   return { ok, total:xs.length };
 }
 function nomScope(scope){
+  const ser = numSerie(scope) ? " · " + libelleSerie(curSubj, curMode || "qcm", scope) : "";
+  if(ser) return nomScope(scopeSansSerie(scope)) + ser;
   if(scope === "erreurs") return "Mes erreurs";
   if(scope === "lex") return "Lexique";
   if(scope === "lexinv") return "Lexique à l'envers";
@@ -9658,7 +9806,9 @@ function quizAuteurs(subj){
 // ── Barre des périmètres : Tout · CM · TD · Auteurs ──
 // lance directement le QCM d'un chapitre (bouton en bas du cours)
 function lancerQCMChapitre(label){
-  choisirScope("ch:" + label);
+  const scs = scopesDuChapitre(curSubj, "qcm", label);
+  const suivante = scs.find(sc=>{ const p = progressionScope(curSubj, sc, "qcm"); return p.ok < p.total; }) || scs[0];
+  choisirScope(suivante);
   const t = curTab;
   retourSession = ()=>{ setTab(t); showScreen("split"); };
   startSession("qcm");
@@ -9708,7 +9858,7 @@ function renderChoix(m){
   const grand = carte("grand", ICO("grand"), cfg.grand, "grand");
   if(grand){
     const sous = grand.querySelector(".qc-sub");
-    sous.textContent = sous.textContent + " · tout dedans";
+    sous.textContent = sous.textContent + " · " + SERIE_MAX + " à la fois, le non validé d'abord";
     box.appendChild(grand);
   }
   // mes erreurs : les questions ratées, ici ou en mode examen
@@ -9728,19 +9878,22 @@ function renderChoix(m){
     if(!liste.length) return;
     const g = el("div","qc-group"); g.textContent = nom;
     box.appendChild(g);
-    liste.forEach(c=>{ const b = carte("ch:" + c.label, icone, c.label); if(b) box.appendChild(b); });
+    liste.forEach(c=>scopesDuChapitre(curSubj, m, c.label).forEach(sc=>{
+      const ser = libelleSerie(curSubj, m, sc);
+      const b = carte(sc, icone, c.label + (ser ? " · " + ser : "")); if(b) box.appendChild(b);
+    }));
   });
   // les termes du lexique, en cartes, dans les deux sens
   if(m === "fc" && lexique(curSubj).length){
     const g = el("div","qc-group"); g.textContent = "Lexique";
     box.appendChild(g);
-    const a = carte("lex", ICO("lexique"), "Le terme → sa définition"); if(a) box.appendChild(a);
-    const b = carte("lexinv", ICO("inverse"), "La définition → le terme"); if(b) box.appendChild(b);
+    [["lex", ICO("lexique"), "Le terme → sa définition"], ["lexinv", ICO("inverse"), "La définition → le terme"]].forEach(([base, ic, nom])=>
+      scopesDe(curSubj, m, base).forEach(sc=>{ const ser = libelleSerie(curSubj, m, sc); const b = carte(sc, ic, nom + (ser ? " · " + ser : "")); if(b) box.appendChild(b); }));
   }
   if(m === "qcm" && quizAuteurs(curSubj).length){
     const g = el("div","qc-group"); g.textContent = "Auteurs";
     box.appendChild(g);
-    box.appendChild(carte("auteurs", ICO("auteurs"), "Les auteurs et leurs notions"));
+    scopesDe(curSubj, m, "auteurs").forEach(sc=>{ const ser = libelleSerie(curSubj, m, sc); const b = carte(sc, ICO("auteurs"), "Les auteurs et leurs notions" + (ser ? " · " + ser : "")); if(b) box.appendChild(b); });
   }
   // écrire ses propres questions (ou cartes), et retrouver celles déjà écrites
   if((m === "qcm" || m === "fc") && peutCreer(curSubj)){
@@ -9811,14 +9964,18 @@ function renderTrainPane(){
       return;
     }
     // un QCM (ou une série) par CM et TD, plus celui des auteurs : on compte ça, pas les questions
-    const series = chapitresAReviser(curSubj).filter(c=>exos(curSubj, mo.m).some(x=>x && x.ch === c.label)).map(c=>"ch:" + c.label);
-    if(mo.m === "qcm" && curSubj.auteurs && curSubj.auteurs.length && quizAuteurs(curSubj).length) series.push("auteurs");
-    if(mo.m === "fc" && lexique(curSubj).length) series.push("lex", "lexinv");
+    const series = chapitresAReviser(curSubj).filter(c=>exos(curSubj, mo.m).some(x=>x && x.ch === c.label)).flatMap(c=>scopesDuChapitre(curSubj, mo.m, c.label));
+    if(mo.m === "qcm" && curSubj.auteurs && curSubj.auteurs.length && quizAuteurs(curSubj).length) series.push(...scopesDe(curSubj, "qcm", "auteurs"));
+    if(mo.m === "fc" && lexique(curSubj).length) series.push(...scopesDe(curSubj, "fc", "lex"), ...scopesDe(curSubj, "fc", "lexinv"));
+    const decoupe = series.some(sc=>numSerie(sc));
+    const aAuteurs = series.some(sc=>scopeSansSerie(sc) === "auteurs"), aLex = series.some(sc=>scopeSansSerie(sc) === "lex");
     const n = series.length;
     const valides = series.filter(sc=>{ const p = progressionScope(curSubj, sc, mo.m); return p.total && p.ok === p.total; }).length;
     const nom = mo.m === "qcm" ? n + " QCM" : n + " série" + (n > 1 ? "s" : "");
-    const detail = mo.m === "qcm" ? "un par CM/TD" + (series.includes("auteurs") ? ", plus les auteurs" : "")
-      : mo.m === "fc" && series.includes("lex") ? (n > 2 ? "une par CM/TD, plus le lexique" : "le lexique, dans les deux sens") : (n > 1 ? "une par CM/TD" : "");
+    const unite = { qcm:"questions", fc:"cartes", tr:"phrases", oq:"questions" }[mo.m];
+    const detail = decoupe ? SERIE_MAX + " " + unite + " max par série"
+      : mo.m === "qcm" ? "un par CM/TD" + (aAuteurs ? ", plus les auteurs" : "")
+      : mo.m === "fc" && aLex ? (n > 2 ? "une par CM/TD, plus le lexique" : "le lexique, dans les deux sens") : (n > 1 ? "une par CM/TD" : "");
     const txt = nom + (valides && valides < n ? " · " + valides + " validé" + (mo.m === "qcm" ? "" : "e") + (valides > 1 ? "s" : "") : detail ? " · " + detail : "");
     const fini = n && valides === n;
     const card=el("button","mode-card");
@@ -9958,10 +10115,6 @@ function renderPlanning(){
     });
   }
 
-  const add = el("button","add-inline");
-  add.textContent = "+  Ajouter un créneau";
-  add.addEventListener("click",()=>{ haptic(); editCoursPlanning(null); });
-  box.appendChild(add);
 }
 
 function editPlanningAB(){
@@ -10094,12 +10247,6 @@ function renderDevoirs(){
   }
   liste.forEach(({d,i})=> box.appendChild(onglet === "remplir" ? carteARemplir(d,i) : carteCorrigee(d,i)));
 
-  if(canEdit()){
-    const add = el("button","add-inline");
-    add.textContent = "+  Ajouter un devoir";
-    add.addEventListener("click",()=>{ haptic(); editDevoir(null); });
-    box.appendChild(add);
-  }
 }
 
 // en-tête commun : titre, document à lire, chapitre lié
@@ -10391,7 +10538,7 @@ function renderExamenChoix(){
   // nombre de questions
   const g1 = el("div","qc-group"); g1.textContent = "Nombre de questions"; box.appendChild(g1);
   const chips = el("div","ex-chips");
-  [10,20,40].forEach(n=>{
+  [10,20,25].forEach(n=>{
     const c = el("button","ex-chip" + (EXAMEN.nb === n ? " on" : "")); c.type = "button"; c.textContent = n;
     c.addEventListener("click",()=>{ haptic(); EXAMEN.nb = n; chips.querySelectorAll(".ex-chip").forEach(x=>x.classList.toggle("on", x === c)); maj(); });
     chips.appendChild(c);
@@ -10541,21 +10688,21 @@ function startSession(m){
   }));
   if(!all.length) return;
   if(sessionScope === "erreurs"){
-    queue = shuffle(all);
+    queue = shuffle(all).slice(0, SERIE_MAX);
     sessionDueOnly = false;
   } else if(sessionScope === "grand"){
     // tout dedans : ce qui n'est pas validé d'abord, puis le reste
-    queue = shuffle(all.filter(x=> !estAcquise(x.key) )).concat(shuffle(all.filter(x=> estAcquise(x.key) )));
+    queue = shuffle(all.filter(x=> !estAcquise(x.key) )).concat(shuffle(all.filter(x=> estAcquise(x.key) ))).slice(0, SERIE_MAX);
     sessionDueOnly = false;
   } else if(sessionScope !== "all"){
     // un chapitre : on reprend ce qui n'est pas encore validé, sinon tout en libre
     const aValider = shuffle(all.filter(x=> !estAcquise(x.key) ));
-    queue = aValider.length ? aValider : shuffle(all);
+    queue = (aValider.length ? aValider : shuffle(all)).slice(0, SERIE_MAX);
     sessionDueOnly = false;
   } else {
     const due    = shuffle(all.filter(x=>  srsIsDue(x.key) ));
     const notDue = shuffle(all.filter(x=> !srsIsDue(x.key) ));
-    queue = (due.length ? due : notDue);
+    queue = (due.length ? due : notDue).slice(0, SERIE_MAX);
     sessionDueOnly = due.length > 0;
   }
   clearInterval(timerInt);
@@ -10580,7 +10727,7 @@ function startGlobalSession(){
     });
   });
   if(!all.length) return;
-  queue = shuffle(all);
+  queue = shuffle(all).slice(0, SERIE_MAX);
   sessionDueOnly = true;
   clearInterval(timerInt);
   showScreen("session");
@@ -10592,7 +10739,7 @@ function titreSession(mode){
   if(sessionFil) return sessionFil.nom;
   if(globalSession) return "Révision";
   const sc = sessionScope || "all";
-  if(sc.startsWith("ch:")) return partiesChapitre(sc.slice(3)).court;
+  if(sc.startsWith("ch:")){ const ser = libelleSerie(curSubj, mode, sc); return partiesChapitre(scopeSansSerie(sc).slice(3)).court + (ser ? " · " + ser : ""); }
   if(sc === "grand") return mode === "qcm" ? "Grand QCM" : "Tout";
   if(sc === "all") return noms[mode] || "Révision";
   return nomScope(sc);
@@ -11078,7 +11225,7 @@ function startFilSession(th){
   const all = questionsDuTheme(th).map(x=>({ item:melangerQCM(x.item), mode:"qcm", subj:x.subj, key:x.key }));
   if(!all.length) return;
   // comme le grand QCM : ce qui n'est pas validé d'abord, puis le reste
-  queue = shuffle(all.filter(x=>!estAcquise(x.key))).concat(shuffle(all.filter(x=>estAcquise(x.key))));
+  queue = shuffle(all.filter(x=>!estAcquise(x.key))).concat(shuffle(all.filter(x=>estAcquise(x.key)))).slice(0, SERIE_MAX);
   clearInterval(timerInt);
   showScreen("session");
   renderSess();
@@ -11504,10 +11651,170 @@ document.getElementById("btn-split-home").addEventListener("click",()=>{
   closeForm(); closePicker(); closeCalSheet(); closeSubjSheet();
   showScreen("semestres");
 });
+// ══════════════════════════════════════════════════
+// POMODORO : 25 min de travail, 5 min de pause, une pause de 15 min après 4.
+// Le temps se calcule sur l'heure de fin : il continue même app fermée.
+// Juste avant la pause, 5 questions sur ce qu'on vient de lire (l'effet test).
+// ══════════════════════════════════════════════════
+const POMO_KEY = "revision_pomo_v1";
+const POMO_MIN = { travail:25, pause:5, longue:15 };
+// une option du compte : activée, la pastille du minuteur apparaît en bas à gauche
+function pomoActif(){ return !!USER_SETTINGS.pomodoro; }
+const POMO_SANS = ["login","pick","welcome","session"];   // pas de pastille sur ces écrans
+let POMO_VITESSE = 1;                       // la démo accélère le temps
+const IC_MINUTEUR = '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5M9.5 2.5h5M12 2.5V6M18.5 6.5l1.5-1.5"/></svg>';
+function pomoCharger(){
+  let p = null; try{ p = JSON.parse(localStorage.getItem(POMO_KEY) || "null"); }catch(e){}
+  if(!p || typeof p !== "object") p = {};
+  const j = jourIso(new Date());
+  if(p.jour !== j){ p.jour = j; p.faits = 0; }
+  p.cycle = p.cycle || 0;
+  return p;
+}
+let POMO = pomoCharger(), POMO_T = null;
+function pomoSauver(){ try{ localStorage.setItem(POMO_KEY, JSON.stringify(POMO)); }catch(e){} }
+function pomoDuree(ph){ return POMO_MIN[ph] * 60000 / POMO_VITESSE; }
+function pomoReste(){ if(!POMO.phase) return 0; if(POMO.arret != null) return POMO.arret; return Math.max(0, POMO.fin - Date.now()); }
+function pomoMMSS(ms){ const s = Math.ceil(ms / 1000 * POMO_VITESSE); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
+function pomoNomPhase(ph){ return ph === "travail" ? "Travail" : ph === "longue" ? "Grande pause" : "Pause"; }
+// la pause qui vient : la grande après le 4e pomodoro
+function pomoPauseSuivante(){ return POMO.cycle >= 4 ? "longue" : "pause"; }
+function pomoLancer(ph){
+  if(ph === "travail" && POMO.cycle >= 4) POMO.cycle = 0;
+  POMO.phase = ph; POMO.fin = Date.now() + pomoDuree(ph); POMO.arret = null; POMO.finie = false;
+  pomoSauver(); pomoBoucle(); pomoMaj();
+}
+function pomoPause(){ if(!POMO.phase || POMO.arret != null || POMO.finie) return; POMO.arret = pomoReste(); pomoSauver(); pomoMaj(); }
+function pomoReprendre(){ if(POMO.arret == null) return; POMO.fin = Date.now() + POMO.arret; POMO.arret = null; pomoSauver(); pomoBoucle(); pomoMaj(); }
+function pomoArreter(){ POMO.phase = null; POMO.arret = null; POMO.finie = false; pomoSauver(); pomoMaj(); }
+function pomoBoucle(){ clearInterval(POMO_T); POMO_T = setInterval(pomoTic, 1000 / Math.min(POMO_VITESSE, 4)); pomoTic(); }
+function pomoTic(){
+  if(!POMO.phase){ clearInterval(POMO_T); return; }
+  if(POMO.arret == null && !POMO.finie && pomoReste() <= 0){
+    POMO.finie = true;
+    if(POMO.phase === "travail"){ POMO.faits = (POMO.faits || 0) + 1; POMO.cycle = (POMO.cycle || 0) + 1; }
+    else if(POMO.phase === "longue") POMO.cycle = 0;
+    pomoSauver(); haptic(); try{ navigator.vibrate && navigator.vibrate([120, 80, 120]); }catch(e){}
+    pomoOuvrir();
+  }
+  pomoMaj();
+}
+// les 4 pomodoros d'une série, en points
+function pomoPoints(){
+  const n = Math.min(POMO.cycle || 0, 4);
+  return `<span class="pomo-pts" aria-label="${n} pomodoro${n > 1 ? "s" : ""} sur 4">${[0,1,2,3].map(i=>`<i class="${i < n ? "on" : ""}"></i>`).join("")}</span>`;
+}
+// la tuile de l'accueil, la pastille des autres pages, la feuille si elle est ouverte
+function pomoMaj(){
+  const t = document.getElementById("home-pomo");
+  if(t){
+    const ph = POMO.phase, reste = pomoReste();
+    t.classList.toggle("en-cours", !!ph && !POMO.finie);
+    t.classList.toggle("pause", ph === "pause" || ph === "longue");
+    if(!t.querySelector(".ht-ic")) t.innerHTML = `<span class="ht-ic ic-box">${IC_MINUTEUR}</span><span class="ht-lbl"></span><span class="ht-t"></span><span class="ht-s"></span><span class="next-bar"><span></span></span>`;
+    const lbl = t.querySelector(".ht-lbl"), tt = t.querySelector(".ht-t"), ss = t.querySelector(".ht-s"), bar = t.querySelector(".next-bar");
+    if(!ph){ lbl.textContent = ""; lbl.hidden = true; tt.textContent = "Pomodoro"; ss.textContent = POMO.faits ? POMO.faits + " aujourd'hui" : "25 min de travail"; bar.hidden = true; }
+    else {
+      lbl.hidden = false;
+      lbl.textContent = pomoNomPhase(ph) + (POMO.arret != null ? " · en pause" : "");
+      tt.textContent = POMO.finie ? (ph === "travail" ? "Bravo !" : "On reprend ?") : pomoMMSS(reste);
+      ss.textContent = POMO.finie ? "Touche pour la suite" : ph === "travail" ? "Pomodoro " + Math.min((POMO.cycle || 0) + 1, 4) + " sur 4" : "Lève-toi, bois de l'eau";
+      bar.hidden = false;
+      bar.firstChild.style.width = (POMO.finie ? 100 : Math.round((1 - reste / pomoDuree(ph)) * 100)) + "%";
+    }
+  }
+  const pill = document.getElementById("pomo-pill");
+  if(pill){
+    const ecran = document.documentElement.getAttribute("data-screen");
+    const montrer = (pomoActif() || !!POMO.phase) && !POMO_SANS.includes(ecran) && !document.getElementById("pomo-overlay").classList.contains("open");
+    pill.hidden = !montrer;
+    if(montrer){
+      pill.classList.toggle("pause", !!POMO.phase && POMO.phase !== "travail");
+      pill.classList.toggle("repos", !POMO.phase);
+      pill.innerHTML = IC_MINUTEUR + `<span>${!POMO.phase ? "Pomodoro" : POMO.finie ? (POMO.phase === "travail" ? "Terminé" : "On reprend ?") : pomoMMSS(pomoReste())}</span>`;
+    }
+  }
+  if(document.getElementById("pomo-overlay").classList.contains("open")) pomoFeuille(true);
+}
+function pomoOuvrir(){ pomoFeuille(); document.getElementById("pomo-overlay").classList.add("open"); pomoMaj(); }
+function pomoFermer(){ document.getElementById("pomo-overlay").classList.remove("open"); pomoMaj(); }
+// juste avant la pause : 5 questions du dernier chapitre lu, ce qui n'est pas validé d'abord
+function pomoRappelPossible(){
+  const g = lectureCharger().global; if(!g) return null;
+  const subj = SUBJECTS.find(x=>x.id === g.id); if(!subj) return null;
+  const n = exos(subj, "qcm").filter(x=>x && x.ch === g.label).length;
+  return n ? { subj, label:g.label } : null;
+}
+function pomoRappel(){
+  const r = pomoRappelPossible(); if(!r) return;
+  const avant = document.documentElement.getAttribute("data-screen");
+  pomoFermer();
+  curSubj = r.subj; curSemestre = SEMESTRES[r.subj.id];
+  choisirScope("ch:" + r.label);
+  retourSession = ()=>{ showScreen(avant && avant !== "session" ? avant : "semestres"); pomoOuvrir(); };
+  startSession("qcm");
+  queue = queue.slice(0, 5); renderSess();
+}
+function pomoFeuille(maj){
+  const box = document.getElementById("pomo-body");
+  const ph = POMO.phase, reste = pomoReste();
+  // pendant le décompte, on ne redessine que le chiffre et l'anneau
+  if(maj && box.dataset.etat === (ph || "") + "|" + (POMO.finie ? 1 : 0) + "|" + (POMO.arret != null ? 1 : 0)){
+    if(!ph || POMO.finie) return;
+    const c = box.querySelector(".pomo-chiffre"); if(c) c.textContent = pomoMMSS(reste);
+    const r = box.querySelector(".pomo-anneau-fill"); if(r && ph) r.style.strokeDashoffset = (1 - reste / pomoDuree(ph)) * 2 * Math.PI * 92;
+    return;
+  }
+  box.dataset.etat = (ph || "") + "|" + (POMO.finie ? 1 : 0) + "|" + (POMO.arret != null ? 1 : 0);
+  const circ = 2 * Math.PI * 92;
+  const anneau = (fait, txt, sous)=>`<div class="pomo-anneau"><svg viewBox="0 0 200 200"><circle class="pomo-anneau-bg" cx="100" cy="100" r="92"/><circle class="pomo-anneau-fill" cx="100" cy="100" r="92" stroke-dasharray="${circ}" style="stroke-dashoffset:${fait * circ}"/></svg>
+    <div class="pomo-centre"><div class="pomo-chiffre">${txt}</div><div class="pomo-sous">${sous}</div></div></div>`;
+  let html = "", boutons = [];
+  if(!ph){
+    html = `<div class="sheet-title">Pomodoro</div><div class="sheet-sub">Travailler par blocs courts, c'est rester concentrée plus longtemps.</div>` +
+      anneau(0, pomoMMSS(pomoDuree("travail")), "de travail") +
+      `<ul class="pomo-regles"><li><b>25 min</b> de travail, sans téléphone ni autre onglet.</li><li><b>5 min</b> de pause : lève-toi, bouge, bois de l'eau.</li><li>Après <b>4 pomodoros</b>, une pause de 15 min.</li><li>Juste avant la pause, <b>5 questions</b> sur ce que tu viens de lire : se tester ancre mieux que relire.</li></ul>` +
+      `<div class="pomo-jour">${pomoPoints()}<span>${POMO.faits ? POMO.faits + " pomodoro" + (POMO.faits > 1 ? "s" : "") + " aujourd'hui" : "Aucun pomodoro aujourd'hui"}</span></div>`;
+    boutons = [["Lancer 25 min", ()=>pomoLancer("travail"), "primaire"]];
+  } else if(POMO.finie && ph === "travail"){
+    const r = pomoRappelPossible(), pp = pomoPauseSuivante();
+    html = `<div class="sheet-title">Pomodoro terminé</div><div class="sheet-sub">${POMO.cycle >= 4 ? "4 pomodoros d'affilée : tu as gagné une grande pause." : "Bravo. Encore un effort avant la pause ?"}</div>` +
+      anneau(0, "✓", "pomodoro " + Math.min(POMO.cycle, 4) + " sur 4") +
+      `<div class="pomo-jour">${pomoPoints()}<span>${POMO.faits} aujourd'hui</span></div>` +
+      (r ? `<div class="pomo-rappel"><b>5 questions avant la pause</b><span>Sur ${esc(partiesChapitre(r.label).court)} · ${esc(r.subj.title)}. Te tester tout de suite fixe ce que tu viens de lire.</span></div>` : "");
+    if(r) boutons.push(["Faire les 5 questions", pomoRappel, "primaire"]);
+    boutons.push([(pp === "longue" ? "Grande pause, 15 min" : "Pause, 5 min"), ()=>pomoLancer(pp), r ? "" : "primaire"]);
+    boutons.push(["Arrêter là", ()=>{ pomoArreter(); pomoFermer(); }, "discret"]);
+  } else if(POMO.finie){
+    html = `<div class="sheet-title">Pause terminée</div><div class="sheet-sub">${ph === "longue" ? "Nouvelle série de 4. Tu peux y aller." : "On s'y remet pour 25 minutes ?"}</div>` +
+      anneau(0, "☕", pomoNomPhase(ph).toLowerCase() + " finie") +
+      `<div class="pomo-jour">${pomoPoints()}<span>${POMO.faits || 0} aujourd'hui</span></div>`;
+    boutons = [["Lancer le pomodoro suivant", ()=>pomoLancer("travail"), "primaire"], ["Arrêter là", ()=>{ pomoArreter(); pomoFermer(); }, "discret"]];
+  } else {
+    const enPause = POMO.arret != null;
+    html = `<div class="sheet-title">${pomoNomPhase(ph)}</div><div class="sheet-sub">${ph === "travail" ? "Pomodoro " + Math.min((POMO.cycle || 0) + 1, 4) + " sur 4. Une seule chose à la fois." : "Éloigne-toi de l'écran. Le cerveau consolide pendant la pause."}</div>` +
+      anneau(1 - reste / pomoDuree(ph), pomoMMSS(reste), enPause ? "en pause" : ph === "travail" ? "restantes" : "de pause") +
+      `<div class="pomo-jour">${pomoPoints()}<span>${POMO.faits || 0} aujourd'hui</span></div>`;
+    boutons = [[enPause ? "Reprendre" : "Mettre en pause", enPause ? pomoReprendre : pomoPause, "primaire"],
+      [ph === "travail" ? "Arrêter ce pomodoro" : "Passer la pause", ph === "travail" ? ()=>{ pomoArreter(); pomoFermer(); } : ()=>pomoLancer("travail"), "discret"]];
+  }
+  box.innerHTML = html + `<div class="pomo-actions"></div>`;
+  const act = box.querySelector(".pomo-actions");
+  boutons.forEach(([t, f, c])=>{ const b = el("button", "pomo-bt " + c); b.type = "button"; b.textContent = t; b.addEventListener("click",()=>{ haptic(); f(); }); act.appendChild(b); });
+  box.classList.toggle("pause", ph === "pause" || ph === "longue");
+}
+(function(){
+  const ov = document.getElementById("pomo-overlay");
+  ov.addEventListener("click", e=>{ if(e.target === ov) pomoFermer(); });
+  document.getElementById("pomo-pill").addEventListener("click",()=>{ haptic(); pomoOuvrir(); });
+  document.addEventListener("visibilitychange",()=>{ if(!document.hidden && POMO.phase) pomoTic(); });
+  if(POMO.phase && POMO.arret == null && !POMO.finie) pomoBoucle();
+  pomoMaj();
+})();
 document.getElementById("fab-add").addEventListener("click",()=>{
   haptic();
-  if(document.getElementById("fab-add").dataset.target === "subjects") addMatiere();
-  else addSemestre();
+  const a = FAB_ACTIONS[document.getElementById("fab-add").dataset.target];
+  if(a) a.fn();
 });
 document.getElementById("fs-del").addEventListener("click",()=>{ haptic(); if(fsDelete) fsDelete(); });
 document.getElementById("fs-extra").addEventListener("click",()=>{ haptic(); if(fsExtra) fsExtra(); });
@@ -11536,12 +11843,12 @@ document.getElementById("dev-entry").addEventListener("click",()=>{
 });
 document.getElementById("btn-sites-back").addEventListener("click",()=>{ haptic(); renderSemestres(); showScreen("semestres"); });
 document.getElementById("btn-mesdevoirs-back").addEventListener("click",()=>{ haptic(); renderSemestres(); showScreen("semestres"); });
-document.getElementById("mesdevoirs-ajout").addEventListener("click",()=>{ haptic(); nouvelleEcheance(); });
+
 document.getElementById("btn-compte").addEventListener("click",()=>{ haptic(); ouvrirCompte(); });
 document.getElementById("btn-classes-back").addEventListener("click",()=>{ showScreen("semestres"); });
 document.getElementById("btn-class-back").addEventListener("click",()=>{ openClasses(); });
 document.getElementById("btn-shared-back").addEventListener("click",()=>{ if(curClass) openClass(curClass); else showScreen("search"); });
-document.getElementById("btn-class-menu").addEventListener("click",()=>{ haptic(); classMenu(); });
+
 document.getElementById("pick-sheet").addEventListener("click",e=>{ if(e.target.id==="pick-sheet") closePicker(); });
 document.getElementById("fs-ok").addEventListener("click",()=>{ haptic(); if(fsSubmit) fsSubmit(); });
 document.getElementById("form-sheet").addEventListener("click",e=>{ if(e.target.id==="form-sheet") closeForm(); });
@@ -11829,6 +12136,31 @@ function normSubject(s){
   return o;
 }
 
+// Mes retouches sur une matière de data.js, fusionnées chapitre par chapitre avec data.js :
+// un chapitre que je n'ai pas retouché suit data.js (nouveaux CM, images, mises à jour) ;
+// un chapitre retouché garde mon texte, mais reçoit les images et la date de mise à jour de data.js.
+function signatureChapitre(c){
+  return JSON.stringify({ s:(c.sections||[]).map(x=>({ t:x.title || "", b:x.body || "", l:x.list || [] })), r:c.recap || [] });
+}
+function fusionChapitres(orig, ov){
+  const parLabel = new Map(ov.map(c=>[c.label, c]));
+  const out = (orig||[]).map(c=>{
+    const o = parLabel.get(c.label); if(!o) return c;
+    parLabel.delete(c.label);
+    if(signatureChapitre(o) === signatureChapitre(c)) return c;
+    const m = normChapitre(o);
+    if(c.maj){ m.maj = c.maj; m.majNote = c.majNote; }
+    m.sections = m.sections.map(sec=>{
+      if(sec.img) return sec;
+      const d = (c.sections||[]).find(x=>x.title === sec.title && x.img);
+      return d ? Object.assign({}, sec, { img:d.img }) : sec;
+    });
+    return m;
+  });
+  // un chapitre qui n'existe que dans mes retouches (renommé, ajouté) reste à la fin
+  parLabel.forEach(c=>out.push(normChapitre(c)));
+  return out;
+}
 // Remplace UES / SUBJECTS / SEMESTRES sur place (le reste de l'app pointe dessus).
 // Tout ce qui porte _own a été créé dans l'app et vit sur Supabase.
 // Le reste vient de data.js : lecture seule, je le régénère de mon côté.
@@ -11854,7 +12186,7 @@ function applyContent(row){
       ["cm","td"].forEach(type=>{
         if(!Array.isArray(o[type])) return;
         sj["_orig_" + type] = sj[type];          // ma version, conservée pour le rétablissement
-        sj[type] = o[type].map(normChapitre);
+        sj[type] = fusionChapitres(sj[type], o[type]);
         sj._over[type] = true;
       });
       if(Array.isArray(o.dev)){
@@ -11954,7 +12286,10 @@ async function pushState(enPartant){
         if(sj._over){
           const o = {};
           ["cm","td"].forEach(type=>{
-            if(sj._over[type]) o[type] = sj[type].filter(ch=>!ch._own && !ch._shared)
+            // seulement les chapitres vraiment retouchés : les autres continuent de suivre data.js
+            const src = (DATA_SUBJECTS.find(x=>x.id === sj.id) || {})[type] || [];
+            const origine = new Map(src.map(c=>[c.label, signatureChapitre(c)]));
+            if(sj._over[type]) o[type] = sj[type].filter(ch=>!ch._own && !ch._shared && origine.get(ch.label) !== signatureChapitre(ch))
               .map(ch=>({ label:ch.label, sections:ch.sections||[], recap:ch.recap||[] }));
           });
           if(sj._over.dev) o.dev = (sj.dev||[]).filter(x=>!x._shared);
