@@ -1,2 +1,0 @@
-# Keyfit
-App Fitness Sociale
