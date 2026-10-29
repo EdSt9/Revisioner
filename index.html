@@ -948,6 +948,10 @@ button.sem-groupe{width:100%;background:none;border:0;padding:0;cursor:pointer;f
 .fp-etat.devoir{color:var(--danger);background:var(--danger-soft);}
 .fp-etat.controle{color:var(--warn);background:var(--warn-soft);}
 .fp-etat.note{color:var(--info);background:var(--info-soft);}
+.fp-etat.maj{color:var(--warn);background:var(--warn-soft);}
+.fp-actions{display:flex;flex-wrap:wrap;gap:8px;margin:-2px 4px 10px;}
+.fp-act{height:34px;padding:0 14px;border-radius:999px;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);font-family:var(--font-text);font-size:13px;font-weight:700;cursor:pointer;}
+.fp-act.discret{border-color:var(--border);background:none;color:var(--text-mute);}
 .fp-etat.mute{color:var(--text-mute);background:none;padding:0;}
 .fp-echeance{margin:4px 0 6px;}
 .od-row{display:flex;align-items:center;gap:12px;padding:12px 14px;margin-bottom:8px;background:var(--surface);border:1px solid var(--border);border-radius:14px;transition:border-color .2s,background .2s;}
@@ -1275,7 +1279,6 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .compte-av{width:46px;height:46px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:20px;font-weight:700;flex-shrink:0;}
 .compte-lab{margin:6px 4px 6px;}
 .compte-hint{margin:8px 6px 4px;}
-.compte-version{text-align:center;margin-top:14px;opacity:.75;}
 .compte-seg{margin:0 0 14px;}
 .compte-quitter .cal-name{color:var(--danger,#d33);}
 .vide-actions{display:flex;flex-direction:column;gap:8px;margin-top:16px;width:100%;max-width:280px;}
@@ -4129,6 +4132,12 @@ function feuillePartage(titre, legende, groupes, nav){
       h.appendChild(b);
     }
     box.appendChild(h);
+    if(g.actions && g.actions.length){
+      const row = el("div","fp-actions");
+      g.actions.forEach(a=>{ const b = el("button","fp-act" + (a.discret ? " discret" : "")); b.type = "button"; b.textContent = a.label;
+        b.addEventListener("click",()=>{ haptic(); a.fn(); }); row.appendChild(b); });
+      box.appendChild(row);
+    }
     g.lignes.forEach(l=>{
       const r = el("button","cal-row chap-ligne fp-ligne" + (l.cls ? " " + l.cls : "")); r.type = "button";
       r.innerHTML = `<span class="rv-dot"></span><div class="cal-txt"><div class="cal-name">${esc(l.nom)}</div>${l.sous ? `<div class="cal-url">${esc(l.sous)}</div>` : ""}</div>` +
@@ -4254,8 +4263,29 @@ async function publishFromClass(c){
   const niv = { sem:null, mat:null };
   const sems = [...new Set(tri.map(sj=>SEMESTRES[sj.id] || 0))].sort((a,b)=>b - a);
   if(sems.length === 1 && !projs.length) niv.sem = sems[0];
-  const compte = sj=>{ const ls = lignesDe(sj); return { n:ls.length, k:ls.filter(l=>dejaPar[l.cle]).length }; };
-  const etatDe = (n, k)=>!n ? null : k === n ? { txt:"✓ Tout publié", cls:"ok" } : k ? { txt:k + " sur " + n, cls:"mute" } : null;
+  const compte = sj=>{ const ls = lignesDe(sj); return { n:ls.length, k:ls.filter(l=>dejaPar[l.cle]).length,
+    m:ls.filter(l=>{ const d = dejaPar[l.cle]; return d && d.mien && !ligneAJour(sj, l, d); }).length }; };
+  const etatDe = (n, k, m)=>!n ? null : m ? { txt:m + " à mettre à jour", cls:"maj" } : k === n ? { txt:"✓ Tout publié", cls:"ok" } : k ? { txt:k + " sur " + n, cls:"mute" } : null;
+  // Mettre à jour d'un coup tout ce que j'ai déjà publié et qui a changé depuis, pour une ou plusieurs matières
+  const aMettreAJour = mats=>{ const out = []; mats.forEach(sj=>lignesDe(sj).forEach(l=>{ const d = dejaPar[l.cle]; if(d && d.mien && !ligneAJour(sj, l, d)) out.push([sj, l]); })); return out; };
+  const miensDe = mats=>{ const out = []; mats.forEach(sj=>lignesDe(sj).forEach(l=>{ const d = dejaPar[l.cle]; if(d && d.mien) out.push(...d.miens); })); return out; };
+  const actionsDe = (mats, nom)=>{
+    const acts = [];
+    const maj = aMettreAJour(mats);
+    if(maj.length) acts.push({ label:"↻ Tout mettre à jour (" + maj.length + ")", fn:async ()=>{
+      let ok = 0;
+      for(let i = 0; i < maj.length; i++){
+        if(maj.length > 1) toast(`Mise à jour ${i + 1} sur ${maj.length}…`);
+        if(await publierLigne(c, maj[i][0], maj[i][1], dejaPar, true)) ok++;
+      }
+      saveContent();
+      toast(ok === maj.length ? (ok > 1 ? ok + " mis à jour. La classe a la nouvelle version." : "Mis à jour.") : (maj.length - ok) + " n'ont pas pu être mis à jour.");
+      rendre(); openClass(c);
+    }});
+    const miens = miensDe(mats);
+    if(miens.length) acts.push({ label:"Tout dépublier", discret:true, fn:()=>{ closePicker(); setTimeout(()=>depublierPlusieurs(c, miens, nom), 320); } });
+    return acts;
+  };
   // tout ce qui n'est pas encore dans la classe, pour une ou plusieurs matières
   const toutPublier = mats=>{
     const reste = [];
@@ -4276,12 +4306,13 @@ async function publishFromClass(c){
       return {
         titre:"Chapitres", sous:"",
         tout:toutPublier([sj]),
+        actions:actionsDe([sj], sj.title),
         lignes:ls.map(l=>{
           const d = dejaPar[l.cle];
           return {
             nom:l.nom, sous:l.sous + (d && !d.mien ? " · par " + d.auteurs.join(", ") : ""),
             cls:d ? "fait" : "",
-            etat:d ? { txt:d.mien ? "✓ Publié" : "✓ Déjà là", cls:"ok" } : null,
+            etat:d ? (d.mien && !ligneAJour(sj, l, d) ? { txt:"↻ À mettre à jour", cls:"maj" } : { txt:d.mien ? "✓ Publié" : "✓ Déjà là", cls:"ok" }) : null,
             onTap:async ()=>{
               if(d && !d.mien){ toast("Déjà publié par " + d.auteurs.join(", ") + "."); return; }
               const ok = await publierLigne(c, sj, l, dejaPar);
@@ -4298,7 +4329,7 @@ async function publishFromClass(c){
     // 3. les chapitres d'une matière
     if(niv.mat){
       const sj = niv.mat;
-      feuillePartage(sj.title, "Touche un chapitre pour le publier. En vert : déjà dans la classe, le retoucher le met à jour.", [groupeMatiere(sj)],
+      feuillePartage(sj.title, "Touche un chapitre pour le publier. En orange : il a changé depuis, touche-le pour envoyer la nouvelle version.", [groupeMatiere(sj)],
         { enHaut, retour:{ txt:niv.sem ? titreSemestre(niv.sem) : "Matières", fn:()=>{ niv.mat = null; rendre(true); } } });
       return;
     }
@@ -4306,13 +4337,14 @@ async function publishFromClass(c){
     if(niv.sem !== null){
       const sem = niv.sem;
       const lignes = tri.filter(sj=>(SEMESTRES[sj.id] || 0) === sem).map(sj=>{
-        const { n, k } = compte(sj);
+        const { n, k, m } = compte(sj);
         const ls = lignesDe(sj), nCh = ls.filter(l=>l.kind !== "revision").length, rev = ls.length > nCh;
-        return { nom:sj.title, sous:nCh + " chapitre" + (nCh > 1 ? "s" : "") + (rev ? " · exercices" : ""), cls:n && k === n ? "fait" : "", etat:etatDe(n, k), chev:true,
+        return { nom:sj.title, sous:nCh + " chapitre" + (nCh > 1 ? "s" : "") + (rev ? " · exercices" : ""), cls:n && k === n ? "fait" : "", etat:etatDe(n, k, m), chev:true,
           onTap:()=>{ niv.mat = sj; rendre(true); } };
       });
       feuillePartage(sem ? titreSemestre(sem) : "Autres matières", "Choisis une matière. En vert : tout est déjà dans la classe.",
-        [{ titre:nomAnneeSem(sem), lignes, tout:toutPublier(tri.filter(sj=>(SEMESTRES[sj.id] || 0) === sem)) }],
+        [{ titre:nomAnneeSem(sem), lignes, tout:toutPublier(tri.filter(sj=>(SEMESTRES[sj.id] || 0) === sem)),
+           actions:actionsDe(tri.filter(sj=>(SEMESTRES[sj.id] || 0) === sem), sem ? titreSemestre(sem) : "Autres matières") }],
         sems.length > 1 ? { enHaut, retour:{ txt:"Semestres", fn:()=>{ niv.sem = null; rendre(true); } } } : { enHaut });
       return;
     }
@@ -4322,9 +4354,9 @@ async function publishFromClass(c){
       const nom = nomAnneeSem(sem);
       let g = groupes.find(x=>x.titre === nom); if(!g){ g = { titre:nom, lignes:[] }; groupes.push(g); }
       const ms = tri.filter(sj=>(SEMESTRES[sj.id] || 0) === sem);
-      let n = 0, k = 0; ms.forEach(sj=>{ const x = compte(sj); n += x.n; k += x.k; });
+      let n = 0, k = 0, m = 0; ms.forEach(sj=>{ const x = compte(sj); n += x.n; k += x.k; m += x.m; });
       g.lignes.push({ nom:sem ? titreSemestre(sem) : "Autres matières", ic:sem ? (tuileDe("sem:" + sem).icone || (sem % 2 ? "📚" : "🧠")) : "📁",
-        sous:ms.length + " matière" + (ms.length > 1 ? "s" : ""), cls:n && k === n ? "fait" : "", etat:etatDe(n, k), chev:true,
+        sous:ms.length + " matière" + (ms.length > 1 ? "s" : ""), cls:n && k === n ? "fait" : "", etat:etatDe(n, k, m), chev:true,
         onTap:()=>{ niv.sem = sem; rendre(true); } });
     });
     // les projets se publient d'un geste, comme une matière entière
@@ -4345,25 +4377,43 @@ async function publishFromClass(c){
           actions:d && d.mien ? [{ label:"Dépublier", fn:()=>{ closePicker(); setTimeout(()=>depublierPlusieurs(c, d.miens, pj.titre), 320); } }] : null };
       }) });
     }
+    if(groupes.length){ const tout = aMettreAJour(tri); if(tout.length) groupes[0].actions = actionsDe(tri, "tout").filter(a=>!a.discret); }
     feuillePartage("Que publier ?", projs.length ? "Choisis un semestre, puis une matière. Ou partage un projet." : "Choisis un semestre, puis une matière.", groupes, { enHaut });
   };
   rendre();
 }
+// Ce que contient une ligne publiable, tel qu'il partirait dans la classe
+function payloadLigne(sj, l){
+  if(l.val === "revision") return payloadRevision(sj);
+  const [type, idx] = l.val.split(":");
+  const ch = (type === "cm" ? sj.cm : sj.td)[Number(idx)];
+  return { label:ch.label, sections:ch.sections || [], recap:ch.recap || [] };
+}
+// Une empreinte du contenu envoyé : si mon cours change ensuite, la ligne passe « À mettre à jour ».
+// Gardée dans mes réglages, elle suit sur tous mes appareils.
+function empreinteContenu(payload){
+  const t = JSON.stringify(payload, (k, v)=>k === "meta" || k === "_own" || k === "maj" || k === "majNote" ? undefined : v);
+  let h = 5381; for(let i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(36) + "." + t.length;
+}
+function envois(){ USER_SETTINGS.envois = (USER_SETTINGS.envois && typeof USER_SETTINGS.envois === "object") ? USER_SETTINGS.envois : {}; return USER_SETTINGS.envois; }
+function ligneAJour(sj, l, d){ return !!(d && d.mien && envois()[d.mien.id] === empreinteContenu(payloadLigne(sj, l))); }
 // Publie (ou met à jour) une seule ligne, et le note dans dejaPar.
-async function publierLigne(c, sj, l, dejaPar){
-  let payload;
-  if(l.val === "revision") payload = payloadRevision(sj);
-  else{
-    const [type, idx] = l.val.split(":");
-    const ch = (type === "cm" ? sj.cm : sj.td)[Number(idx)];
-    payload = { label:ch.label, sections:ch.sections || [], recap:ch.recap || [] };
-  }
+// Mettre à jour garde le même élément : ceux qui l'ont ajouté reçoivent la nouvelle version, sans rien refaire.
+async function publierLigne(c, sj, l, dejaPar, sansSauver){
+  const payload = payloadLigne(sj, l);
+  const emp = empreinteContenu(payload);
   payload.meta = metaMatiere(sj);
   const d = dejaPar[l.cle];
   try{
-    if(d && d.mien){ await api("item_update", { item_id:d.mien.id, payload }); return true; }
-    const it = (await api("item_publish", { class_id:c.id, kind:l.kind, subject_title:sj.title, payload })).item || { id:"", author:whoAmI() };
-    dejaPar[l.cle] = { mien:it, miens:[it], auteurs:[whoAmI()] };
+    let id;
+    if(d && d.mien){ await api("item_update", { item_id:d.mien.id, payload }); id = d.mien.id; }
+    else{
+      const it = (await api("item_publish", { class_id:c.id, kind:l.kind, subject_title:sj.title, payload })).item || { id:"", author:whoAmI() };
+      dejaPar[l.cle] = { mien:it, miens:[it], auteurs:[whoAmI()] };
+      id = it.id;
+    }
+    if(id){ envois()[id] = emp; if(!sansSauver) saveContent(); }
     return true;
   }catch(e){ return false; }
 }
@@ -8578,7 +8628,6 @@ function majBoutonCompte(){
   b.textContent = p.charAt(0).toUpperCase();
   b.setAttribute("aria-label", "Mon compte : " + p);
 }
-const APP_VERSION = "29/10 · 18h40";
 function ouvrirCompte(){
   document.querySelectorAll("#pick-sheet .pick-actions, #pick-sheet .fp-retour").forEach(n=>n.remove());
   document.getElementById("pick-title").textContent = "Mon compte";
@@ -8628,12 +8677,6 @@ function ouvrirCompte(){
     closePicker(); renderSemestres(); window.scrollTo(0, 0);
   });
   ligne("Se déconnecter", "Pour changer de compte sur ce téléphone", ()=>{ closePicker(); setTimeout(seDeconnecter, 320); }, "compte-quitter");
-  // la version de l'app et des cours : pour vérifier que la dernière est bien arrivée
-  const ver = el("div","fs-hint compte-hint compte-version");
-  const nCh = SUBJECTS.reduce((n,sj)=>n + (sj.cm||[]).length + (sj.td||[]).length, 0);
-  const nImg = SUBJECTS.reduce((n,sj)=>n + ["cm","td"].reduce((k,t)=>k + (sj[t]||[]).reduce((j,ch)=>j + (ch.sections||[]).filter(x=>x.img).length, 0), 0), 0);
-  ver.textContent = "Version de l'app : " + APP_VERSION + " · cours : " + nCh + " chapitres, " + nImg + " images";
-  box.appendChild(ver);
   document.getElementById("pick-sheet").classList.add("open");
 }
 // On enregistre d'abord en ligne, puis on vide ce téléphone : le compte suivant repart de zéro.
