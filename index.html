@@ -284,7 +284,6 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 /* ── EMPLOI DU TEMPS ── */.edt-titlerow{display:flex;align-items:center;gap:8px;}
 .edt-titlerow>.page-title{flex:1;min-width:0;}
 @keyframes edtspin{to{transform:rotate(360deg);}}
-#edt-refresh.spinning svg{animation:edtspin .8s linear infinite;}
 /* actions dans la barre du haut */.page-head .head-row>[data-entete]{width:36px;height:36px;border-radius:11px;}
 .page-head .head-row>[data-entete] svg{width:17px;height:17px;}
 .page-head .head-row>.back-btn+[data-entete]{margin-left:auto;}
@@ -636,6 +635,17 @@ div.av-tete{cursor:default;}
 .pomo-pill.pause{border-color:var(--ok);box-shadow:0 6px 24px rgba(0,0,0,.25);}
 .pomo-pill.pause .ico{color:var(--ok);}
 .pomo-pill[hidden]{display:none;}
+/* tirer pour actualiser : une pastille descend sous l'en-tête, et tourne pendant le rechargement */
+.ptr{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 62px);z-index:25;display:flex;align-items:center;gap:8px;height:38px;padding:0 14px 0 8px;border-radius:999px;
+  background:var(--surface-solid);border:1px solid var(--border);box-shadow:0 6px 20px rgba(0,0,0,.25);color:var(--text-soft);font-family:var(--font-text);font-size:13px;font-weight:600;white-space:nowrap;
+  transform:translate(-50%,-70px);opacity:0;pointer-events:none;}
+.ptr.anim{transition:transform .3s var(--ease-spring),opacity .25s;}
+.ptr-pousse{transition:transform .3s var(--ease-spring);}
+.ptr-rond{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);}
+.ptr-rond svg{width:15px;height:15px;}
+.ptr.pret{border-color:var(--accent);color:var(--accent);}
+.ptr.charge .ptr-rond svg{animation:ptrTourne .8s linear infinite;}
+@keyframes ptrTourne{to{transform:rotate(360deg)}}
 .pomo-pill.repos{border-color:var(--border);box-shadow:0 4px 16px rgba(0,0,0,.18);color:var(--text-soft);font-weight:600;font-size:14px;}
 #pomo-body{padding:0 20px 4px;}
 #pomo-body .sheet-title,#pomo-body .sheet-sub{margin-left:0;margin-right:0;}
@@ -1523,9 +1533,39 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
    rétrécit et la page paraît plus étroite d'un TD à l'autre. */.card{background:var(--surface);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px 22px;box-shadow:0 4px 20px var(--shadow);width:100%;box-sizing:border-box;overflow:hidden;}
 .card-body{font-size:calc(14.5px * var(--zt,1));line-height:1.95;color:var(--text);white-space:pre-line;overflow-wrap:break-word;word-break:break-word;}
 .chunk-highlight{background:var(--hl-bg);color:var(--hl-text);border-radius:5px;padding:1px 6px;font-weight:600;}
+.cours-pdf{display:flex;align-items:center;gap:12px;margin:14px 0 2px;padding:12px 14px;border-radius:14px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);text-decoration:none;}
+.cours-pdf:active{background:var(--accent-soft);}
+.cours-pdf-ic{flex-shrink:0;width:40px;height:46px;border-radius:8px;display:grid;place-items:center;background:var(--accent);color:#fff;font-size:11px;font-weight:800;letter-spacing:.04em;}
+.cours-pdf-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+.cours-pdf-t b{font-size:14.5px;}
+.cours-pdf-t small{font-size:12px;color:var(--text-mute);}
+.cours-pdf svg{width:16px;height:16px;flex-shrink:0;color:var(--text-mute);}
 .cours-fig{margin:14px -6px 4px;}
 .cours-fig img{display:block;width:100%;height:auto;border-radius:12px;background:var(--surface-2);cursor:zoom-in;}
 .cours-fig figcaption{font-size:12px;color:var(--text-mute);margin-top:7px;text-align:center;line-height:1.4;}
+.pdf-voile{position:fixed;inset:0;z-index:310;background:var(--bg);display:flex;flex-direction:column;transform:translateY(100%);transition:transform .32s cubic-bezier(.2,.8,.2,1);}
+.pdf-voile.on{transform:none;}
+.pdf-barre{flex-shrink:0;display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top) + 10px) 14px 10px;border-bottom:1px solid var(--border);background:var(--surface);}
+.pdf-barre b{flex:1;min-width:0;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);}
+.pdf-bt{flex-shrink:0;width:38px;height:38px;border-radius:50%;border:0;background:var(--surface-2);color:var(--text);display:grid;place-items:center;cursor:pointer;}
+.pdf-bt svg{width:19px;height:19px;}
+.pdf-pages{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:12px 10px calc(env(safe-area-inset-bottom) + 24px);display:flex;flex-direction:column;align-items:center;gap:10px;touch-action:pan-x pan-y pinch-zoom;}
+.pdf-pages canvas{width:100%;max-width:820px;height:auto;background:#fff;border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.18);}
+.pdf-pages{position:relative;}
+.pdf-page{position:relative;width:100%;max-width:820px;flex-shrink:0;}
+.pdf-texte{position:absolute;inset:0;overflow:hidden;line-height:1;text-align:initial;opacity:1;-webkit-text-size-adjust:none;text-size-adjust:none;transform-origin:0 0;z-index:2;}
+.pdf-texte span,.pdf-texte br{color:transparent;position:absolute;white-space:pre;cursor:text;transform-origin:0 0;}
+.pdf-texte span.markedContent{top:0;height:0;}
+.pdf-texte ::selection{background:var(--accent-soft);color:transparent;}
+.pdf-voile .lec-calque{z-index:3;}
+.pdf-bt[disabled]{opacity:.35;pointer-events:none;}
+body.lec-on .pdf-pages{padding-bottom:calc(env(safe-area-inset-bottom) + 100px);}
+body.pdf-ouvert .lec-bar{z-index:320;}
+body.pdf-ouvert #pick-sheet{z-index:330;}
+body.pdf-ouvert #toast{z-index:340;}
+.pdf-attente{margin:auto;color:var(--text-mute);font-size:14px;text-align:center;padding:30px 20px;line-height:1.6;}
+.card-list li .cours-pdf{margin:10px 0 2px;}
+.card-list li .li-col{flex:1;min-width:0;display:flex;flex-direction:column;}
 .img-voile{position:fixed;inset:0;z-index:300;background:rgba(5,4,10,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .25s;padding:calc(env(safe-area-inset-top) + 50px) 0 calc(env(safe-area-inset-bottom) + 24px);}
 .img-voile.on{opacity:1;}
 .img-zoom{width:100%;overflow:auto;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y pinch-zoom;}
@@ -1620,6 +1660,33 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .mt-nv{min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--new);color:#fff;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
 .mt-ok{width:18px;height:18px;color:var(--accent);flex-shrink:0;margin-left:2px;}
 .mt-ok svg{width:100%;height:100%;}
+.mt-tete{display:flex;align-items:center;gap:10px;}
+.mt-tt{flex:1;min-width:0;display:flex;flex-direction:column;}
+.mt-ecue{font-family:var(--font-text);font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--accent);margin-bottom:2px;}
+.mt-nom{font-family:var(--font-display);font-size:22px;font-weight:600;line-height:1.15;text-wrap:balance;}
+.mt-rond{width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--text-soft);display:grid;place-items:center;flex-shrink:0;cursor:pointer;padding:0;transition:background .2s,color .2s,border-color .2s;}
+.mt-rond .ico{width:19px;height:19px;}
+.mt-aa span{font-family:var(--font-display);font-size:17px;font-weight:500;}
+.mt-rond.on{background:var(--accent-soft);border-color:var(--border-strong);color:var(--accent);}
+.mt-rond:active{transform:scale(.94);}
+.mt-pop{max-height:0;overflow:hidden;opacity:0;transition:max-height .3s var(--ease-spring,ease),opacity .2s;}
+.mt-pop.ouvert{max-height:240px;opacity:1;}
+.mt-curseur{display:flex;align-items:center;gap:12px;padding:12px 16px;margin:4px 0 10px;border:1px solid var(--border);border-radius:16px;background:var(--surface);}
+.mt-curseur input{flex:1;min-width:0;accent-color:var(--accent);height:28px;}
+.mt-a1,.mt-a2{font-family:var(--font-display);color:var(--text-mute);}
+.mt-a1{font-size:13px;}.mt-a2{font-size:22px;}
+.mt-apercu{margin:0 0 12px;padding:12px 14px;border-radius:14px;border:1px dashed var(--border);color:var(--text-soft);font-size:calc(15px * var(--zt,1));line-height:1.5;}
+.mt-seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;margin:6px 0 0;border-radius:16px;border:1px solid var(--border);background:var(--seg-bg);}
+.mt-seg button{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;padding:10px 4px;border:0;border-radius:12px;background:none;color:var(--text-soft);font-family:var(--font-text);cursor:pointer;transition:background .2s,color .2s;}
+.mt-sn{font-size:14.5px;font-weight:600;white-space:nowrap;}
+.mt-seg small{font-size:11px;color:var(--text-mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.mt-seg button.on{background:var(--accent);color:#fff;box-shadow:0 6px 18px var(--accent-glow);}
+.mt-seg button.on small{color:rgba(255,255,255,.78);}
+.mt-seg button:active{transform:scale(.97);}
+.mt-seg .mt-nv{position:absolute;top:5px;right:6px;min-width:18px;height:18px;font-size:10.5px;}
+.mt-lab{font-family:var(--font-text);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-mute);margin:20px 4px 8px;}
+.mt-chev{width:15px;height:15px;color:var(--text-mute);flex-shrink:0;display:flex;}
+.mt-chev svg{width:100%;height:100%;}
 .mt-pied{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 2px 2px;}
 .mt-taille{display:flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:4px;}
 .mt-taille span{font-size:12px;color:var(--text-mute);padding:0 8px 0 10px;}
@@ -1724,6 +1791,22 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .nav-score.sx-temps{font-size:13px;font-weight:600;color:var(--text-mute);font-variant-numeric:tabular-nums;}
 .nav-score.sx-temps.red{color:var(--ko);}
 .timer-track{height:3px;margin:0 0 18px;}
+/* chrono bien visible : un anneau qui se vide, le nombre au centre */
+.nav-score.sx-temps{display:flex;align-items:center;}
+.chrono{position:relative;width:46px;height:46px;display:grid;place-items:center;}
+.chrono svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);}
+.chrono-fond{fill:var(--accent-soft);stroke:var(--border);stroke-width:3;}
+.chrono-arc{fill:none;stroke:var(--accent);stroke-width:3.4;stroke-linecap:round;transition:stroke-dashoffset 1s linear,stroke .3s;}
+.chrono b{position:relative;font-size:17px;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums;}
+.chrono.red .chrono-arc{stroke:var(--ko);}
+.chrono.red b{color:var(--ko);}
+.chrono.red{animation:chrono-pouls 1s ease-in-out infinite;}
+@keyframes chrono-pouls{50%{transform:scale(1.12);}}
+/* explications : pourquoi ton choix est faux, puis pourquoi la bonne est juste */
+.expl-bloc + .expl-bloc{margin-top:14px;padding-top:14px;border-top:1px solid var(--border);}
+.expl-bloc .expl-label{text-transform:none;letter-spacing:0;font-size:13px;}
+.expl .expl-bloc.juste .expl-label{color:var(--ok);}
+.expl .expl-bloc.faux .expl-label{color:var(--ko);}
 .sx-qlbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-mute);margin-bottom:10px;}
 .sess-body .opt-letter{border-radius:50%;background:transparent;border:1.5px solid var(--border-strong);color:var(--text-soft);}
 .sess-body .opt.correct .opt-letter,.sess-body .opt.wrong .opt-letter,.sess-body .opt.choisie .opt-letter{border-color:transparent;}
@@ -2221,9 +2304,6 @@ html.calme .rise{animation:none!important;}
       <button class="icon-btn" data-entete id="edt-link" aria-label="Lien de l'emploi du temps">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>
       </button>
-      <button class="icon-btn" data-entete id="edt-refresh" aria-label="Actualiser">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg>
-      </button>
     </div>
     <div class="edt-ctrl rise" style="animation-delay:.05s">
     <div class="seg" id="edt-seg">
@@ -2241,6 +2321,9 @@ html.calme .rise{animation:none!important;}
 </div>
 
 <!-- FEUILLE : éditer un créneau -->
+<!-- Tirer vers le bas, tout en haut d'une page : actualiser -->
+<div id="ptr" class="ptr" aria-hidden="true"><span class="ptr-rond"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/></svg></span><span class="ptr-txt">Tire pour actualiser</span></div>
+
 <!-- POMODORO : la feuille du minuteur, et la pastille qui le suit sur les autres pages -->
 <div id="pomo-overlay" class="sheet-overlay">
   <div class="sheet" id="pomo-sheet" role="dialog" aria-modal="true">
@@ -4642,12 +4725,30 @@ function phrasesDe(mots, b){
     cur.push(t); long += t.dit.length + 1;
     if(/[.!?…][»")\]]*$/.test(t.brut) && t.brut !== "p.") pousser();
     else if(long > 200 && /[,;:]$/.test(t.brut)) pousser();
+    else if(long > 320) pousser();
   });
   pousser();
   return out;
 }
+// Dans un PDF, un retour à la ligne n'est pas une fin de phrase,
+// et un mot coupé en fin de ligne (« connais- sance ») se lit en entier.
+function motsPdf(elem){
+  const mots = motsDe(elem);
+  mots.forEach((m,k)=>{
+    const s = mots[k+1];
+    if(s && s.ligne && m.dit && /[a-zà-öø-ÿ]-$/i.test(m.brut)){ s.dit = m.dit.replace(/-$/, "") + s.dit; m.dit = ""; }
+  });
+  mots.forEach(m=>{ m.ligne = false; });
+  return mots;
+}
+function lecEstPdf(){ return !!(LEC.racine && LEC.racine.classList.contains("pdf-pages")); }
 // On lit ce qui est affiché : titres, textes, listes, puis « À retenir ».
 function construireFile(root){
+  if(root.classList.contains("pdf-pages")){
+    const blocs = [...root.querySelectorAll(".pdf-page")], phrases = [];
+    blocs.forEach((b,bi)=>{ const t = b.querySelector(".pdf-texte"); if(t) phrasesDe(motsPdf(t), bi).forEach(p=>phrases.push(p)); });
+    return { blocs, phrases };
+  }
   const blocs = [...root.querySelectorAll(".section, .recap")];
   const phrases = [];
   blocs.forEach((b,bi)=>{
@@ -4669,9 +4770,14 @@ const LEC_CALQUES = {};
 function lecSurligner(nom, r){
   let calque = LEC_CALQUES[nom];
   if(!r){ if(calque) calque.innerHTML = ""; return; }
-  if(!calque){
-    calque = LEC_CALQUES[nom] = el("div","lec-calque " + nom);
-    document.body.appendChild(calque);
+  if(!calque) calque = LEC_CALQUES[nom] = el("div","lec-calque " + nom);
+  // dans un PDF, le calque vit dans la zone qui défile ; sinon dans la page
+  const hote = lecEstPdf() ? LEC.racine : document.body;
+  if(calque.parentNode !== hote) hote.appendChild(calque);
+  let dx = scrollX, dy = scrollY;
+  if(hote !== document.body){
+    const z = hote.getBoundingClientRect();
+    dx = hote.scrollLeft - z.left - hote.clientLeft; dy = hote.scrollTop - z.top - hote.clientTop;
   }
   // une boîte par ligne : on fusionne les morceaux d'une même ligne
   const lignes = [];
@@ -4685,7 +4791,7 @@ function lecSurligner(nom, r){
   calque.innerHTML = "";
   lignes.forEach(l=>{
     const d = document.createElement("div");
-    d.style.cssText = `left:${l.left + scrollX - 2}px;top:${l.top + scrollY}px;` +
+    d.style.cssText = `left:${l.left + dx - 2}px;top:${l.top + dy}px;` +
                       `width:${l.right - l.left + 4}px;height:${l.bottom - l.top}px`;
     calque.appendChild(d);
   });
@@ -4701,6 +4807,12 @@ function lecSuivre(r){
   if(!r || Date.now() - LEC.toucheA < 4000) return;
   const box = r.getBoundingClientRect();
   if(!box.height) return;
+  if(lecEstPdf()){
+    const z = LEC.racine.getBoundingClientRect();
+    if(box.top < z.top + 40 || box.bottom > z.bottom - 130)
+      LEC.racine.scrollBy({ top: box.top - z.top - z.height * 0.33, behavior:"smooth" });
+    return;
+  }
   if(box.top < 170 || box.bottom > innerHeight - 130)
     window.scrollBy({ top: box.top - innerHeight * 0.33, behavior:"smooth" });
 }
@@ -4839,7 +4951,7 @@ function lecPositionTouchee(x, y){
 function lecToucher(e){
   if(!LEC.actif) return;
   if(e.target.closest("a, button, input, textarea")) return;
-  const bloc = e.target.closest(".section, .recap");
+  const bloc = e.target.closest(".section, .recap, .pdf-page");
   if(!bloc || !LEC.racine || !LEC.racine.contains(bloc)) return;
   const pos = lecPositionTouchee(e.clientX, e.clientY);
   let pi = -1, ti = 0;
@@ -4889,7 +5001,7 @@ function lecteurStart(root){
   if(!TTS_OK){ toast("La lecture à voix haute n'est pas disponible sur cet appareil."); return; }
   lecteurStop();
   const f = construireFile(root);
-  if(!f.phrases.length){ toast("Rien à lire dans ce chapitre."); return; }
+  if(!f.phrases.length){ toast(root.classList.contains("pdf-pages") ? "Pas de texte à lire dans ce document." : "Rien à lire dans ce chapitre."); return; }
   Object.assign(LEC, { phrases:f.phrases, blocs:f.blocs, racine:root, i:0, depuis:0,
                        actif:true, pause:false, blocCourant:-1, toucheA:0 });
   root.addEventListener("click", lecToucher, true);
@@ -4992,9 +5104,10 @@ function lecBarre(){
     bar.appendChild(x); return x;
   };
   b("lec-voix", LEC_ICO.voix, "Choisir la voix", lecChoixVoix);
-  b("lec-prev", LEC_ICO.prev, "Section précédente", ()=>lecAller(-1));
+  const unite = lecEstPdf() ? "Page" : "Section";
+  b("lec-prev", LEC_ICO.prev, unite + " précédente", ()=>lecAller(-1));
   b("lec-play", LEC_ICO.pause, "Pause", lecPlayPause);
-  b("lec-next", LEC_ICO.next, "Section suivante", ()=>lecAller(1));
+  b("lec-next", LEC_ICO.next, unite + " suivante", ()=>lecAller(1));
   b("lec-speed", "", "Vitesse", lecVitesse);
   b("lec-close", LEC_ICO.close, "Arrêter la lecture", lecteurStop);
   document.body.appendChild(bar);
@@ -6655,6 +6768,113 @@ function figureCours(im){
     (im.legende ? `<figcaption>${esc(im.legende)}</figcaption>` : "");
   f.querySelector("img").addEventListener("click", ev=>{ ev.stopPropagation(); haptic(); ouvrirImage(im); });
   return f;
+}
+// ── LECTEUR DE PDF ──
+// Le document s'ouvre dans l'app, par-dessus le cours : une croix pour revenir,
+// un bouton pour l'enregistrer ou le partager (Fichiers, Mail, AirDrop…).
+const PDFJS = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
+const IC_FERMER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+const IC_PARTAGE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M7.5 7.5L12 3l4.5 4.5"/><path d="M5 12v6.5A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V12"/></svg>';
+function carteDocument(doc){
+  const a = el("a","cours-pdf"); a.href = doc.src;
+  a.innerHTML = `<span class="cours-pdf-ic">PDF</span><span class="cours-pdf-t"><b>${esc(doc.nom || "Ouvrir le document")}</b><small>${esc(doc.sous || "Touche pour l'ouvrir")}</small></span>${IC_CHEV_DROITE}`;
+  a.addEventListener("click", ev=>{ ev.preventDefault(); ev.stopPropagation(); haptic(); ouvrirPdf(doc); });
+  return a;
+}
+let PDFJS_PRET = null;
+function chargerPdfJs(){
+  if(window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+  if(PDFJS_PRET) return PDFJS_PRET;
+  PDFJS_PRET = new Promise((ok, ko)=>{
+    const sc = document.createElement("script"); sc.src = PDFJS + "pdf.min.js";
+    sc.onload = ()=>{ try{ window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + "pdf.worker.min.js"; ok(window.pdfjsLib); }catch(e){ ko(e); } };
+    sc.onerror = ()=>{ PDFJS_PRET = null; ko(new Error("pdfjs")); };
+    document.head.appendChild(sc);
+  });
+  return PDFJS_PRET;
+}
+function nomFichierPdf(doc){
+  const base = String(doc.src || "").split("/").pop() || "document.pdf";
+  return /\.pdf$/i.test(base) ? base : base + ".pdf";
+}
+async function partagerPdf(doc, blob){
+  const nom = nomFichierPdf(doc);
+  try{
+    if(!blob) blob = await (await fetch(doc.src)).blob();
+    const f = new File([blob], nom, { type:"application/pdf" });
+    if(navigator.canShare && navigator.canShare({ files:[f] })){
+      try{ await navigator.share({ files:[f], title:doc.nom || nom }); return; }
+      catch(e){ if(e && e.name === "AbortError") return; }
+    }
+    // sans partage de fichiers : on le télécharge
+    const u = URL.createObjectURL(blob); const a = document.createElement("a");
+    a.href = u; a.download = nom; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(u), 4000);
+  }catch(e){ toast("Impossible de récupérer le document."); }
+}
+function ouvrirPdf(doc){
+  const v = el("div","pdf-voile");
+  v.innerHTML = `<div class="pdf-barre"><button class="pdf-bt pdf-fermer" type="button" aria-label="Fermer">${IC_FERMER}</button><b>${esc(doc.nom || "Document")}</b>${TTS_OK ? `<button class="pdf-bt pdf-ecouter" type="button" aria-label="Écouter le document" disabled>${LEC_ICO.voix}</button>` : ""}<button class="pdf-bt pdf-partager" type="button" aria-label="Enregistrer ou partager">${IC_PARTAGE}</button></div><div class="pdf-pages"><div class="pdf-attente">Ouverture du document…</div></div>`;
+  let blob = null, ferme = false, aDuTexte = false;
+  const fermer = ()=>{ ferme = true; haptic();
+    if(LEC.racine && v.contains(LEC.racine)) lecteurStop();
+    document.body.classList.remove("pdf-ouvert");
+    v.classList.remove("on"); setTimeout(()=>v.remove(), 330); document.removeEventListener("keydown", echap); };
+  const echap = e=>{ if(e.key === "Escape") fermer(); };
+  document.addEventListener("keydown", echap);
+  v.querySelector(".pdf-fermer").addEventListener("click", fermer);
+  v.querySelector(".pdf-partager").addEventListener("click", ()=>{ haptic(); partagerPdf(doc, blob); });
+  document.body.appendChild(v); requestAnimationFrame(()=>v.classList.add("on"));
+  document.body.classList.add("pdf-ouvert");
+  const zone = v.querySelector(".pdf-pages");
+  // Écouter : le même lecteur que pour les cours, qui suit le texte du PDF mot à mot.
+  const btEcoute = v.querySelector(".pdf-ecouter");
+  if(btEcoute) btEcoute.addEventListener("click", ()=>{
+    haptic();
+    if(!aDuTexte){ toast("Ce PDF est une image scannée : il n'a pas de texte à lire."); return; }
+    lecteurStart(zone);
+  });
+  (async ()=>{
+    try{
+      blob = await (await fetch(doc.src)).blob();
+      const lib = await chargerPdfJs();
+      const pdf = await lib.getDocument({ data: new Uint8Array(await blob.arrayBuffer()) }).promise;
+      if(ferme) return;
+      zone.innerHTML = "";
+      const larg = Math.min(zone.clientWidth - 20, 820), dpr = Math.min(window.devicePixelRatio || 1, 3);
+      for(let n = 1; n <= pdf.numPages; n++){
+        if(ferme) return;
+        const page = await pdf.getPage(n);
+        const vp0 = page.getViewport({ scale:1 }), vp = page.getViewport({ scale: (larg / vp0.width) * dpr });
+        const pg = el("div","pdf-page");
+        const c = document.createElement("canvas"); c.width = Math.floor(vp.width); c.height = Math.floor(vp.height);
+        c.setAttribute("aria-label", "Page " + n);
+        pg.appendChild(c); zone.appendChild(pg);
+        await page.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise;
+        // le texte de la page, invisible, posé sur l'image : c'est lui qu'on lit et qu'on surligne
+        try{
+          const vpc = page.getViewport({ scale: pg.clientWidth / vp0.width });
+          const tl = el("div","pdf-texte");
+          tl.style.setProperty("--scale-factor", vpc.scale);
+          pg.appendChild(tl);
+          const tc = await page.getTextContent();
+          if(tc.items.some(it=>it.str && it.str.trim())) aDuTexte = true;
+          const divs = [];
+          await lib.renderTextLayer({ textContentSource: tc, container: tl, viewport: vpc, textDivs: divs }).promise;
+          // une fin de ligne du PDF doit séparer deux mots, même si la bibliothèque ne la marque pas
+          const its = tc.items.filter(it=>it.str !== undefined);
+          divs.forEach((d,i)=>{
+            if(its[i] && its[i].hasEOL && !(d.nextSibling && d.nextSibling.nodeName === "BR"))
+              d.after(document.createElement("br"));
+          });
+        }catch(e){}
+      }
+      if(btEcoute && !ferme) btEcoute.disabled = false;
+    }catch(e){
+      if(ferme) return;
+      zone.innerHTML = `<div class="pdf-attente">Le document ne s'affiche pas ici sans connexion.<br>Touche le bouton en haut à droite pour l'enregistrer ou l'ouvrir ailleurs.</div>`;
+    }
+  })();
 }
 function ouvrirImage(im){
   const v = el("div","img-voile");
@@ -9251,52 +9471,64 @@ function majTypePick(){
 function listeTypes(){
   document.querySelectorAll("#pick-sheet .pick-actions").forEach(n=>n.remove());
   const box = document.getElementById("pick-list");
-  document.getElementById("pick-title").textContent = curSubj ? ((curSubj.ecue ? curSubj.ecue + " · " : "") + curSubj.title) : "Aller à";
-  box.innerHTML = "";
-  // une ligne par entrée, groupées en blocs comme les Réglages : le nom, le nombre à droite
-  const ligne = (ic, nom, droite, fn, extra)=>{
-    const r = el("button","mt-l" + (extra && extra.on ? " on" : "")); r.type = "button";
-    const nv = extra && extra.nv || 0;
-    r.innerHTML = ICO(ic) + `<span class="mt-n">${esc(nom)}</span>` +
-      (nv ? `<span class="mt-nv" aria-label="${nv} nouveau${nv > 1 ? "x" : ""}">${nv}</span>` : "") +
-      (droite ? `<span class="mt-c">${esc(droite)}</span>` : "") +
-      (extra && extra.on ? `<span class="mt-ok">${COCHE_SVG}</span>` : "");
-    r.addEventListener("click",()=>{ haptic(); fn(); });
-    return r;
-  };
   const s = curSubj || {};
-  const g1 = el("div","mt-groupe");
+  // l'en-tête : le numéro et le nom de la matière, puis « Aa » (taille du texte) et l'accueil
+  const tete = document.getElementById("pick-title");
+  tete.innerHTML = `<div class="mt-tete"><div class="mt-tt">${s.ecue ? `<span class="mt-ecue">${esc(s.ecue)}</span>` : ""}<span class="mt-nom">${esc(s.title || "Aller à")}</span></div>` +
+    `<button class="mt-rond mt-aa" type="button" aria-label="Taille du texte" aria-expanded="false"><span>Aa</span></button>` +
+    `<button class="mt-rond mt-home" type="button" aria-label="Revenir à l'accueil">${ICO("accueil")}</button></div>`;
+  box.innerHTML = "";
+  // « Aa » ouvre un curseur, fermé on ne le voit pas
+  const ordre = ["petit","normal","grand"];
+  const pop = el("div","mt-pop");
+  pop.innerHTML = `<div class="mt-curseur"><span class="mt-a1">A</span><input type="range" min="0" max="2" step="1" value="${ordre.indexOf(tailleTexte())}" aria-label="Taille du texte"><span class="mt-a2">A</span></div><div class="mt-apercu"></div>`;
+  const ap = pop.querySelector(".mt-apercu");
+  // un vrai paragraphe du cours ouvert, pour juger la taille sur du texte réel
+  const p0 = [...document.querySelectorAll("#screen-split .section p")].find(x=>x.textContent.trim().length > 70 && !/^(contrôle|partiel|examen|évaluation)/i.test(x.textContent.trim()));
+  let ex = p0 ? p0.textContent.trim().replace(/\s+/g, " ") : "";
+  if(ex.length > 110) ex = ex.slice(0, 110).replace(/\s+\S*$/, "") + "…";
+  ap.textContent = ex || "Le texte des cours s'affiche à cette taille.";
+  pop.querySelector("input").addEventListener("input", e=>{
+    const t = ordre[+e.target.value] || "normal";
+    if(t !== tailleTexte()){ haptic(); appliquerTaille(t); requestAnimationFrame(majProgression); }
+  });
+  box.appendChild(pop);
+  const btAa = tete.querySelector(".mt-aa");
+  btAa.addEventListener("click", ()=>{
+    haptic();
+    const ouvert = pop.classList.toggle("ouvert");
+    btAa.classList.toggle("on", ouvert); btAa.setAttribute("aria-expanded", ouvert);
+  });
+  tete.querySelector(".mt-home").addEventListener("click", ()=>{ haptic(); document.getElementById("btn-split-home").click(); });
+  // CM, TD, S'entraîner : un sélecteur à trois cases
+  const seg = el("div","mt-seg");
   TYPES_VUE.forEach((t,i)=>{
     const n = i < 2 ? (s[i === 0 ? "cm" : "td"] || []).length : 0;
-    const droite = i < 2 ? (n ? n + " " + t.nom : "aucun") : "QCM, fiches…";
-    g1.appendChild(ligne(t.ic, t.nom, droite, ()=>{ closePicker(); if(i !== curTab) setTab(i); },
-      { on:i === curTab, nv:i < 2 ? nouveauxType(i === 0 ? "cm" : "td") : 0 }));
+    const sous = i < 2 ? (n ? n + " " + t.nom : "aucun") : "QCM, fiches…";
+    const nv = i < 2 ? nouveauxType(i === 0 ? "cm" : "td") : 0;
+    const b = el("button", i === curTab ? "on" : ""); b.type = "button";
+    b.innerHTML = `<span class="mt-sn">${esc(t.nom)}</span><small>${esc(sous)}</small>` +
+      (nv ? `<span class="mt-nv" aria-label="${nv} nouveau${nv > 1 ? "x" : ""}">${nv}</span>` : "");
+    b.addEventListener("click", ()=>{ haptic(); closePicker(); if(i !== curTab) setTab(i); });
+    seg.appendChild(b);
   });
-  box.appendChild(g1);
+  box.appendChild(seg);
   // les outils de la matière
   const nLex = curSubj ? lexique(curSubj).length : 0;
   const nSyn = curSubj ? nbPointsSynthese(curSubj) : 0;
   if(nLex || nSyn){
-    const g2 = el("div","mt-groupe");
-    if(nLex) g2.appendChild(ligne("lexique", "Lexique", nLex + " terme" + (nLex > 1 ? "s" : ""), ()=>{ closePicker(); setTimeout(ouvrirLexique, 250); }));
-    if(nSyn) g2.appendChild(ligne("synthese", "Fiche de synthèse", "", ()=>{ closePicker(); setTimeout(ouvrirSynthese, 250); }));
-    box.appendChild(g2);
+    const lab = el("div","mt-lab"); lab.textContent = "Outils"; box.appendChild(lab);
+    const g = el("div","mt-groupe");
+    const ligne = (ic, nom, droite, fn)=>{
+      const r = el("button","mt-l"); r.type = "button";
+      r.innerHTML = ICO(ic) + `<span class="mt-n">${esc(nom)}</span>` + (droite ? `<span class="mt-c">${esc(droite)}</span>` : "") + `<span class="mt-chev">${IC_CHEV_DROITE}</span>`;
+      r.addEventListener("click",()=>{ haptic(); fn(); });
+      return r;
+    };
+    if(nLex) g.appendChild(ligne("lexique", "Lexique", nLex + " terme" + (nLex > 1 ? "s" : ""), ()=>{ closePicker(); setTimeout(ouvrirLexique, 250); }));
+    if(nSyn) g.appendChild(ligne("synthese", "Fiche de synthèse", "", ()=>{ closePicker(); setTimeout(ouvrirSynthese, 250); }));
+    box.appendChild(g);
   }
-  // en bas, sur une ligne : la taille du texte des cours, et le retour à l'accueil
-  const pied = el("div","mt-pied");
-  const tl = el("div","mt-taille"); tl.innerHTML = `<span>Texte</span>`;
-  [["petit",12],["normal",15],["grand",19]].forEach(([t,px])=>{
-    const b = el("button", t === tailleTexte() ? "on" : ""); b.type = "button"; b.textContent = "A"; b.style.fontSize = px + "px";
-    b.setAttribute("aria-label", "Texte " + t);
-    b.addEventListener("click",()=>{ haptic(); appliquerTaille(t); tl.querySelectorAll("button").forEach(x=>x.classList.toggle("on", x === b)); requestAnimationFrame(majProgression); });
-    tl.appendChild(b);
-  });
-  const acc = el("button","mt-acc"); acc.type = "button";
-  acc.innerHTML = ICO("accueil") + "Accueil";
-  acc.setAttribute("aria-label", "Revenir à l'accueil");
-  acc.addEventListener("click",()=>{ haptic(); document.getElementById("btn-split-home").click(); });
-  pied.append(tl, acc);
-  box.appendChild(pied);
   document.getElementById("pick-sheet").classList.add("open");
 }
 function setTab(i){
@@ -9384,7 +9616,14 @@ function renderCoursePane(type){
     const card=el("div","card");
     if(sec.body){ const b=el("div","card-body"); b.innerHTML=texteCours(sec.body); card.appendChild(b); }
     if(sec.img && sec.img.src) card.appendChild(figureCours(sec.img));
-    if(sec.list&&sec.list.length){ const ul=el("ul","card-list"); sec.list.forEach(it=>{const li=el("li"); li.innerHTML='<span class="li-text">'+texteCours(it)+'</span>'; ul.appendChild(li);}); card.appendChild(ul); }
+    // un document joint : il ne se charge qu'en le touchant, et s'ouvre dans le lecteur de l'app
+    const cartePdf = (sec.pdf && sec.pdf.src) ? carteDocument(sec.pdf) : null;
+    const sousPuce = cartePdf && Number.isInteger(sec.pdf.apres) && sec.list && sec.pdf.apres < sec.list.length ? sec.pdf.apres : -1;
+    if(sec.list&&sec.list.length){ const ul=el("ul","card-list"); sec.list.forEach((it,k)=>{const li=el("li");
+      if(k === sousPuce){ const col = el("div","li-col"); col.innerHTML='<span class="li-text">'+texteCours(it)+'</span>'; col.appendChild(cartePdf); li.appendChild(col); }
+      else li.innerHTML='<span class="li-text">'+texteCours(it)+'</span>';
+      ul.appendChild(li);}); card.appendChild(ul); }
+    if(cartePdf && sousPuce < 0) card.appendChild(cartePdf);
     block.appendChild(title);
     block.appendChild(card);
     if(modifiable(ch)) onLongPress(block, ()=>editSection(type, ch, ch.sections.indexOf(sec)));
@@ -10704,7 +10943,7 @@ function finirExamen(tempsEcoule){
       const d = el("div","ex-err");
       d.innerHTML = `<div class="ex-err-q">${esc(q.q)}</div>
         <div class="ex-err-l ko">✗ ${r === null ? "Pas de réponse" : esc(q.opts[r])}</div>
-        <div class="ex-err-l ok">✓ ${esc(q.opts[q.c])}</div>` + (q.e ? `<div class="ex-err-e">${esc(q.e)}</div>` : "");
+        <div class="ex-err-l ok">✓ ${esc(q.opts[q.c])}</div>` + (r !== null && q.w && q.w[q.opts[r]] ? `<div class="ex-err-e"><b>Pourquoi pas :</b> ${esc(q.w[q.opts[r]])}</div>` : "") + (q.e ? `<div class="ex-err-e">${q.w ? "<b>Pourquoi la bonne :</b> " : ""}${esc(q.e)}</div>` : "");
       wrap.appendChild(d);
     });
   }
@@ -10788,10 +11027,31 @@ function titreSession(mode){
   return nomScope(sc);
 }
 // les secondes restantes, en petit en haut à droite
-function majSecondes(v){
+let SEC_MAX = 20;
+function majSecondes(v, max){
   const sc = document.getElementById("sess-score"); if(!sc) return;
-  sc.textContent = v > 0 ? v + " s" : "";
-  sc.classList.toggle("red", v > 0 && v <= 5);
+  if(max) SEC_MAX = max;
+  if(!(v > 0)){ sc.innerHTML = ""; return; }
+  const R = 20, C = 2 * Math.PI * R, part = Math.max(0, Math.min(1, v / SEC_MAX));
+  let ch = sc.querySelector(".chrono");
+  if(!ch){
+    sc.innerHTML = `<span class="chrono" role="timer" aria-label="Temps restant"><svg viewBox="0 0 46 46"><circle class="chrono-fond" cx="23" cy="23" r="${R}"/><circle class="chrono-arc" cx="23" cy="23" r="${R}" stroke-dasharray="${C.toFixed(2)}" stroke-dashoffset="0"/></svg><b></b></span>`;
+    ch = sc.querySelector(".chrono");
+  }
+  ch.querySelector("b").textContent = v;
+  ch.querySelector(".chrono-arc").setAttribute("stroke-dashoffset", (C * (1 - part)).toFixed(2));
+  ch.classList.toggle("red", v <= 5);
+}
+// l'explication d'un prof : si tu t'es trompée, pourquoi ton choix ne va pas, puis pourquoi la bonne réponse est juste
+function explicationHtml(cur, sel){
+  const ok = sel === cur.c, bonne = cur.opts[cur.c];
+  const pourquoiPas = sel >= 0 && !ok && cur.w ? cur.w[cur.opts[sel]] : "";
+  if(ok) return cur.e ? `<div class="expl-bloc juste"><div class="expl-label">✓ Bonne réponse</div><div class="expl-text">${esc(cur.e)}</div></div>` : "";
+  let h = "";
+  if(pourquoiPas) h += `<div class="expl-bloc faux"><div class="expl-label">Pourquoi pas « ${esc(cur.opts[sel])} »</div><div class="expl-text">${esc(pourquoiPas)}</div></div>`;
+  const titre = sel < 0 ? "Temps écoulé · la réponse était « " + esc(bonne) + " »" : (cur.w ? "Pourquoi « " + esc(bonne) + " »" : "À retenir");
+  if(cur.e) h += `<div class="expl-bloc juste"><div class="expl-label">${titre}</div><div class="expl-text">${esc(cur.e)}</div></div>`;
+  return h;
 }
 function renderSess(){
   if(idx>=queue.length){ showResults(); return; }
@@ -10910,7 +11170,7 @@ function renderQCM(cur,body){
   const wrap=el("div","rise");
   if(!confirmed){
     timerVal=20;
-    majSecondes(20);
+    majSecondes(20, 20);
     const tt=el("div","timer-track"); tt.innerHTML=`<div class="timer-bar" id="tbar" style="width:100%"></div>`; wrap.appendChild(tt);
     clearInterval(timerInt);
     timerInt=setInterval(()=>{
@@ -10935,8 +11195,8 @@ function renderQCM(cur,body){
   if(confirmed){
     const ok=selOpt===cur.c;
     const exp=el("div","expl "+(ok?"good":"bad"));
-    exp.innerHTML=`<div class="expl-label">${ok?"Bonne réponse":"À retenir"}</div><div class="expl-text">${esc(cur.e)}</div>`;
-    wrap.appendChild(exp);
+    exp.innerHTML=explicationHtml(cur, selOpt);
+    if(exp.innerHTML) wrap.appendChild(exp);
     const key = queue[idx].key;
     if(ok){
       // bonne réponse : on demande si c'était facile ou laborieux
@@ -11111,7 +11371,7 @@ function renderTR(cur,body){
   const wrap=el("div","rise");
   if(!confirmed){
     timerVal=15;
-    majSecondes(15);
+    majSecondes(15, 15);
     const tt=el("div","timer-track"); tt.innerHTML=`<div class="timer-bar" id="tbar" style="width:100%"></div>`; wrap.appendChild(tt);
     clearInterval(timerInt);
     timerInt=setInterval(()=>{
@@ -11151,7 +11411,7 @@ function renderTR(cur,body){
     }
     if(cur.e){
       const exp=el("div","expl "+(ok?"good":"bad"));
-      exp.innerHTML=`<div class="expl-label">${ok?"Bonne réponse":"À retenir"}</div><div class="expl-text">${esc(cur.e)}</div>`;
+      exp.innerHTML=explicationHtml(cur, selOpt);
       wrap.appendChild(exp);
     }
     // même notation que les autres modes, pour que le score et la mémorisation suivent
@@ -11854,6 +12114,73 @@ function pomoFeuille(maj){
   if(POMO.phase && POMO.arret == null && !POMO.finie) pomoBoucle();
   pomoMaj();
 })();
+
+// ── Tirer vers le bas, tout en haut d'une page, pour actualiser ──
+// On enregistre ce qui reste à envoyer, on recharge l'emploi du temps, puis la page :
+// la dernière version de l'app et des cours arrive, comme à une nouvelle ouverture.
+(function(){
+  const ptr = document.getElementById("ptr"); if(!ptr) return;
+  const SEUIL = 80, MAX = 120;
+  let y0 = null, d = 0, actif = false, charge = false;
+  const bloque = ()=>{
+    const ecran = document.documentElement.getAttribute("data-screen");
+    return charge || ["login","pick","welcome","session"].includes(ecran)
+      || document.querySelector(".sheet-overlay.open, #pick-sheet.open, #form-sheet.open, .img-voile, .pdf-voile, .somm-panneau.open");
+  };
+  // la page descend avec le doigt, la pastille apparaît dans l'espace libéré
+  const page = ()=>document.querySelector(".screen.active > .wrap, .screen.active > #psycho-inner, .screen.active > .content-scroll");
+  const poser = v=>{
+    const pg = page(); if(pg){ pg.classList.toggle("ptr-pousse", ptr.classList.contains("anim")); pg.style.transform = v ? "translateY(" + v + "px)" : ""; }
+    ptr.style.transform = "translate(-50%," + (v * 0.55 - 50) + "px)";
+    ptr.style.opacity = Math.min(1, v / 40);
+    const ok = d >= SEUIL;
+    ptr.classList.toggle("pret", ok);
+    ptr.querySelector(".ptr-txt").textContent = ok ? "Relâche pour actualiser" : "Tire pour actualiser";
+    ptr.querySelector(".ptr-rond svg").style.transform = "rotate(" + Math.round(d / SEUIL * 270) + "deg)";
+  };
+  const debut = y=>{ if(bloque() || window.scrollY > 0) return; y0 = y; d = 0; actif = false; ptr.classList.remove("anim"); };
+  const bouge = (y, ev)=>{
+    if(y0 === null) return;
+    const brut = y - y0;
+    if(brut <= 0 || window.scrollY > 0){ if(actif){ d = 0; poser(0); } return; }
+    actif = true;
+    d = Math.min(MAX, brut * 0.55);          // résistance : on tire, ça suit moins vite que le doigt
+    if(ev && ev.cancelable) ev.preventDefault();
+    poser(d);
+  };
+  const fin = async ()=>{
+    if(y0 === null) return;
+    y0 = null;
+    ptr.classList.add("anim");
+    if(!actif || d < SEUIL){ d = 0; poser(0); return; }
+    charge = true; haptic();
+    poser(56); ptr.style.opacity = 1;
+    ptr.classList.add("charge"); ptr.classList.remove("pret");
+    ptr.querySelector(".ptr-txt").textContent = "Actualisation…";
+    await actualiserTout();
+  };
+  window.actualiserTout = async ()=>{
+    try{ if(typeof pushState === "function" && syncOn) await Promise.race([pushState(true), new Promise(r=>setTimeout(r, 2500))]); }catch(e){}
+    try{ localStorage.removeItem(EDT_CACHE_KEY); }catch(e){}
+    const finir = msg=>{ charge = false; ptr.classList.remove("charge"); d = 0; poser(0); if(msg) toast(msg); };
+    // sur l'emploi du temps : on recharge juste les cours, sur place
+    if(document.documentElement.getAttribute("data-screen") === "edt"){
+      await Promise.all([ loadEDT(true), new Promise(r=>setTimeout(r, 600)) ]);
+      renderEDT(); renderTodayCourses(); finir(edtState === "ok" ? "Emploi du temps à jour." : "");
+      return;
+    }
+    if(window.PTR_DEMO){ setTimeout(()=>finir("À jour."), 1200); return; }
+    location.reload();
+  };
+  document.addEventListener("touchstart", e=>debut(e.touches[0].clientY), { passive:true });
+  document.addEventListener("touchmove",  e=>bouge(e.touches[0].clientY, e), { passive:false });
+  document.addEventListener("touchend", fin);
+  document.addEventListener("touchcancel", fin);
+  // à la souris aussi (ordinateur, démo)
+  document.addEventListener("mousedown", e=>{ if(e.button === 0 && !e.target.closest("button,a,input,textarea,select")) debut(e.clientY); });
+  document.addEventListener("mousemove", e=>{ if(y0 !== null && e.buttons) bouge(e.clientY, e); });
+  document.addEventListener("mouseup", fin);
+})();
 document.getElementById("fab-add").addEventListener("click",()=>{
   haptic();
   const a = FAB_ACTIONS[document.getElementById("fab-add").dataset.target];
@@ -12026,14 +12353,6 @@ document.querySelectorAll("#ev-types .ev-type").forEach(b=>{
 });
 
 // actualiser manuellement (force le rechargement, sans attendre les 6 h)
-document.getElementById("edt-refresh").addEventListener("click",async function(){
-  haptic();
-  this.classList.add("spinning");
-  // on garde l'animation au moins un instant, même si la réponse est immédiate
-  const [_] = await Promise.all([ loadEDT(true), new Promise(r=>setTimeout(r,600)) ]);
-  renderEDT(); renderTodayCourses();
-  this.classList.remove("spinning");
-});
 // balayage pour changer de semaine
 onSwipe(document.getElementById("screen-edt"), {
   onLeft:  ()=>{ haptic(); edtWeekOffset++; renderEDT(); },
@@ -12490,6 +12809,76 @@ document.getElementById("login-go").addEventListener("click",()=>{ haptic(); doL
 document.getElementById("login-input").addEventListener("keydown",e=>{ if(e.key==="Enter") document.getElementById("login-code").focus(); });
 document.getElementById("login-code").addEventListener("keydown",e=>{ if(e.key==="Enter") doLogin(); });
 
+
+// ── RESTER SUR LA MÊME PAGE QUAND ON ACTUALISE ──
+// La page ouverte est notée pour cet onglet (sessionStorage) : une actualisation y ramène,
+// au même chapitre et au même endroit. Une app rouverte de zéro repart de l'accueil.
+const OU_KEY = "revision_ou_v1";
+const PAGES_GARDEES = ["semestres","semchoice","subjects","split","edt","planning","classes","class","shared",
+  "devoirs","mesdevoirs","sites","search","index","auteurs","lexique","synthese","qcmchoix","session","psycho"];
+function memoriserPage(){
+  try{
+    const id = document.documentElement.getAttribute("data-screen");
+    if(!PAGES_GARDEES.includes(id)){ sessionStorage.removeItem(OU_KEY); return; }
+    sessionStorage.setItem(OU_KEY, JSON.stringify({ id, subj: curSubj ? curSubj.id : null, tab: curTab,
+      cm: curCmIdx, td: curTdIdx, sem: curSemestre, y: Math.round(window.scrollY), t: Date.now() }));
+  }catch(e){}
+}
+window.addEventListener("pagehide", memoriserPage);
+window.addEventListener("beforeunload", memoriserPage);
+document.addEventListener("visibilitychange", ()=>{ if(document.hidden) memoriserPage(); });
+let PAGE_RESTAUREE = null;
+function lirePageGardee(){
+  let o = null; try{ o = JSON.parse(sessionStorage.getItem(OU_KEY) || "null"); }catch(e){}
+  if(!o || !o.id || !PAGES_GARDEES.includes(o.id)) return null;
+  if(Date.now() - (o.t || 0) > 12 * 3600e3) return null;   // une vieille trace ne compte plus
+  return o;
+}
+// rouvre la page notée ; renvoie faux si ce n'est pas possible (l'appelant montre l'accueil)
+function restaurerPage(o){
+  if(!o) return false;
+  try{
+    if(o.sem) curSemestre = o.sem;
+    const sj = o.subj ? SUBJECTS.find(s=>s.id === o.subj) : null;
+    const matiere = ()=>{
+      if(!sj) return false;
+      openSubject(sj.id);
+      const tab = o.tab === 1 ? 1 : 0;
+      const n = (sj[tab ? "td" : "cm"] || []).length;
+      const i = Math.max(0, Math.min(tab ? (o.td || 0) : (o.cm || 0), n - 1));
+      if(tab) curTdIdx = i; else curCmIdx = i;
+      setTab(tab);
+      return true;
+    };
+    let ok = true;
+    switch(o.id){
+      case "semestres": renderSemestres(); showScreen("semestres"); break;
+      case "semchoice": renderSemestres(); showScreen("semchoice"); break;
+      case "subjects": renderSubjectCards(curSemestre); showScreen("subjects"); break;
+      case "split": case "qcmchoix": case "session": ok = matiere(); break;
+      case "devoirs": ok = matiere(); if(ok) renderDevoirs(); break;
+      case "auteurs": ok = matiere(); if(ok) renderAuteurs(); break;
+      case "lexique": ok = matiere(); if(ok) ouvrirLexique(); break;
+      case "synthese": ok = matiere(); if(ok) ouvrirSynthese(); break;
+      case "edt": case "planning": renderSemestres(); showScreen("semestres"); openEDT(); break;
+      case "classes": case "class": case "shared": renderSemestres(); showScreen("semestres"); openClasses(); break;
+      case "mesdevoirs": renderKnowBlock(); showScreen("mesdevoirs"); break;
+      case "sites": openSitesSheet(); break;
+      case "search": case "index": openSearch(); break;
+      case "psycho": renderPsycho(); break;
+      default: ok = false;
+    }
+    if(!ok) return false;
+    PAGE_RESTAUREE = o;
+    // on revient au même endroit dans la page, une fois le contenu posé
+    if(o.y > 0 && !["edt","planning","classes","class","shared"].includes(o.id)){
+      const y = o.y;
+      [60, 350, 900].forEach(ms=>setTimeout(()=>{ if(!DEJA_TOUCHE) window.scrollTo(0, y); }, ms));
+    }
+    return true;
+  }catch(e){ return false; }
+}
+
 // start
 (async function(){
   let p=null; try{ p = localStorage.getItem(PSEUDO_KEY); }catch(e){}
@@ -12510,7 +12899,9 @@ document.getElementById("login-code").addEventListener("keydown",e=>{ if(e.key==
   updatePersonalText();   // pseudo connu dès le départ
   applyContent(null);     // évite d'afficher le contenu de quelqu'un d'autre le temps du chargement
   renderSemestres();
-  showScreen(saved ? "welcome" : "pick");
+  // une actualisation ramène sur la page où l'on était
+  const garde = saved ? lirePageGardee() : null;
+  if(!restaurerPage(garde)) showScreen(saved ? "welcome" : "pick");
 
   // puis, en arrière-plan, on récupère la version du serveur si elle est plus récente
   if(supaReady()){
@@ -12518,7 +12909,16 @@ document.getElementById("login-code").addEventListener("keydown",e=>{ if(e.key==
       const out = await api("login");
       syncOn = true;
       if(out.nouveau){ await pushState(); }   // pseudo pas encore sur le serveur : on l'y met
-      else { applyRemote(out.row); renderSemestres(); }
+      else {
+        applyRemote(out.row); renderSemestres();
+        // tes ajouts et retouches viennent d'arriver : la page rouverte est redessinée avec,
+        // ou ouverte maintenant si elle n'existait que dans tes ajouts
+        const garde = lirePageGardee();
+        if(garde && !DEJA_TOUCHE){
+          const ici = document.documentElement.getAttribute("data-screen");
+          if(PAGE_RESTAUREE ? ici === PAGE_RESTAUREE.id : ici === "welcome") restaurerPage(garde);
+        }
+      }
       setSyncBadge("ok");
     }catch(e){
       syncOn = false; setSyncBadge("off");
