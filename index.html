@@ -284,7 +284,6 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 /* ── EMPLOI DU TEMPS ── */.edt-titlerow{display:flex;align-items:center;gap:8px;}
 .edt-titlerow>.page-title{flex:1;min-width:0;}
 @keyframes edtspin{to{transform:rotate(360deg);}}
-#edt-refresh.spinning svg{animation:edtspin .8s linear infinite;}
 /* actions dans la barre du haut */.page-head .head-row>[data-entete]{width:36px;height:36px;border-radius:11px;}
 .page-head .head-row>[data-entete] svg{width:17px;height:17px;}
 .page-head .head-row>.back-btn+[data-entete]{margin-left:auto;}
@@ -636,6 +635,17 @@ div.av-tete{cursor:default;}
 .pomo-pill.pause{border-color:var(--ok);box-shadow:0 6px 24px rgba(0,0,0,.25);}
 .pomo-pill.pause .ico{color:var(--ok);}
 .pomo-pill[hidden]{display:none;}
+/* tirer pour actualiser : une pastille descend sous l'en-tête, et tourne pendant le rechargement */
+.ptr{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 62px);z-index:25;display:flex;align-items:center;gap:8px;height:38px;padding:0 14px 0 8px;border-radius:999px;
+  background:var(--surface-solid);border:1px solid var(--border);box-shadow:0 6px 20px rgba(0,0,0,.25);color:var(--text-soft);font-family:var(--font-text);font-size:13px;font-weight:600;white-space:nowrap;
+  transform:translate(-50%,-70px);opacity:0;pointer-events:none;}
+.ptr.anim{transition:transform .3s var(--ease-spring),opacity .25s;}
+.ptr-pousse{transition:transform .3s var(--ease-spring);}
+.ptr-rond{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);}
+.ptr-rond svg{width:15px;height:15px;}
+.ptr.pret{border-color:var(--accent);color:var(--accent);}
+.ptr.charge .ptr-rond svg{animation:ptrTourne .8s linear infinite;}
+@keyframes ptrTourne{to{transform:rotate(360deg)}}
 .pomo-pill.repos{border-color:var(--border);box-shadow:0 4px 16px rgba(0,0,0,.18);color:var(--text-soft);font-weight:600;font-size:14px;}
 #pomo-body{padding:0 20px 4px;}
 #pomo-body .sheet-title,#pomo-body .sheet-sub{margin-left:0;margin-right:0;}
@@ -1523,9 +1533,27 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
    rétrécit et la page paraît plus étroite d'un TD à l'autre. */.card{background:var(--surface);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px 22px;box-shadow:0 4px 20px var(--shadow);width:100%;box-sizing:border-box;overflow:hidden;}
 .card-body{font-size:calc(14.5px * var(--zt,1));line-height:1.95;color:var(--text);white-space:pre-line;overflow-wrap:break-word;word-break:break-word;}
 .chunk-highlight{background:var(--hl-bg);color:var(--hl-text);border-radius:5px;padding:1px 6px;font-weight:600;}
+.cours-pdf{display:flex;align-items:center;gap:12px;margin:14px 0 2px;padding:12px 14px;border-radius:14px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);text-decoration:none;}
+.cours-pdf:active{background:var(--accent-soft);}
+.cours-pdf-ic{flex-shrink:0;width:40px;height:46px;border-radius:8px;display:grid;place-items:center;background:var(--accent);color:#fff;font-size:11px;font-weight:800;letter-spacing:.04em;}
+.cours-pdf-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+.cours-pdf-t b{font-size:14.5px;}
+.cours-pdf-t small{font-size:12px;color:var(--text-mute);}
+.cours-pdf svg{width:16px;height:16px;flex-shrink:0;color:var(--text-mute);}
 .cours-fig{margin:14px -6px 4px;}
 .cours-fig img{display:block;width:100%;height:auto;border-radius:12px;background:var(--surface-2);cursor:zoom-in;}
 .cours-fig figcaption{font-size:12px;color:var(--text-mute);margin-top:7px;text-align:center;line-height:1.4;}
+.pdf-voile{position:fixed;inset:0;z-index:310;background:var(--bg);display:flex;flex-direction:column;transform:translateY(100%);transition:transform .32s cubic-bezier(.2,.8,.2,1);}
+.pdf-voile.on{transform:none;}
+.pdf-barre{flex-shrink:0;display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top) + 10px) 14px 10px;border-bottom:1px solid var(--border);background:var(--surface);}
+.pdf-barre b{flex:1;min-width:0;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);}
+.pdf-bt{flex-shrink:0;width:38px;height:38px;border-radius:50%;border:0;background:var(--surface-2);color:var(--text);display:grid;place-items:center;cursor:pointer;}
+.pdf-bt svg{width:19px;height:19px;}
+.pdf-pages{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:12px 10px calc(env(safe-area-inset-bottom) + 24px);display:flex;flex-direction:column;align-items:center;gap:10px;touch-action:pan-x pan-y pinch-zoom;}
+.pdf-pages canvas{width:100%;max-width:820px;height:auto;background:#fff;border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.18);}
+.pdf-attente{margin:auto;color:var(--text-mute);font-size:14px;text-align:center;padding:30px 20px;line-height:1.6;}
+.card-list li .cours-pdf{margin:10px 0 2px;}
+.card-list li .li-col{flex:1;min-width:0;display:flex;flex-direction:column;}
 .img-voile{position:fixed;inset:0;z-index:300;background:rgba(5,4,10,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .25s;padding:calc(env(safe-area-inset-top) + 50px) 0 calc(env(safe-area-inset-bottom) + 24px);}
 .img-voile.on{opacity:1;}
 .img-zoom{width:100%;overflow:auto;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y pinch-zoom;}
@@ -2221,9 +2249,6 @@ html.calme .rise{animation:none!important;}
       <button class="icon-btn" data-entete id="edt-link" aria-label="Lien de l'emploi du temps">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>
       </button>
-      <button class="icon-btn" data-entete id="edt-refresh" aria-label="Actualiser">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg>
-      </button>
     </div>
     <div class="edt-ctrl rise" style="animation-delay:.05s">
     <div class="seg" id="edt-seg">
@@ -2241,6 +2266,9 @@ html.calme .rise{animation:none!important;}
 </div>
 
 <!-- FEUILLE : éditer un créneau -->
+<!-- Tirer vers le bas, tout en haut d'une page : actualiser -->
+<div id="ptr" class="ptr" aria-hidden="true"><span class="ptr-rond"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/></svg></span><span class="ptr-txt">Tire pour actualiser</span></div>
+
 <!-- POMODORO : la feuille du minuteur, et la pastille qui le suit sur les autres pages -->
 <div id="pomo-overlay" class="sheet-overlay">
   <div class="sheet" id="pomo-sheet" role="dialog" aria-modal="true">
@@ -6656,6 +6684,83 @@ function figureCours(im){
   f.querySelector("img").addEventListener("click", ev=>{ ev.stopPropagation(); haptic(); ouvrirImage(im); });
   return f;
 }
+// ── LECTEUR DE PDF ──
+// Le document s'ouvre dans l'app, par-dessus le cours : une croix pour revenir,
+// un bouton pour l'enregistrer ou le partager (Fichiers, Mail, AirDrop…).
+const PDFJS = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
+const IC_FERMER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+const IC_PARTAGE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M7.5 7.5L12 3l4.5 4.5"/><path d="M5 12v6.5A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V12"/></svg>';
+function carteDocument(doc){
+  const a = el("a","cours-pdf"); a.href = doc.src;
+  a.innerHTML = `<span class="cours-pdf-ic">PDF</span><span class="cours-pdf-t"><b>${esc(doc.nom || "Ouvrir le document")}</b><small>${esc(doc.sous || "Touche pour l'ouvrir")}</small></span>${IC_CHEV_DROITE}`;
+  a.addEventListener("click", ev=>{ ev.preventDefault(); ev.stopPropagation(); haptic(); ouvrirPdf(doc); });
+  return a;
+}
+let PDFJS_PRET = null;
+function chargerPdfJs(){
+  if(window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+  if(PDFJS_PRET) return PDFJS_PRET;
+  PDFJS_PRET = new Promise((ok, ko)=>{
+    const sc = document.createElement("script"); sc.src = PDFJS + "pdf.min.js";
+    sc.onload = ()=>{ try{ window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + "pdf.worker.min.js"; ok(window.pdfjsLib); }catch(e){ ko(e); } };
+    sc.onerror = ()=>{ PDFJS_PRET = null; ko(new Error("pdfjs")); };
+    document.head.appendChild(sc);
+  });
+  return PDFJS_PRET;
+}
+function nomFichierPdf(doc){
+  const base = String(doc.src || "").split("/").pop() || "document.pdf";
+  return /\.pdf$/i.test(base) ? base : base + ".pdf";
+}
+async function partagerPdf(doc, blob){
+  const nom = nomFichierPdf(doc);
+  try{
+    if(!blob) blob = await (await fetch(doc.src)).blob();
+    const f = new File([blob], nom, { type:"application/pdf" });
+    if(navigator.canShare && navigator.canShare({ files:[f] })){
+      try{ await navigator.share({ files:[f], title:doc.nom || nom }); return; }
+      catch(e){ if(e && e.name === "AbortError") return; }
+    }
+    // sans partage de fichiers : on le télécharge
+    const u = URL.createObjectURL(blob); const a = document.createElement("a");
+    a.href = u; a.download = nom; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(u), 4000);
+  }catch(e){ toast("Impossible de récupérer le document."); }
+}
+function ouvrirPdf(doc){
+  const v = el("div","pdf-voile");
+  v.innerHTML = `<div class="pdf-barre"><button class="pdf-bt pdf-fermer" type="button" aria-label="Fermer">${IC_FERMER}</button><b>${esc(doc.nom || "Document")}</b><button class="pdf-bt pdf-partager" type="button" aria-label="Enregistrer ou partager">${IC_PARTAGE}</button></div><div class="pdf-pages"><div class="pdf-attente">Ouverture du document…</div></div>`;
+  let blob = null, ferme = false;
+  const fermer = ()=>{ ferme = true; haptic(); v.classList.remove("on"); setTimeout(()=>v.remove(), 330); document.removeEventListener("keydown", echap); };
+  const echap = e=>{ if(e.key === "Escape") fermer(); };
+  document.addEventListener("keydown", echap);
+  v.querySelector(".pdf-fermer").addEventListener("click", fermer);
+  v.querySelector(".pdf-partager").addEventListener("click", ()=>{ haptic(); partagerPdf(doc, blob); });
+  document.body.appendChild(v); requestAnimationFrame(()=>v.classList.add("on"));
+  const zone = v.querySelector(".pdf-pages");
+  (async ()=>{
+    try{
+      blob = await (await fetch(doc.src)).blob();
+      const lib = await chargerPdfJs();
+      const pdf = await lib.getDocument({ data: new Uint8Array(await blob.arrayBuffer()) }).promise;
+      if(ferme) return;
+      zone.innerHTML = "";
+      const larg = Math.min(zone.clientWidth - 20, 820), dpr = Math.min(window.devicePixelRatio || 1, 3);
+      for(let n = 1; n <= pdf.numPages; n++){
+        if(ferme) return;
+        const page = await pdf.getPage(n);
+        const vp0 = page.getViewport({ scale:1 }), vp = page.getViewport({ scale: (larg / vp0.width) * dpr });
+        const c = document.createElement("canvas"); c.width = Math.floor(vp.width); c.height = Math.floor(vp.height);
+        c.setAttribute("aria-label", "Page " + n);
+        zone.appendChild(c);
+        await page.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise;
+      }
+    }catch(e){
+      if(ferme) return;
+      zone.innerHTML = `<div class="pdf-attente">Le document ne s'affiche pas ici sans connexion.<br>Touche le bouton en haut à droite pour l'enregistrer ou l'ouvrir ailleurs.</div>`;
+    }
+  })();
+}
 function ouvrirImage(im){
   const v = el("div","img-voile");
   v.innerHTML = `<div class="img-zoom"><img src="${esc(im.src)}" alt="${esc(im.alt || "")}"></div>${im.legende ? `<div class="img-leg">${esc(im.legende)}</div>` : ""}<button class="img-fermer" type="button" aria-label="Fermer">✕</button>`;
@@ -9384,7 +9489,14 @@ function renderCoursePane(type){
     const card=el("div","card");
     if(sec.body){ const b=el("div","card-body"); b.innerHTML=texteCours(sec.body); card.appendChild(b); }
     if(sec.img && sec.img.src) card.appendChild(figureCours(sec.img));
-    if(sec.list&&sec.list.length){ const ul=el("ul","card-list"); sec.list.forEach(it=>{const li=el("li"); li.innerHTML='<span class="li-text">'+texteCours(it)+'</span>'; ul.appendChild(li);}); card.appendChild(ul); }
+    // un document joint : il ne se charge qu'en le touchant, et s'ouvre dans le lecteur de l'app
+    const cartePdf = (sec.pdf && sec.pdf.src) ? carteDocument(sec.pdf) : null;
+    const sousPuce = cartePdf && Number.isInteger(sec.pdf.apres) && sec.list && sec.pdf.apres < sec.list.length ? sec.pdf.apres : -1;
+    if(sec.list&&sec.list.length){ const ul=el("ul","card-list"); sec.list.forEach((it,k)=>{const li=el("li");
+      if(k === sousPuce){ const col = el("div","li-col"); col.innerHTML='<span class="li-text">'+texteCours(it)+'</span>'; col.appendChild(cartePdf); li.appendChild(col); }
+      else li.innerHTML='<span class="li-text">'+texteCours(it)+'</span>';
+      ul.appendChild(li);}); card.appendChild(ul); }
+    if(cartePdf && sousPuce < 0) card.appendChild(cartePdf);
     block.appendChild(title);
     block.appendChild(card);
     if(modifiable(ch)) onLongPress(block, ()=>editSection(type, ch, ch.sections.indexOf(sec)));
@@ -11854,6 +11966,73 @@ function pomoFeuille(maj){
   if(POMO.phase && POMO.arret == null && !POMO.finie) pomoBoucle();
   pomoMaj();
 })();
+
+// ── Tirer vers le bas, tout en haut d'une page, pour actualiser ──
+// On enregistre ce qui reste à envoyer, on recharge l'emploi du temps, puis la page :
+// la dernière version de l'app et des cours arrive, comme à une nouvelle ouverture.
+(function(){
+  const ptr = document.getElementById("ptr"); if(!ptr) return;
+  const SEUIL = 80, MAX = 120;
+  let y0 = null, d = 0, actif = false, charge = false;
+  const bloque = ()=>{
+    const ecran = document.documentElement.getAttribute("data-screen");
+    return charge || ["login","pick","welcome","session"].includes(ecran)
+      || document.querySelector(".sheet-overlay.open, #pick-sheet.open, #form-sheet.open, .img-voile, .pdf-voile, .somm-panneau.open");
+  };
+  // la page descend avec le doigt, la pastille apparaît dans l'espace libéré
+  const page = ()=>document.querySelector(".screen.active > .wrap, .screen.active > #psycho-inner, .screen.active > .content-scroll");
+  const poser = v=>{
+    const pg = page(); if(pg){ pg.classList.toggle("ptr-pousse", ptr.classList.contains("anim")); pg.style.transform = v ? "translateY(" + v + "px)" : ""; }
+    ptr.style.transform = "translate(-50%," + (v * 0.55 - 50) + "px)";
+    ptr.style.opacity = Math.min(1, v / 40);
+    const ok = d >= SEUIL;
+    ptr.classList.toggle("pret", ok);
+    ptr.querySelector(".ptr-txt").textContent = ok ? "Relâche pour actualiser" : "Tire pour actualiser";
+    ptr.querySelector(".ptr-rond svg").style.transform = "rotate(" + Math.round(d / SEUIL * 270) + "deg)";
+  };
+  const debut = y=>{ if(bloque() || window.scrollY > 0) return; y0 = y; d = 0; actif = false; ptr.classList.remove("anim"); };
+  const bouge = (y, ev)=>{
+    if(y0 === null) return;
+    const brut = y - y0;
+    if(brut <= 0 || window.scrollY > 0){ if(actif){ d = 0; poser(0); } return; }
+    actif = true;
+    d = Math.min(MAX, brut * 0.55);          // résistance : on tire, ça suit moins vite que le doigt
+    if(ev && ev.cancelable) ev.preventDefault();
+    poser(d);
+  };
+  const fin = async ()=>{
+    if(y0 === null) return;
+    y0 = null;
+    ptr.classList.add("anim");
+    if(!actif || d < SEUIL){ d = 0; poser(0); return; }
+    charge = true; haptic();
+    poser(56); ptr.style.opacity = 1;
+    ptr.classList.add("charge"); ptr.classList.remove("pret");
+    ptr.querySelector(".ptr-txt").textContent = "Actualisation…";
+    await actualiserTout();
+  };
+  window.actualiserTout = async ()=>{
+    try{ if(typeof pushState === "function" && syncOn) await Promise.race([pushState(true), new Promise(r=>setTimeout(r, 2500))]); }catch(e){}
+    try{ localStorage.removeItem(EDT_CACHE_KEY); }catch(e){}
+    const finir = msg=>{ charge = false; ptr.classList.remove("charge"); d = 0; poser(0); if(msg) toast(msg); };
+    // sur l'emploi du temps : on recharge juste les cours, sur place
+    if(document.documentElement.getAttribute("data-screen") === "edt"){
+      await Promise.all([ loadEDT(true), new Promise(r=>setTimeout(r, 600)) ]);
+      renderEDT(); renderTodayCourses(); finir(edtState === "ok" ? "Emploi du temps à jour." : "");
+      return;
+    }
+    if(window.PTR_DEMO){ setTimeout(()=>finir("À jour."), 1200); return; }
+    location.reload();
+  };
+  document.addEventListener("touchstart", e=>debut(e.touches[0].clientY), { passive:true });
+  document.addEventListener("touchmove",  e=>bouge(e.touches[0].clientY, e), { passive:false });
+  document.addEventListener("touchend", fin);
+  document.addEventListener("touchcancel", fin);
+  // à la souris aussi (ordinateur, démo)
+  document.addEventListener("mousedown", e=>{ if(e.button === 0 && !e.target.closest("button,a,input,textarea,select")) debut(e.clientY); });
+  document.addEventListener("mousemove", e=>{ if(y0 !== null && e.buttons) bouge(e.clientY, e); });
+  document.addEventListener("mouseup", fin);
+})();
 document.getElementById("fab-add").addEventListener("click",()=>{
   haptic();
   const a = FAB_ACTIONS[document.getElementById("fab-add").dataset.target];
@@ -12026,14 +12205,6 @@ document.querySelectorAll("#ev-types .ev-type").forEach(b=>{
 });
 
 // actualiser manuellement (force le rechargement, sans attendre les 6 h)
-document.getElementById("edt-refresh").addEventListener("click",async function(){
-  haptic();
-  this.classList.add("spinning");
-  // on garde l'animation au moins un instant, même si la réponse est immédiate
-  const [_] = await Promise.all([ loadEDT(true), new Promise(r=>setTimeout(r,600)) ]);
-  renderEDT(); renderTodayCourses();
-  this.classList.remove("spinning");
-});
 // balayage pour changer de semaine
 onSwipe(document.getElementById("screen-edt"), {
   onLeft:  ()=>{ haptic(); edtWeekOffset++; renderEDT(); },
@@ -12490,6 +12661,76 @@ document.getElementById("login-go").addEventListener("click",()=>{ haptic(); doL
 document.getElementById("login-input").addEventListener("keydown",e=>{ if(e.key==="Enter") document.getElementById("login-code").focus(); });
 document.getElementById("login-code").addEventListener("keydown",e=>{ if(e.key==="Enter") doLogin(); });
 
+
+// ── RESTER SUR LA MÊME PAGE QUAND ON ACTUALISE ──
+// La page ouverte est notée pour cet onglet (sessionStorage) : une actualisation y ramène,
+// au même chapitre et au même endroit. Une app rouverte de zéro repart de l'accueil.
+const OU_KEY = "revision_ou_v1";
+const PAGES_GARDEES = ["semestres","semchoice","subjects","split","edt","planning","classes","class","shared",
+  "devoirs","mesdevoirs","sites","search","index","auteurs","lexique","synthese","qcmchoix","session","psycho"];
+function memoriserPage(){
+  try{
+    const id = document.documentElement.getAttribute("data-screen");
+    if(!PAGES_GARDEES.includes(id)){ sessionStorage.removeItem(OU_KEY); return; }
+    sessionStorage.setItem(OU_KEY, JSON.stringify({ id, subj: curSubj ? curSubj.id : null, tab: curTab,
+      cm: curCmIdx, td: curTdIdx, sem: curSemestre, y: Math.round(window.scrollY), t: Date.now() }));
+  }catch(e){}
+}
+window.addEventListener("pagehide", memoriserPage);
+window.addEventListener("beforeunload", memoriserPage);
+document.addEventListener("visibilitychange", ()=>{ if(document.hidden) memoriserPage(); });
+let PAGE_RESTAUREE = null;
+function lirePageGardee(){
+  let o = null; try{ o = JSON.parse(sessionStorage.getItem(OU_KEY) || "null"); }catch(e){}
+  if(!o || !o.id || !PAGES_GARDEES.includes(o.id)) return null;
+  if(Date.now() - (o.t || 0) > 12 * 3600e3) return null;   // une vieille trace ne compte plus
+  return o;
+}
+// rouvre la page notée ; renvoie faux si ce n'est pas possible (l'appelant montre l'accueil)
+function restaurerPage(o){
+  if(!o) return false;
+  try{
+    if(o.sem) curSemestre = o.sem;
+    const sj = o.subj ? SUBJECTS.find(s=>s.id === o.subj) : null;
+    const matiere = ()=>{
+      if(!sj) return false;
+      openSubject(sj.id);
+      const tab = o.tab === 1 ? 1 : 0;
+      const n = (sj[tab ? "td" : "cm"] || []).length;
+      const i = Math.max(0, Math.min(tab ? (o.td || 0) : (o.cm || 0), n - 1));
+      if(tab) curTdIdx = i; else curCmIdx = i;
+      setTab(tab);
+      return true;
+    };
+    let ok = true;
+    switch(o.id){
+      case "semestres": renderSemestres(); showScreen("semestres"); break;
+      case "semchoice": renderSemestres(); showScreen("semchoice"); break;
+      case "subjects": renderSubjectCards(curSemestre); showScreen("subjects"); break;
+      case "split": case "qcmchoix": case "session": ok = matiere(); break;
+      case "devoirs": ok = matiere(); if(ok) renderDevoirs(); break;
+      case "auteurs": ok = matiere(); if(ok) renderAuteurs(); break;
+      case "lexique": ok = matiere(); if(ok) ouvrirLexique(); break;
+      case "synthese": ok = matiere(); if(ok) ouvrirSynthese(); break;
+      case "edt": case "planning": renderSemestres(); showScreen("semestres"); openEDT(); break;
+      case "classes": case "class": case "shared": renderSemestres(); showScreen("semestres"); openClasses(); break;
+      case "mesdevoirs": renderKnowBlock(); showScreen("mesdevoirs"); break;
+      case "sites": openSitesSheet(); break;
+      case "search": case "index": openSearch(); break;
+      case "psycho": renderPsycho(); break;
+      default: ok = false;
+    }
+    if(!ok) return false;
+    PAGE_RESTAUREE = o;
+    // on revient au même endroit dans la page, une fois le contenu posé
+    if(o.y > 0 && !["edt","planning","classes","class","shared"].includes(o.id)){
+      const y = o.y;
+      [60, 350, 900].forEach(ms=>setTimeout(()=>{ if(!DEJA_TOUCHE) window.scrollTo(0, y); }, ms));
+    }
+    return true;
+  }catch(e){ return false; }
+}
+
 // start
 (async function(){
   let p=null; try{ p = localStorage.getItem(PSEUDO_KEY); }catch(e){}
@@ -12510,7 +12751,9 @@ document.getElementById("login-code").addEventListener("keydown",e=>{ if(e.key==
   updatePersonalText();   // pseudo connu dès le départ
   applyContent(null);     // évite d'afficher le contenu de quelqu'un d'autre le temps du chargement
   renderSemestres();
-  showScreen(saved ? "welcome" : "pick");
+  // une actualisation ramène sur la page où l'on était
+  const garde = saved ? lirePageGardee() : null;
+  if(!restaurerPage(garde)) showScreen(saved ? "welcome" : "pick");
 
   // puis, en arrière-plan, on récupère la version du serveur si elle est plus récente
   if(supaReady()){
@@ -12518,7 +12761,16 @@ document.getElementById("login-code").addEventListener("keydown",e=>{ if(e.key==
       const out = await api("login");
       syncOn = true;
       if(out.nouveau){ await pushState(); }   // pseudo pas encore sur le serveur : on l'y met
-      else { applyRemote(out.row); renderSemestres(); }
+      else {
+        applyRemote(out.row); renderSemestres();
+        // tes ajouts et retouches viennent d'arriver : la page rouverte est redessinée avec,
+        // ou ouverte maintenant si elle n'existait que dans tes ajouts
+        const garde = lirePageGardee();
+        if(garde && !DEJA_TOUCHE){
+          const ici = document.documentElement.getAttribute("data-screen");
+          if(PAGE_RESTAUREE ? ici === PAGE_RESTAUREE.id : ici === "welcome") restaurerPage(garde);
+        }
+      }
       setSyncBadge("ok");
     }catch(e){
       syncOn = false; setSyncBadge("off");
