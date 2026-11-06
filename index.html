@@ -1499,6 +1499,11 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .clair-minute .recap-label{margin-bottom:8px;}
 .card-body.clair-txt,.clair-txt{white-space:normal;font-size:calc(15px * var(--zt,1));line-height:1.7;color:var(--text);}
 .clair-txt p+p{margin-top:12px;}
+.clair-txt ul{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:7px;}
+.clair-txt p+ul{margin-top:8px;}
+.clair-txt ul+p,.clair-txt ul+ul{margin-top:14px;}
+.clair-txt li{position:relative;padding-left:18px;}
+.clair-txt li::before{content:"";position:absolute;left:3px;top:calc(.85em - 3px);width:6px;height:6px;border-radius:50%;background:var(--accent);}
 .clair-txt b{color:var(--accent);font-weight:600;}
 .clair-sigles{margin-top:16px;border-top:1px solid var(--border);}
 .clair-sig{display:grid;grid-template-columns:minmax(88px,38%) 1fr;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);font-size:calc(14px * var(--zt,1));line-height:1.5;}
@@ -5170,13 +5175,13 @@ function texteChapitre(subj, type, ch, avecQcm){
   l.push("");
   // le chapitre tel qu'il s'affiche : la version en clair quand elle existe
   const cl = ch.clair && (ch.clair.sections||[]).some(Boolean) ? ch.clair : null;
-  if(cl && cl.minute){ l.push("## En 1 minute"); l.push(texteBrut(String(cl.minute).replace(/<\/p>/g, "</p>\n"))); l.push(""); }
+  if(cl && cl.minute){ l.push("## En 1 minute"); l.push(texteBrut(String(cl.minute).replace(/<\/p>/g, "</p>\n").replace(/<li>/g, "<li>• ").replace(/<\/li>/g, "</li>\n"))); l.push(""); }
   (ch.sections||[]).forEach((sec,si)=>{
     l.push("## " + texteBrut(sec.title));
     const cs = cl ? cl.sections[si] : null;
     if(cs){
       const t = typeof cs === "string" ? cs : (cs.b || cs.body || "");
-      l.push(texteBrut(String(t).replace(/<\/p>/g, "</p>\n")));
+      l.push(texteBrut(String(t).replace(/<\/p>/g, "</p>\n").replace(/<li>/g, "<li>• ").replace(/<\/li>/g, "</li>\n")));
       (cs.sig || cs.sigles || []).forEach(([a,b])=>l.push("• " + texteBrut(a) + " : " + texteBrut(b)));
       if(cs.mot) l.push("À retenir : " + texteBrut(cs.mot));
     } else {
