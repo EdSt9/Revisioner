@@ -1,7 +1,8 @@
 // Service worker de Révision : l'app s'ouvre tout de suite, même sans réseau.
 // Changer le numéro de version à chaque changement de ce fichier.
-const CACHE = "revision-v11";
+const CACHE = "revision-v16";
 const POLICES = "revision-polices-v1";
+const LIBS = "revision-libs-v1";   // le lecteur de PDF, gardé pour lire sans réseau
 const PRECACHE = ["./", "./index.html", "./data.js"];
 
 self.addEventListener("install", e=>{
@@ -11,7 +12,7 @@ self.addEventListener("install", e=>{
 self.addEventListener("activate", e=>{
   e.waitUntil(
     caches.keys()
-      .then(noms=>Promise.all(noms.filter(n=>n !== CACHE && n !== POLICES).map(n=>caches.delete(n))))
+      .then(noms=>Promise.all(noms.filter(n=>n !== CACHE && n !== POLICES && n !== LIBS).map(n=>caches.delete(n))))
       .then(()=>self.clients.claim())
   );
 });
@@ -57,8 +58,8 @@ function reseauDabord(req){
 }
 
 // Polices Google : la copie gardée tout de suite, mise à jour en arrière-plan.
-function polices(req){
-  return caches.open(POLICES).then(cache=>cache.match(req).then(garde=>{
+function polices(req, nom){
+  return caches.open(nom || POLICES).then(cache=>cache.match(req).then(garde=>{
     const reseau = fetch(req).then(rep=>{
       if(rep && (rep.ok || rep.type === "opaque")) cache.put(req, rep.clone());
       return rep;
@@ -73,6 +74,10 @@ self.addEventListener("fetch", e=>{
   const url = new URL(req.url);
   if(url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com"){
     e.respondWith(polices(req));
+    return;
+  }
+  if(url.hostname === "cdnjs.cloudflare.com" && url.pathname.includes("/pdf.js/")){
+    e.respondWith(polices(req, LIBS));
     return;
   }
   // le reste des autres sites (Supabase, emploi du temps) passe sans toucher au cache
