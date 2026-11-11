@@ -1425,6 +1425,21 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
   padding:14px;margin-top:14px;cursor:pointer;
   font-family:var(--font-text);font-size:14px;color:var(--text-soft);}
 .add-inline:active{background:var(--accent-soft);}
+/* plus de pointillés : les ajouts passent par le +, le reste devient un bouton plein et discret */
+.add-inline{border:1px solid var(--border);background:var(--surface);}
+.colle-presse{border-style:solid !important;background:var(--surface);}
+.head-row .head-plus{margin-left:auto;color:var(--accent);}
+.head-row .head-plus:not([hidden]) + .head-search{margin-left:0;}
+#screen-qcmchoix .qc-plus{position:absolute;right:18px;top:calc(env(safe-area-inset-top) + 16px);width:38px;height:38px;border-radius:50%;border:0;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;z-index:2;}
+#screen-qcmchoix .qc-plus[hidden]{display:none;}
+#screen-qcmchoix .qc-plus svg{width:20px;height:20px;}
+#pick-title{position:relative;}
+.pick-plus{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;border:0;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;cursor:pointer;}
+.pick-plus svg{width:19px;height:19px;}
+.mn-ouvrir{display:none !important;}
+.page-head .head-row>.back-btn+[data-entete][hidden]+[data-entete]{margin-left:auto;}
+.plus-entete{color:var(--accent);}
+.head-row .head-plus[hidden],.plus-entete[hidden],.pick-plus[hidden]{display:none !important;}
 .sheet-title{font-family:var(--font-display);font-weight:500;font-size:17px;color:var(--text);text-align:center;margin-bottom:14px;flex-shrink:0;}
 .sheet-list{overflow-y:auto;padding:0 14px;-webkit-overflow-scrolling:touch;}
 .sheet-ue{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-mute);margin:14px 6px 8px;}
@@ -2181,6 +2196,7 @@ html.calme .rise{animation:none!important;}
     <div class="head-row">
       <button class="back-btn" id="btn-split-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Matières</button>
       <button class="subj-chip" id="split-chip" hidden></button>
+      <button class="head-search head-plus" id="btn-split-add" type="button" aria-label="Ajouter" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button>
       <button class="head-search" id="btn-split-search" type="button" aria-label="Rechercher dans mes cours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
       <button class="chap-pick type-pick" id="type-pick" type="button"></button>
     </div>
@@ -2324,6 +2340,9 @@ html.calme .rise{animation:none!important;}
     <button class="back-btn rise" id="btn-edt-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
     <div class="edt-titlerow rise" style="animation-delay:.03s">
       <h1 class="page-title" style="margin:0">Emploi du temps</h1>
+      <button class="icon-btn" data-entete id="edt-add" aria-label="Ajouter un cours ou un devoir">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+      </button>
       <button class="icon-btn" data-entete id="edt-link" aria-label="Lien de l'emploi du temps">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>
       </button>
@@ -2495,6 +2514,7 @@ html.calme .rise{animation:none!important;}
 <!-- CHOIX DU QCM -->
 <div id="screen-qcmchoix" class="screen">
   <div class="wrap">
+    <button class="head-search qc-plus rise" id="btn-qcmchoix-add" type="button" aria-label="Ajouter" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button>
     <button class="back-btn rise" id="btn-qcmchoix-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Réviser</button>
     <div class="page-eyebrow rise" id="qcmchoix-eyebrow" style="animation-delay:.03s"></div>
     <h1 class="page-title rise" id="qcmchoix-titre" style="animation-delay:.06s">QCM</h1>
@@ -3179,6 +3199,15 @@ let SHARED_CACHE = {};    // item_id → payload, rempli à l'ouverture
 let SUB_ITEMS    = {};    // "classe|matière" → chapitres, pour les matières suivies
 
 // Picker générique : une liste de choix dans une feuille qui monte.
+// le + dans le titre d'une feuille : ajouter quelque chose à la liste affichée
+function plusFeuille(label, fn){
+  const t = document.getElementById("pick-title");
+  t.querySelectorAll(".pick-plus").forEach(n=>n.remove());
+  const b = el("button","pick-plus"); b.type = "button"; b.setAttribute("aria-label", label);
+  b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>';
+  b.addEventListener("click",()=>{ haptic(); closePicker(); setTimeout(fn, 320); });
+  t.appendChild(b);
+}
 function openPicker(title, options, onPick){
   document.querySelectorAll("#pick-sheet .pick-actions").forEach(n=>n.remove());
   const box = document.getElementById("pick-list");
@@ -4304,11 +4333,7 @@ function choisirCoursDevoir(c){
   feuillePartage("Pour quel cours ?", "Les cours où tu as déjà noté quelque chose sont prêts. Touche-en un pour le partager.", groupes);
   // un devoir pour un jour précis, qui ne dépend d'aucun cours
   const box = document.getElementById("pick-list");
-  const lim = el("button","add-inline cls-publier fp-echeance"); lim.type = "button";
-  lim.textContent = "+  Un devoir sans cours, pour un jour précis";
-  lim.addEventListener("click",()=>{ haptic(); closePicker(); setTimeout(()=>nouvelleEcheance({ partager:c.id }), 320); });
-  const lg = box.querySelector(".pick-legend");
-  if(lg) lg.after(lim); else box.prepend(lim);
+  plusFeuille("Un devoir sans cours, pour un jour précis", ()=>nouvelleEcheance({ partager:c.id }));
   // comme « Tout publier » pour les cours : tous les devoirs prêts d'un coup, tous jours confondus
   if(tousPrets.length){
     const h = el("div","fp-tete fp-tous");
@@ -6088,7 +6113,7 @@ function addSection(type, ch){
 
 // Le « + » flottant n'apparaît que là où il veut dire quelque chose.
 // Une seule logique dans toute l'app : quand une page sert à ajouter quelque chose,
-// c'est le « + » flottant en bas à droite qui l'ajoute.
+// c'est le « + » de la barre du haut qui l'ajoute (le bouton flottant n'est plus affiché).
 let CLS_GERE = false;   // créateur ou adjoint de la classe ouverte
 const FAB_ACTIONS = {
   semchoice:  { label:"Ajouter un semestre", fn:()=>addSemestre() },
@@ -6107,7 +6132,8 @@ function refreshFab(id){
   if(!fab) return;
   const a = FAB_ACTIONS[id];
   const ok = canEdit() && !!a && (!a.si || a.si());
-  fab.classList.toggle("show", ok);
+  fab.classList.remove("show");
+  document.querySelectorAll(".plus-entete").forEach(b=>{ b.hidden = !(ok && b.closest("#screen-" + id)); });
   fab.dataset.target = id;
   if(a) fab.setAttribute("aria-label", a.label);
 }
@@ -6138,6 +6164,16 @@ function poserEntete(scr){
   // les actions de la page (lien, actualiser, réglages) vont à droite de la barre
   wrap.querySelectorAll("[data-entete]").forEach(b=>row.appendChild(b));
 }
+// le « + » de chaque page monte dans la barre du haut, à côté des autres actions
+Object.keys(FAB_ACTIONS).forEach(id=>{
+  const w = document.querySelector("#screen-" + id + " > .wrap"); if(!w) return;
+  const b = el("button","icon-btn plus-entete"); b.type = "button"; b.hidden = true;
+  b.setAttribute("data-entete",""); b.setAttribute("aria-label", FAB_ACTIONS[id].label);
+  b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>';
+  b.addEventListener("click",()=>{ haptic(); FAB_ACTIONS[id].fn(); });
+  const premier = w.querySelector("[data-entete]");
+  if(premier) premier.before(b); else w.appendChild(b);
+});
 document.querySelectorAll(".screen").forEach(poserEntete);
 // le bouton mémo est « fixed » : il sort du contenu qui glisse, sinon il glisserait avec lui
 (function(){ const m = document.getElementById("btn-memo"), sc = document.getElementById("screen-semestres"); if(m && sc) sc.appendChild(m); })();
@@ -7599,10 +7635,6 @@ function renderEDT(){
     evs.forEach(e=>day.appendChild(courseCard(e)));
     body.appendChild(day);
   }
-  const ajout = el("button","add-inline edt-echeance"); ajout.type = "button";
-  ajout.textContent = "+  Ajouter un devoir sans cours";
-  ajout.addEventListener("click",()=>{ haptic(); nouvelleEcheance(); });
-  if(total) body.appendChild(ajout);
   if(!total){
     const box = el("div");
     const now = new Date();
@@ -7674,11 +7706,7 @@ function listeChapitres(type, chapters, chIdx){
     box.appendChild(r);
   });
   if(ajoutChapitrePossible()){
-    const add = el("button","add-inline chap-ajout");
-    add.type = "button";
-    add.textContent = type === "cm" ? "+  Ajouter un CM" : "+  Ajouter un TD";
-    add.addEventListener("click",()=>{ haptic(); closePicker(); setTimeout(()=>addChapitre(type), 320); });
-    box.appendChild(add);
+    plusFeuille(type === "cm" ? "Ajouter un CM" : "Ajouter un TD", ()=>addChapitre(type));
   }
   document.getElementById("pick-sheet").classList.add("open");
 }
@@ -8331,7 +8359,7 @@ function renderKnowBlock(){
   const alerts = pendingAlerts(true, true);
   majTuileDevoirs(alerts);
   if(!alerts.length){
-    box.innerHTML = vide("calendrier", "Rien à venir", "Pose un devoir, un contrôle ou une note sur un cours de ton emploi du temps, ou touche le + en bas. Il apparaîtra ici.");
+    box.innerHTML = vide("calendrier", "Rien à venir", "Pose un devoir, un contrôle ou une note sur un cours de ton emploi du temps, ou touche le + en haut. Il apparaîtra ici.");
     return;
   }
   const now = new Date();
@@ -8754,7 +8782,7 @@ function renderSemestres(){
   // les semestres ne sont plus figés à 5 et 6 : chacun crée les siens
   const sems = [...new Set(Object.values(UES).map(u=>u.sem))].filter(n=>n).sort((a,b)=>a-b);
   if(!sems.length && canEdit()){
-    wrap.innerHTML = vide("semestres", "Aucun semestre pour l'instant", "Touche le + en bas pour créer ton premier semestre. Tu y rangeras ensuite tes matières.");
+    wrap.innerHTML = vide("semestres", "Aucun semestre pour l'instant", "Touche le + en haut pour créer ton premier semestre. Tu y rangeras ensuite tes matières.");
   }
   { const sg = document.getElementById("vue-sem"); if(sg) sg.hidden = !sems.length; }
   const tuiles = [];
@@ -9142,7 +9170,7 @@ function renderSubjectCards(sem){
     : aJour === avecCours.length ? "Tout est à jour, bravo !"
     : aJour + " matière" + (aJour > 1 ? "s" : "") + " à jour sur " + avecCours.length;
   ov.hidden = !list.length;
-  if(!list.length && canEdit()) wrap.innerHTML = vide("cm", "Aucune matière pour l'instant", "Touche le + en bas pour ajouter ta première matière.");
+  if(!list.length && canEdit()) wrap.innerHTML = vide("cm", "Aucune matière pour l'instant", "Touche le + en haut pour ajouter ta première matière.");
   ov.innerHTML=`
     <div class="overview-ring"><svg width="44" height="44"><circle class="overview-ring-bg" cx="22" cy="22" r="18"/><circle class="overview-ring-fill" cx="22" cy="22" r="18" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/></svg><div class="overview-ring-num">${pct}%</div></div>
     <div class="overview-text"><div class="overview-title">${msg}</div><div class="overview-sub">${list.length} matière${list.length > 1 ? "s" : ""}${list.length > avecCours.length ? ", dont " + (list.length - avecCours.length) + " à remplir" : ""} · ${ueCount} UE</div></div>`;
@@ -9577,6 +9605,40 @@ function listeTypes(){
   }
   document.getElementById("pick-sheet").classList.add("open");
 }
+// le + de l'en-tête d'une matière : ce qu'on peut ajouter là où on est
+function optionsAjout(){
+  if(curTab > 1 || !curSubj) return [];
+  const type = curTab === 0 ? "cm" : "td";
+  const chapters = type === "cm" ? (curSubj.cm||[]) : (curSubj.td||[]);
+  const ch = chapters[type === "cm" ? curCmIdx : curTdIdx];
+  const o = [];
+  if(ajoutChapitrePossible()) o.push({ label: type === "cm" ? "Un CM" : "Un TD", sub:"Un nouveau chapitre dans cette matière", value:"chap" });
+  if(ch && modifiable(ch) && !(isCiva() && !ch._own)){
+    o.push({ label:"Une section", sub:"Écrire une section dans ce chapitre", value:"sec" });
+    o.push({ label:"Du texte collé", sub:"Un cours copié ailleurs, découpé en sections", value:"coller" });
+  }
+  if(ch) o.push({ label:"Une note", sub:"Une remarque perso sur ce chapitre", value:"note" });
+  return o;
+}
+function majPlusMatiere(){ const b = document.getElementById("btn-split-add"); if(b) b.hidden = !optionsAjout().length; }
+document.addEventListener("click", e=>{
+  if(!e.target.closest("#btn-split-add")) return;
+  haptic();
+  const type = curTab === 0 ? "cm" : "td";
+  const chapters = type === "cm" ? (curSubj.cm||[]) : (curSubj.td||[]);
+  const ch = chapters[type === "cm" ? curCmIdx : curTdIdx];
+  openPicker("Ajouter", optionsAjout(), v=>setTimeout(()=>{
+    if(v === "chap") addChapitre(type);
+    else if(v === "sec") addSection(type, ch);
+    else if(v === "coller") collerCours(type, ch);
+    else if(v === "note"){
+      const pane = document.getElementById(type === "cm" ? "pane-0" : "pane-1");
+      const b = pane.querySelector(".mn-ouvrir");
+      if(b){ b.click(); }
+      const n = pane.querySelector(".mes-notes"); if(n) n.scrollIntoView({ behavior:"smooth", block:"center" });
+    }
+  }, 320));
+});
 function setTab(i){
   fermerRecherchePage();
   curTab=i;
@@ -9588,6 +9650,7 @@ function setTab(i){
   if(i===0) renderCoursePane("cm");
   else if(i===1) renderCoursePane("td");
   else renderTrainPane();
+  majPlusMatiere();
   const pane=document.getElementById("pane-"+i);
   if(pane){ pane.style.animation="none"; void pane.offsetWidth; pane.style.animation=""; }
   window.scrollTo(0,0);
@@ -9599,13 +9662,8 @@ function renderCoursePane(type){
   pane.innerHTML="";
   if(!chapters.length){
     pane.innerHTML = vide(type === "cm" ? "cm" : "td", type === "cm" ? "Aucun CM pour l'instant" : "Aucun TD pour l'instant",
-      ajoutChapitrePossible() ? "Ajoute ton premier " + (type === "cm" ? "CM" : "TD") + " ci-dessous. Les " + (type === "cm" ? "TD" : "CM") + " sont dans le menu en haut à droite." : "Ils apparaîtront ici dès qu'ils seront ajoutés.");
-    if(ajoutChapitrePossible()){
-      const add=el("button","add-inline");
-      add.textContent = "+  Ajouter un chapitre";
-      add.addEventListener("click",()=>{ haptic(); addChapitre(type); });
-      pane.appendChild(add);
-    }
+      ajoutChapitrePossible() ? "Ajoute ton premier " + (type === "cm" ? "CM" : "TD") + " avec le + en haut. Les " + (type === "cm" ? "TD" : "CM") + " sont dans le menu en haut à droite." : "Ils apparaîtront ici dès qu'ils seront ajoutés.");
+    majPlusMatiere();
     return;
   }
   const chIdx = type==="cm"?curCmIdx:curTdIdx;
@@ -9774,7 +9832,7 @@ function renderCoursePane(type){
     const ok = p.ok === p.total;
     const q = etape(num++, ok ? "fait" : "");
     q.innerHTML = `<span class="fin-num">${ok ? COCHE_SVG : 2}</span><span class="fin-txt"><span class="fin-nom">Faire le QCM de ${mot}</span>
-      <span class="fin-sub">${ok ? "Validé" : p.ok ? p.ok + " questions validées sur " + p.total : p.total + " questions"}${!ok && nbSeries(p.total) > 1 ? " · en " + nbSeries(p.total) + " séries" : ""}</span></span><span class="fin-fl">${IC_CHEV_DROITE}</span>`;
+      <span class="fin-sub">${ok ? "Validé" : p.ok ? p.ok + (p.ok > 1 ? " questions validées sur " : " question validée sur ") + p.total : p.total + (p.total > 1 ? " questions" : " question")}${!ok && nbSeries(p.total) > 1 ? " · en " + nbSeries(p.total) + " séries" : ""}</span></span><span class="fin-fl">${IC_CHEV_DROITE}</span>`;
     q.addEventListener("click", ()=>{ haptic(); lancerQCMChapitre(ch.label); });
   } else if(peutCreer(curSubj)){
     const q = etape(num++, "");
@@ -9803,17 +9861,8 @@ function renderCoursePane(type){
   }
   pane.appendChild(fin);
   // ajouter une section : pour ceux qui écrivent leurs cours. Les miens viennent de data.js.
-  if(peutEcrire){
-    const row = el("div","ajout-row");
-    const addSec=el("button","add-inline");
-    addSec.textContent = "+  Écrire une section";
-    addSec.addEventListener("click",()=>{ haptic(); addSection(type, ch); });
-    const coller = el("button","add-inline");
-    coller.textContent = "+  Coller du texte";
-    coller.addEventListener("click",()=>{ haptic(); collerCours(type, ch); });
-    row.appendChild(addSec); row.appendChild(coller);
-    pane.appendChild(row);
-  }
+  // ajouter une section, coller du texte, une note : tout passe par le « + » en haut
+  majPlusMatiere();
 }
 // ══════════════════════════════════════════════════
 // RÉVISER PAR CHAPITRE
@@ -10202,6 +10251,7 @@ const CHOIX_MODES = {
   oq: { titre:"Questions ouvertes", grand:"Toutes les questions", unite:"questions", valide:"Une réponse que tu juges réussie est validée. Chaque session reprend d'abord celles qui ne le sont pas encore." }
 };
 function renderChoix(m){
+  document.getElementById("btn-qcmchoix-add").hidden = true;
   const cfg = CHOIX_MODES[m] || CHOIX_MODES.qcm;
   document.getElementById("qcmchoix-eyebrow").textContent = curSubj.title;
   document.getElementById("qcmchoix-titre").textContent = cfg.titre;
@@ -10277,18 +10327,17 @@ function renderChoix(m){
     }
     const apres = ()=>renderChoix(m);
     const row = el("div","ajout-row exo-row");
-    const plus = el("button","add-inline"); plus.type = "button";
-    plus.textContent = m === "qcm" ? "+  Écrire une question" : "+  Écrire une carte";
-    plus.addEventListener("click",()=>{ haptic(); formExo(curSubj, m, null, null, apres); });
-    row.appendChild(plus);
+    const qp = document.getElementById("btn-qcmchoix-add");
+    qp.hidden = false;
+    qp.onclick = ()=>{ haptic(); formExo(curSubj, m, null, null, apres); };
     const n = mesExos(curSubj, m).length;
     if(n){
       const mes = el("button","add-inline"); mes.type = "button";
       mes.textContent = (m === "qcm" ? "Mes questions (" : "Mes cartes (") + n + ")";
       mes.addEventListener("click",()=>{ haptic(); listeMesExos(curSubj, m, apres); });
       row.appendChild(mes);
-    } else row.classList.add("seul");
-    box.appendChild(row);
+      box.appendChild(row);
+    }
   }
   // les exercices sans chapitre (ajoutés à la main, partagés) restent dans « tout d'un coup »
   showScreen("qcmchoix");
@@ -10509,7 +10558,9 @@ function editPlanningAB(){
   });
 }
 
-function editCoursPlanning(id){
+function editCoursPlanning(id, opts){
+  // ajouté depuis l'emploi du temps : on y reste, au lieu d'ouvrir la page du planning
+  const apres = ()=>{ if(opts && opts.depuisEdt) renderEDT(); else renderPlanning(); };
   const p = planning();
   const c = id ? p.cours.find(x=>x.id === id) : null;
   const champs = [
@@ -10532,7 +10583,7 @@ function editCoursPlanning(id){
                    titre:v.titre, salle:v.salle, semaine:p.ab ? (v.semaine||"AB") : "AB" };
     if(c) Object.assign(c, data);
     else  p.cours.push(Object.assign({ id:newId() }, data));
-    saveContent(); reloadEDT(); renderPlanning();
+    saveContent(); reloadEDT(); apres();
   }, c ? ()=>{
     p.cours = p.cours.filter(x=>x.id !== id);
     saveContent(); reloadEDT(); renderPlanning();
@@ -12036,6 +12087,14 @@ document.getElementById("btn-split-back").addEventListener("click",()=>{ renderS
 document.getElementById("split-chip").addEventListener("click",openSubjSheet);
 document.getElementById("subj-sheet").addEventListener("click",e=>{ if(e.target.id==="subj-sheet") closeSubjSheet(); });
 document.getElementById("edt-link").addEventListener("click",()=>{ haptic(); openCalSheet(); });
+// le « + » de l'emploi du temps : un devoir pour un jour précis, ou un cours qui revient chaque semaine
+document.getElementById("edt-add").addEventListener("click",()=>{
+  haptic();
+  openPicker("Ajouter", [
+    { label:"Un devoir", sub:"Pour un jour précis, même sans cours ce jour-là", value:"devoir" },
+    { label:"Un cours", sub:"Un créneau qui revient chaque semaine", value:"cours" }
+  ], v=>setTimeout(()=>{ if(v === "devoir") nouvelleEcheance(); else editCoursPlanning(null, { depuisEdt:true }); }, 320));
+});
 document.getElementById("cal-close").addEventListener("click",()=>{ haptic(); closeCalSheet(); });
 document.getElementById("cal-add").addEventListener("click",()=>{ haptic(); editCalendar(null); });
 document.getElementById("cal-sheet").addEventListener("click",e=>{ if(e.target.id==="cal-sheet") closeCalSheet(); });
