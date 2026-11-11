@@ -2196,7 +2196,6 @@ html.calme .rise{animation:none!important;}
     <div class="head-row">
       <button class="back-btn" id="btn-split-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Matières</button>
       <button class="subj-chip" id="split-chip" hidden></button>
-      <button class="head-search head-plus" id="btn-split-add" type="button" aria-label="Ajouter" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button>
       <button class="head-search" id="btn-split-search" type="button" aria-label="Rechercher dans mes cours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
       <button class="chap-pick type-pick" id="type-pick" type="button"></button>
     </div>
@@ -9495,6 +9494,7 @@ function listeSections(){
 // ── Icônes au trait de l'app (même style que la barre du haut) ──
 // icônes au trait, même style que celles des barres (24×24, trait 2)
 const P = {
+  plus:'<path d="M12 5v14"/><path d="M5 12h14"/>',
   cm:'<path d="M2 5.5C4 4.5 7 4.5 12 6.5c5-2 8-2 10-1V19c-2-1-5-1-10 1-5-2-8-2-10-1z"/><path d="M12 6.5V20"/>',
   td:'<rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 3h6v3H9z"/><path d="M8.5 11h7M8.5 15h5"/>',
   entrainer:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/>',
@@ -9603,9 +9603,22 @@ function listeTypes(){
     if(nLex) g.appendChild(ligne("lexique", "Lexique", nLex + " terme" + (nLex > 1 ? "s" : ""), ()=>{ closePicker(); setTimeout(ouvrirLexique, 250); }));
     box.appendChild(g);
   }
+  // ce qu'on peut ajouter là où on est : plus de + dans l'en-tête d'une matière, tout passe par ce menu
+  const ajouts = optionsAjout();
+  if(ajouts.length){
+    const lab = el("div","mt-lab"); lab.textContent = "Ajouter"; box.appendChild(lab);
+    const g = el("div","mt-groupe");
+    ajouts.forEach(o=>{
+      const r = el("button","mt-l"); r.type = "button";
+      r.innerHTML = ICO("plus") + `<span class="mt-n">${esc(o.label)}</span><span class="mt-chev">${IC_CHEV_DROITE}</span>`;
+      r.addEventListener("click",()=>{ haptic(); closePicker(); setTimeout(()=>lancerAjout(o.value), 320); });
+      g.appendChild(r);
+    });
+    box.appendChild(g);
+  }
   document.getElementById("pick-sheet").classList.add("open");
 }
-// le + de l'en-tête d'une matière : ce qu'on peut ajouter là où on est
+// ce qu'on peut ajouter dans la matière, là où on est (menu TD ⌄ / CM ⌄)
 function optionsAjout(){
   if(curTab > 1 || !curSubj) return [];
   const type = curTab === 0 ? "cm" : "td";
@@ -9620,25 +9633,20 @@ function optionsAjout(){
   if(ch) o.push({ label:"Une note", sub:"Une remarque perso sur ce chapitre", value:"note" });
   return o;
 }
-function majPlusMatiere(){ const b = document.getElementById("btn-split-add"); if(b) b.hidden = !optionsAjout().length; }
-document.addEventListener("click", e=>{
-  if(!e.target.closest("#btn-split-add")) return;
-  haptic();
+function lancerAjout(v){
   const type = curTab === 0 ? "cm" : "td";
   const chapters = type === "cm" ? (curSubj.cm||[]) : (curSubj.td||[]);
   const ch = chapters[type === "cm" ? curCmIdx : curTdIdx];
-  openPicker("Ajouter", optionsAjout(), v=>setTimeout(()=>{
-    if(v === "chap") addChapitre(type);
-    else if(v === "sec") addSection(type, ch);
-    else if(v === "coller") collerCours(type, ch);
-    else if(v === "note"){
-      const pane = document.getElementById(type === "cm" ? "pane-0" : "pane-1");
-      const b = pane.querySelector(".mn-ouvrir");
-      if(b){ b.click(); }
-      const n = pane.querySelector(".mes-notes"); if(n) n.scrollIntoView({ behavior:"smooth", block:"center" });
-    }
-  }, 320));
-});
+  if(v === "chap") addChapitre(type);
+  else if(v === "sec") addSection(type, ch);
+  else if(v === "coller") collerCours(type, ch);
+  else if(v === "note"){
+    const pane = document.getElementById(type === "cm" ? "pane-0" : "pane-1");
+    const b = pane.querySelector(".mn-ouvrir");
+    if(b){ b.click(); }
+    const n = pane.querySelector(".mes-notes"); if(n) n.scrollIntoView({ behavior:"smooth", block:"center" });
+  }
+}
 function setTab(i){
   fermerRecherchePage();
   curTab=i;
@@ -9650,7 +9658,7 @@ function setTab(i){
   if(i===0) renderCoursePane("cm");
   else if(i===1) renderCoursePane("td");
   else renderTrainPane();
-  majPlusMatiere();
+
   const pane=document.getElementById("pane-"+i);
   if(pane){ pane.style.animation="none"; void pane.offsetWidth; pane.style.animation=""; }
   window.scrollTo(0,0);
@@ -9663,7 +9671,7 @@ function renderCoursePane(type){
   if(!chapters.length){
     pane.innerHTML = vide(type === "cm" ? "cm" : "td", type === "cm" ? "Aucun CM pour l'instant" : "Aucun TD pour l'instant",
       ajoutChapitrePossible() ? "Ajoute ton premier " + (type === "cm" ? "CM" : "TD") + " avec le + en haut. Les " + (type === "cm" ? "TD" : "CM") + " sont dans le menu en haut à droite." : "Ils apparaîtront ici dès qu'ils seront ajoutés.");
-    majPlusMatiere();
+
     return;
   }
   const chIdx = type==="cm"?curCmIdx:curTdIdx;
@@ -9862,7 +9870,7 @@ function renderCoursePane(type){
   pane.appendChild(fin);
   // ajouter une section : pour ceux qui écrivent leurs cours. Les miens viennent de data.js.
   // ajouter une section, coller du texte, une note : tout passe par le « + » en haut
-  majPlusMatiere();
+
 }
 // ══════════════════════════════════════════════════
 // RÉVISER PAR CHAPITRE
