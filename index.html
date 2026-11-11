@@ -931,7 +931,9 @@ button.sem-groupe{width:100%;background:none;border:0;padding:0;cursor:pointer;f
 .cls-pill b{color:var(--accent);letter-spacing:.12em;font-weight:700;}
 .cls-pill svg{width:15px;height:15px;flex-shrink:0;}
 .cls-pill .nb{top:-8px;right:-8px;min-width:20px;height:20px;font-size:11px;padding:0 6px;}
-.head-row .cls-code-pill{margin-left:auto;padding:5px 11px;font-size:12.5px;}
+/* le code de la classe : une petite ligne sous le nom, on la touche pour copier */.cls-code-ligne{display:inline-flex;align-items:center;gap:5px;margin:-4px 0 14px;padding:2px 0;border:0;background:none;cursor:pointer;font-family:var(--font-text);font-size:12.5px;color:var(--text-mute);}
+.cls-code-ligne b{color:var(--text-soft);letter-spacing:.1em;font-weight:600;}
+.cls-code-ligne svg{width:13px;height:13px;color:var(--accent);flex-shrink:0;}
 .cls-bar{display:flex;align-items:center;gap:8px;margin:-4px 0 20px;}
 .cls-mat{margin-bottom:10px;}
 .cls-mat .ecue-name{font-size:15.5px;}
@@ -3511,21 +3513,19 @@ async function openClass(c){
   curClass = c; CLS_GERE = c.role === "owner" || c.role === "adjoint";
   showScreen("class");
   document.getElementById("class-title").textContent = c.name;
-  // le code, en pastille dans l'entête : seul le créateur le voit, c'est lui qui le donne
-  const tete = document.querySelector("#screen-class .page-head .head-row");
-  if(tete){
-    tete.querySelectorAll(".cls-code-pill").forEach(n=>n.remove());
-    if(c.code){
-      const cp = el("button","cls-pill cls-code-pill"); cp.type = "button";
-      cp.innerHTML = `Code <b>${esc(c.code)}</b>`;
-      cp.setAttribute("aria-label", "Copier le code " + c.code);
-      cp.addEventListener("click", async ()=>{
-        haptic();
-        try{ await navigator.clipboard.writeText(c.code); toast("Code copié. Donne-le à ta classe."); }
-        catch(e){ toast("Code de la classe : " + c.code); }
-      });
-      tete.appendChild(cp);
-    }
+  // le code, en petite ligne sous le nom : seul le créateur le voit, c'est lui qui le donne
+  const titre = document.getElementById("class-title");
+  document.querySelectorAll("#screen-class .cls-code-ligne").forEach(n=>n.remove());
+  if(c.code && titre){
+    const cp = el("button","cls-code-ligne"); cp.type = "button";
+    cp.innerHTML = `Code <b>${esc(c.code)}</b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>`;
+    cp.setAttribute("aria-label", "Copier le code " + c.code);
+    cp.addEventListener("click", async ()=>{
+      haptic();
+      try{ await navigator.clipboard.writeText(c.code); toast("Code copié. Donne-le à ta classe."); }
+      catch(e){ toast("Code de la classe : " + c.code); }
+    });
+    titre.after(cp);
   }
   const box = document.getElementById("class-inner");
   box.innerHTML = `<div class="empty-note">Chargement…</div>`;
