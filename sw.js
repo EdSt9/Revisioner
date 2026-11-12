@@ -1,6 +1,6 @@
 // Service worker de Révision : l'app s'ouvre tout de suite, même sans réseau.
 // Changer le numéro de version à chaque changement de ce fichier.
-const CACHE = "revision-v27";
+const CACHE = "revision-v28";
 const POLICES = "revision-polices-v1";
 const LIBS = "revision-libs-v1";   // le lecteur de PDF, gardé pour lire sans réseau
 const PRECACHE = ["./", "./index.html", "./data.js"];
@@ -67,6 +67,30 @@ function polices(req, nom){
     return garde || reseau;
   }));
 }
+
+// ── Notifications push : le serveur envoie { title, body, tag, data } ──
+self.addEventListener("push", e=>{
+  let n = {};
+  try{ n = e.data ? e.data.json() : {}; }catch(err){ n = { body: e.data ? e.data.text() : "" }; }
+  e.waitUntil(self.registration.showNotification(n.title || "Révision", {
+    body: n.body || "",
+    tag: n.tag || undefined,          // même tag : la nouvelle remplace l'ancienne (6 chapitres → une seule)
+    renotify: !!n.tag,
+    data: n.data || {},
+    icon: "icon-192.png",
+    badge: "icon-192.png"
+  }));
+});
+// Touchée : on ramène l'app au premier plan et on lui dit quoi ouvrir
+self.addEventListener("notificationclick", e=>{
+  e.notification.close();
+  const data = e.notification.data || {};
+  e.waitUntil(self.clients.matchAll({ type:"window", includeUncontrolled:true }).then(cs=>{
+    const c = cs[0];
+    if(c){ c.postMessage({ type:"notif", data }); return c.focus(); }
+    return self.clients.openWindow("./?notif=" + encodeURIComponent(JSON.stringify(data)));
+  }));
+});
 
 self.addEventListener("fetch", e=>{
   const req = e.request;
