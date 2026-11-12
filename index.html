@@ -8927,11 +8927,15 @@ function renderAideAccueil(){
 // Le serveur (revision-api) envoie ; sw.js affiche ; ici on s'abonne, on règle, on ouvre la bonne page.
 // Un abonnement par téléphone. Trois familles qu'on peut couper : cours, devoirs, classe.
 const NOTIF_PREFS_KEY = "revision_notif_prefs";
+// [clé, titre, détail, activé par défaut]. Les rappels partent de l'agenda de chacun, à 18 h (heure de Paris).
 const NOTIF_TYPES = [
-  ["cours",   "Cours publiés",        "Un CM, un TD ou des révisions"],
-  ["devoirs", "Devoirs et contrôles", "Posés, ou leur date qui change"],
-  ["classe",  "Ma classe",            "Demandes pour entrer, demande acceptée"]
+  ["cours",   "Cours publiés",        "Un CM, un TD ou des révisions",                  true],
+  ["devoirs", "Devoirs et contrôles", "Posés, ou leur date qui change",                 true],
+  ["classe",  "Ma classe",            "Demandes pour entrer, demande acceptée",         true],
+  ["rappels", "Rappels de devoirs",   "La veille à 18 h, et 3 jours avant un contrôle", true],
+  ["semaine", "Ma semaine",           "Le dimanche à 18 h : ce qui t'attend",           false]
 ];
+function notifOn(p, k, parDefaut){ return typeof p[k] === "boolean" ? p[k] : parDefaut; }
 function notifPrefs(){ try{ return JSON.parse(localStorage.getItem(NOTIF_PREFS_KEY) || "{}") || {}; }catch(e){ return {}; } }
 function notifPrefsSave(p){ try{ localStorage.setItem(NOTIF_PREFS_KEY, JSON.stringify(p)); }catch(e){} }
 function notifIOS(){ return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1); }
@@ -9005,16 +9009,16 @@ async function dessinerNotifs(zone){
   zone.appendChild(seg);
   if(!actif){ zone.appendChild(aide("Pour savoir quand un cours ou un devoir arrive dans tes classes, même app fermée.")); return; }
   const g = el("div","mt-groupe notif-types");
-  NOTIF_TYPES.forEach(([k, titre, sous])=>{
-    const r = el("button","mt-l notif-type" + (notifPrefs()[k] !== false ? " on" : "")); r.type = "button";
+  NOTIF_TYPES.forEach(([k, titre, sous, parDefaut])=>{
+    const r = el("button","mt-l notif-type" + (notifOn(notifPrefs(), k, parDefaut) ? " on" : "")); r.type = "button";
     r.innerHTML = `<span class="ev-share-t"><b>${esc(titre)}</b><small>${esc(sous)}</small></span><span class="ev-sw"></span>`;
     r.addEventListener("click", async ()=>{
       haptic();
       const avant = notifPrefs();
-      const p = Object.assign({}, avant, { [k]: avant[k] === false });
-      notifPrefsSave(p); r.classList.toggle("on", p[k] !== false);
+      const p = Object.assign({}, avant, { [k]: !notifOn(avant, k, parDefaut) });
+      notifPrefsSave(p); r.classList.toggle("on", p[k]);
       try{ await api("push_prefs", { endpoint: sub.endpoint, prefs: p }); }
-      catch(e){ notifPrefsSave(avant); r.classList.toggle("on", avant[k] !== false); toast("Pas de connexion : réessaie."); }
+      catch(e){ notifPrefsSave(avant); r.classList.toggle("on", notifOn(avant, k, parDefaut)); toast("Pas de connexion : réessaie."); }
     });
     g.appendChild(r);
   });
@@ -9035,7 +9039,10 @@ try{
   if(q){ NOTIF_A_OUVRIR = JSON.parse(q); history.replaceState(null, "", location.pathname); }
 }catch(e){}
 async function ouvrirDepuisNotif(data){
-  if(!data || !data.class_id || !PSEUDO) return;
+  if(!data || !PSEUDO) return;
+  // un rappel : la liste de mes devoirs, comme depuis l'accueil
+  if(data.type === "rappel"){ closePicker(); document.getElementById("dev-entry").click(); return; }
+  if(!data.class_id) return;
   let c = MY_CLASSES.find(x=>x.id === data.class_id);
   if(!c){
     try{ MY_CLASSES = (await api("class_list")).classes || []; }catch(e){ return; }
@@ -12928,6 +12935,8 @@ function envoyerMaintenant(){
 }
 document.addEventListener("visibilitychange",()=>{ if(document.hidden) envoyerMaintenant(); });
 window.addEventListener("pagehide", envoyerMaintenant);
+// Le nom de chaque matière, pour que les rappels du serveur disent « Droits de l'enfant » et pas un code
+function nomsMatieres(){ const o = {}; SUBJECTS.forEach(sj=>{ if(sj && sj.id && sj.title) o[sj.id] = sj.title; }); return o; }
 async function pushState(enPartant){
   if(!syncOn || !PSEUDO) return;
   envoiEnAttente = false; dernierEnvoi = Date.now();
@@ -12936,7 +12945,7 @@ async function pushState(enPartant){
     PSYCHO_STEPS.forEach(s=>{ psy[s.id] = !!s.done; });
     const patch = {
       theme: document.documentElement.getAttribute("data-theme") || "girly",
-      srs: Object.assign({}, SRS, { __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP, __revises: REVISES, __vus: vusCharger(), __clsvus: clsVus(), __profs: PROFS, __notes: CHNOTES, __errexam: ERREXAM }),
+      srs: Object.assign({}, SRS, { __matieres: nomsMatieres(), __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP, __revises: REVISES, __vus: vusCharger(), __clsvus: clsVus(), __profs: PROFS, __notes: CHNOTES, __errexam: ERREXAM }),
       psycho: psy,
       settings: USER_SETTINGS
     };
@@ -13023,7 +13032,7 @@ function applyRemote(row){
       ERREXAM = incoming.__errexam;
       try{ localStorage.setItem(ERREXAM_KEY, JSON.stringify(ERREXAM)); }catch(e){}
     }
-    delete incoming.__edtnotes; delete incoming.__memo; delete incoming.__devrep; delete incoming.__revises; delete incoming.__vus; delete incoming.__profs; delete incoming.__notes; delete incoming.__errexam;
+    delete incoming.__matieres; delete incoming.__edtnotes; delete incoming.__memo; delete incoming.__devrep; delete incoming.__revises; delete incoming.__vus; delete incoming.__profs; delete incoming.__notes; delete incoming.__errexam;
     SRS = incoming;
     try{ localStorage.setItem(SRS_KEY, JSON.stringify(SRS)); }catch(e){}
   }
