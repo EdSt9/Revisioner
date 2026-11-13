@@ -12945,6 +12945,23 @@ function envoyerMaintenant(){
 document.addEventListener("visibilitychange",()=>{ if(document.hidden) envoyerMaintenant(); });
 window.addEventListener("pagehide", envoyerMaintenant);
 // Le nom de chaque matière, pour que les rappels du serveur disent « Droits de l'enfant » et pas un code
+// pour les rappels de contrôle : par matière, les QCM pas encore validés (q) et les erreurs à revoir (e)
+// seulement les matières qui ont un contrôle pas encore fait : le calcul est lourd
+function bilanMatieres(){
+  const o = {}, avecControle = {};
+  Object.values(EDTNOTES || {}).forEach(N=>{ if(N && N.type === "controle" && !N.done && N.subj) avecControle[N.subj] = 1; });
+  SUBJECTS.forEach(sj=>{
+    if(!sj || !sj.id || !avecControle[sj.id]) return;
+    try{
+      const xs = itemsDuScope(sj, "qcm", "grand");
+      if(!xs.length) return;
+      let q = 0, e = 0;
+      xs.forEach(x=>{ const k = cardKey(sj.id, "qcm", x.item, x.i); if(!estAcquise(k)) q++; if(estErreur(k)) e++; });
+      o[sj.id] = { q, e };
+    }catch(err){}
+  });
+  return o;
+}
 function nomsMatieres(){ const o = {}; SUBJECTS.forEach(sj=>{ if(sj && sj.id && sj.title) o[sj.id] = sj.title; }); return o; }
 async function pushState(enPartant){
   if(!syncOn || !PSEUDO) return;
@@ -12954,7 +12971,7 @@ async function pushState(enPartant){
     PSYCHO_STEPS.forEach(s=>{ psy[s.id] = !!s.done; });
     const patch = {
       theme: document.documentElement.getAttribute("data-theme") || "girly",
-      srs: Object.assign({}, SRS, { __matieres: nomsMatieres(), __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP, __revises: REVISES, __vus: vusCharger(), __clsvus: clsVus(), __profs: PROFS, __notes: CHNOTES, __errexam: ERREXAM }),
+      srs: Object.assign({}, SRS, { __matieres: nomsMatieres(), __bilan: bilanMatieres(), __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP, __revises: REVISES, __vus: vusCharger(), __clsvus: clsVus(), __profs: PROFS, __notes: CHNOTES, __errexam: ERREXAM }),
       psycho: psy,
       settings: USER_SETTINGS
     };
@@ -13041,7 +13058,7 @@ function applyRemote(row){
       ERREXAM = incoming.__errexam;
       try{ localStorage.setItem(ERREXAM_KEY, JSON.stringify(ERREXAM)); }catch(e){}
     }
-    delete incoming.__matieres; delete incoming.__edtnotes; delete incoming.__memo; delete incoming.__devrep; delete incoming.__revises; delete incoming.__vus; delete incoming.__profs; delete incoming.__notes; delete incoming.__errexam;
+    delete incoming.__matieres; delete incoming.__bilan; delete incoming.__edtnotes; delete incoming.__memo; delete incoming.__devrep; delete incoming.__revises; delete incoming.__vus; delete incoming.__profs; delete incoming.__notes; delete incoming.__errexam;
     SRS = incoming;
     try{ localStorage.setItem(SRS_KEY, JSON.stringify(SRS)); }catch(e){}
   }

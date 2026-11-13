@@ -179,9 +179,19 @@ type Notif = { title: string; body: string; tag?: string; data?: Record<string, 
 
 // Envoie à tous les appareils de ces personnes, sauf ceux qui ont coupé cette famille.
 // surDemande : une famille éteinte par défaut (Ma semaine), envoyée seulement à qui l'a allumée.
-async function notifier(pseudos: string[], famille: string, n: Notif, surDemande = false) {
+// La nuit (22 h – 8 h, heure de Paris), les nouvelles des classes attendent dans push_attente :
+// le réveil de 8 h les envoie. Les rappels et l'essai partent toujours tout de suite.
+const FAMILLES_DE_JOUR = ["cours", "devoirs", "classe"];
+const laNuit = () => { const h = aParis().heure; return h >= 22 || h < 8; };
+
+async function notifier(pseudos: string[], famille: string, n: Notif, surDemande = false, maintenant = false) {
   const cibles = [...new Set(pseudos.filter(Boolean))];
   if (!cibles.length) return;
+  if (!maintenant && FAMILLES_DE_JOUR.includes(famille) && laNuit()) {
+    const r = await db("push_attente", { method: "POST", body: JSON.stringify({ pseudos: cibles, famille, notif: n }) });
+    if (r.ok) return;
+    console.error("push_attente", await r.text());
+  }
   await vapid();
   const liste = cibles.map((p) => `"${p.replace(/"/g, "")}"`).join(",");
   const r = await db(`push_subs?pseudo=in.(${liste})&select=endpoint,p256dh,auth,prefs`);
@@ -295,7 +305,22 @@ function jourDe(iso: string): number {
   return new Date(Date.UTC(y, m - 1, d)).getUTCDay();
 }
 
-type Echeance = { date: string; type: "controle" | "devoir"; nom: string; note: string };
+type Echeance = { date: string; type: "controle" | "devoir"; nom: string; note: string; subj: string };
+// Ce qu'il reste à réviser par matière, calculé par l'app (users.srs.__bilan) : q = QCM pas encore validés, e = erreurs à revoir.
+type Bilan = Record<string, { q?: number; e?: number }>;
+
+// « 42 QCM à valider et 5 erreurs à revoir en Socialisations. » ; rien si tout est fait ou inconnu
+function resteAReviser(es: Echeance[], bilan: Bilan | null): string {
+  const morceaux: string[] = [];
+  for (const e of es.filter((x) => x.type === "controle")) {
+    const b = bilan?.[e.subj];
+    if (!b) continue;
+    const q = Number(b.q) || 0, er = Number(b.e) || 0;
+    const t = [q ? `${q} QCM à valider` : "", er ? `${er} erreur${er > 1 ? "s" : ""} à revoir` : ""].filter(Boolean).join(" et ");
+    if (t) morceaux.push(es.length > 1 ? `${t} en ${e.nom}` : t);
+  }
+  return morceaux.length ? "Il te reste " + morceaux.join(", ") + "." : "";
+}
 
 // « ECUE 23.1 ter Droits de l'enfant et de l » → « Droits de l'enfant et de l »
 const sansCode = (t: string) => t.replace(/^ECUE\s+[\d.]+\s*(bis|ter|quater)?\s*/i, "").replace(/\s+(CM|TD)(\s*\d+)?$/i, "").trim();
@@ -323,7 +348,7 @@ function echeances(notes: Record<string, any> | null, matieres: Record<string, s
     const nom = matiere || titreDevoir || brut;
     let note = String(N.note ?? "").replace(/\s+/g, " ").trim();
     if (matiere && titreDevoir && titreDevoir !== matiere) note = titreDevoir + (note ? " : " + note : "");
-    out.push({ date, type: N.type, nom: nom || "Devoir", note: note.length > 60 ? note.slice(0, 57) + "…" : note });
+    out.push({ date, type: N.type, nom: nom || "Devoir", note: note.length > 60 ? note.slice(0, 57) + "…" : note, subj: String(N.subj ?? "") });
   }
   return out.sort((a, b) => a.date.localeCompare(b.date));
 }
@@ -351,7 +376,7 @@ async function envoyerRappels(force: boolean, aBlanc: boolean) {
   const pseudos = [...new Set((r1.ok ? await r1.json() : []).map((s: { pseudo: string }) => s.pseudo))];
   if (!pseudos.length) return { ok: true, envoyes: 0 };
   const liste = pseudos.map((p) => `"${String(p).replace(/"/g, "")}"`).join(",");
-  const r2 = await db(`users?pseudo=in.(${liste})&select=pseudo,notes:srs->__edtnotes,matieres:srs->__matieres`);
+  const r2 = await db(`users?pseudo=in.(${liste})&select=pseudo,notes:srs->__edtnotes,matieres:srs->__matieres,bilan:srs->__bilan`);
   const users = r2.ok ? await r2.json() : [];
 
   const demain = plusJours(ici.iso, 1), dansTrois = plusJours(ici.iso, 3), finSemaine = plusJours(ici.iso, 7);
@@ -367,7 +392,7 @@ async function envoyerRappels(force: boolean, aBlanc: boolean) {
         : veille[0].type === "controle" ? "Demain : contrôle" : "Demain : devoir à rendre";
       await envoyer(u.pseudo, "rappels", {
         title: titre,
-        body: veille.map((e) => `${quoi(e)} · ${e.nom}${e.note ? " — " + e.note : ""}`).join("\n"),
+        body: [veille.map((e) => `${quoi(e)} · ${e.nom}${e.note ? " — " + e.note : ""}`).join("\n"), resteAReviser(veille, u.bilan)].filter(Boolean).join("\n"),
         tag: `rappel:veille:${demain}`, data,
       });
       envoyes++;
@@ -378,7 +403,7 @@ async function envoyerRappels(force: boolean, aBlanc: boolean) {
       const jour = JOURS[jourDe(dansTrois)];
       await envoyer(u.pseudo, "rappels", {
         title: controles.length > 1 ? `${controles.length} contrôles ${jour}` : `Contrôle ${jour}`,
-        body: `${controles.map((e) => e.nom).join(", ")}, ${jour} ${jourCourt(dansTrois)}. Pense à réviser.`,
+        body: `${controles.map((e) => e.nom).join(", ")}, ${jour} ${jourCourt(dansTrois)}. ` + (resteAReviser(controles, u.bilan) || "Pense à réviser."),
         tag: `rappel:j3:${dansTrois}`, data,
       });
       envoyes++;
@@ -399,6 +424,22 @@ async function envoyerRappels(force: boolean, aBlanc: boolean) {
     }
   }
   return { ok: true, jour: ici.iso, personnes: users.length, envoyes, ...(aBlanc ? { apercu } : {}) };
+}
+
+// Au premier réveil de jour, on envoie ce qui a attendu la nuit, dans l'ordre d'arrivée.
+// On supprime chaque ligne avant d'envoyer : un réveil en double n'envoie rien deux fois.
+async function envoyerLaNuit(): Promise<number> {
+  if (laNuit()) return 0;
+  const r = await db("push_attente?select=id,pseudos,famille,notif&order=id.asc&limit=500");
+  const rows = r.ok ? await r.json() : [];
+  let n = 0;
+  for (const row of rows) {
+    const d = await db(`push_attente?id=eq.${row.id}`, { method: "DELETE", headers: { Prefer: "return=representation" } });
+    if (!d.ok || !(await d.json()).length) continue;
+    await notifier(row.pseudos, row.famille, row.notif, false, true);
+    n++;
+  }
+  return n;
 }
 
 // Laisse l'envoi se finir après la réponse, pour ne pas faire attendre l'app.
@@ -425,7 +466,8 @@ Deno.serve(async (req) => {
       const r = await db("server_config?key=eq.cron_secret&select=value");
       const secret = r.ok ? (await r.json())[0]?.value : null;
       if (!secret || String(body.secret ?? "") !== String(secret)) return json({ error: "interdit" }, 403);
-      return json(await envoyerRappels(body.force === true, body.a_blanc === true));
+      const nuit = body.a_blanc === true ? 0 : await envoyerLaNuit();
+      return json({ ...(await envoyerRappels(body.force === true, body.a_blanc === true)), nuit });
     } catch (e) {
       return json({ error: "serveur", detail: String(e) }, 500);
     }
