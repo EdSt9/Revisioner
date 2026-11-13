@@ -308,6 +308,8 @@ function jourDe(iso: string): number {
 type Echeance = { date: string; type: "controle" | "devoir"; nom: string; note: string; subj: string };
 // Ce qu'il reste à réviser par matière, calculé par l'app (users.srs.__bilan) : q = QCM pas encore validés, e = erreurs à revoir.
 type Bilan = Record<string, { q?: number; e?: number }>;
+// Une étape de projet : p = projet, t = titre, d = début (AAAA-MM-JJ ou vide), f = fin, ok = cochée.
+type Etape = { id?: string; p: string; t: string; d: string; f: string; ok: boolean };
 
 // « 42 QCM à valider et 5 erreurs à revoir en Socialisations. » ; rien si tout est fait ou inconnu
 function resteAReviser(es: Echeance[], bilan: Bilan | null): string {
@@ -376,10 +378,11 @@ async function envoyerRappels(force: boolean, aBlanc: boolean) {
   const pseudos = [...new Set((r1.ok ? await r1.json() : []).map((s: { pseudo: string }) => s.pseudo))];
   if (!pseudos.length) return { ok: true, envoyes: 0 };
   const liste = pseudos.map((p) => `"${String(p).replace(/"/g, "")}"`).join(",");
-  const r2 = await db(`users?pseudo=in.(${liste})&select=pseudo,notes:srs->__edtnotes,matieres:srs->__matieres,bilan:srs->__bilan`);
+  const r2 = await db(`users?pseudo=in.(${liste})&select=pseudo,notes:srs->__edtnotes,matieres:srs->__matieres,bilan:srs->__bilan,projets:srs->__projets`);
   const users = r2.ok ? await r2.json() : [];
 
   const demain = plusJours(ici.iso, 1), dansTrois = plusJours(ici.iso, 3), finSemaine = plusJours(ici.iso, 7);
+  const dansSept = finSemaine;
   const dimanche = jourDe(ici.iso) === 0 || aBlanc;
   let envoyes = 0;
   for (const u of users) {
@@ -406,6 +409,20 @@ async function envoyerRappels(force: boolean, aBlanc: boolean) {
         body: `${controles.map((e) => e.nom).join(", ")}, ${jour} ${jourCourt(dansTrois)}. ` + (resteAReviser(controles, u.bilan) || "Pense à réviser."),
         tag: `rappel:j3:${dansTrois}`, data,
       });
+      envoyes++;
+    }
+
+    // Les étapes datées des projets (Concours CPE, projet psycho), envoyées par l'app :
+    // 7 jours avant la fin, la veille, et le jour où l'étape commence.
+    const projets: Etape[] = Array.isArray(u.projets) ? u.projets : [];
+    for (const st of projets) {
+      if (!st || st.ok || !st.f) continue;
+      let n: Notif | null = null;
+      if (st.f === dansSept) n = { title: `${st.p} · plus que 7 jours`, body: `${st.t} : avant le ${jourCourt(st.f)}.`, tag: `projet:j7:${st.p}:${st.f}` };
+      else if (st.f === demain) n = { title: `${st.p} · demain, dernier jour`, body: `${st.t} : avant demain, ${jourCourt(st.f)}.`, tag: `projet:veille:${st.p}:${st.f}` };
+      else if (st.d && st.d === ici.iso) n = { title: `${st.p} · c'est le moment`, body: `${st.t}, d'ici le ${jourCourt(st.f)}.`, tag: `projet:debut:${st.p}:${st.t}` };
+      if (!n) continue;
+      await envoyer(u.pseudo, "projets", { ...n, data: { type: "projet", pid: st.id ?? "" } });
       envoyes++;
     }
 
