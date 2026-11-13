@@ -3456,10 +3456,21 @@ function pastille(parent, n, label){
   p.textContent = n > 99 ? "99+" : n;
   p.setAttribute("aria-label", label || (n + " nouveau" + (n > 1 ? "x" : "")));
 }
+// La pastille de l'icône de l'app : les mêmes nouveautés que sur l'accueil (classes + devoirs).
+// Le chiffre est aussi rangé pour sw.js, qui l'augmente quand une notification arrive app fermée.
+var BADGE_APP = { cls:0, dev:0 };
+function poserBadgeApp(){
+  const n = BADGE_APP.cls + BADGE_APP.dev;
+  try{
+    if(navigator.setAppBadge) (n ? navigator.setAppBadge(n) : navigator.clearAppBadge()).catch(()=>{});
+    if(window.caches) caches.open("revision-badge").then(c=>c.put("/__badge", new Response(String(n)))).catch(()=>{});
+  }catch(e){}
+}
 function majPastillesClasses(){
   const o = clsNb();
   const connues = new Set(MY_CLASSES.map(c=>String(c.id)));
   const tot = Object.keys(o).filter(k=>!MY_CLASSES.length || connues.has(String(k))).reduce((s,k)=>s + (o[k] || 0), 0);
+  BADGE_APP.cls = tot; poserBadgeApp();
   pastille(document.getElementById("btn-classes"), tot, tot + " matière" + (tot > 1 ? "s" : "") + " avec du nouveau dans tes classes");
   document.querySelectorAll("#classes-list .cls-row[data-cls]").forEach(r=>{
     const n = o[r.dataset.cls] || 0;
@@ -8337,7 +8348,7 @@ function marquerDevoirsVus(alerts){
 // La tuile « Mes devoirs » de l'accueil : ce qui reste à faire, le prochain, et la pastille des nouveaux
 function majTuileDevoirs(alerts){
   const nb = document.getElementById("dev-entry-nb");
-  if(nb){ const k = devoirsNouveaux(alerts).length; nb.textContent = k; nb.hidden = !k; nb.setAttribute("aria-label", k + " devoir" + (k > 1 ? "s" : "") + " nouveau" + (k > 1 ? "x" : "")); }
+  if(nb){ const k = devoirsNouveaux(alerts).length; BADGE_APP.dev = k; poserBadgeApp(); nb.textContent = k; nb.hidden = !k; nb.setAttribute("aria-label", k + " devoir" + (k > 1 ? "s" : "") + " nouveau" + (k > 1 ? "x" : "")); }
   const ic = document.getElementById("dev-entry-ic"); if(ic && !ic.firstChild) ic.innerHTML = ICO("devoirs");
   const sub = document.getElementById("dev-entry-sub"); if(!sub) return;
   const now = new Date(); now.setHours(0,0,0,0);
@@ -9040,6 +9051,13 @@ async function ouvrirDepuisNotif(data){
     c = MY_CLASSES.find(x=>x.id === data.class_id);
   }
   if(!c) return;
+  // un seul chapitre publié : on l'ouvre directement ; le retour ramène à sa classe
+  if(data.type === "cours" && data.item_id && !(data.n > 1)){
+    try{
+      const it = ((await api("items_fetch", { ids:[data.item_id] })).items || [])[0];
+      if(it){ curClass = c; closePicker(); openSharedItem(it); return; }
+    }catch(e){}
+  }
   if(data.type === "devoir") CLS_VUE[c.id] = "devoirs";
   else if(data.type === "cours") CLS_VUE[c.id] = "cours";
   closePicker();

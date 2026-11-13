@@ -1,8 +1,9 @@
 // Service worker de Révision : l'app s'ouvre tout de suite, même sans réseau.
 // Changer le numéro de version à chaque changement de ce fichier.
-const CACHE = "revision-v30";
+const CACHE = "revision-v31";
 const POLICES = "revision-polices-v1";
 const LIBS = "revision-libs-v1";   // le lecteur de PDF, gardé pour lire sans réseau
+const BADGE = "revision-badge";    // le chiffre de la pastille de l'icône, partagé avec la page
 const PRECACHE = ["./", "./index.html", "./data.js"];
 
 self.addEventListener("install", e=>{
@@ -12,7 +13,7 @@ self.addEventListener("install", e=>{
 self.addEventListener("activate", e=>{
   e.waitUntil(
     caches.keys()
-      .then(noms=>Promise.all(noms.filter(n=>n !== CACHE && n !== POLICES && n !== LIBS).map(n=>caches.delete(n))))
+      .then(noms=>Promise.all(noms.filter(n=>n !== CACHE && n !== POLICES && n !== LIBS && n !== BADGE).map(n=>caches.delete(n))))
       .then(()=>self.clients.claim())
   );
 });
@@ -69,9 +70,20 @@ function polices(req, nom){
 }
 
 // ── Notifications push : le serveur envoie { title, body, tag, data } ──
+// Une nouveauté (cours, devoir, classe) ajoute 1 à la pastille de l'icône ; la page la remet au juste chiffre à l'ouverture.
+function badgePlusUn(){
+  if(!self.navigator || !self.navigator.setAppBadge) return Promise.resolve();
+  return caches.open(BADGE).then(c=>c.match("/__badge").then(r=>r ? r.text() : "0").then(t=>{
+    const n = (parseInt(t, 10) || 0) + 1;
+    return c.put("/__badge", new Response(String(n))).then(()=>self.navigator.setAppBadge(n));
+  })).catch(()=>{});
+}
 self.addEventListener("push", e=>{
   let n = {};
   try{ n = e.data ? e.data.json() : {}; }catch(err){ n = { body: e.data ? e.data.text() : "" }; }
+  const type = n.data && n.data.type;
+  const compte = type !== "rappel" && type !== "test";   // un rappel n'est pas une nouveauté
+  if(compte) e.waitUntil(badgePlusUn());
   e.waitUntil(self.registration.showNotification(n.title || "Révision", {
     body: n.body || "",
     tag: n.tag || undefined,          // même tag : la nouvelle remplace l'ancienne (6 chapitres → une seule)
