@@ -2476,6 +2476,54 @@ html[data-screen="login"]{background:var(--bg) !important;background-image:none 
 .screen.dessous.relache{transition:transform .32s cubic-bezier(.2,.9,.25,1) !important;}
 .screen.active.au-doigt,.screen.active.relache{z-index:2;background:var(--bg);}
 html.glisse-retour #somm-flot,html.glisse-retour #somm-panneau{opacity:0;pointer-events:none;}
+
+/* ══════════ ACCUEIL ALLÉGÉ ══════════ */
+.hm-ligne{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:12px;font-size:13px;font-weight:700;color:var(--text-soft);}
+.hm-ligne b{color:var(--text);}
+.hm-ligne .pt{width:4px;height:4px;border-radius:50%;background:var(--text-mute);}
+.hm-objbtn{border:none;background:none;font:inherit;color:var(--text-soft);cursor:pointer;padding:4px 2px;}
+.hm-objbtn b{color:var(--accent);}
+.obj-voile{position:fixed;inset:0;z-index:90;background:rgba(10,6,25,.35);opacity:0;transition:opacity .3s;}
+.obj-voile.on{opacity:1;}
+.obj-feuille{position:fixed;left:0;right:0;bottom:0;z-index:91;background:var(--surface-solid);border-radius:28px 28px 0 0;padding:12px 18px calc(env(safe-area-inset-bottom) + 24px);transform:translateY(105%);transition:transform .4s cubic-bezier(.2,.9,.25,1);box-shadow:0 -10px 40px rgba(0,0,0,.18);}
+.obj-feuille.on{transform:none;}
+.obj-feuille .in{max-width:440px;margin:0 auto;}
+.obj-feuille h3{font-size:19px;font-weight:800;}
+.obj-feuille p{font-size:13.5px;color:var(--text-soft);font-weight:600;margin-top:4px;}
+.obj-opts{display:flex;flex-direction:column;gap:8px;margin-top:14px;}
+.obj-opt{display:flex;align-items:center;gap:12px;padding:14px;border-radius:18px;border:2px solid transparent;background:color-mix(in srgb,var(--text) 5%,transparent);text-align:left;font:inherit;color:var(--text);cursor:pointer;transition:border-color .2s,background .2s;}
+.obj-opt.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent);}
+.obj-opt b{font-size:20px;font-weight:800;width:44px;}
+.obj-opt span{font-weight:700;font-size:14px;color:var(--text-soft);}
+/* ══════════ ÉCRAN DE L'AMBIANCE ══════════ */
+html[data-screen="pick"]{background:var(--bg) !important;background-image:none !important;}
+#screen-pick.active{display:block;padding:0;}
+.amb-wrap{max-width:440px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 56px) 18px 40px;text-align:center;}
+.amb-logo{font-size:58px;line-height:1;animation:dmIn .9s cubic-bezier(.3,1.5,.5,1) both;}
+.amb-titre{font-size:30px;font-weight:800;letter-spacing:-.025em;margin-top:16px;animation:casUp .5s .1s both;}
+.amb-sous{color:var(--text-soft);font-weight:600;font-size:15px;margin-top:6px;line-height:1.45;animation:casUp .5s .15s both;}
+.amb-choix{display:flex;gap:12px;margin-top:30px;animation:casUp .55s .2s both;}
+.amb-opt{flex:1;padding:16px 14px 16px;border-radius:24px;border:2.5px solid transparent;background:var(--surface-solid);box-shadow:0 8px 24px rgba(76,47,192,.12),0 1px 3px rgba(0,0,0,.04);font:inherit;color:var(--text);cursor:pointer;transition:transform .2s,border-color .2s;}
+.amb-opt:active{transform:scale(.97);}
+.amb-opt b{display:block;font-size:16px;font-weight:800;margin-top:12px;}
+.amb-prev{display:block;position:relative;height:120px;border-radius:16px;overflow:hidden;background:#f6f4fb;}
+.amb-prev i{display:block;position:absolute;}
+.amb-prev .h{left:0;right:0;top:0;height:52px;}
+.amb-prev .c{left:10px;right:10px;top:34px;height:52px;border-radius:12px;background:#fff;box-shadow:0 4px 10px rgba(0,0,0,.08);}
+.amb-prev .r{left:10px;top:12px;width:26px;height:26px;border-radius:50%;}
+.amb-prev .l1{left:44px;right:10px;top:16px;height:6px;border-radius:3px;background:#eee;}
+.amb-prev .l2{left:44px;right:30px;top:28px;height:6px;border-radius:3px;background:#eee;}
+/* ══════════ FIN DE CHAPITRE, CARTES PSYCHO / CPE, EXAMEN ══════════ */
+.fin-chap{border:none !important;border-radius:24px !important;background:var(--surface-solid) !important;box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04);padding:18px 16px 8px !important;}
+.fin-etape{border-top-color:color-mix(in srgb,var(--text) 7%,transparent) !important;padding:13px 0 !important;}
+.fin-num{width:38px !important;height:38px !important;border-radius:13px !important;font-weight:800 !important;}
+.fin-nom{font-weight:800;}
+.psy-nav-card{border:none !important;border-radius:24px !important;background:var(--surface-solid) !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04) !important;}
+.psy-nav-icon{border-radius:15px !important;}
+.ex-grille{gap:7px;}
+.ex-grille button{width:38px;height:38px;border-radius:12px;border:none;background:var(--surface-solid);box-shadow:0 4px 12px color-mix(in srgb,var(--accent) 10%,transparent);font-weight:800;font-size:13.5px;color:var(--text-soft);}
+.ex-grille button.fait{background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);box-shadow:none;border:none;}
+.ex-grille button.ici{background:var(--accent);color:#fff;border:none;box-shadow:0 6px 14px color-mix(in srgb,var(--accent) 35%,transparent);}
 </style>
 </head>
 <body>
@@ -2517,13 +2565,13 @@ html.glisse-retour #somm-flot,html.glisse-retour #somm-panneau{opacity:0;pointer
 </div>
 
 <div id="screen-pick" class="screen">
-  <div class="pick-inner">
-    <div class="pick-mark">💫</div>
-    <h1 class="pick-title">Choisis ton ambiance</h1>
-    <p class="pick-sub">Le clair et le sombre suivent ton téléphone.</p>
-    <div class="pick-row">
-      <button class="pick-opt girly" id="pick-girly"><div class="pick-swatch"></div><div class="pick-name">Rose</div></button>
-      <button class="pick-opt purple" id="pick-purple"><div class="pick-swatch"></div><div class="pick-name">Violet</div></button>
+  <div class="amb-wrap">
+    <div class="amb-logo">💫</div>
+    <h1 class="amb-titre">Ton ambiance</h1>
+    <p class="amb-sous">Tu pourras la changer à tout moment<br>dans ton compte.</p>
+    <div class="amb-choix">
+      <button type="button" class="amb-opt" id="pick-girly"><span class="amb-prev"><i class="h" style="background:linear-gradient(150deg,#c2185b,#e0356e,#ff8ab4)"></i><i class="c"><i class="r" style="background:#ffd3e3"></i><i class="l1"></i><i class="l2"></i></i></span><b>Rose</b></button>
+      <button type="button" class="amb-opt" id="pick-purple"><span class="amb-prev"><i class="h" style="background:linear-gradient(150deg,#4b2fc0,#6c4cdc,#a78bff)"></i><i class="c"><i class="r" style="background:#e3dcff"></i><i class="l1"></i><i class="l2"></i></i></span><b>Violet</b></button>
     </div>
   </div>
 </div>
@@ -6791,7 +6839,7 @@ function chooseTheme(t){
   try{ localStorage.setItem(THEME_KEY, t); }catch(e){}
   if(syncOn) pushState();       // on enregistre le thème sur le serveur
   renderSemestres();
-  showScreen("welcome");
+  showScreen("semestres");
 }
 (function initTheme(){
   let saved=null;
@@ -9315,6 +9363,22 @@ function hmSerie(){
 
 // objectif du jour, au choix : 10, 25 ou 50 questions (réglage de chaque appareil)
 const OBJ_KEY = "revision_objectif_v1";
+// la feuille pour choisir son objectif du jour
+function choisirObjectif(){
+  const actuel = hmObjectif();
+  const voile = el("div","obj-voile"), f = el("div","obj-feuille");
+  f.innerHTML = `<div class="in"><div class="sheet-grip"></div><h3>Mon objectif du jour</h3><p>Combien de questions par jour ? Tout le reste, c'est du bonus.</p>
+    <div class="obj-opts">${[[10,"Un petit tour, c'est déjà bien"],[25,"Une bonne séance"],[50,"Une grosse séance, à ton rythme"]].map(([v,t])=>`<button type="button" class="obj-opt${v === actuel ? " on" : ""}" data-v="${v}"><b>${v}</b><span>${t}</span></button>`).join("")}</div></div>`;
+  const fermer = ()=>{ voile.classList.remove("on"); f.classList.remove("on"); setTimeout(()=>{ voile.remove(); f.remove(); }, 400); };
+  voile.addEventListener("click", fermer);
+  f.querySelectorAll(".obj-opt").forEach(b=>b.addEventListener("click",()=>{
+    haptic(); try{ localStorage.setItem(OBJ_KEY, b.dataset.v); }catch(e){}
+    f.querySelectorAll(".obj-opt").forEach(x=>x.classList.toggle("on", x === b));
+    setTimeout(()=>{ fermer(); renderAccueil(true); }, 220);
+  }));
+  document.body.append(voile, f);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{ voile.classList.add("on"); f.classList.add("on"); }));
+}
 function hmObjectif(){ let v = 25; try{ v = +localStorage.getItem(OBJ_KEY) || 25; }catch(e){} return [10,25,50].includes(v) ? v : 25; }
 let HM_DERNIER = "";
 function renderAccueil(anim){
@@ -9351,10 +9415,6 @@ function renderAccueil(anim){
   const serie = hmSerie();
   const pc = (a,b)=>b ? Math.round(a / b * 100) : 0;
   const ctaTxt = auj === 0 ? "Commencer mes révisions" : auj >= HM_OBJECTIF ? "Encore une série" : "Continuer mes révisions";
-  const serieTxt = serie.fait
-    ? `<p>${serie.n} jour${serie.n > 1 ? "s" : ""} de révision<em>C'est fait pour aujourd'hui, bravo</em></p>`
-    : serie.n ? `<p>${serie.n} jour${serie.n > 1 ? "s" : ""} de révision<em>Un petit tour aujourd'hui, et c'est ${serie.n + 1}</em></p>`
-    : `<p>Une série par jour<em>À ton rythme, quand tu veux</em></p>`;
   const jour = `<div class="hm-jtop">
       <div class="hm-ring"><svg viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="color-mix(in srgb,var(--accent) 13%,transparent)" stroke-width="14"/>
         <circle class="arc" cx="75" cy="75" r="62" fill="none" stroke="url(#hm-g)" stroke-width="14" stroke-linecap="round" stroke-dasharray="389.6" stroke-dashoffset="389.6" data-off="${389.6 * (1 - fait / HM_OBJECTIF)}"/>
@@ -9365,19 +9425,16 @@ function renderAccueil(anim){
         <div class="hm-sv"><div class="l">QCM validés<em>${pc(qO,qT)} %</em></div><div class="hm-tr hm-doux-v"><i data-w="${pc(qO,qT)}" style="background:var(--accent)"></i></div></div>
         <div class="hm-sv"><div class="l">Mes erreurs<em>${err}</em></div><div class="hm-tr hm-doux-r"><i data-w="${Math.min(100, err * 4)}" style="background:var(--c-r)"></i></div></div>
       </div></div>
-    <div class="hm-obj"><span>Mon objectif</span>${[10,25,50].map(v=>`<button type="button" class="${v === HM_OBJECTIF ? "on" : ""}" data-obj="${v}">${v}</button>`).join("")}</div>
     ${auj >= HM_OBJECTIF ? `<div class="hm-bravo">✓ Objectif atteint. Tout le reste, c'est du bonus.</div>` : ""}
     <button type="button" class="hm-cta hm-press" id="hm-go">${ctaTxt}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
-    <div class="hm-serie"><span class="f"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 3.5 5 5.5 5 10.5A5 5 0 0 1 7 13c0-2 .8-3.3 2-4.5.2 1.6 1 2.6 2 3 0-3.5-.8-6.3 1-9.5z"/></svg></span>${serieTxt}
-      <span class="hm-dots">${serie.sept.map(x=>`<i class="${x ? "" : "o"}"></i>`).join("")}</span></div>`;
+    <div class="hm-ligne">${serie.n ? `🔥 <b>${serie.n} jour${serie.n > 1 ? "s" : ""}</b> de suite` : "Une série par jour, à ton rythme"}<span class="pt"></span><button type="button" class="hm-objbtn" id="hm-obj">objectif <b>${HM_OBJECTIF}</b> par jour ›</button></div>`;
   const boxJ = document.getElementById("hm-jour");
   const neuf = jour !== HM_DERNIER;
   if(neuf){
     HM_DERNIER = jour; boxJ.innerHTML = jour;
     document.getElementById("hm-go").addEventListener("click",()=>{ haptic(); startGlobalSession(); });
-    boxJ.querySelectorAll("[data-obj]").forEach(b=>b.addEventListener("click",()=>{
-      haptic(); try{ localStorage.setItem(OBJ_KEY, b.dataset.obj); }catch(e){} renderAccueil(true);
-    }));
+    document.getElementById("hm-obj").addEventListener("click",()=>{ haptic(); choisirObjectif(); });
+    const ring = boxJ.querySelector(".hm-ring"); if(ring){ ring.style.cursor = "pointer"; ring.addEventListener("click",()=>{ haptic(); choisirObjectif(); }); }
   }
   if(neuf || anim){
     const arc = boxJ.querySelector(".arc"), num = boxJ.querySelector(".hm-rc b"), bars = boxJ.querySelectorAll(".hm-tr i");
@@ -14188,11 +14245,11 @@ function afterLogin(row){
   if(row){
     applyRemote(row);
     renderSemestres();
-    showScreen("welcome");
+    showScreen("semestres");
   } else {
     // pseudo inconnu (ou pas de réseau) : on demande l'ambiance
     let saved=null; try{ saved=localStorage.getItem(THEME_KEY); }catch(e){}
-    if(saved){ applyTheme(saved); renderSemestres(); showScreen("welcome"); }
+    if(saved){ applyTheme(saved); renderSemestres(); showScreen("semestres"); }
     else { showScreen("pick"); }
   }
 }
@@ -14299,7 +14356,7 @@ function restaurerPage(o){
   renderSemestres();
   // une actualisation ramène sur la page où l'on était
   const garde = saved ? lirePageGardee() : null;
-  if(!restaurerPage(garde)) showScreen(saved ? "welcome" : "pick");
+  if(!restaurerPage(garde)) showScreen(saved ? "semestres" : "pick");
 
   // puis, en arrière-plan, on récupère la version du serveur si elle est plus récente
   if(supaReady()){
@@ -14314,7 +14371,7 @@ function restaurerPage(o){
         const garde = lirePageGardee();
         if(garde && !DEJA_TOUCHE){
           const ici = document.documentElement.getAttribute("data-screen");
-          if(PAGE_RESTAUREE ? ici === PAGE_RESTAUREE.id : ici === "welcome") restaurerPage(garde);
+          if(PAGE_RESTAUREE ? ici === PAGE_RESTAUREE.id : ici === "semestres") restaurerPage(garde);
         }
       }
       setSyncBadge("ok");
