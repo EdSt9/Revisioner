@@ -2587,6 +2587,24 @@ html[data-theme="girly"]{--text-mute:#7a5f6c;}
 @media(prefers-color-scheme:dark){html[data-theme="purple"]:not([data-mode="clair"]){--text-mute:#9086b3;}html[data-theme="girly"]:not([data-mode="clair"]){--text-mute:#b08a9c;}}
 html[data-theme="purple"][data-mode="sombre"]{--text-mute:#9086b3;}
 html[data-theme="girly"][data-mode="sombre"]{--text-mute:#b08a9c;}
+
+/* ══════════ LE MÉMO : dans Devoirs, au nouveau style ══════════ */
+.hd-act>.memo-fab{position:relative !important;inset:auto !important;right:auto !important;bottom:auto !important;top:auto !important;display:grid !important;transform:none !important;opacity:1 !important;}
+.hd-act>.memo-fab svg{width:19px !important;height:19px !important;}
+.hd-act .memo-fab-badge{position:absolute;top:-5px;right:-5px;}
+.memo2-titre{font-size:22px;font-weight:800;letter-spacing:-.02em;margin:2px 2px 12px;}
+.memo2-seg{border:none !important;background:color-mix(in srgb,var(--text) 6%,transparent) !important;border-radius:14px !important;padding:4px !important;}
+.memo2-seg button{border-radius:11px !important;font-weight:800 !important;font-size:14px !important;color:var(--text-soft) !important;}
+.memo2-seg button.on{background:var(--surface-solid) !important;color:var(--text) !important;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.memo2-carte{border:none !important;border-radius:20px !important;background:var(--surface-solid) !important;box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04) !important;}
+.memo2 .memo-slide{background:var(--surface-solid) !important;padding:14px 16px !important;}
+.memo2 .memo-todo,.memo2 .memo-add{border-top-color:color-mix(in srgb,var(--text) 7%,transparent) !important;}
+.memo2 .memo-text{font-weight:700;}
+.memo2 .memo-check{border-radius:8px !important;}
+.memo2 .memo-add{padding:14px 16px !important;}
+.memo2 .memo-plus{border-radius:8px !important;}
+.memo2-notes{border:none !important;border-radius:20px !important;background:color-mix(in srgb,var(--text) 5%,transparent) !important;padding:16px !important;font-size:15.5px !important;line-height:1.55 !important;min-height:300px !important;box-shadow:none !important;}
+.memo2-notes:focus{background:var(--surface-solid) !important;box-shadow:0 0 0 2px var(--accent) !important;}
 </style>
 </head>
 <body>
@@ -6810,7 +6828,7 @@ function majHdSemaine(){
 }
 
 // le bouton mémo est « fixed » : il sort du contenu qui glisse, sinon il glisserait avec lui
-(function(){ const m = document.getElementById("btn-memo"), h = document.getElementById("hm-btns"); if(m && h) h.insertBefore(m, h.firstChild); })();
+(function(){ const m = document.getElementById("btn-memo"), d = document.querySelector("#screen-mesdevoirs .hd-act"); if(m && d){ m.setAttribute("aria-label","Mémo : tâches et notes"); d.insertBefore(m, d.firstChild); } })();
 // Pas de jeu en bas des pages : la marge du bas sert à respirer quand la page défile.
 // Si tout tient presque sur l'écran, cette marge ne doit pas, à elle seule, faire défiler la page.
 // Avec le bouton flottant, on lui laisse sa place ; sans lui, juste la barre d'accueil de l'iPhone.
@@ -9138,6 +9156,7 @@ function refreshMemoSheet(){
   const body = document.getElementById("memo-sheet-body");
   if(!body) return;
   body.innerHTML = "";
+  const t = el("div","memo2-titre"); t.textContent = "Mémo"; body.appendChild(t);
   renderMemo(body);
 }
 function closeMemoSheet(){
@@ -9544,7 +9563,7 @@ function renderAccueil(anim){
   const head = document.getElementById("hm-hello"); if(!head) return;
   // les vrais boutons montent dans l'en-tête (une seule fois)
   const btns = document.getElementById("hm-btns");
-  if(btns) [["btn-memo","Mémo"],["btn-search","Chercher"],["btn-compte","Compte"]].forEach(([id, lbl])=>{ const x = document.getElementById(id); if(!x) return; x.dataset.lbl = lbl; if(x.parentNode !== btns) btns.appendChild(x); });
+  if(btns) [["btn-search","Chercher"],["btn-compte","Compte"]].forEach(([id, lbl])=>{ const x = document.getElementById(id); if(!x) return; x.dataset.lbl = lbl; if(x.parentNode !== btns) btns.appendChild(x); });
   const now = new Date();
   document.getElementById("hm-date").textContent = now.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long" });
   const h = now.getHours();
@@ -10127,7 +10146,7 @@ function renderAideAccueil(){
     [ic('#tabbar [data-tb="edt"]'), "Agenda", "Importe ton emploi du temps une fois, tes cours s'affichent chaque jour."],
     [ic('#tabbar [data-tb="classes"]'), "Liens", "Tes sites utiles (ENT, Moodle…) et tes classes partagées."],
     [ic("#btn-search"), "Rechercher", "Retrouve un mot dans tous tes cours."],
-    [ic("#btn-memo"), "Mémo", "Tes tâches et tes notes rapides."],
+    [ic("#btn-memo"), "Mémo", "Dans Devoirs, en haut : tes tâches et tes notes rapides."],
     ["<b style='font-size:13px'>" + esc(String(PSEUDO || "?").charAt(0).toUpperCase()) + "</b>", "Ton compte", "L'ambiance, l'affichage et les notifications."]
   ];
   box.className = "aide-acc rise";
