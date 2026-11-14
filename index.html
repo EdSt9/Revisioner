@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
 <meta name="theme-color" content="#fdf5f8" media="(prefers-color-scheme: light)"/>
 <meta name="theme-color" content="#1a0d15" media="(prefers-color-scheme: dark)"/>
+<script>try{var m=localStorage.getItem("revision_mode_v1");if(m==="clair"||m==="sombre")document.documentElement.setAttribute("data-mode",m);}catch(e){}</script>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -52,7 +53,7 @@
   --ko:#d64562;--ko-soft:rgba(214,69,98,.10);--ko-border:rgba(214,69,98,.35);
   --warn:#c98a1a;--warn-soft:rgba(201,138,26,.12);
   --halo1:rgba(224,53,110,.14);--halo2:rgba(255,126,179,.16);--halo-op:1;}
-@media(prefers-color-scheme:dark){html[data-theme="girly"]{--accent:#ff5c9d;--accent-2:#ff7eb3;
+@media(prefers-color-scheme:dark){html[data-theme="girly"]:not([data-mode="clair"]){--accent:#ff5c9d;--accent-2:#ff7eb3;
   --accent-soft:rgba(255,126,179,.12);--accent-glow:rgba(224,53,110,.4);
   --bg:#1a0d15;--surface:rgba(255,255,255,.06);--surface-solid:#2a1521;--surface-2:rgba(255,255,255,.04);
   --border:rgba(255,126,179,.16);--border-strong:rgba(255,126,179,.42);
@@ -65,6 +66,19 @@
   --ko:#ff7a95;--ko-soft:rgba(255,122,149,.12);--ko-border:rgba(255,122,149,.38);
   --warn:#f0b84a;--warn-soft:rgba(240,184,74,.14);
   --halo1:rgba(224,53,110,.23);--halo2:rgba(255,126,179,.17);--halo-op:1;}}
+html[data-theme="girly"][data-mode="sombre"]{--accent:#ff5c9d;--accent-2:#ff7eb3;
+  --accent-soft:rgba(255,126,179,.12);--accent-glow:rgba(224,53,110,.4);
+  --bg:#1a0d15;--surface:rgba(255,255,255,.06);--surface-solid:#2a1521;--surface-2:rgba(255,255,255,.04);
+  --border:rgba(255,126,179,.16);--border-strong:rgba(255,126,179,.42);
+  --text:#fce8f0;--text-soft:#d8a5bd;--text-mute:#9a7284;
+  --shadow:rgba(0,0,0,.4);--shadow-lift:rgba(224,53,110,.35);
+  --hl-bg:rgba(255,126,179,.18);--hl-text:#ffc2d9;
+  --chip-bg:rgba(255,126,179,.12);--chip-text:#f0b8ce;
+  --seg-bg:rgba(0,0,0,.25);--seg-thumb:rgba(255,126,179,.22);
+  --ok:#5fd6a0;--ok-soft:rgba(95,214,160,.14);--ok-border:rgba(95,214,160,.4);--danger:#ff6b7d;--danger-soft:rgba(255,107,125,.16);--new:#a78bff;--info:#5aa9ff;--info-soft:rgba(90,169,255,.16);
+  --ko:#ff7a95;--ko-soft:rgba(255,122,149,.12);--ko-border:rgba(255,122,149,.38);
+  --warn:#f0b84a;--warn-soft:rgba(240,184,74,.14);
+  --halo1:rgba(224,53,110,.23);--halo2:rgba(255,126,179,.17);--halo-op:1;}
 /* PURPLE light */html[data-theme="purple"]{--accent:#6c4cdc;--accent-2:#a78bff;
   --accent-soft:rgba(108,76,220,.10);--accent-glow:rgba(108,76,220,.28);
   --bg:#f4f2fc;--surface:rgba(255,255,255,.72);--surface-solid:#fff;--surface-2:rgba(108,76,220,.05);
@@ -78,7 +92,7 @@
   --ko:#d6456e;--ko-soft:rgba(214,69,110,.10);--ko-border:rgba(214,69,110,.35);
   --warn:#c98a1a;--warn-soft:rgba(201,138,26,.12);
   --halo1:rgba(108,76,220,.13);--halo2:rgba(167,139,255,.16);--halo-op:1;}
-@media(prefers-color-scheme:dark){html[data-theme="purple"]{--accent:#7c5cff;--accent-2:#a78bff;
+@media(prefers-color-scheme:dark){html[data-theme="purple"]:not([data-mode="clair"]){--accent:#7c5cff;--accent-2:#a78bff;
   --accent-soft:rgba(167,139,255,.12);--accent-glow:rgba(108,76,220,.4);
   --bg:#120e22;--surface:rgba(255,255,255,.06);--surface-solid:#1d1738;--surface-2:rgba(255,255,255,.04);
   --border:rgba(167,139,255,.16);--border-strong:rgba(167,139,255,.42);
@@ -91,6 +105,19 @@
   --ko:#ff7a9d;--ko-soft:rgba(255,122,157,.12);--ko-border:rgba(255,122,157,.38);
   --warn:#f0b84a;--warn-soft:rgba(240,184,74,.14);
   --halo1:rgba(124,92,255,.23);--halo2:rgba(167,139,255,.17);--halo-op:1;}}
+html[data-theme="purple"][data-mode="sombre"]{--accent:#7c5cff;--accent-2:#a78bff;
+  --accent-soft:rgba(167,139,255,.12);--accent-glow:rgba(108,76,220,.4);
+  --bg:#120e22;--surface:rgba(255,255,255,.06);--surface-solid:#1d1738;--surface-2:rgba(255,255,255,.04);
+  --border:rgba(167,139,255,.16);--border-strong:rgba(167,139,255,.42);
+  --text:#ece8fc;--text-soft:#b3a8d8;--text-mute:#7a7098;
+  --shadow:rgba(0,0,0,.4);--shadow-lift:rgba(108,76,220,.35);
+  --hl-bg:rgba(167,139,255,.18);--hl-text:#d0c2ff;
+  --chip-bg:rgba(167,139,255,.12);--chip-text:#c9bcf0;
+  --seg-bg:rgba(0,0,0,.25);--seg-thumb:rgba(167,139,255,.22);
+  --ok:#5fd6a0;--ok-soft:rgba(95,214,160,.14);--ok-border:rgba(95,214,160,.4);--danger:#ff6b7d;--danger-soft:rgba(255,107,125,.16);--new:#ff6ea8;--info:#5aa9ff;--info-soft:rgba(90,169,255,.16);
+  --ko:#ff7a9d;--ko-soft:rgba(255,122,157,.12);--ko-border:rgba(255,122,157,.38);
+  --warn:#f0b84a;--warn-soft:rgba(240,184,74,.14);
+  --halo1:rgba(124,92,255,.23);--halo2:rgba(167,139,255,.17);--halo-op:1;}
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 button{color:inherit;-webkit-tap-highlight-color:transparent;}
@@ -2094,7 +2121,8 @@ html.calme .rise{animation:none!important;}
 .hm-doux-g{background:color-mix(in srgb,var(--c-g) 14%,transparent);color:var(--c-g);}
 .hm-doux-y{background:color-mix(in srgb,var(--c-y) 17%,transparent);color:#d48a00;}
 .hm-doux-r{background:color-mix(in srgb,var(--c-r) 14%,transparent);color:var(--c-r);}
-@media(prefers-color-scheme:dark){.hm-doux-y{color:var(--c-y);}}
+@media(prefers-color-scheme:dark){html:not([data-mode="clair"]) .hm-doux-y{color:var(--c-y);}}
+html[data-mode="sombre"] .hm-doux-y{color:var(--c-y);}
 #screen-semestres>.hm-wrap{padding:0 !important;max-width:none !important;width:100%;}
 .hm-head{position:relative;overflow:hidden;color:#fff;padding:calc(env(safe-area-inset-top) + 20px) 18px 96px;
   background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 85%,#000) 0%,var(--accent) 48%,var(--accent-2) 100%);border-radius:0 0 34px 34px;}
@@ -2137,7 +2165,8 @@ html.calme .rise{animation:none!important;}
 .hm-tr{height:7px;border-radius:4px;margin-top:6px;overflow:hidden;}
 .hm-tr i{display:block;height:100%;border-radius:4px;width:0;transition:width 1.1s cubic-bezier(.2,.9,.25,1) .15s;}
 .hm-cta{width:100%;margin-top:18px;height:54px;border-radius:17px;border:none;background:var(--text);color:var(--bg);font:inherit;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;}
-@media(prefers-color-scheme:dark){.hm-cta{background:var(--accent);color:#fff;}}
+@media(prefers-color-scheme:dark){html:not([data-mode="clair"]) .hm-cta{background:var(--accent);color:#fff;}}
+html[data-mode="sombre"] .hm-cta{background:var(--accent);color:#fff;}
 .hm-cta svg{width:18px;height:18px;}
 .hm-serie{display:flex;align-items:center;gap:10px;margin-top:14px;padding:11px 12px;border-radius:16px;background:color-mix(in srgb,var(--c-y) 15%,transparent);}
 .hm-serie .f{width:34px;height:34px;border-radius:11px;background:var(--hm-carte);display:grid;place-items:center;color:var(--c-y);flex-shrink:0;}
@@ -2311,7 +2340,7 @@ html.tabbar-on[data-screen="classes"] .page-head .back-btn{visibility:hidden;}
 
 /* ══════════ REFONTE · PAGES DE LA BARRE DU BAS ET FEUILLES ══════════ */
 /* titres : la même police nette que l'accueil */
-html.tabbar-on .page-title,#screen-class .page-title,#screen-sites .page-title,#screen-planning .page-title,#screen-devoirs .page-title{font-family:var(--font-text);font-weight:800;font-size:28px;letter-spacing:-.025em;}
+.page-title{font-family:var(--font-text);font-weight:800;font-size:28px;letter-spacing:-.025em;}
 html.tabbar-on .page-sub,html.tabbar-on .lex-sous{font-weight:600;color:var(--text-mute);}
 /* barre du haut sans trait, fondue dans le fond */
 html.tabbar-on .page-head{border-bottom-color:transparent !important;box-shadow:none !important;}
@@ -2333,7 +2362,7 @@ html.tabbar-on .cal-row,#pick-list .cal-row{border-radius:18px;}
 .tb-nb.tb-point{min-width:12px;width:12px;height:12px;padding:0;font-size:0;top:-2px;right:-2px;}
 
 /* titres de l'interface : police nette ; le serif reste pour le contenu des cours */
-.sem-name,.sem-tile .sem-name,.project-title,.ecue-name,.vide-t,.aide-acc-t,.sheet-title,.sheet .sheet-title,.dev-name,.dv-nom,.edt-week,.edt-day-name,.exam-title,.plan-day,.ht-t,.next-title,.mode-name,.qc-name,.colle-carte-t,.fin-titre,.sr-title,.bilan-score{font-family:var(--font-text) !important;font-weight:800 !important;letter-spacing:-.015em;}
+.page-title,.lex-lettre,.lex-terme,.auteur-nom,.auteur-avatar,.psy-hero-title,.psy-nav-title,.syn-tete,.syn-tete span,#screen-synthese .recap-num,.sem-name,.sem-tile .sem-name,.project-title,.ecue-name,.vide-t,.aide-acc-t,.sheet-title,.sheet .sheet-title,.dev-name,.dv-nom,.edt-week,.edt-day-name,.exam-title,.plan-day,.ht-t,.next-title,.mode-name,.qc-name,.colle-carte-t,.fin-titre,.sr-title,.bilan-score{font-family:var(--font-text) !important;font-weight:800 !important;letter-spacing:-.015em;}
 </style>
 </head>
 <body>
@@ -6602,7 +6631,17 @@ function updatePersonalText(){
 const COULEUR_BARRE = { girly:{ clair:"#fdf5f8", sombre:"#1a0d15" }, purple:{ clair:"#f4f2fc", sombre:"#120e22" } };
 function majCouleurBarre(t){
   const c = COULEUR_BARRE[t] || COULEUR_BARRE.girly;
-  document.querySelectorAll('meta[name="theme-color"]').forEach(m=>{ m.setAttribute("content", /dark/.test(m.getAttribute("media") || "") ? c.sombre : c.clair); });
+  const force = document.documentElement.getAttribute("data-mode");
+  document.querySelectorAll('meta[name="theme-color"]').forEach(m=>{ m.setAttribute("content", force === "sombre" ? c.sombre : force === "clair" ? c.clair : /dark/.test(m.getAttribute("media") || "") ? c.sombre : c.clair); });
+}
+// Mode clair / sombre : « auto » suit le téléphone. Réglage propre à chaque appareil.
+const MODE_KEY = "revision_mode_v1";
+function modeActuel(){ let m = "auto"; try{ m = localStorage.getItem(MODE_KEY) || "auto"; }catch(e){} return m; }
+function appliquerMode(m){
+  try{ if(m === "auto") localStorage.removeItem(MODE_KEY); else localStorage.setItem(MODE_KEY, m); }catch(e){}
+  if(m === "auto") document.documentElement.removeAttribute("data-mode");
+  else document.documentElement.setAttribute("data-mode", m);
+  majCouleurBarre(document.documentElement.getAttribute("data-theme"));
 }
 function applyTheme(t){ document.documentElement.setAttribute("data-theme", t); majCouleurBarre(t); resolveAllLangs(); updatePersonalText(); }
 function chooseTheme(t){
@@ -9764,6 +9803,15 @@ function ouvrirCompte(){
     seg.appendChild(o);
   });
   box.appendChild(seg);
+  const labM = el("div","fs-label compte-lab"); labM.textContent = "Affichage"; box.appendChild(labM);
+  const segM = el("div","seg compte-seg");
+  [["auto","Auto"],["clair","Clair"],["sombre","Sombre"]].forEach(([v, nom])=>{
+    const o = el("button","seg-opt" + (v === modeActuel() ? " active" : "")); o.type = "button"; o.textContent = nom;
+    o.addEventListener("click",()=>{ haptic(); appliquerMode(v); segM.querySelectorAll(".seg-opt").forEach(x=>x.classList.toggle("active", x === o)); });
+    segM.appendChild(o);
+  });
+  box.appendChild(segM);
+  const hM = el("div","fs-hint compte-hint"); hM.style.marginBottom = "14px"; hM.textContent = "Auto suit le réglage de ton téléphone."; box.appendChild(hM);
   // Pomodoro : une option, pas une tuile
   const labP = el("div","fs-label compte-lab"); labP.textContent = "Pomodoro"; box.appendChild(labP);
   const segP = el("div","seg compte-seg");
