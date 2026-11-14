@@ -2517,6 +2517,31 @@ html.tabbar-on .screen.hd-on>.page-head{display:none !important;}
 .cls-row{padding:14px !important;}
 .cls-ic{width:50px !important;height:50px !important;border-radius:16px !important;font-size:24px !important;background:color-mix(in srgb,var(--accent) 10%,transparent) !important;}
 .cls-name{font-size:16px !important;}
+
+/* ══════════ EN-TÊTE COLORÉ SUR LES AUTRES PAGES ══════════ */
+.screen.hd-on>.page-head{display:none !important;}
+.screen.hd-on>.wrap>.page-eyebrow{display:none;}
+.hd-titres{flex:1;min-width:0;}
+.hd-page .hd-t{font-family:var(--font-text) !important;font-size:25px !important;font-weight:800 !important;letter-spacing:-.025em;line-height:1.15;margin:0 !important;color:#fff !important;overflow-wrap:break-word;}
+.hd-page .page-eyebrow{color:#fff !important;opacity:.85;font-size:11.5px !important;font-weight:800 !important;letter-spacing:.08em;text-transform:uppercase;margin:0 0 2px !important;}
+.hd-sous{color:#fff !important;opacity:.88;font-size:13.5px !important;font-weight:600 !important;line-height:1.45 !important;margin:8px 0 0 !important;}
+.hd-row .back-btn{flex-shrink:0;align-self:flex-start;width:40px;height:40px;border-radius:13px;background:rgba(255,255,255,.2) !important;color:#fff !important;font-size:0 !important;padding:0 !important;margin:0 !important;display:grid !important;place-items:center;}
+.hd-row .back-btn svg{width:20px;height:20px;}
+.hd-page .hd-row{align-items:flex-start;}
+.hd-act{align-self:flex-start;}
+.hd-act .vue-seg{margin:0 !important;background:rgba(255,255,255,.18) !important;}
+.hd-act .vue-seg .seg-opt{color:#fff !important;opacity:.8;padding:7px 9px !important;}
+.hd-act .vue-seg .seg-opt.active{background:#fff !important;color:var(--accent) !important;opacity:1;}
+.hd-act .vue-seg svg{width:18px;height:18px;}
+
+/* onglets : pas de bouton retour dans l'en-tête */
+html.tabbar-on .hd-row .back-btn{display:none !important;}
+/* toutes les cartes restantes : sans contour, ombre douce, comme le reste de l'app */
+.sr-carte,.lex-item,.memo2-carte,.dev-card,.mode-card,.mn-carte,.mt-groupe,.qc-card,.results-detail,.auteur,.od-row,.ex-err,.recap{border:none !important;background:var(--surface-solid) !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;border-radius:22px !important;box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04) !important;}
+@media(prefers-color-scheme:dark){html:not([data-mode="clair"]) :is(.sr-carte,.lex-item,.memo2-carte,.dev-card,.mode-card,.mn-carte,.mt-groupe,.qc-card,.results-detail,.auteur,.od-row,.ex-err,.recap){box-shadow:0 8px 24px rgba(0,0,0,.28) !important;}}
+html[data-mode="sombre"] :is(.sr-carte,.lex-item,.memo2-carte,.dev-card,.mode-card,.mn-carte,.mt-groupe,.qc-card,.results-detail,.auteur,.od-row,.ex-err,.recap){box-shadow:0 8px 24px rgba(0,0,0,.28) !important;}
+.qc-card.grand{box-shadow:0 0 0 2px var(--accent),0 10px 26px var(--accent-glow) !important;}
+.mode-icon,.qc-ic,.sr-ic{border-radius:14px !important;}
 </style>
 </head>
 <body>
@@ -2654,7 +2679,7 @@ html.tabbar-on .screen.hd-on>.page-head{display:none !important;}
 <div id="screen-semchoice" class="screen">
   <div class="wrap">
     <button class="back-btn rise" id="btn-semchoice-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
-    <div class="vue-tete rise" style="animation-delay:.04s"><h1 class="page-title">Quel semestre&nbsp;?</h1><div class="seg vue-seg" id="vue-sem" role="group" aria-label="Affichage"><button type="button" class="seg-opt" data-vue="bloc" aria-label="Afficher en blocs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/></svg></button><button type="button" class="seg-opt" data-vue="liste" aria-label="Afficher en liste"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.5" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.5" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button></div></div>
+    <div class="vue-tete rise" style="animation-delay:.04s"><h1 class="page-title">Cours</h1><div class="seg vue-seg" id="vue-sem" role="group" aria-label="Affichage"><button type="button" class="seg-opt" data-vue="bloc" aria-label="Afficher en blocs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/></svg></button><button type="button" class="seg-opt" data-vue="liste" aria-label="Afficher en liste"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.5" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.5" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button></div></div>
     <div class="sem-grid rise" id="semchoice-inner" style="animation-delay:.08s"></div>
   </div>
 </div>
@@ -6690,6 +6715,28 @@ function poserHdOnglet(id){
   if(id === "mesdevoirs"){ const st = el("div","hd-stats"); st.id = "hd-stats"; plus.appendChild(st); }
 }
 Object.keys(HD_ONGLETS).forEach(poserHdOnglet);
+// ══════════ LE MÊME EN-TÊTE SUR TOUTES LES AUTRES PAGES ══════════
+// Le titre (et son surtitre, sa phrase) passent dans le bandeau coloré, avec le retour et les boutons.
+// On déplace les éléments eux-mêmes : le code qui les remplit (par leur id) continue de marcher.
+function poserHdPage(id){
+  const scr = document.getElementById("screen-" + id); if(!scr || scr.querySelector(":scope > .hd-onglet")) return;
+  const wrap = scr.querySelector(":scope > .wrap"); if(!wrap) return;
+  const h1 = wrap.querySelector(".page-title"); if(!h1) return;
+  const hd = el("div","hd-onglet hd-page"); hd.innerHTML = `<div class="hd-row"><div class="hd-titres"></div><div class="hd-act"></div></div><div class="hd-plus"></div>`;
+  scr.insertBefore(hd, wrap); scr.classList.add("hd-on");
+  const row = hd.querySelector(".hd-row"), titres = hd.querySelector(".hd-titres"), act = hd.querySelector(".hd-act");
+  const back = scr.querySelector(":scope > .page-head .back-btn"); if(back) row.insertBefore(back, titres);
+  const eb = wrap.querySelector(".page-eyebrow"); if(eb){ eb.classList.remove("rise"); titres.appendChild(eb); }
+  h1.classList.remove("rise"); h1.removeAttribute("style"); h1.classList.add("hd-t"); titres.appendChild(h1);
+  const sous = wrap.querySelector(":scope > .page-sub, :scope > .lex-sous"); if(sous){ sous.classList.remove("rise"); sous.classList.add("hd-sous"); hd.querySelector(".hd-plus").appendChild(sous); }
+  scr.querySelectorAll(".page-head [data-entete]").forEach(b=>act.appendChild(b));
+  wrap.querySelectorAll(":scope > [data-entete]").forEach(b=>act.appendChild(b));
+  // Cours : blocs / liste, à côté des boutons
+  const vue = wrap.querySelector(".vue-seg"); if(vue) act.appendChild(vue);
+  const tete = wrap.querySelector(".vue-tete"); if(tete && !tete.children.length) tete.remove();
+}
+["semchoice","subjects","planning","devoirs","class","shared","search","lexique","index","auteurs","qcmchoix"].forEach(poserHdPage);
+
 // la semaine affichée, sous les réglages de l'agenda : un point les jours de cours, un appui ouvre le jour
 function majHdSemaine(){
   const box = document.getElementById("hd-wk"); if(!box) return;
