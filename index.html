@@ -2492,7 +2492,7 @@ html.tabbar-on .screen.hd-on>.page-head{display:none !important;}
 .hd-stats b{display:block;font-size:22px;font-weight:800;}
 .hd-stats small{font-size:11.5px;font-weight:800;opacity:.88;}
 #screen-mesdevoirs #home-know{margin-top:4px !important;}
-#screen-mesdevoirs .av-carte{background:none !important;box-shadow:none !important;border-radius:0 !important;overflow:visible;display:flex;flex-direction:column;gap:9px;}
+#screen-mesdevoirs .av-carte,#screen-class .av-carte{background:none !important;box-shadow:none !important;border-radius:0 !important;overflow:visible;display:flex;flex-direction:column;gap:9px;}
 .av-row.dv-carte{border-top:none !important;border-radius:20px;background:var(--surface-solid);box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04);padding:12px 14px !important;}
 .dv-j{width:52px;height:52px;border-radius:16px;display:grid;place-content:center;text-align:center;font-weight:800;font-size:15px;line-height:1.05;flex-shrink:0;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c);}
 .dv-j small{display:block;font-size:10.5px;font-weight:800;opacity:.8;margin-top:2px;}
@@ -2674,6 +2674,8 @@ html[data-theme="girly"][data-mode="sombre"]{--text-mute:#b08a9c;}
 /* boutons retour carrés : la flèche bien au centre (le mot « Retour », invisible, ne la pousse plus) */
 .hd-row .back-btn,.hd-row .psy-back,#screen-split>.split-head .back-btn,.sess-nav .nav-back{display:flex !important;align-items:center !important;justify-content:center !important;gap:0 !important;line-height:0 !important;text-indent:0;overflow:hidden;}
 .hd-row .back-btn svg,.hd-row .psy-back svg,#screen-split>.split-head .back-btn svg,.sess-nav .nav-back svg{margin:0 !important;flex-shrink:0;display:block;}
+#screen-class .av-row.note{--c:var(--info);}
+.av-row.fait .dv-j{--c:var(--ok);}
 </style>
 </head>
 <body>
@@ -4795,14 +4797,15 @@ function renderDevoirsClasse(c, box, gere, devs){
     const nouveau = !passe && it.author !== whoAmI() && !vus[it.id];
     const kn = cleDuDevoir(it.id), N = kn ? EDTNOTES[kn] : null;
     const fait = !!(N && N.done), modifie = !!(N && (N.src === it.id ? N.modifie : autresDe(N).some(a=>a.src === it.id && a.modifie)));
-    const row = el("div","av-row " + cle + (fait ? " fait" : "")); row.setAttribute("role","button"); row.tabIndex = 0;
+    const row = el("div","av-row dv-carte " + cle + (fait ? " fait" : "")); row.setAttribute("role","button"); row.tabIndex = 0;
+    const jD = hmJoursAvant(d), chsP = Array.isArray(p.chs) ? p.chs.map(x=>String(x).split(" · ")[0]) : [];
     let note = String(p.note || "").split("\n")[0];
     if(p.jour && note.trim() === it.subject_title) note = String(p.note || "").split("\n")[1] || "";   // le nom vient déjà de la note
     note = note.replace(/(?:https?:\/\/|www\.)[^\s<>"']+/gi, u=>libelleUrl(u).split("/")[0]);   // une adresse : juste son site
     // fait ou pas : on le voit comme à l'accueil (nom barré, « Fait » en vert), on coche depuis l'accueil ou la fiche
     const quand = JOURS[d.getDay()].toLowerCase() + " " + d.getDate() + (p.heure ? " · " + p.heure + (p.jour && p.fin ? " → " + p.fin : "") : "");
-    row.innerHTML = `<span class="av-dot"></span><span class="av-txt"><b>${esc(it.subject_title)}</b>
-      <small><i>${fait ? "Fait" : TAG_DEVOIR[p.type || ""]}</i> · ${esc(quand)}</small>${note ? `<small class="av-note">${esc(note)}</small>` : ""}${it.author === whoAmI() ? "" : `<small>par ${esc(it.author)}</small>`}</span>` +
+    row.innerHTML = `<span class="dv-j">${passe ? d.getDate() + "/" + String(d.getMonth()+1).padStart(2,"0") : jD <= 0 ? "Auj." : "J-" + jD}<small>${passe ? "" : jD === 1 ? "demain" : jD > 1 ? HM_JOURS[d.getDay()] : ""}</small></span><span class="av-txt"><b>${esc(it.subject_title)}</b>
+      <small><i>${fait ? "Fait" : TAG_DEVOIR[p.type || ""]}</i> · ${esc(quand)}</small>${note ? `<small class="av-note">${esc(note)}</small>` : ""}${it.author === whoAmI() ? "" : `<small>par ${esc(it.author)}</small>`}${chsP.length ? `<span class="dv-chs">${chsP.map(x=>`<span>${esc(x)}</span>`).join("")}</span>` : ""}</span>` +
       (nouveau ? `<span class="chap-pick-new">Nouveau</span>` : modifie ? `<span class="chap-pick-new">Modifié</span>` : `<span class="av-fl">›</span>`);
     row.addEventListener("click",()=>{
       haptic();
