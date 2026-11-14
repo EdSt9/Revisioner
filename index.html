@@ -2084,6 +2084,129 @@ html.calme .rise{animation:none!important;}
 .psy-spe-lien{font-size:12.5px;color:var(--pac);background:var(--psurface2);border-radius:10px;padding:9px 12px;margin-bottom:8px;line-height:1.6;}
 .psy-spe-master{font-size:11.5px;font-weight:700;color:var(--pac);}
 
+
+/* ══════════ NOUVEL ACCUEIL ET BARRE DU BAS (2026) ══════════ */
+:root{--c-b:#3a86ff;--c-g:#14b87e;--c-y:#f5a524;--c-r:#ff4d8d;
+  --hm-carte:var(--surface-solid);--hm-ombre:0 1px 2px rgba(23,19,43,.04),0 12px 30px var(--shadow);
+  --hm-trait:color-mix(in srgb,var(--text) 8%,transparent);}
+.hm-doux-v{background:color-mix(in srgb,var(--accent) 13%,transparent);color:var(--accent);}
+.hm-doux-b{background:color-mix(in srgb,var(--c-b) 14%,transparent);color:var(--c-b);}
+.hm-doux-g{background:color-mix(in srgb,var(--c-g) 14%,transparent);color:var(--c-g);}
+.hm-doux-y{background:color-mix(in srgb,var(--c-y) 17%,transparent);color:#d48a00;}
+.hm-doux-r{background:color-mix(in srgb,var(--c-r) 14%,transparent);color:var(--c-r);}
+@media(prefers-color-scheme:dark){.hm-doux-y{color:var(--c-y);}}
+#screen-semestres>.hm-wrap{padding:0 !important;max-width:none !important;width:100%;}
+.hm-head{position:relative;overflow:hidden;color:#fff;padding:calc(env(safe-area-inset-top) + 20px) 18px 96px;
+  background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 85%,#000) 0%,var(--accent) 48%,var(--accent-2) 100%);border-radius:0 0 34px 34px;}
+.hm-head:before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.08);right:-90px;top:-60px;pointer-events:none;}
+.hm-head:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.06);left:-60px;bottom:-80px;pointer-events:none;}
+.hm-row{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:520px;margin:0 auto;}
+.hm-date{font-size:14px;font-weight:600;opacity:.85;}
+.hm-date:first-letter{text-transform:uppercase;}
+.hm-hello{font-size:27px;font-weight:800;letter-spacing:-.02em;margin-top:2px;line-height:1.1;}
+.hm-btns{display:flex;gap:10px;flex-shrink:0;}
+.hm-btns>button{position:relative !important;inset:auto !important;width:42px !important;height:42px !important;border-radius:14px !important;
+  background:rgba(255,255,255,.2) !important;color:#fff !important;box-shadow:none !important;border:none !important;display:grid;place-items:center;margin:0 !important;transform:none !important;}
+.hm-btns>button svg{width:20px;height:20px;}
+.hm-btns>#btn-compte{background:#fff !important;color:var(--accent) !important;font-weight:800;font-size:16px;}
+.hm-btns .memo-fab-badge{top:-5px;right:-5px;}
+.hm-week{position:relative;z-index:1;display:flex;justify-content:space-between;margin:20px auto 0;max-width:520px;}
+.hm-d{width:44px;height:62px;border-radius:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#fff;border:none;background:none;font:inherit;cursor:pointer;}
+.hm-d i{font-style:normal;font-size:11px;font-weight:700;opacity:.72;text-transform:uppercase;}
+.hm-d b{font-size:17px;font-weight:800;}
+.hm-d u{width:5px;height:5px;border-radius:50%;}
+.hm-d u.x{background:rgba(255,255,255,.78);}
+.hm-d.on{background:#fff;color:var(--accent);}
+.hm-d.on u.x{background:var(--accent);}
+.hm-body{position:relative;z-index:2;max-width:520px;margin:-72px auto 0;padding:0 16px calc(120px + env(safe-area-inset-bottom));}
+.hm-card{background:var(--hm-carte);border-radius:26px;box-shadow:var(--hm-ombre);}
+.hm-press{transition:transform .18s var(--ease-spring);cursor:pointer;}
+.hm-press:active{transform:scale(.97);}
+/* le bloc du jour */
+.hm-jour{padding:20px;}
+.hm-jtop{display:flex;align-items:center;}
+.hm-ring{position:relative;width:140px;height:140px;flex-shrink:0;}
+.hm-ring svg{transform:rotate(-90deg);width:140px;height:140px;}
+.hm-ring .arc{transition:stroke-dashoffset 1.3s cubic-bezier(.2,.9,.25,1);}
+.hm-rc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.hm-rc b{font-size:36px;font-weight:800;letter-spacing:-.03em;line-height:1;}
+.hm-rc span{font-size:12px;color:var(--text-soft);font-weight:700;margin-top:4px;}
+.hm-side{flex:1;min-width:0;padding-left:18px;display:flex;flex-direction:column;gap:13px;}
+.hm-sv .l{display:flex;justify-content:space-between;gap:6px;font-size:13px;font-weight:700;}
+.hm-sv .l em{font-style:normal;color:var(--text-mute);white-space:nowrap;}
+.hm-tr{height:7px;border-radius:4px;margin-top:6px;overflow:hidden;}
+.hm-tr i{display:block;height:100%;border-radius:4px;width:0;transition:width 1.1s cubic-bezier(.2,.9,.25,1) .15s;}
+.hm-cta{width:100%;margin-top:18px;height:54px;border-radius:17px;border:none;background:var(--text);color:var(--bg);font:inherit;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;}
+@media(prefers-color-scheme:dark){.hm-cta{background:var(--accent);color:#fff;}}
+.hm-cta svg{width:18px;height:18px;}
+.hm-serie{display:flex;align-items:center;gap:10px;margin-top:14px;padding:11px 12px;border-radius:16px;background:color-mix(in srgb,var(--c-y) 15%,transparent);}
+.hm-serie .f{width:34px;height:34px;border-radius:11px;background:var(--hm-carte);display:grid;place-items:center;color:var(--c-y);flex-shrink:0;}
+.hm-serie .f svg{width:18px;height:18px;}
+.hm-serie p{font-size:13.5px;font-weight:700;flex:1;margin:0;}
+.hm-serie p em{display:block;font-style:normal;font-weight:600;color:var(--text-soft);font-size:12px;margin-top:1px;}
+.hm-dots{display:flex;gap:4px;}
+.hm-dots i{width:8px;height:8px;border-radius:50%;background:var(--c-y);}
+.hm-dots i.o{background:color-mix(in srgb,var(--c-y) 25%,transparent);}
+/* sections */
+.hm-sec{display:flex;justify-content:space-between;align-items:center;margin:26px 6px 12px;}
+.hm-sec h3{font-size:19px;font-weight:800;letter-spacing:-.02em;margin:0;}
+.hm-sec button{font:inherit;font-size:14px;font-weight:700;color:var(--accent);background:none;border:none;cursor:pointer;padding:4px 0;}
+.hm-tl{padding:6px 16px;}
+.hm-slot{display:flex;gap:12px;padding:12px 0;width:100%;text-align:left;background:none;border:none;font:inherit;color:inherit;cursor:pointer;}
+.hm-slot+.hm-slot{border-top:1px solid var(--hm-trait);}
+.hm-hr{width:46px;flex-shrink:0;font-size:13px;font-weight:800;padding-top:3px;}
+.hm-hr em{display:block;font-style:normal;font-weight:600;color:var(--text-mute);font-size:12px;margin-top:2px;}
+.hm-vb{width:4px;border-radius:2px;flex-shrink:0;}
+.hm-sl{flex:1;min-width:0;}
+.hm-sl .t1{font-size:15.5px;font-weight:800;line-height:1.25;}
+.hm-sl .t2{font-size:13px;color:var(--text-soft);font-weight:600;margin-top:3px;}
+.hm-tag{align-self:center;font-size:12px;font-weight:800;padding:6px 10px;border-radius:10px;white-space:nowrap;}
+.hm-live{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--c-g);margin-right:6px;vertical-align:1px;animation:hmPulse 1.6s infinite;}
+@keyframes hmPulse{50%{opacity:.35;}}
+.hm-hs{display:flex;gap:12px;overflow-x:auto;margin:0 -16px;padding:0 16px 10px;scrollbar-width:none;scroll-snap-type:x mandatory;}
+.hm-hs::-webkit-scrollbar{display:none;}
+.hm-up{flex:0 0 158px;padding:14px;text-align:left;border:none;font:inherit;color:inherit;scroll-snap-align:start;}
+.hm-ic{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;flex-shrink:0;}
+.hm-ic svg{width:20px;height:20px;}
+.hm-jj{font-size:30px;font-weight:800;letter-spacing:-.03em;margin-top:14px;line-height:1;}
+.hm-jj small{font-size:14px;color:var(--text-mute);font-weight:700;margin-left:4px;letter-spacing:0;}
+.hm-up .n{font-size:14px;font-weight:800;margin-top:8px;line-height:1.25;height:35px;overflow:hidden;}
+.hm-up .s{font-size:12px;font-weight:700;margin-top:6px;}
+.hm-vide{padding:18px;display:flex;align-items:center;gap:12px;font-weight:700;font-size:14.5px;color:var(--text-soft);}
+.hm-ml{padding:4px 14px;}
+.hm-mi{display:flex;align-items:center;gap:12px;padding:12px 0;width:100%;text-align:left;background:none;border:none;font:inherit;color:inherit;}
+.hm-mi+.hm-mi{border-top:1px solid var(--hm-trait);}
+.hm-mi .hm-ic{width:44px;height:44px;border-radius:14px;}
+.hm-mi .t{flex:1;min-width:0;}
+.hm-mi .t1{font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hm-mi .t2{font-size:12.5px;color:var(--text-soft);font-weight:600;margin-top:2px;}
+.hm-pr{position:relative;width:42px;height:42px;flex-shrink:0;}
+.hm-pr svg{transform:rotate(-90deg);width:42px;height:42px;}
+.hm-pr b{position:absolute;inset:0;display:grid;place-items:center;font-size:11px;font-weight:800;}
+/* barre du bas */
+.tabbar{position:fixed;z-index:45;left:0;right:0;bottom:0;display:none;justify-content:space-around;align-items:flex-start;
+  padding:9px 8px calc(env(safe-area-inset-bottom) + 6px);background:color-mix(in srgb,var(--surface-solid) 92%,transparent);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 -6px 24px var(--shadow);border-top:1px solid var(--hm-trait);}
+html.tabbar-on .tabbar{display:flex;}
+.tb{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;background:none;border:none;font:inherit;font-size:10.5px;font-weight:800;color:var(--text-mute);cursor:pointer;padding:0;}
+.tb svg{width:24px;height:24px;}
+.tb.on{color:var(--accent);}
+.tb-mid{margin-top:-28px;}
+.tb-rond{position:relative;width:58px;height:58px;border-radius:20px;display:grid;place-items:center;color:#fff;
+  background:linear-gradient(140deg,color-mix(in srgb,var(--accent) 85%,#000),var(--accent-2));box-shadow:0 10px 22px var(--accent-glow);transition:transform .18s var(--ease-spring);}
+.tb-mid:active .tb-rond{transform:scale(.92);}
+.tb-rond svg{width:26px;height:26px;}
+.tb-mid.on{color:var(--accent);}
+.tb-nb{position:absolute;top:-6px;right:12px;min-width:18px;height:18px;border-radius:9px;background:var(--new);color:#fff;font-size:10.5px;font-weight:800;display:grid;place-items:center;padding:0 5px;border:2px solid var(--surface-solid);}
+.tb-rond .tb-nb{top:-6px;right:-6px;}
+.hm-btns>.memo-fab{display:grid !important;}
+.tb-nb[hidden],.hm-btns [hidden]{display:none !important;}
+.hm-mi .t,.hm-mi .t1,.hm-mi .t2,.hm-sl,.hm-sl .t1,.hm-sl .t2{display:block;}
+html.tabbar-on .screen.active>.wrap{padding-bottom:calc(112px + env(safe-area-inset-bottom)) !important;}
+html.tabbar-on[data-screen="semchoice"] .page-head .back-btn,
+html.tabbar-on[data-screen="mesdevoirs"] .page-head .back-btn,
+html.tabbar-on[data-screen="edt"] .page-head .back-btn,
+html.tabbar-on[data-screen="classes"] .page-head .back-btn{visibility:hidden;}
 </style>
 </head>
 <body>
@@ -2131,7 +2254,24 @@ html.calme .rise{animation:none!important;}
 
 <!-- SEMESTRES -->
 <div id="screen-semestres" class="screen">
-  <div class="wrap">
+  <div class="wrap hm-wrap">
+    <!-- Accueil : un en-tête en couleur (date, bonjour, semaine), puis la journée en cartes -->
+    <div class="hm-head">
+      <div class="hm-row">
+        <div class="hm-qui"><div class="hm-date" id="hm-date"></div><div class="hm-hello" id="hm-hello"></div></div>
+        <div class="hm-btns" id="hm-btns"></div>
+      </div>
+      <div class="hm-week" id="hm-week"></div>
+    </div>
+    <div class="hm-body">
+      <div class="hm-card hm-jour" id="hm-jour"></div>
+      <div id="aide-accueil" hidden></div>
+      <div id="hm-cours"></div>
+      <div id="hm-avenir"></div>
+      <div id="hm-mats"></div>
+    </div>
+    <!-- l'ancien accueil reste là, caché : ses boutons servent encore (barre du bas, raccourcis) -->
+    <div class="hm-ancien" hidden>
     <div class="home-icons rise">
       <button class="icon-btn compte-btn" id="btn-compte" aria-label="Mon compte"></button>
       <button class="icon-btn" id="btn-edt" aria-label="Emploi du temps">
@@ -2148,7 +2288,7 @@ html.calme .rise{animation:none!important;}
       </button>
     </div>
 
-    <div id="aide-accueil" hidden></div>
+    
 
     <!-- Le prochain cours en long, puis des tuiles carrées deux par ligne ; toutes de la même hauteur -->
     <div class="home-tuiles rise" style="animation-delay:.06s">
@@ -2178,8 +2318,18 @@ html.calme .rise{animation:none!important;}
     <div id="today-courses" hidden></div>
     <div id="dashboard" hidden></div>
     <div id="sem-inner" hidden></div>
+    </div>
   </div>
 </div>
+
+<!-- Barre du bas : les cinq grandes parties de l'app, à portée de pouce -->
+<nav class="tabbar" id="tabbar" aria-label="Navigation">
+  <button class="tb" type="button" data-tb="semestres"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.3 3.3a1 1 0 0 1 1.4 0l8 7.2a1 1 0 0 1 .3.7V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8.8a1 1 0 0 1 .3-.7z"/></svg><span>Accueil</span></button>
+  <button class="tb" type="button" data-tb="mesdevoirs"><span class="tb-nb" hidden></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg><span>Devoirs</span></button>
+  <button class="tb tb-mid" type="button" data-tb="semchoice" aria-label="Cours"><span class="tb-rond"><span class="tb-nb" hidden></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><span>Cours</span></button>
+  <button class="tb" type="button" data-tb="edt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg><span>Agenda</span></button>
+  <button class="tb" type="button" data-tb="classes"><span class="tb-nb" hidden></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 19v-1.5a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3V19"/><circle cx="9.5" cy="8" r="3"/><path d="M21 19v-1.5a3 3 0 0 0-2.3-2.9"/><path d="M15.5 5.2a3 3 0 0 1 0 5.6"/></svg><span>Classes</span></button>
+</nav>
 
 <!-- MATIÈRES -->
 <!-- CHOIX DU SEMESTRE -->
@@ -2772,6 +2922,7 @@ function srsReview(key, grade){
   }
   c.last = today0();
   SRS[key] = c;
+  try{ noterJourRevision(); }catch(e){}
   srsSave();
   return c;
 }
@@ -3474,7 +3625,7 @@ function majPastillesClasses(){
   const o = clsNb();
   const connues = new Set(MY_CLASSES.map(c=>String(c.id)));
   const tot = Object.keys(o).filter(k=>!MY_CLASSES.length || connues.has(String(k))).reduce((s,k)=>s + (o[k] || 0), 0);
-  BADGE_APP.cls = tot; poserBadgeApp();
+  BADGE_APP.cls = tot; poserBadgeApp(); try{ majTabbar(); }catch(e){}
   pastille(document.getElementById("btn-classes"), tot, tot + " matière" + (tot > 1 ? "s" : "") + " avec du nouveau dans tes classes");
   document.querySelectorAll("#classes-list .cls-row[data-cls]").forEach(r=>{
     const n = o[r.dataset.cls] || 0;
@@ -6196,7 +6347,7 @@ Object.keys(FAB_ACTIONS).forEach(id=>{
 });
 document.querySelectorAll(".screen").forEach(poserEntete);
 // le bouton mémo est « fixed » : il sort du contenu qui glisse, sinon il glisserait avec lui
-(function(){ const m = document.getElementById("btn-memo"), sc = document.getElementById("screen-semestres"); if(m && sc) sc.appendChild(m); })();
+(function(){ const m = document.getElementById("btn-memo"), h = document.getElementById("hm-btns"); if(m && h) h.insertBefore(m, h.firstChild); })();
 // Pas de jeu en bas des pages : la marge du bas sert à respirer quand la page défile.
 // Si tout tient presque sur l'écran, cette marge ne doit pas, à elle seule, faire défiler la page.
 // Avec le bouton flottant, on lui laisse sa place ; sans lui, juste la barre d'accueil de l'iPhone.
@@ -6261,7 +6412,7 @@ function showScreen(id){
     clearTimeout(CALME_T); CALME_T = setTimeout(()=>document.documentElement.classList.add("calme"), 900);
   }
   if(id !== "split" && typeof fermerRecherchePage === "function") fermerRecherchePage();
-  if(id === "semestres") renderReprise();
+  if(id === "semestres"){ renderReprise(); try{ renderAccueil(true); }catch(e){ console.error(e); } }
   requestAnimationFrame(()=>ajusterBas(document.querySelector("#screen-" + id + " > .wrap, #screen-" + id + " > #psycho-inner")));
   const avant = document.documentElement.getAttribute("data-screen");
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
@@ -6277,6 +6428,7 @@ function showScreen(id){
   }
   // le canvas <html> peint toute la surface (sous les barres Safari + safe areas PWA)
   document.documentElement.setAttribute("data-screen", id);
+  try{ majTabbar(id); }catch(e){}
   refreshFab(id);
   // un nouvel écran commence en haut ; le même écran redessiné garde sa place
   if(avant !== id) window.scrollTo(0,0);
@@ -8112,7 +8264,7 @@ function demarrerHorlogeCours(){
   horlogeCours = setInterval(()=>{
     if(document.hidden) return;
     const scr = document.documentElement.getAttribute("data-screen");
-    if(scr === "semestres") renderNextCourse();
+    if(scr === "semestres"){ renderNextCourse(); try{ renderAccueil(); }catch(e){} }
   }, 30000);
 }
 
@@ -8122,6 +8274,7 @@ function renderTodayCourses(){
   box.innerHTML = ""; box.hidden = true;
   renderNextCourse();
   majTuileDevoirs(pendingAlerts(true, true));
+  try{ renderAccueil(); }catch(e){ console.error(e); }
   demarrerHorlogeCours();
   // la liste du jour a été retirée de l'accueil : le panneau au-dessus suffit,
   // et « Tout voir » mène à l'emploi du temps complet.
@@ -8352,7 +8505,7 @@ function marquerDevoirsVus(alerts){
 // La tuile « Mes devoirs » de l'accueil : ce qui reste à faire, le prochain, et la pastille des nouveaux
 function majTuileDevoirs(alerts){
   const nb = document.getElementById("dev-entry-nb");
-  if(nb){ const k = devoirsNouveaux(alerts).length; BADGE_APP.dev = k; poserBadgeApp(); nb.textContent = k; nb.hidden = !k; nb.setAttribute("aria-label", k + " devoir" + (k > 1 ? "s" : "") + " nouveau" + (k > 1 ? "x" : "")); }
+  if(nb){ const k = devoirsNouveaux(alerts).length; BADGE_APP.dev = k; poserBadgeApp(); try{ majTabbar(); }catch(e){} nb.textContent = k; nb.hidden = !k; nb.setAttribute("aria-label", k + " devoir" + (k > 1 ? "s" : "") + " nouveau" + (k > 1 ? "x" : "")); }
   const ic = document.getElementById("dev-entry-ic"); if(ic && !ic.firstChild) ic.innerHTML = ICO("devoirs");
   const sub = document.getElementById("dev-entry-sub"); if(!sub) return;
   const now = new Date(); now.setHours(0,0,0,0);
@@ -8780,6 +8933,267 @@ function renderReprise(){
   };
   b.hidden = false;
 }
+
+// ══════════ NOUVEL ACCUEIL (2026) ══════════
+// En-tête en couleur (date, bonjour, semaine), le bloc du jour (anneau, barres, série),
+// les cours du jour, ce qui arrive, et les matières du semestre en cours.
+const HM_COUL = ["v","b","g","y","r"];
+const HM_IC = ["cm","lexique","auteurs","examen","synthese","groupe","td","oq"];
+function hmHash(t){ let h = 0; String(t).split("").forEach(c=>{ h = (h * 31 + c.charCodeAt(0)) | 0; }); return Math.abs(h); }
+function hmCouleur(subj){ return HM_COUL[hmHash(subj.id) % HM_COUL.length]; }
+const HM_HEX = { v:"var(--accent)", b:"var(--c-b)", g:"var(--c-g)", y:"var(--c-y)", r:"var(--c-r)" };
+// le semestre « en cours » : le plus avancé qui a déjà des chapitres
+function hmSemCourant(){
+  let sem = 0;
+  SUBJECTS.forEach(s=>{ const n = (s.cm||[]).length + (s.td||[]).length; const k = SEMESTRES[s.id] || 0; if(n && k > sem) sem = k; });
+  return sem;
+}
+function hmMatieresSem(){ const sem = hmSemCourant(); return SUBJECTS.filter(s=>SEMESTRES[s.id] === sem && ((s.cm||[]).length + (s.td||[]).length)); }
+// QCM de la matière : combien sont validés (les vrais QCM du cours, sans ceux du lexique)
+function hmQcm(subj){
+  const qs = subj.qcm || []; let ok = 0, err = 0;
+  qs.forEach((q,i)=>{ const k = cardKey(subj.id, "qcm", q, i); if(estAcquise(k)) ok++; if(estErreur(k)) err++; });
+  return { tot:qs.length, ok, err };
+}
+function hmChapitres(subj){
+  let tot = 0, lus = 0;
+  ["cm","td"].forEach(t=>(subj[t]||[]).forEach(ch=>{ tot++; if(estRevise(subj, t, ch)) lus++; }));
+  return { tot, lus };
+}
+// le prochain contrôle (non fait) de chaque matière, d'après l'agenda
+function hmControles(){
+  const o = {};
+  pendingAlerts(true, false).forEach(e=>{
+    const N = evNote(e) || {};
+    if(typeDevoir(N) !== "controle" || !N.subj) return;
+    if(!o[N.subj] || e.start < o[N.subj].start) o[N.subj] = e;
+  });
+  return o;
+}
+const HM_JOURS = ["dim.","lun.","mar.","mer.","jeu.","ven.","sam."];
+function hmJoursAvant(d){ const a = new Date(d); a.setHours(0,0,0,0); return Math.round((a - today0()) / DAY); }
+
+// ── Les jours de révision : une petite série, sans pression ──
+const JOURS_KEY = "revision_jours_v1";
+function joursCharger(){ try{ return JSON.parse(localStorage.getItem(JOURS_KEY) || "[]") || []; }catch(e){ return []; } }
+function joursSave(l){ try{ localStorage.setItem(JOURS_KEY, JSON.stringify(l.slice(-400))); }catch(e){} }
+function isoJour(t){ const d = new Date(t); return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); }
+function noterJourRevision(){
+  const l = joursCharger(), j = isoJour(Date.now());
+  if(!l.includes(j)){ l.push(j); l.sort(); joursSave(l); }
+}
+// les jours connus : ceux notés, plus ceux qu'on devine dans les cartes (date de la dernière réponse)
+function joursRevision(){
+  const set = new Set(joursCharger());
+  Object.keys(SRS).forEach(k=>{ const c = SRS[k]; if(c && c.last) set.add(isoJour(c.last)); });
+  return set;
+}
+function hmSerie(){
+  const set = joursRevision();
+  const auj = isoJour(Date.now());
+  const fait = set.has(auj);
+  let n = 0; const d = new Date(); d.setHours(12,0,0,0);
+  if(!fait) d.setDate(d.getDate() - 1);
+  while(set.has(isoJour(d))){ n++; d.setDate(d.getDate() - 1); }
+  const sept = []; const x = new Date(); x.setHours(12,0,0,0); x.setDate(x.getDate() - 6);
+  for(let i = 0; i < 7; i++){ sept.push(set.has(isoJour(x))); x.setDate(x.getDate() + 1); }
+  return { n, fait, sept };
+}
+
+const HM_OBJECTIF = 25;     // une série : 25 questions
+let HM_DERNIER = "";
+function renderAccueil(anim){
+  const head = document.getElementById("hm-hello"); if(!head) return;
+  // les vrais boutons montent dans l'en-tête (une seule fois)
+  const btns = document.getElementById("hm-btns");
+  if(btns) ["btn-memo","btn-search","btn-compte"].forEach(id=>{ const x = document.getElementById(id); if(x && x.parentNode !== btns) btns.appendChild(x); });
+  const now = new Date();
+  document.getElementById("hm-date").textContent = now.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long" });
+  const h = now.getHours();
+  const nom = String(PSEUDO || "").trim();
+  head.textContent = (h >= 5 && h < 18 ? "Bonjour" : "Bonsoir") + (nom ? " " + nom.charAt(0).toUpperCase() + nom.slice(1) : "");
+
+  // la semaine : un point sous les jours qui ont des cours ou une échéance
+  const week = document.getElementById("hm-week");
+  const lun = mondayOf(now); lun.setHours(12,0,0,0);
+  let wh = "";
+  for(let i = 0; i < 7; i++){
+    const d = new Date(lun); d.setDate(lun.getDate() + i);
+    const plein = eventsOn(d).length > 0 || pendingAlerts(true, true).some(e=>sameDay(e.start, d));
+    wh += `<button type="button" class="hm-d${sameDay(d, now) ? " on" : ""}" data-j="${d.getTime()}"><i>${d.toLocaleDateString("fr-FR",{weekday:"short"}).replace(".","")}</i><b>${d.getDate()}</b><u class="${plein ? "x" : ""}"></u></button>`;
+  }
+  week.innerHTML = wh;
+  week.querySelectorAll(".hm-d").forEach(b=>b.addEventListener("click",()=>{ haptic(); openEDTAt(new Date(+b.dataset.j)); }));
+
+  // ── le bloc du jour ──
+  const mats = hmMatieresSem();
+  let chT = 0, chL = 0, qT = 0, qO = 0, err = 0;
+  mats.forEach(m=>{ const c = hmChapitres(m), q = hmQcm(m); chT += c.tot; chL += c.lus; qT += q.tot; qO += q.ok; err += q.err; });
+  const t0 = today0();
+  const auj = Object.keys(SRS).filter(k=>{ const c = SRS[k]; return c && c.last === t0; }).length;
+  const fait = Math.min(auj, HM_OBJECTIF);
+  const serie = hmSerie();
+  const pc = (a,b)=>b ? Math.round(a / b * 100) : 0;
+  const ctaTxt = auj === 0 ? "Commencer mes révisions" : auj >= HM_OBJECTIF ? "Encore une série" : "Continuer mes révisions";
+  const serieTxt = serie.fait
+    ? `<p>${serie.n} jour${serie.n > 1 ? "s" : ""} de révision<em>C'est fait pour aujourd'hui, bravo</em></p>`
+    : serie.n ? `<p>${serie.n} jour${serie.n > 1 ? "s" : ""} de révision<em>Un petit tour aujourd'hui, et c'est ${serie.n + 1}</em></p>`
+    : `<p>Une série par jour<em>À ton rythme, quand tu veux</em></p>`;
+  const jour = `<div class="hm-jtop">
+      <div class="hm-ring"><svg viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="color-mix(in srgb,var(--accent) 13%,transparent)" stroke-width="14"/>
+        <circle class="arc" cx="75" cy="75" r="62" fill="none" stroke="url(#hm-g)" stroke-width="14" stroke-linecap="round" stroke-dasharray="389.6" stroke-dashoffset="389.6" data-off="${389.6 * (1 - fait / HM_OBJECTIF)}"/>
+        <defs><linearGradient id="hm-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="var(--c-r)"/></linearGradient></defs></svg>
+        <div class="hm-rc"><b data-n="${fait}">${fait}</b><span>sur ${HM_OBJECTIF}</span></div></div>
+      <div class="hm-side">
+        <div class="hm-sv"><div class="l">Chapitres lus<em>${chL}/${chT}</em></div><div class="hm-tr hm-doux-b"><i data-w="${pc(chL,chT)}" style="background:var(--c-b)"></i></div></div>
+        <div class="hm-sv"><div class="l">QCM validés<em>${pc(qO,qT)} %</em></div><div class="hm-tr hm-doux-v"><i data-w="${pc(qO,qT)}" style="background:var(--accent)"></i></div></div>
+        <div class="hm-sv"><div class="l">À revoir<em>${err}</em></div><div class="hm-tr hm-doux-r"><i data-w="${Math.min(100, err * 4)}" style="background:var(--c-r)"></i></div></div>
+      </div></div>
+    <button type="button" class="hm-cta hm-press" id="hm-go">${ctaTxt}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+    <div class="hm-serie"><span class="f"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 3.5 5 5.5 5 10.5A5 5 0 0 1 7 13c0-2 .8-3.3 2-4.5.2 1.6 1 2.6 2 3 0-3.5-.8-6.3 1-9.5z"/></svg></span>${serieTxt}
+      <span class="hm-dots">${serie.sept.map(x=>`<i class="${x ? "" : "o"}"></i>`).join("")}</span></div>`;
+  const boxJ = document.getElementById("hm-jour");
+  const neuf = jour !== HM_DERNIER;
+  if(neuf){
+    HM_DERNIER = jour; boxJ.innerHTML = jour;
+    document.getElementById("hm-go").addEventListener("click",()=>{ haptic(); startGlobalSession(); });
+  }
+  if(neuf || anim){
+    const arc = boxJ.querySelector(".arc"), num = boxJ.querySelector(".hm-rc b"), bars = boxJ.querySelectorAll(".hm-tr i");
+    arc.style.transition = "none"; arc.setAttribute("stroke-dashoffset", 389.6); bars.forEach(i=>{ i.style.transition = "none"; i.style.width = 0; });
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      arc.style.transition = ""; arc.setAttribute("stroke-dashoffset", arc.dataset.off);
+      bars.forEach(i=>{ i.style.transition = ""; i.style.width = i.dataset.w + "%"; });
+    }));
+    const cible = +num.dataset.n; let n = 0; num.textContent = 0;
+    if(cible){ const pas = Math.max(1, Math.round(cible / 20)); const t = setInterval(()=>{ n = Math.min(cible, n + pas); num.textContent = n; if(n >= cible) clearInterval(t); }, 45); }
+  }
+
+  // ── les cours : aujourd'hui s'il en reste, sinon le prochain jour de cours ──
+  const boxC = document.getElementById("hm-cours"); boxC.innerHTML = "";
+  let jourC = null, evs = [];
+  for(let j = 0; j < 8 && !evs.length; j++){
+    const d = new Date(now); d.setDate(now.getDate() + j);
+    evs = eventsOn(d).filter(e=>(e.end || e.start) > now);
+    if(evs.length) jourC = d;
+  }
+  if(evs.length){
+    const jj = hmJoursAvant(jourC);
+    const titre = jj === 0 ? "Aujourd'hui" : jj === 1 ? "Demain" : jourC.toLocaleDateString("fr-FR",{ weekday:"long", day:"numeric" });
+    const sec = el("div","hm-sec"); sec.innerHTML = `<h3>${esc(titre.charAt(0).toUpperCase() + titre.slice(1))}</h3><button type="button">Agenda</button>`;
+    sec.querySelector("button").addEventListener("click",()=>{ haptic(); openEDTAt(jourC); });
+    boxC.appendChild(sec);
+    const card = el("div","hm-card hm-tl");
+    evs.slice(0, 4).forEach(e=>{
+      const N = evNote(e) || {};
+      const live = e.start <= now && (e.end || e.start) > now;
+      const t = String(e.title || "");
+      const genre = /\bTD\b/.test(t) ? "TD" : /\bCM\b/.test(t) ? "CM" : "";
+      const c = HM_COUL[hmHash(nomCourt(t)) % HM_COUL.length];
+      const flag = typeDevoir(N) === "controle" && !N.done ? `<span class="hm-tag hm-doux-r">Contrôle</span>` : typeDevoir(N) === "devoir" && !N.done ? `<span class="hm-tag hm-doux-y">À rendre</span>` : genre ? `<span class="hm-tag hm-doux-${c}">${genre}</span>` : "";
+      const b = el("button","hm-slot"); b.type = "button";
+      b.innerHTML = `<span class="hm-hr">${hhmm(e.start)}<em>${e.end ? hhmm(e.end) : ""}</em></span><span class="hm-vb" style="background:${HM_HEX[c]}"></span>
+        <span class="hm-sl"><span class="t1">${live ? '<span class="hm-live"></span>' : ""}${esc(nomCourt(t))}</span><span class="t2">${live ? "En cours" : ""}${live && e.place ? " · " : ""}${esc(e.place || "")}</span></span>${flag}`;
+      b.addEventListener("click",()=>{ haptic(); openEDTAt(e.start); });
+      card.appendChild(b);
+    });
+    boxC.appendChild(card);
+  }
+
+  // ── à venir : contrôles, rendus, étapes de projet ──
+  const boxA = document.getElementById("hm-avenir"); boxA.innerHTML = "";
+  const items = [];
+  pendingAlerts(true, false).forEach(e=>{
+    const N = evNote(e) || {}; const ty = typeDevoir(N); if(ty === "note") return;
+    const subj = N.subj ? SUBJECTS.find(x=>x.id === N.subj) : null;
+    let s = "", sc = "";
+    if(ty === "controle" && subj){ const q = hmQcm(subj); const reste = q.tot - q.ok; s = reste ? reste + " QCM à valider" : "Tout est révisé"; sc = reste ? "var(--c-r)" : "var(--c-g)"; }
+    else { const l = String(N.note || N.titre || "").split("\n")[0].trim(); s = l || (ty === "controle" ? "Contrôle" : "À rendre"); sc = "var(--text-soft)"; }
+    items.push({ d:e.start, n:(ty === "controle" ? "Contrôle " : "À rendre · ") + (subj ? subj.title : nomCourt(e.title)), s, sc, c:ty === "controle" ? "r" : "y", ic:"devoirs", go:()=>openEDTAt(e.start) });
+  });
+  try{
+    projetsVisibles().forEach(pid=>{
+      const E = echeancesDe(pid);
+      etapesProjet(pid).forEach(st=>{
+        if(st.fait || !E[st.id]) return; const j = joursAvant(E[st.id].fin); if(j < 0 || j > 31) return;
+        const [y,m,d] = E[st.id].fin.split("-").map(Number);
+        items.push({ d:new Date(y, m-1, d, 12), n:st.titre, s:pid === "psy" ? "Projet psycho" : PROJETS[pid].titre, sc:"#c98300", c:"y", ic:"accueil",
+          go:()=>{ if(pid === "psy") renderPsychoEtapes(); else ouvrirRubrique(pid, Math.max(0, PROJETS[pid].rubriques.findIndex(r=>r.type === "etapes"))); } });
+      });
+    });
+  }catch(e){}
+  items.sort((a,b)=>a.d - b.d);
+  const secA = el("div","hm-sec"); secA.innerHTML = `<h3>À venir</h3><button type="button">Tout voir</button>`;
+  secA.querySelector("button").addEventListener("click",()=>{ haptic(); document.getElementById("dev-entry").click(); });
+  boxA.appendChild(secA);
+  if(!items.length){
+    const v = el("div","hm-card hm-vide"); v.innerHTML = `<span class="hm-ic hm-doux-g">${ICO("valide")}</span>Rien à rendre pour l'instant. Profites-en.`;
+    boxA.appendChild(v);
+  } else {
+    const hs = el("div","hm-hs");
+    items.slice(0, 8).forEach(it=>{
+      const j = hmJoursAvant(it.d);
+      const b = el("button","hm-card hm-up hm-press"); b.type = "button";
+      b.innerHTML = `<span class="hm-ic hm-doux-${it.c}">${ICO(it.ic)}</span>
+        <div class="hm-jj">${j <= 0 ? "Auj." : "J-" + j}<small>${j <= 0 ? "" : j === 1 ? "demain" : j < 7 ? HM_JOURS[it.d.getDay()] : it.d.getDate() + "/" + String(it.d.getMonth()+1).padStart(2,"0")}</small></div>
+        <div class="n">${esc(it.n)}</div><div class="s" style="color:${it.sc}">${esc(it.s)}</div>`;
+      b.addEventListener("click",()=>{ haptic(); it.go(); });
+      hs.appendChild(b);
+    });
+    boxA.appendChild(hs);
+  }
+
+  // ── mes matières : celles qui ont un contrôle d'abord ──
+  const boxM = document.getElementById("hm-mats"); boxM.innerHTML = "";
+  if(mats.length){
+    const ctl = hmControles();
+    const tri = mats.slice().sort((a,b)=>{ const x = ctl[a.id], y = ctl[b.id]; if(x && y) return x.start - y.start; if(x) return -1; if(y) return 1; return 0; });
+    const sem = hmSemCourant();
+    const secM = el("div","hm-sec"); secM.innerHTML = `<h3>Mes matières</h3><button type="button">${esc(titreSemestre(sem))}</button>`;
+    secM.querySelector("button").addEventListener("click",()=>{ haptic(); curSemestre = sem; renderSubjectCards(sem); showScreen("subjects"); });
+    boxM.appendChild(secM);
+    const card = el("div","hm-card hm-ml");
+    const nouv = new Set(newSubjects().map(x=>x.id || x));
+    tri.slice(0, 5).forEach(m=>{
+      const c = hmCouleur(m), q = hmQcm(m), ch = hmChapitres(m), p = q.tot ? Math.round(q.ok / q.tot * 100) : 0;
+      const e = ctl[m.id];
+      let sous = ch.tot + " chapitre" + (ch.tot > 1 ? "s" : "");
+      if(e){ const j = hmJoursAvant(e.start); sous += " · contrôle " + (j <= 0 ? "aujourd'hui" : j === 1 ? "demain" : j < 7 ? e.start.toLocaleDateString("fr-FR",{weekday:"long"}) : "le " + e.start.getDate() + "/" + String(e.start.getMonth()+1).padStart(2,"0")); }
+      else if(nouv.has(m.id)) sous += " · du nouveau";
+      const b = el("button","hm-mi hm-press"); b.type = "button";
+      b.innerHTML = `<span class="hm-ic hm-doux-${c}">${ICO(HM_IC[hmHash(m.id + "i") % HM_IC.length])}</span><span class="t"><span class="t1">${esc(m.title)}</span><span class="t2">${esc(sous)}</span></span>
+        <span class="hm-pr"><svg viewBox="0 0 42 42"><circle cx="21" cy="21" r="17" fill="none" stroke="color-mix(in srgb,${HM_HEX[c]} 16%,transparent)" stroke-width="5"/><circle cx="21" cy="21" r="17" fill="none" stroke="${HM_HEX[c]}" stroke-width="5" stroke-linecap="round" stroke-dasharray="106.8" stroke-dashoffset="${106.8 * (1 - p / 100)}"/></svg><b>${q.tot ? p : "–"}</b></span>`;
+      b.addEventListener("click",()=>{ haptic(); curSemestre = SEMESTRES[m.id]; openSubject(m.id); });
+      card.appendChild(b);
+    });
+    boxM.appendChild(card);
+  }
+}
+
+// ── la barre du bas ──
+const TB_ECRANS = ["semestres","mesdevoirs","semchoice","edt","classes"];
+function majTabbar(id){
+  id = id || document.documentElement.getAttribute("data-screen");
+  const on = !!PSEUDO && TB_ECRANS.includes(id);
+  document.documentElement.classList.toggle("tabbar-on", on);
+  document.querySelectorAll("#tabbar .tb").forEach(b=>b.classList.toggle("on", b.dataset.tb === id));
+  const pose = (cle, n)=>{ const b = document.querySelector('#tabbar [data-tb="' + cle + '"] .tb-nb'); if(!b) return; b.hidden = !n; b.textContent = n > 99 ? "99+" : n; };
+  pose("classes", BADGE_APP.cls || 0);
+  pose("mesdevoirs", BADGE_APP.dev || 0);
+  let nc = 0; try{ nc = newSubjects().length + (BADGE_APP.proj || 0); }catch(e){}
+  pose("semchoice", nc);
+}
+document.querySelectorAll("#tabbar .tb").forEach(b=>b.addEventListener("click",()=>{
+  haptic();
+  const cle = b.dataset.tb, ici = document.documentElement.getAttribute("data-screen");
+  if(cle === ici){ window.scrollTo({ top:0, behavior:"smooth" }); return; }
+  if(cle === "semestres"){ renderSemestres(); showScreen("semestres"); }
+  else if(cle === "mesdevoirs") document.getElementById("dev-entry").click();
+  else if(cle === "semchoice") document.getElementById("sem-entry").click();
+  else if(cle === "edt") document.getElementById("btn-edt").click();
+  else if(cle === "classes") document.getElementById("btn-classes").click();
+}));
+
 function renderSemestres(){
   try{ majBadgeProjets(); }catch(e){}
   majBoutonCompte();
@@ -8788,6 +9202,7 @@ function renderSemestres(){
   renderReprise();
   renderSemEntry();
   updateMemoBadge();
+  try{ renderAccueil(); majTabbar(); }catch(e){ console.error(e); }
   const wrap=document.getElementById("semchoice-inner"); wrap.innerHTML="";
   // affichage en blocs ou en liste : un choix par appareil
   const vue = vueSem();
@@ -13052,7 +13467,7 @@ async function pushState(enPartant){
     PSYCHO_STEPS.forEach(s=>{ psy[s.id] = !!s.done; });
     const patch = {
       theme: document.documentElement.getAttribute("data-theme") || "girly",
-      srs: Object.assign({}, SRS, { __matieres: nomsMatieres(), __bilan: bilanMatieres(), __projets: projetsPourServeur(), __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP, __revises: REVISES, __vus: vusCharger(), __clsvus: clsVus(), __profs: PROFS, __notes: CHNOTES, __errexam: ERREXAM }),
+      srs: Object.assign({}, SRS, { __matieres: nomsMatieres(), __bilan: bilanMatieres(), __projets: projetsPourServeur(), __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP, __revises: REVISES, __vus: vusCharger(), __clsvus: clsVus(), __profs: PROFS, __notes: CHNOTES, __errexam: ERREXAM, __jours: joursCharger() }),
       psycho: psy,
       settings: USER_SETTINGS
     };
@@ -13139,6 +13554,8 @@ function applyRemote(row){
       ERREXAM = incoming.__errexam;
       try{ localStorage.setItem(ERREXAM_KEY, JSON.stringify(ERREXAM)); }catch(e){}
     }
+    if(Array.isArray(incoming.__jours)){ try{ const l = new Set(joursCharger()); incoming.__jours.forEach(j=>{ if(/^\d{4}-\d{2}-\d{2}$/.test(j)) l.add(j); }); joursSave([...l].sort()); }catch(e){} }
+    delete incoming.__jours;
     delete incoming.__matieres; delete incoming.__bilan; delete incoming.__projets; delete incoming.__edtnotes; delete incoming.__memo; delete incoming.__devrep; delete incoming.__revises; delete incoming.__vus; delete incoming.__profs; delete incoming.__notes; delete incoming.__errexam;
     SRS = incoming;
     try{ localStorage.setItem(SRS_KEY, JSON.stringify(SRS)); }catch(e){}
