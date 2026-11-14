@@ -2413,6 +2413,51 @@ html[data-mode="sombre"] .btn:not(.ghost),html[data-mode="sombre"] .fs-ok{backgr
 .mt-ctl .t{flex:1;min-width:0;}
 .mt-ctl .t1{display:block;font-weight:800;font-size:15px;}
 .mt-ctl .t2{display:block;font-size:12.5px;color:var(--text-soft);font-weight:600;margin-top:2px;}
+
+/* ══════════ AGENDA, DEVOIRS, CLASSES, SITES : LE NOUVEAU STYLE ══════════ */
+/* cartes : arrondies, ombre douce, sans contour */
+.edt-course,.av-carte,.cls-row,.cal-row{border:none !important;background:var(--surface-solid) !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04);}
+@media(prefers-color-scheme:dark){html:not([data-mode="clair"]) .edt-course,html:not([data-mode="clair"]) .av-carte,html:not([data-mode="clair"]) .cls-row,html:not([data-mode="clair"]) .cal-row{box-shadow:0 8px 24px rgba(0,0,0,.28);}}
+html[data-mode="sombre"] .edt-course,html[data-mode="sombre"] .av-carte,html[data-mode="sombre"] .cls-row,html[data-mode="sombre"] .cal-row{box-shadow:0 8px 24px rgba(0,0,0,.28);}
+/* agenda : les jours comme des titres de section, chaque cours avec une barre de couleur */
+.edt-day{margin-bottom:22px;}
+.edt-day-head{border-bottom:none !important;padding-bottom:0;margin:0 4px 10px;}
+.edt-day-name{font-family:var(--font-text) !important;font-weight:800 !important;font-size:18px !important;letter-spacing:-.015em;}
+.edt-day-num{font-size:13px;font-weight:600;}
+.edt-day-head.today .edt-day-name{color:var(--accent);}
+.edt-course{position:relative;border-radius:20px !important;padding:14px 16px 14px 20px !important;margin-bottom:10px;gap:14px;overflow:hidden;}
+.edt-course::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:4px;border-radius:0 4px 4px 0;background:color-mix(in srgb,var(--accent) 35%,transparent);}
+.edt-course.flagged.controle::before{background:var(--ko);}
+.edt-course.flagged.devoir::before{background:var(--warn);}
+.edt-course.flagged.note::before{background:var(--info);}
+.edt-course.live::before{background:var(--accent);}
+.edt-course.flagged.controle,.edt-course.flagged.devoir{border:none !important;}
+.edt-course.live{box-shadow:0 0 0 2px var(--accent),0 8px 24px var(--accent-glow) !important;}
+.edt-course.done{opacity:.6;}
+.edt-time{font-weight:800;font-size:14px;}
+.edt-title{font-weight:800;font-size:15px;}
+.edt-place{font-weight:600;font-size:12.5px;}
+.edt-note{font-weight:600;}
+.ev-badge{border-radius:8px;font-weight:800;}
+/* mes devoirs : semaines en titres, une carte par semaine */
+.av-semaine{font-family:var(--font-text);font-weight:800 !important;font-size:16px !important;color:var(--text) !important;margin:22px 4px 10px !important;letter-spacing:-.01em;}
+.av-carte{border-radius:24px !important;}
+.av-row{padding:15px 18px !important;border-top-color:color-mix(in srgb,var(--text) 7%,transparent) !important;}
+.av-txt b{font-weight:800 !important;font-size:15px !important;}
+.av-txt small{font-weight:600;}
+/* classes et sites */
+.cls-row{border-radius:22px !important;padding:16px !important;}
+.cls-name{font-weight:800 !important;font-size:15.5px;}
+.cls-sub{font-weight:600;}
+.cls-ic{border-radius:15px !important;}
+.cls-tag{border-radius:10px !important;font-weight:800 !important;}
+.cal-row{border-radius:20px !important;padding:15px 16px !important;margin-bottom:10px !important;}
+.cal-name{font-weight:800;}
+.cal-row:active,.cls-row:active{transform:scale(.985);}
+/* une ligne qu'on glisse (sites, calendriers) : la carte couvre ses boutons cachés */
+.swipe{border-radius:20px !important;margin-bottom:10px !important;}
+.swipe-front{border-radius:20px;}
+.swipe-front>.cal-row,.swipe .cal-row{margin-bottom:0 !important;}
 </style>
 </head>
 <body>
