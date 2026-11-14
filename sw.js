@@ -1,6 +1,6 @@
 // Service worker de Révision : l'app s'ouvre tout de suite, même sans réseau.
 // Changer le numéro de version à chaque changement de ce fichier.
-const CACHE = "revision-v40";
+const CACHE = "revision-v44";
 const POLICES = "revision-polices-v1";
 const LIBS = "revision-libs-v1";   // le lecteur de PDF, gardé pour lire sans réseau
 const BADGE = "revision-badge";    // le chiffre de la pastille de l'icône, partagé avec la page
@@ -82,7 +82,7 @@ self.addEventListener("push", e=>{
   let n = {};
   try{ n = e.data ? e.data.json() : {}; }catch(err){ n = { body: e.data ? e.data.text() : "" }; }
   const type = n.data && n.data.type;
-  const compte = type !== "rappel" && type !== "test";   // un rappel n'est pas une nouveauté
+  const compte = type !== "rappel" && type !== "test" && type !== "projet";   // un rappel n'est pas une nouveauté ; l'app compte déjà les étapes
   if(compte) e.waitUntil(badgePlusUn());
   e.waitUntil(self.registration.showNotification(n.title || "Révision", {
     body: n.body || "",

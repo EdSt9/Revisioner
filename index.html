@@ -2056,6 +2056,10 @@ html.calme .rise{animation:none!important;}
 .psy-step-desc{font-size:12.5px;color:var(--psoftxt);line-height:1.6;margin-bottom:7px;}
 .psy-step-desc p{margin:0 0 4px;}
 .psy-step-date{font-size:11px;font-weight:700;color:var(--pac);}
+/* étape dont la date de fin approche : contour et étiquette roses, comme les nouveautés */
+.psy-step.urgent:not(.done){border-color:var(--new);}
+.psy-step-urgent{display:inline-flex;align-items:center;height:22px;padding:0 9px;margin-top:8px;border-radius:11px;background:var(--new);color:#fff;font-size:11.5px;font-weight:700;}
+.psy-nav-card{position:relative;}
 .psy-congrats{background:linear-gradient(140deg,var(--pac),var(--pac2));border-radius:var(--r-lg);padding:26px 22px;text-align:center;margin-bottom:24px;color:#fff;box-shadow:0 12px 32px var(--pglow);}
 .psy-congrats-emoji{font-size:38px;margin-bottom:12px;}
 .psy-congrats-title{font-family:var(--font-display);font-weight:500;font-size:22px;margin-bottom:12px;}
@@ -3458,9 +3462,9 @@ function pastille(parent, n, label){
 }
 // La pastille de l'icône de l'app : les mêmes nouveautés que sur l'accueil (classes + devoirs).
 // Le chiffre est aussi rangé pour sw.js, qui l'augmente quand une notification arrive app fermée.
-var BADGE_APP = { cls:0, dev:0 };
+var BADGE_APP = { cls:0, dev:0, proj:0 };
 function poserBadgeApp(){
-  const n = BADGE_APP.cls + BADGE_APP.dev;
+  const n = BADGE_APP.cls + BADGE_APP.dev + BADGE_APP.proj;
   try{
     if(navigator.setAppBadge) (n ? navigator.setAppBadge(n) : navigator.clearAppBadge()).catch(()=>{});
     if(window.caches) caches.open("revision-badge").then(c=>c.put("/__badge", new Response(String(n)))).catch(()=>{});
@@ -8777,6 +8781,7 @@ function renderReprise(){
   b.hidden = false;
 }
 function renderSemestres(){
+  try{ majBadgeProjets(); }catch(e){}
   majBoutonCompte();
   renderAideAccueil();
   renderKnowBlock();
@@ -8839,6 +8844,7 @@ function renderSemestres(){
       <div class="sem-bar"><div class="sem-bar-fill" style="width:${psyProgress()}%"></div></div>
       <div class="sem-pct">${psyProgress()} %</div>`;
     psy.addEventListener("click",()=>{ haptic(); renderPsycho(); });
+    const nu = urgences("psy").length; pastille(psy, nu, nu + " étape" + (nu > 1 ? "s" : "") + " à faire bientôt");
     tuiles.push({ cle:"psy", el:psy, defaut:psyTitle(), icone:"💜", sousDefaut:"Passerelles · masters", groupe:"\u0000psy" });
   }
   // les autres projets : reçus d'une classe (et Concours CPE chez Civa)
@@ -8852,6 +8858,7 @@ function renderSemestres(){
       <div class="sem-bar"><div class="sem-bar-fill" style="width:${pct}%"></div></div>
       <div class="sem-pct">${pct} %</div>`;
     b.addEventListener("click",()=>{ haptic(); renderProjet(pid); });
+    const nu = urgences(pid).length; pastille(b, nu, nu + " étape" + (nu > 1 ? "s" : "") + " à faire bientôt");
     tuiles.push({ cle:"projet:" + pid, el:b, defaut:pj.titre, icone:pj.icone, sousDefaut:pj.sous, groupe:"\u0000psy" });
   });
 
@@ -8943,7 +8950,8 @@ const NOTIF_TYPES = [
   ["devoirs", "Devoirs et contrôles", "Posés, ou leur date qui change",                 true],
   ["classe",  "Ma classe",            "Demandes pour entrer, demande acceptée",         true],
   ["rappels", "Rappels de devoirs",   "La veille à 18 h, et 3 jours avant un contrôle", true],
-  ["semaine", "Ma semaine",           "Le dimanche à 18 h : ce qui t'attend",           false]
+  ["semaine", "Ma semaine",           "Le dimanche à 18 h : ce qui t'attend",           false],
+  ["projets", "CPE et psycho",        "Les étapes de tes projets, 7 jours avant et la veille", true]
 ];
 function notifOn(p, k, parDefaut){ return typeof p[k] === "boolean" ? p[k] : parDefaut; }
 function notifPrefs(){ try{ return JSON.parse(localStorage.getItem(NOTIF_PREFS_KEY) || "{}") || {}; }catch(e){ return {}; } }
@@ -9044,6 +9052,14 @@ async function ouvrirDepuisNotif(data){
   if(!data || !PSEUDO) return;
   // un rappel : la liste de mes devoirs, comme depuis l'accueil
   if(data.type === "rappel"){ closePicker(); document.getElementById("dev-entry").click(); return; }
+  // une étape de projet : la liste des étapes de ce projet
+  if(data.type === "projet"){
+    closePicker();
+    if(data.pid === "psy" && isCloseFriend()){ renderPsychoEtapes(); return; }
+    const p = PROJETS[data.pid];
+    if(p && projetsVisibles().includes(data.pid)){ ouvrirRubrique(data.pid, Math.max(0, p.rubriques.findIndex(r=>r.type === "etapes"))); return; }
+    renderSemestres(); showScreen("semchoice"); return;
+  }
   if(!data.class_id) return;
   let c = MY_CLASSES.find(x=>x.id === data.class_id);
   if(!c){
@@ -11792,7 +11808,9 @@ function renderPsycho(){
   cards.forEach((c,i)=>{
     const b=el("button","psy-nav-card rise"); b.style.animationDelay=(0.12+i*0.03)+"s";
     b.innerHTML=`<div class="psy-nav-icon">${c.icon}</div><div class="psy-nav-info"><div class="psy-nav-title">${c.title}</div><div class="psy-nav-sub">${c.sub.replace(/\n/g, " ")}</div></div><span class="psy-nav-arrow">${IC_CHEV_DROITE}</span>`;
-    b.addEventListener("click",c.fn); inner.appendChild(b);
+    b.addEventListener("click",c.fn);
+    if(c.fn === renderPsychoEtapes) pastille(b, urgences("psy").length, "étapes à faire bientôt");
+    inner.appendChild(b);
   });
   document.getElementById("psy-back-home").addEventListener("click",()=>showScreen("semestres"));
   showScreen("psycho");
@@ -12066,6 +12084,66 @@ function projetEtat(pid){
   USER_SETTINGS.projets = USER_SETTINGS.projets || {};
   return (USER_SETTINGS.projets[pid] = USER_SETTINGS.projets[pid] || {});
 }
+// Les dates de fin des étapes, lisibles par la machine (le texte affiché reste « Décembre », etc.).
+// debut : le 1er du mois où l'étape commence. Sans date ici, une étape n'a ni pastille ni rappel.
+const ECHEANCES = {
+  cpe:{
+    c3:{ fin:"2026-11-25" },
+    c4:{ debut:"2026-11-01", fin:"2026-11-30" },
+    c5:{ debut:"2026-11-01", fin:"2027-01-31" },
+    c6:{ debut:"2026-12-01", fin:"2026-12-31" },
+    c7:{ debut:"2026-12-01", fin:"2027-02-28" },
+    c9:{ fin:"2027-03-04" }
+  },
+  psycho:{
+    s3:{ debut:"2027-01-01", fin:"2027-01-31" },
+    s4:{ debut:"2027-01-01", fin:"2027-02-28" },
+    s5:{ debut:"2027-02-01", fin:"2027-03-31" },
+    s6:{ debut:"2027-03-01", fin:"2027-04-30" },
+    s7:{ fin:"2027-04-30" },
+    s7b:{ debut:"2027-03-01", fin:"2027-04-30" },
+    s8:{ fin:"2027-05-31" }
+  }
+};
+// « psy » : le projet perso de Civa et Nana (PSYCHO_STEPS) ; les autres : PROJETS
+function projetsVisibles(){ return (isCloseFriend() ? ["psy"] : []).concat(mesProjets()); }
+function etapesProjet(pid){
+  if(pid === "psy"){ loadPsychoSteps(); return PSYCHO_STEPS.map(s=>({ id:s.id, titre:s.title, fait:!!s.done })); }
+  const p = PROJETS[pid]; if(!p) return [];
+  const e = projetEtat(pid);
+  return p.etapes().map(s=>({ id:s.id, titre:s.titre, fait:!!e[s.id] }));
+}
+function echeancesDe(pid){ return ECHEANCES[pid === "psy" ? "psycho" : pid] || {}; }
+function joursAvant(iso){
+  const [y, m, d] = iso.split("-").map(Number);
+  const auj = new Date(); auj.setHours(0, 0, 0, 0);
+  return Math.round((new Date(y, m - 1, d) - auj) / 864e5);
+}
+// les étapes pas cochées dont la date de fin est dans 7 jours ou moins (ou passée)
+function urgences(pid){
+  const E = echeancesDe(pid);
+  return etapesProjet(pid).filter(s=>!s.fait && E[s.id]).map(s=>({ id:s.id, j:joursAvant(E[s.id].fin) })).filter(u=>u.j <= 7);
+}
+function libelleUrgence(j){ return j < 0 ? "⏰ En retard" : j === 0 ? "⏰ Aujourd'hui" : j === 1 ? "⏰ Demain" : "⏰ Plus que " + j + " jours"; }
+function marquerUrgence(step, pid, id){
+  const u = urgences(pid).find(x=>x.id === id); if(!u) return;
+  step.classList.add("urgent");
+  const t = el("span","psy-step-urgent"); t.textContent = libelleUrgence(u.j);
+  step.querySelector(".psy-step-content").appendChild(t);
+}
+function majBadgeProjets(){
+  BADGE_APP.proj = projetsVisibles().reduce((n, pid)=>n + urgences(pid).length, 0);
+  poserBadgeApp();
+}
+// pour les rappels du serveur : chaque étape datée, avec son projet et si elle est faite
+function projetsPourServeur(){
+  const out = [];
+  projetsVisibles().forEach(pid=>{
+    const E = echeancesDe(pid), nom = pid === "psy" ? "Projet psycho" : PROJETS[pid].titre;
+    etapesProjet(pid).forEach(s=>{ if(E[s.id]) out.push({ id:pid, p:nom, t:s.titre, d:E[s.id].debut || "", f:E[s.id].fin, ok:s.fait }); });
+  });
+  return out;
+}
 function projetAvancement(pid){
   const p = PROJETS[pid]; if(!p) return 0;
   const et = p.etapes(), e = projetEtat(pid);
@@ -12094,6 +12172,7 @@ function renderProjet(pid){
     if(r.type === "etapes"){ const et = p.etapes(), e = projetEtat(pid), n = et.filter(s=>e[s.id]).length; sous = n ? n + " étape" + (n > 1 ? "s" : "") + " sur " + et.length + " · " + projetAvancement(pid) + " %" : r.sous; }
     b.innerHTML = `<div class="psy-nav-icon">${r.icon}</div><div class="psy-nav-info"><div class="psy-nav-title">${esc(r.titre)}</div><div class="psy-nav-sub">${esc(sous)}</div></div><span class="psy-nav-arrow">${IC_CHEV_DROITE}</span>`;
     b.addEventListener("click",()=>{ haptic(); ouvrirRubrique(pid, i); });
+    if(r.type === "etapes") pastille(b, urgences(pid).length, "étapes à faire bientôt");
     inner.appendChild(b);
   });
   // un projet reçu d'une classe peut se retirer ; celui de Civa vient de l'app
@@ -12134,7 +12213,8 @@ function ouvrirRubrique(pid, i){
         const fait = !!e[s.id];
         const step = el("button","psy-step" + (fait ? " done" : ""));
         step.innerHTML = `<span class="psy-check">${checkSvg}</span><span class="psy-step-content"><span class="psy-step-title">${esc(s.titre)}</span><span class="psy-step-desc">${s.desc.split("\n").map(l=>"<p>" + escFr(l) + "</p>").join("")}</span><span class="psy-step-date">📅 ${esc(s.date)}</span></span>`;
-        step.addEventListener("click",()=>{ haptic(); if(fait) delete e[s.id]; else e[s.id] = true; scheduleSync(); const y = window.scrollY; SANS_ENTREE = true; ouvrirRubrique(pid, i); window.scrollTo(0, y); });
+        if(!fait) marquerUrgence(step, pid, s.id);
+        step.addEventListener("click",()=>{ haptic(); if(fait) delete e[s.id]; else e[s.id] = true; scheduleSync(); majBadgeProjets(); const y = window.scrollY; SANS_ENTREE = true; ouvrirRubrique(pid, i); window.scrollTo(0, y); });
         sw.appendChild(step);
       });
       box.appendChild(sw); inner.appendChild(box);
@@ -12186,7 +12266,8 @@ function renderPsychoEtapes(){
       const descLines=s.desc.split("\n").map(l=>"<p>"+esc(l)+"</p>").join("");
       const step=el("button","psy-step"+(s.done?" done":""));
       step.innerHTML=`<span class="psy-check">${checkSvg}</span><span class="psy-step-content"><span class="psy-step-title">${esc(s.title)}</span><span class="psy-step-desc">${descLines}</span><span class="psy-step-date">📅 ${esc(s.date)}</span></span>`;
-      step.addEventListener("click",()=>{ haptic(); s.done=!s.done; savePsychoSteps(); const y = window.scrollY; SANS_ENTREE = true; renderPsychoEtapes(); window.scrollTo(0, y); });
+      if(!s.done) marquerUrgence(step, "psy", s.id);
+      step.addEventListener("click",()=>{ haptic(); s.done=!s.done; savePsychoSteps(); majBadgeProjets(); const y = window.scrollY; SANS_ENTREE = true; renderPsychoEtapes(); window.scrollTo(0, y); });
       sw.appendChild(step);
     });
     ph2.appendChild(sw); inner.appendChild(ph2);
@@ -12971,7 +13052,7 @@ async function pushState(enPartant){
     PSYCHO_STEPS.forEach(s=>{ psy[s.id] = !!s.done; });
     const patch = {
       theme: document.documentElement.getAttribute("data-theme") || "girly",
-      srs: Object.assign({}, SRS, { __matieres: nomsMatieres(), __bilan: bilanMatieres(), __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP, __revises: REVISES, __vus: vusCharger(), __clsvus: clsVus(), __profs: PROFS, __notes: CHNOTES, __errexam: ERREXAM }),
+      srs: Object.assign({}, SRS, { __matieres: nomsMatieres(), __bilan: bilanMatieres(), __projets: projetsPourServeur(), __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP, __revises: REVISES, __vus: vusCharger(), __clsvus: clsVus(), __profs: PROFS, __notes: CHNOTES, __errexam: ERREXAM }),
       psycho: psy,
       settings: USER_SETTINGS
     };
@@ -13058,7 +13139,7 @@ function applyRemote(row){
       ERREXAM = incoming.__errexam;
       try{ localStorage.setItem(ERREXAM_KEY, JSON.stringify(ERREXAM)); }catch(e){}
     }
-    delete incoming.__matieres; delete incoming.__bilan; delete incoming.__edtnotes; delete incoming.__memo; delete incoming.__devrep; delete incoming.__revises; delete incoming.__vus; delete incoming.__profs; delete incoming.__notes; delete incoming.__errexam;
+    delete incoming.__matieres; delete incoming.__bilan; delete incoming.__projets; delete incoming.__edtnotes; delete incoming.__memo; delete incoming.__devrep; delete incoming.__revises; delete incoming.__vus; delete incoming.__profs; delete incoming.__notes; delete incoming.__errexam;
     SRS = incoming;
     try{ localStorage.setItem(SRS_KEY, JSON.stringify(SRS)); }catch(e){}
   }
