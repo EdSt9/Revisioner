@@ -2470,6 +2470,12 @@ html[data-screen="login"]{background:var(--bg) !important;background-image:none 
 .cx-aide{text-align:center;font-size:13px;color:var(--text-soft);font-weight:600;margin-top:14px;line-height:1.5;}
 .cx-bas{text-align:center;font-size:11px;color:var(--text-mute);font-weight:600;padding:34px 0 calc(env(safe-area-inset-bottom) + 20px);}
 @media(prefers-reduced-motion:reduce){.cx-logo,.cx-head h1,.cx-head p,.cx-card{animation:none;}}
+
+/* glisser pour revenir : la page d'avant, derrière */
+.screen.dessous{display:flex !important;flex-direction:column;position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.screen.dessous.relache{transition:transform .32s cubic-bezier(.2,.9,.25,1) !important;}
+.screen.active.au-doigt,.screen.active.relache{z-index:2;background:var(--bg);}
+html.glisse-retour #somm-flot,html.glisse-retour #somm-panneau{opacity:0;pointer-events:none;}
 </style>
 </head>
 <body>
@@ -2625,7 +2631,7 @@ html[data-screen="login"]{background:var(--bg) !important;background-image:none 
 
 <div id="screen-subjects" class="screen">
   <div class="wrap">
-    <button class="back-btn rise" id="btn-sem-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Semestres</button>
+    <button class="back-btn rise" id="btn-sem-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
     <div class="page-eyebrow rise" id="subjects-eyebrow" style="animation-delay:.03s">Semestre</div>
     <h1 class="page-title rise" style="animation-delay:.06s">Tes matières</h1>
     <p class="page-sub rise" style="animation-delay:.09s">Groupées par UE. Touche une matière pour l'ouvrir.</p>
@@ -2643,7 +2649,7 @@ html[data-screen="login"]{background:var(--bg) !important;background-image:none 
 <div id="screen-split" class="screen">
   <div class="split-head">
     <div class="head-row">
-      <button class="back-btn" id="btn-split-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Matières</button>
+      <button class="back-btn" id="btn-split-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
       <button class="subj-chip" id="split-chip" hidden></button>
       <button class="head-search" id="btn-split-search" type="button" aria-label="Rechercher dans mes cours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
       <button class="chap-pick type-pick" id="type-pick" type="button"></button>
@@ -2707,7 +2713,7 @@ html[data-screen="login"]{background:var(--bg) !important;background-image:none 
 <!-- DEVOIRS CORRIGÉS -->
 <div id="screen-devoirs" class="screen">
   <div class="wrap">
-    <button class="back-btn rise" id="btn-dev-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Réviser</button>
+    <button class="back-btn rise" id="btn-dev-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
     <h1 class="page-title rise" style="animation-delay:.03s">Devoirs</h1>
     <p class="page-sub rise" id="dev-sub" style="animation-delay:.06s">Rédige tes réponses ici. Quand la correction arrive, le devoir passe dans Corrigés.</p>
     <div id="dev-inner" class="rise" style="animation-delay:.1s"></div>
@@ -2730,7 +2736,7 @@ html[data-screen="login"]{background:var(--bg) !important;background-image:none 
 <!-- UNE CLASSE -->
 <div id="screen-class" class="screen">
   <div class="wrap">
-    <button class="back-btn rise" id="btn-class-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Mes classes</button>
+    <button class="back-btn rise" id="btn-class-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
     <h1 class="page-title rise" id="class-title" style="animation-delay:.03s"></h1>
     <div id="class-inner" class="rise" style="animation-delay:.08s"></div>
   </div>
@@ -2915,7 +2921,7 @@ html[data-screen="login"]{background:var(--bg) !important;background-image:none 
 
 <div id="screen-sites" class="screen">
   <div class="wrap">
-    <button class="back-btn rise" id="btn-sites-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Accueil</button>
+    <button class="back-btn rise" id="btn-sites-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
     <h1 class="page-title rise" style="animation-delay:.03s">Liens</h1>
     <div class="seg liens-seg rise" style="animation-delay:.04s"><button type="button" class="seg-opt active" data-liens="sites">Mes sites</button><button type="button" class="seg-opt" data-liens="classes">Classes</button></div>
     <div class="lex-sous rise" style="animation-delay:.05s">Tes liens utiles, à un geste</div>
@@ -2924,7 +2930,7 @@ html[data-screen="login"]{background:var(--bg) !important;background-image:none 
 </div>
 <div id="screen-mesdevoirs" class="screen">
   <div class="wrap">
-    <button class="back-btn rise" id="btn-mesdevoirs-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Accueil</button>
+    <button class="back-btn rise" id="btn-mesdevoirs-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
     <h1 class="page-title rise" style="animation-delay:.03s">Mes devoirs</h1>
     <div class="lex-sous rise" style="animation-delay:.05s">Tes contrôles, tes rendus et tes notes, semaine par semaine</div>
     <div id="home-know" class="rise" style="animation-delay:.07s"></div>
@@ -2932,7 +2938,7 @@ html[data-screen="login"]{background:var(--bg) !important;background-image:none 
 </div>
 <div id="screen-index" class="screen">
   <div class="wrap">
-    <button class="back-btn rise" id="btn-idx-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Rechercher</button>
+    <button class="back-btn rise" id="btn-idx-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
     <h1 class="page-title rise" style="animation-delay:.03s">Index</h1>
     <div class="lex-sous rise" id="idx-sous" style="animation-delay:.05s">Tes auteurs et tes notions, de la L1 à la L3</div>
     <div class="seg idx-seg rise" id="idx-genre" style="animation-delay:.06s">
@@ -2953,7 +2959,7 @@ html[data-screen="login"]{background:var(--bg) !important;background-image:none 
 <!-- AUTEURS -->
 <div id="screen-auteurs" class="screen">
   <div class="wrap">
-    <button class="back-btn rise" id="btn-auteurs-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Réviser</button>
+    <button class="back-btn rise" id="btn-auteurs-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
     <div class="page-eyebrow rise" id="auteurs-eyebrow" style="animation-delay:.03s"></div>
     <h1 class="page-title rise" style="animation-delay:.06s">Les auteurs</h1>
     <p class="page-sub rise" id="auteurs-sub" style="animation-delay:.09s"></p>
@@ -2965,7 +2971,7 @@ html[data-screen="login"]{background:var(--bg) !important;background-image:none 
 <div id="screen-qcmchoix" class="screen">
   <div class="wrap">
     <button class="head-search qc-plus rise" id="btn-qcmchoix-add" type="button" aria-label="Ajouter" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button>
-    <button class="back-btn rise" id="btn-qcmchoix-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Réviser</button>
+    <button class="back-btn rise" id="btn-qcmchoix-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
     <div class="page-eyebrow rise" id="qcmchoix-eyebrow" style="animation-delay:.03s"></div>
     <h1 class="page-title rise" id="qcmchoix-titre" style="animation-delay:.06s">QCM</h1>
     <p class="page-sub rise" id="qcmchoix-sub" style="animation-delay:.09s">Un QCM réussi est validé. Chaque session reprend d'abord ceux qui ne le sont pas encore.</p>
@@ -6600,6 +6606,12 @@ function refreshFab(id){
 
 // ── En-tête commun : le bouton retour (ou les icônes de l'accueil) dans une barre fixe,
 // identique à celle des cours, pour que rien ne bouge d'une page à l'autre ──
+// le bouton retour dit toujours « Retour », quelle que soit la page
+function libelleRetour(b){
+  if(!b) return;
+  [...b.childNodes].forEach(n=>{ if(n.nodeType === 3 && n.textContent.trim()) n.textContent = "Retour"; });
+  if(![...b.childNodes].some(n=>n.nodeType === 3 && n.textContent.trim())) b.appendChild(document.createTextNode("Retour"));
+}
 function poserEntete(scr){
   if(!scr || scr.id === "screen-split" || scr.id === "screen-session") return;
   const wrap = scr.querySelector(":scope > .wrap, :scope > #psycho-inner");
@@ -6616,7 +6628,7 @@ function poserEntete(scr){
   }
   const row = head.firstChild;
   if(back){
-    back.classList.remove("rise"); back.classList.add("back-btn");
+    back.classList.remove("rise"); back.classList.add("back-btn"); libelleRetour(back);
     row.querySelectorAll(".back-btn").forEach(x=>{ if(x !== back) x.remove(); });
     row.insertBefore(back, row.firstChild);
   }
@@ -6692,6 +6704,7 @@ function entreeDansEcran(cible){
   if(cible){ cible.classList.remove("glisse-av"); void cible.offsetWidth; cible.classList.add("glisse-av");
     cible.addEventListener("animationend", ()=>cible.classList.remove("glisse-av"), { once:true }); }
 }
+let ECRAN_AVANT = null;   // la page d'où l'on vient : visible derrière pendant le glisser
 function showScreen(id){
   lecteurStop();
   // arrivée sur un autre écran : les animations d'entrée jouent, puis on se calme.
@@ -6704,7 +6717,8 @@ function showScreen(id){
   if(id === "semestres"){ renderReprise(); try{ renderAccueil(true); cascade(document.querySelector("#screen-semestres .hm-body"), ".hm-body > *, .hm-up > *, #hm-mats .hm-card"); }catch(e){ console.error(e); } }
   requestAnimationFrame(()=>ajusterBas(document.querySelector("#screen-" + id + " > .wrap, #screen-" + id + " > #psycho-inner")));
   const avant = document.documentElement.getAttribute("data-screen");
-  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  if(avant && avant !== id) ECRAN_AVANT = avant;
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active","dessous"));
   const scr = document.getElementById("screen-"+id);
   scr.classList.add("active");
   // glissement comme sur l'iPhone : vers la gauche quand on avance, vers la droite quand on revient.
@@ -8160,7 +8174,7 @@ function listeChapitres(type, chapters, chIdx){
   chapters.forEach((c,i)=>{
     const rev = estRevise(curSubj, type, c), nouv = i !== chIdx && chapitreNouveau(curSubj, type, c);
     const nQ = exos(curSubj, "qcm").filter(x=>x && x.ch === c.label).length;
-    const etat = nouv && chapitreModifie(curSubj, type, c) ? "Mis à jour" : rev ? "Révisé" : nouv ? "Nouveau" : "À réviser";
+    const etat = nouv && chapitreModifie(curSubj, type, c) ? "Mis à jour" : rev ? "Lu" : nouv ? "Nouveau" : "À lire";
     const r = el("button","cal-row chap-ligne" + (i === chIdx ? " actif" : "") + (rev ? " revise" : "") + (nouv ? " nouveau" : ""));
     r.type = "button";
     r.innerHTML = `<span class="rv-dot"></span><div class="cal-txt"><div class="cal-name">${esc(libelleChapitre(c.label))}</div>
@@ -9349,7 +9363,7 @@ function renderAccueil(anim){
       <div class="hm-side">
         ${chT ? `<div class="hm-sv"><div class="l">Chapitres lus<em>${chL}/${chT}</em></div><div class="hm-tr hm-doux-b"><i data-w="${pc(chL,chT)}" style="background:var(--c-b)"></i></div></div>` : ""}
         <div class="hm-sv"><div class="l">QCM validés<em>${pc(qO,qT)} %</em></div><div class="hm-tr hm-doux-v"><i data-w="${pc(qO,qT)}" style="background:var(--accent)"></i></div></div>
-        <div class="hm-sv"><div class="l">À revoir<em>${err}</em></div><div class="hm-tr hm-doux-r"><i data-w="${Math.min(100, err * 4)}" style="background:var(--c-r)"></i></div></div>
+        <div class="hm-sv"><div class="l">Mes erreurs<em>${err}</em></div><div class="hm-tr hm-doux-r"><i data-w="${Math.min(100, err * 4)}" style="background:var(--c-r)"></i></div></div>
       </div></div>
     <div class="hm-obj"><span>Mon objectif</span>${[10,25,50].map(v=>`<button type="button" class="${v === HM_OBJECTIF ? "on" : ""}" data-obj="${v}">${v}</button>`).join("")}</div>
     ${auj >= HM_OBJECTIF ? `<div class="hm-bravo">✓ Objectif atteint. Tout le reste, c'est du bonus.</div>` : ""}
@@ -9571,7 +9585,7 @@ function renderMatiere(){
       <div class="mt-top"><span class="mt-big">${ICO(HM_IC[hmHash(m.id + "i") % HM_IC.length])}</span><div><h1>${esc(m.title)}</h1><p>${esc(sous)}</p></div></div>
     </div>
     <div class="mt-body">
-      <div class="hm-card mt-kpi"><div><b>${ch.lus}/${ch.tot}</b><span>chapitres lus</span></div><div><b>${q.tot ? Math.round(q.ok / q.tot * 100) + " %" : "–"}</b><span>QCM validés</span></div><div><b>${ctl ? (jc <= 0 ? "Auj." : "J-" + jc) : (q.err || 0)}</b><span>${ctl ? "contrôle" : "à revoir"}</span></div></div>
+      <div class="hm-card mt-kpi"><div><b>${ch.lus}/${ch.tot}</b><span>chapitres lus</span></div><div><b>${q.tot ? Math.round(q.ok / q.tot * 100) + " %" : "–"}</b><span>QCM validés</span></div><div><b>${ctl ? (jc <= 0 ? "Auj." : "J-" + jc) : (q.err || 0)}</b><span>${ctl ? "contrôle" : "erreurs"}</span></div></div>
       <div id="mt-reprise"></div>
       <div class="mt-seg" id="mt-seg"><button type="button" data-o="cm">CM${(m.cm||[]).length ? " · " + m.cm.length : ""}</button><button type="button" data-o="td">TD${(m.td||[]).length ? " · " + m.td.length : ""}</button><button type="button" data-o="ent">S'entraîner</button></div>
       <div id="mt-liste"></div>
@@ -10873,7 +10887,7 @@ function renderCoursePane(type){
   const majRv = ()=>{
     const on = estRevise(curSubj, type, ch);
     rv.classList.toggle("fait", on);
-    rv.innerHTML = `<span class="fin-num">${on ? COCHE_SVG : 1}</span><span class="fin-txt"><span class="fin-nom">${on ? "Révisé" : "Marquer comme révisé"}</span>
+    rv.innerHTML = `<span class="fin-num">${on ? COCHE_SVG : 1}</span><span class="fin-txt"><span class="fin-nom">${on ? "Lu" : "Marquer comme lu"}</span>
       <span class="fin-sub">${on ? "Touche pour enlever" : "Le point devient vert dans la liste"}</span></span><span class="sw"></span>`;
   };
   majRv();
@@ -12313,13 +12327,14 @@ function nextLabel(key, grade){
   return "dans "+Math.round(iv/30)+" mois";
 }
 // 3 boutons de notation (SM-2 simplifié)
-function gradeRow(key, onGrade){
+function gradeRow(key, onGrade, reussi){
   const row=el("div","grade-row");
+  // après une bonne réponse, « Pas su » n'a pas de sens : il reste Difficile / Facile
   const defs=[
     {g:0, lbl:"Pas su",    cls:"g-hard"},
     {g:1, lbl:"Difficile", cls:"g-mid"},
     {g:2, lbl:"Facile",    cls:"g-easy"},
-  ];
+  ].filter(d=>!(reussi && d.g === 0));
   defs.forEach(d=>{
     const b=el("button","grade-btn "+d.cls);
     b.innerHTML=`<span class="g-lbl">${d.lbl}</span><span class="g-next">${nextLabel(key,d.g)}</span>`;
@@ -12528,7 +12543,7 @@ function showResults(){
   wrap.innerHTML = `<div class="qz-medal">${etoile}</div>
     <h2>${titre}${n && ok / n >= .5 ? " !" : ""}</h2><p>${esc(doux)}</p>
     <div class="hm-card qz-bilan"><span class="hm-ic hm-doux-g" style="flex-shrink:0">${'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M5 12l5 5 9-10"/></svg>'}</span><span><span class="t1">${ok} sur ${n}</span><span class="t2">${esc(nomSerie)}</span></span></div>
-    ${aRevoir.length ? `<div class="results-detail"><div class="results-detail-label">À revoir</div>${aRevoir.map(a=>`<div class="result-row ko"><span class="result-ic">✕</span><span class="result-q">${esc(a.q)}</span></div>`).join("")}</div>` : ""}`;
+    ${aRevoir.length ? `<div class="results-detail"><div class="results-detail-label">Tes erreurs</div>${aRevoir.map(a=>`<div class="result-row ko"><span class="result-ic">✕</span><span class="result-q">${esc(a.q)}</span></div>`).join("")}</div>` : ""}`;
   if(n && ok / n >= .5){ setTimeout(confettis, 250);
     if(navigator.vibrate){ try{ navigator.vibrate([12,70,12,70,20]); }catch(e){} } else { haptic(); setTimeout(haptic, 130); setTimeout(haptic, 260); } }
   const row = el("div");
@@ -12632,7 +12647,7 @@ function feuilleReponse(cur, question, body){
   const key = queue[idx].key;
   if(ok){
     // bonne réponse : on demande si c'était facile ou laborieux
-    inn.appendChild(gradeRow(key, g=>doGrade(g, question)));
+    inn.appendChild(gradeRow(key, g=>doGrade(g, question), true));
   } else {
     // mauvaise réponse : la carte revient forcément
     const nb = el("button","hm-cta hm-press"); nb.type = "button";
@@ -14120,7 +14135,8 @@ async function doLogin(){
 // ── Glisser depuis le bord gauche pour revenir (comme sur l'iPhone) ──
 // Sur les pages qui ont un bouton retour ; pas pendant une série de QCM, pour ne pas la quitter par erreur.
 (function(){
-  let x0 = null, y0 = null, dx = 0, scr = null, actif = false;
+  let x0 = null, y0 = null, dx = 0, scr = null, actif = false, dessous = null;
+  const rangerDessous = ()=>{ if(dessous){ dessous.classList.remove("dessous"); dessous.style.transform = ""; dessous = null; } };
   const boutonRetour = ()=>{
     const id = document.documentElement.getAttribute("data-screen");
     if(!id || id === "session" || document.documentElement.classList.contains("tabbar-on")) return null;
@@ -14137,21 +14153,30 @@ async function doLogin(){
   addEventListener("touchmove", e=>{
     if(x0 === null || !scr) return;
     const t = e.touches[0]; dx = Math.max(0, t.clientX - x0);
-    if(!actif){ if(Math.abs(t.clientY - y0) > 14 && Math.abs(t.clientY - y0) > dx){ x0 = null; return; } if(dx < 8) return; actif = true; scr.classList.add("au-doigt"); }
+    if(!actif){ if(Math.abs(t.clientY - y0) > 14 && Math.abs(t.clientY - y0) > dx){ x0 = null; return; } if(dx < 8) return; actif = true; scr.classList.add("au-doigt");
+      // la page d'avant apparaît derrière, légèrement décalée, comme sur l'iPhone
+      dessous = ECRAN_AVANT && ECRAN_AVANT !== document.documentElement.getAttribute("data-screen") ? document.getElementById("screen-" + ECRAN_AVANT) : null;
+      if(dessous) dessous.classList.add("dessous");
+      document.documentElement.classList.add("glisse-retour");
+    }
     scr.style.transform = "translateX(" + dx + "px)";
+    if(dessous) dessous.style.transform = "translateX(" + (-26 + 26 * Math.min(1, dx / innerWidth)) + "%)";
   }, { passive:true });
   const fin = ()=>{
     if(x0 === null || !scr){ x0 = null; return; }
     x0 = null; const s = scr; scr = null;
     if(!actif) return;
     s.classList.remove("au-doigt");
+    document.documentElement.classList.remove("glisse-retour");
     if(dx > innerWidth * .33){
       const b = boutonRetour();
       s.classList.add("relache"); s.style.transform = "translateX(" + innerWidth + "px)";
-      setTimeout(()=>{ s.classList.remove("relache"); s.style.transform = ""; if(b) b.click(); }, 200);
+      if(dessous){ dessous.classList.add("relache"); dessous.style.transform = "translateX(0)"; }
+      setTimeout(()=>{ s.classList.remove("relache"); s.style.transform = ""; const d = dessous; dessous = null; if(b) b.click(); if(d){ d.classList.remove("relache","dessous"); d.style.transform = ""; } }, 230);
     } else {
       s.classList.add("relache"); s.style.transform = "";
-      setTimeout(()=>s.classList.remove("relache"), 340);
+      if(dessous){ dessous.classList.add("relache"); dessous.style.transform = "translateX(-26%)"; }
+      setTimeout(()=>{ s.classList.remove("relache"); if(dessous) dessous.classList.remove("relache"); rangerDessous(); }, 340);
     }
   };
   addEventListener("touchend", fin, { passive:true });
