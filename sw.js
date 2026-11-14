@@ -1,10 +1,10 @@
 // Service worker de Révision : l'app s'ouvre tout de suite, même sans réseau.
 // Changer le numéro de version à chaque changement de ce fichier.
-const CACHE = "revision-v78";
+const CACHE = "revision-v79";
 const POLICES = "revision-polices-v1";
 const LIBS = "revision-libs-v1";   // le lecteur de PDF, gardé pour lire sans réseau
 const BADGE = "revision-badge";    // le chiffre de la pastille de l'icône, partagé avec la page
-const PRECACHE = ["./", "./index.html", "./data.js"];
+const PRECACHE = ["./", "./index.html", "./app.css", "./app.js", "./data.js"];
 
 self.addEventListener("install", e=>{
   e.waitUntil(caches.open(CACHE).then(c=>c.addAll(PRECACHE)).then(()=>self.skipWaiting()));
@@ -123,6 +123,6 @@ self.addEventListener("fetch", e=>{
   const nom = url.pathname.split("/").pop();
   if(req.mode === "navigate" && nom && nom !== "index.html" && /\.[a-z0-9]+$/i.test(nom)){ return; }   // /data.js tapé dans Safari : le fichier lui-même
   const cle = req.mode === "navigate" ? new Request("./index.html") : req;
-  if(req.mode === "navigate" || nom === "data.js" || nom === "index.html" || nom === ""){ e.respondWith(reseauDabord(cle)); return; }
+  if(req.mode === "navigate" || nom === "data.js" || nom === "app.js" || nom === "app.css" || nom === "index.html" || nom === ""){ e.respondWith(reseauDabord(cle)); return; }
   e.respondWith(copieDabord(e, cle));
 });
