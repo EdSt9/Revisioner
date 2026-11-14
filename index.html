@@ -2235,7 +2235,8 @@ html.tabbar-on .screen.active>.wrap{padding-bottom:calc(112px + env(safe-area-in
 html.tabbar-on[data-screen="semchoice"] .page-head .back-btn,
 html.tabbar-on[data-screen="mesdevoirs"] .page-head .back-btn,
 html.tabbar-on[data-screen="edt"] .page-head .back-btn,
-html.tabbar-on[data-screen="classes"] .page-head .back-btn{visibility:hidden;}
+html.tabbar-on[data-screen="classes"] .page-head .back-btn,
+html.tabbar-on[data-screen="sites"] .page-head .back-btn{visibility:hidden;}
 
 /* ══════════ PAGE MATIÈRE ══════════ */
 #screen-matiere>.mt-wrap{padding:0 !important;max-width:none !important;width:100%;}
@@ -2404,6 +2405,7 @@ html.morph-en-cours #mt-inner .mt-head{visibility:hidden;}
 .screen.active.au-doigt{transition:none !important;box-shadow:-12px 0 30px rgba(0,0,0,.14);}
 .screen.active.relache{transition:transform .32s cubic-bezier(.2,.9,.25,1) !important;}
 @media(prefers-reduced-motion:reduce){#demarrage .dm-logo,.hm-bravo{animation:none;}.mt-morph{transition:none;}}
+.liens-seg{margin:6px 0 14px;}
 </style>
 </head>
 <body>
@@ -2538,7 +2540,7 @@ html.morph-en-cours #mt-inner .mt-head{visibility:hidden;}
   <button class="tb" type="button" data-tb="mesdevoirs"><span class="tb-nb" hidden></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg><span>Devoirs</span></button>
   <button class="tb tb-mid" type="button" data-tb="semchoice" aria-label="Cours"><span class="tb-rond"><span class="tb-nb" hidden></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><span>Cours</span></button>
   <button class="tb" type="button" data-tb="edt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg><span>Agenda</span></button>
-  <button class="tb" type="button" data-tb="classes"><span class="tb-nb" hidden></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 19v-1.5a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3V19"/><circle cx="9.5" cy="8" r="3"/><path d="M21 19v-1.5a3 3 0 0 0-2.3-2.9"/><path d="M15.5 5.2a3 3 0 0 1 0 5.6"/></svg><span>Classes</span></button>
+  <button class="tb" type="button" data-tb="classes"><span class="tb-nb" hidden></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg><span>Liens</span></button>
 </nav>
 
 <!-- MATIÈRES -->
@@ -2647,8 +2649,9 @@ html.morph-en-cours #mt-inner .mt-head{visibility:hidden;}
   <div class="wrap">
     <button class="back-btn rise" id="btn-classes-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
     <div class="edt-titlerow rise" style="animation-delay:.03s">
-      <h1 class="page-title" style="margin:0">Mes classes</h1>
+      <h1 class="page-title" style="margin:0">Liens</h1>
     </div>
+    <div class="seg liens-seg rise" style="animation-delay:.04s"><button type="button" class="seg-opt" data-liens="sites">Mes sites</button><button type="button" class="seg-opt active" data-liens="classes">Classes</button></div>
     <p class="page-sub rise" style="animation-delay:.06s">Des dossiers de cours partagés. On y entre avec un code, après validation.</p>
     <div id="classes-list" class="rise" style="animation-delay:.1s"></div>
   </div>
@@ -2843,7 +2846,8 @@ html.morph-en-cours #mt-inner .mt-head{visibility:hidden;}
 <div id="screen-sites" class="screen">
   <div class="wrap">
     <button class="back-btn rise" id="btn-sites-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Accueil</button>
-    <h1 class="page-title rise" style="animation-delay:.03s">Mes sites</h1>
+    <h1 class="page-title rise" style="animation-delay:.03s">Liens</h1>
+    <div class="seg liens-seg rise" style="animation-delay:.04s"><button type="button" class="seg-opt active" data-liens="sites">Mes sites</button><button type="button" class="seg-opt" data-liens="classes">Classes</button></div>
     <div class="lex-sous rise" style="animation-delay:.05s">Tes liens utiles, à un geste</div>
     <div id="sites-liste" class="rise" style="animation-delay:.07s"></div>
   </div>
@@ -9410,12 +9414,12 @@ function renderAccueil(anim){
 }
 
 // ── la barre du bas ──
-const TB_ECRANS = ["semestres","mesdevoirs","semchoice","edt","classes"];
+const TB_ECRANS = ["semestres","mesdevoirs","semchoice","edt","classes","sites"];
 function majTabbar(id){
   id = id || document.documentElement.getAttribute("data-screen");
   const on = !!PSEUDO && TB_ECRANS.includes(id);
   document.documentElement.classList.toggle("tabbar-on", on);
-  document.querySelectorAll("#tabbar .tb").forEach(b=>b.classList.toggle("on", b.dataset.tb === id));
+  document.querySelectorAll("#tabbar .tb").forEach(b=>b.classList.toggle("on", b.dataset.tb === (id === "sites" ? "classes" : id)));
   if(on) requestAnimationFrame(placerTrait);
   if(typeof majLecture === "function") majLecture();
   const pose = (cle, n)=>{ const b = document.querySelector('#tabbar [data-tb="' + cle + '"] .tb-nb'); if(!b) return; b.hidden = !n; b.textContent = n > 99 ? "99+" : n; };
@@ -9444,12 +9448,12 @@ document.querySelectorAll("#tabbar .tb").forEach(b=>b.addEventListener("click",(
   haptic();
   if(b.classList.contains("tb-mid")){ b.classList.remove("boing"); void b.offsetWidth; b.classList.add("boing"); }
   const cle = b.dataset.tb, ici = document.documentElement.getAttribute("data-screen");
-  if(cle === ici){ window.scrollTo({ top:0, behavior:"smooth" }); return; }
+  if(cle === ici || (cle === "classes" && ici === "sites")){ window.scrollTo({ top:0, behavior:"smooth" }); return; }
   if(cle === "semestres"){ renderSemestres(); showScreen("semestres"); }
   else if(cle === "mesdevoirs") document.getElementById("dev-entry").click();
   else if(cle === "semchoice") document.getElementById("sem-entry").click();
   else if(cle === "edt") document.getElementById("btn-edt").click();
-  else if(cle === "classes") document.getElementById("btn-classes").click();
+  else if(cle === "classes") openSitesSheet();   // l'onglet Liens s'ouvre sur Mes sites
 }));
 
 
@@ -9710,10 +9714,10 @@ function renderAideAccueil(){
   const lignes = [
     [ic('#tabbar [data-tb="semchoice"]'), "Cours", "Le bouton du milieu, en bas : tes matières et tes chapitres."],
     [ic('#tabbar [data-tb="edt"]'), "Agenda", "Importe ton emploi du temps une fois, tes cours s'affichent chaque jour."],
-    [ic('#tabbar [data-tb="classes"]'), "Classes", "Partage tes cours et tes exercices avec d'autres."],
+    [ic('#tabbar [data-tb="classes"]'), "Liens", "Tes sites utiles (ENT, Moodle…) et tes classes partagées."],
     [ic("#btn-search"), "Rechercher", "Retrouve un mot dans tous tes cours."],
     [ic("#btn-memo"), "Mémo", "Tes tâches et tes notes rapides."],
-    ["<b style='font-size:13px'>" + esc(String(PSEUDO || "?").charAt(0).toUpperCase()) + "</b>", "Ton compte", "L'ambiance, les notifications et Mes sites."]
+    ["<b style='font-size:13px'>" + esc(String(PSEUDO || "?").charAt(0).toUpperCase()) + "</b>", "Ton compte", "L'ambiance, l'affichage et les notifications."]
   ];
   box.className = "aide-acc rise";
   box.innerHTML = `<div class="aide-acc-t">Bienvenue ! Voici où tout se trouve</div>` +
@@ -9935,7 +9939,6 @@ function ouvrirCompte(){
     r.addEventListener("click",()=>{ haptic(); fn(); });
     box.appendChild(r);
   };
-  ligne("Mes sites", "Tes liens utiles : ENT, Moodle, scolarité…", ()=>{ closePicker(); setTimeout(()=>document.getElementById("btn-news").click(), 320); });
   if(!isCiva()) ligne("Revoir l'aide de l'accueil", "Ce que font les boutons", ()=>{
     try{ localStorage.removeItem("revision_aide_accueil"); }catch(e){}
     closePicker(); renderSemestres(); window.scrollTo(0, 0);
@@ -13503,6 +13506,12 @@ document.getElementById("btn-split-search").addEventListener("click",()=>{ hapti
 document.getElementById("btn-edt").addEventListener("click",()=>{ haptic(); openEDT(); });
 // actualités de la licence : ouvre la page de scolarité dans le navigateur.
 // Appui long pour la remplacer par celle de sa propre formation.
+document.querySelectorAll("[data-liens]").forEach(b=>b.addEventListener("click",()=>{
+  haptic();
+  const ici = document.documentElement.getAttribute("data-screen");
+  if(b.dataset.liens === "sites" && ici !== "sites") openSitesSheet();
+  else if(b.dataset.liens === "classes" && ici !== "classes") document.getElementById("btn-classes").click();
+}));
 document.getElementById("btn-news").addEventListener("click",()=>{
   haptic();
   openSitesSheet();
