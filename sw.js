@@ -1,6 +1,6 @@
 // Service worker de Révision : l'app s'ouvre tout de suite, même sans réseau.
 // Changer le numéro de version à chaque changement de ce fichier.
-const CACHE = "revision-v45";
+const CACHE = "revision-v46";
 const POLICES = "revision-polices-v1";
 const LIBS = "revision-libs-v1";   // le lecteur de PDF, gardé pour lire sans réseau
 const BADGE = "revision-badge";    // le chiffre de la pastille de l'icône, partagé avec la page

@@ -2207,6 +2207,57 @@ html.tabbar-on[data-screen="semchoice"] .page-head .back-btn,
 html.tabbar-on[data-screen="mesdevoirs"] .page-head .back-btn,
 html.tabbar-on[data-screen="edt"] .page-head .back-btn,
 html.tabbar-on[data-screen="classes"] .page-head .back-btn{visibility:hidden;}
+
+/* ══════════ PAGE MATIÈRE ══════════ */
+#screen-matiere>.mt-wrap{padding:0 !important;max-width:none !important;width:100%;}
+.mt-head{position:relative;overflow:hidden;color:#fff;padding:calc(env(safe-area-inset-top) + 14px) 18px 92px;border-radius:0 0 34px 34px;}
+.mt-head:before{content:"";position:absolute;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.1);right:-80px;top:-70px;pointer-events:none;}
+.mt-bk{position:relative;z-index:1;width:42px;height:42px;border-radius:14px;border:none;background:rgba(255,255,255,.22);color:#fff;display:grid;place-items:center;cursor:pointer;}
+.mt-bk svg{width:20px;height:20px;}
+.mt-top{position:relative;z-index:1;display:flex;align-items:center;gap:16px;margin:18px auto 0;max-width:520px;}
+.mt-big{width:62px;height:62px;border-radius:20px;background:rgba(255,255,255,.24);display:grid;place-items:center;flex-shrink:0;}
+.mt-big svg{width:30px;height:30px;}
+.mt-top h1{font-size:23px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin:0;font-family:inherit;}
+.mt-top p{font-size:13.5px;opacity:.9;font-weight:600;margin:4px 0 0;}
+.mt-body{position:relative;z-index:2;max-width:520px;margin:-68px auto 0;padding:0 16px calc(110px + env(safe-area-inset-bottom));}
+.mt-kpi{display:grid;grid-template-columns:repeat(3,1fr);padding:16px 6px;}
+.mt-kpi div{text-align:center;}
+.mt-kpi div+div{border-left:1px solid var(--hm-trait);}
+.mt-kpi b{display:block;font-size:20px;font-weight:800;}
+.mt-kpi span{font-size:12px;color:var(--text-soft);font-weight:700;}
+.mt-seg{display:flex;background:color-mix(in srgb,var(--text) 6%,transparent);border-radius:14px;padding:4px;margin:18px 0 12px;}
+.mt-seg button{flex:1;height:36px;border-radius:11px;border:none;background:none;font:inherit;font-weight:800;font-size:14px;color:var(--text-soft);cursor:pointer;transition:background .25s,color .25s;}
+.mt-seg button.on{background:var(--hm-carte);color:var(--text);box-shadow:var(--hm-ombre);}
+.mt-reprise{display:flex;align-items:center;gap:12px;padding:14px;margin-top:12px;width:100%;text-align:left;border:none;font:inherit;color:inherit;}
+.mt-reprise .t{flex:1;min-width:0;}
+.mt-reprise .k{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);}
+.mt-reprise .t1{font-size:15px;font-weight:800;margin-top:2px;}
+.mt-ch{display:flex;align-items:center;gap:12px;padding:14px;width:100%;text-align:left;border:none;font:inherit;color:inherit;margin-bottom:10px;}
+.mt-cn{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-weight:800;font-size:12.5px;flex-shrink:0;}
+.mt-ch .t{flex:1;min-width:0;}
+.mt-ch .t1{display:block;font-size:15px;font-weight:800;line-height:1.3;}
+.mt-ch .t2{display:block;font-size:12.5px;color:var(--text-soft);font-weight:600;margin-top:3px;}
+.mt-ok{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;}
+.mt-ok svg{width:15px;height:15px;}
+.mt-new{font-size:11px;font-weight:800;padding:4px 8px;border-radius:8px;flex-shrink:0;}
+.mt-chev{color:var(--text-mute);flex-shrink:0;}
+.mt-chev svg{width:18px;height:18px;}
+.mt-sticky{position:fixed;z-index:44;left:0;right:0;bottom:0;padding:14px 16px calc(env(safe-area-inset-bottom) + 14px);background:linear-gradient(transparent,var(--bg) 35%);pointer-events:none;}
+.mt-sticky .hm-cta{max-width:488px;margin:0 auto;pointer-events:auto;}
+.screen:not(.active) .mt-sticky{display:none;}
+
+/* ══════════ CHAPITRE : même famille que l'accueil ══════════ */
+#screen-split .clair-minute{border:none;color:#fff;border-radius:24px;padding:18px 20px;
+  background:linear-gradient(140deg,color-mix(in srgb,var(--accent) 88%,#000),var(--accent-2));box-shadow:0 12px 28px var(--accent-glow);}
+#screen-split .clair-minute .recap-label{color:rgba(255,255,255,.88);}
+#screen-split .clair-minute .clair-txt,#screen-split .clair-minute .clair-txt *{color:#fff;}
+#screen-split .clair-minute .clair-txt b{color:#fff;font-weight:800;}
+#screen-split .clair-minute .clair-txt li::before{background:#fff;}
+#pane-0,#pane-1{counter-reset:sect;}
+#pane-0 .section-title,#pane-1 .section-title{counter-increment:sect;display:flex;align-items:center;gap:10px;border-left:none !important;padding-left:0 !important;}
+#pane-0 .section-title::before,#pane-1 .section-title::before{content:counter(sect);flex-shrink:0;width:28px;height:28px;border-radius:10px;display:grid;place-items:center;
+  font-family:var(--font-text);font-size:12.5px;font-weight:800;background:color-mix(in srgb,var(--accent) 13%,transparent);color:var(--accent);}
+#pane-0 .card,#pane-1 .card{border-radius:22px;border:none;box-shadow:var(--hm-ombre);background:var(--hm-carte);}
 </style>
 </head>
 <body>
@@ -2350,6 +2401,11 @@ html.tabbar-on[data-screen="classes"] .page-head .back-btn{visibility:hidden;}
     <div class="overview rise" id="overview" style="animation-delay:.12s"></div>
     <div class="subj-list" id="subj-cards"></div>
   </div>
+</div>
+
+<!-- UNE MATIÈRE : en-tête à sa couleur, chiffres clés, chapitres -->
+<div id="screen-matiere" class="screen">
+  <div class="wrap mt-wrap" id="mt-inner"></div>
 </div>
 
 <!-- SPLIT -->
@@ -6390,7 +6446,7 @@ if(window.ResizeObserver){
 })();
 // à quelle profondeur est chaque écran : sert à savoir si on avance ou si on revient
 const PROFONDEUR = { login:0, pick:0, welcome:0, semestres:0, semchoice:1, edt:1, classes:1, search:1, mesdevoirs:1, sites:1, index:2, planning:1, psycho:1,
-  class:2, shared:3, subjects:2, split:3, qcmchoix:4, lexique:4, synthese:4, auteurs:4, devoirs:4, session:5 };
+  class:2, shared:3, subjects:2, matiere:2.5, split:3, qcmchoix:4, lexique:4, synthese:4, auteurs:4, devoirs:4, session:5 };
 function profondeurEcran(id){ return PROFONDEUR[id] ?? 2; }
 let CALME_T = null, SANS_ENTREE = false;
 // une page qui en remplace une autre dans le même écran (projets) : elle entre comme une page
@@ -8885,7 +8941,7 @@ function makeEcueCard(s){
       </div>
       <span class="ecue-arrow">→</span>
     </div>`;
-  card.addEventListener("click",()=>openSubject(s.id));
+  card.addEventListener("click",()=>{ document.documentElement.dataset.mtDepuis = "subjects"; ouvrirMatiere(s.id); });
   // les chapitres ajoutés depuis la dernière visite : un bandeau rose en bas de la carte
   if(nv){
     card.classList.add("a-nouveau");
@@ -9163,7 +9219,7 @@ function renderAccueil(anim){
       const b = el("button","hm-mi hm-press"); b.type = "button";
       b.innerHTML = `<span class="hm-ic hm-doux-${c}">${ICO(HM_IC[hmHash(m.id + "i") % HM_IC.length])}</span><span class="t"><span class="t1">${esc(m.title)}</span><span class="t2">${esc(sous)}</span></span>
         <span class="hm-pr"><svg viewBox="0 0 42 42"><circle cx="21" cy="21" r="17" fill="none" stroke="color-mix(in srgb,${HM_HEX[c]} 16%,transparent)" stroke-width="5"/><circle cx="21" cy="21" r="17" fill="none" stroke="${HM_HEX[c]}" stroke-width="5" stroke-linecap="round" stroke-dasharray="106.8" stroke-dashoffset="${106.8 * (1 - p / 100)}"/></svg><b>${q.tot ? p : "–"}</b></span>`;
-      b.addEventListener("click",()=>{ haptic(); curSemestre = SEMESTRES[m.id]; openSubject(m.id); });
+      b.addEventListener("click",()=>{ haptic(); document.documentElement.dataset.mtDepuis = "semestres"; ouvrirMatiere(m.id); });
       card.appendChild(b);
     });
     boxM.appendChild(card);
@@ -9193,6 +9249,101 @@ document.querySelectorAll("#tabbar .tb").forEach(b=>b.addEventListener("click",(
   else if(cle === "edt") document.getElementById("btn-edt").click();
   else if(cle === "classes") document.getElementById("btn-classes").click();
 }));
+
+
+// ══════════ PAGE D'UNE MATIÈRE ══════════
+// En-tête à la couleur de la matière, trois chiffres, « Reprendre », les chapitres (CM / TD),
+// et un bouton en bas pour réviser ses QCM (le contrôle à venir en tête).
+let MATIERE_OUVERTE = null, MT_ONGLET = "cm";
+const MT_GRAD = { v:"linear-gradient(160deg,color-mix(in srgb,var(--accent) 85%,#000),var(--accent) 50%,var(--accent-2))",
+  b:"linear-gradient(160deg,#1f63d6,#3a86ff 50%,#7fb0ff)", g:"linear-gradient(160deg,#0b8a5d,#14b87e 50%,#5fd9a9)",
+  y:"linear-gradient(160deg,#e07b00,#f5a524 50%,#ffc766)", r:"linear-gradient(160deg,#d12a6b,#ff4d8d 50%,#ff8ab4)" };
+function ouvrirMatiere(id, onglet){
+  const m = SUBJECTS.find(x=>x.id === id); if(!m) return;
+  MATIERE_OUVERTE = id; curSubj = m; curSemestre = SEMESTRES[id];
+  if(onglet) MT_ONGLET = onglet;
+  else if(!(m.cm||[]).length && (m.td||[]).length) MT_ONGLET = "td";
+  else MT_ONGLET = "cm";
+  renderMatiere();
+  showScreen("matiere");
+  window.scrollTo(0, 0);
+}
+function renderMatiere(){
+  const m = SUBJECTS.find(x=>x.id === MATIERE_OUVERTE); const box = document.getElementById("mt-inner");
+  if(!m || !box) return;
+  const c = hmCouleur(m), q = hmQcm(m), ch = hmChapitres(m);
+  const ctl = hmControles()[m.id];
+  const jc = ctl ? hmJoursAvant(ctl.start) : null;
+  const quandCtl = ctl ? (jc <= 0 ? "aujourd'hui" : jc === 1 ? "demain" : jc < 7 ? ctl.start.toLocaleDateString("fr-FR",{weekday:"long"}) : "le " + ctl.start.getDate() + "/" + String(ctl.start.getMonth()+1).padStart(2,"0")) : "";
+  const nouv = new Set(nouveauxDe(m).map(n=>n.ch.label));
+  const prof = (m.profs && m.profs.length) ? (m.profs[0].nom || m.profs[0]) : "";
+  const sous = ch.tot + " chapitre" + (ch.tot > 1 ? "s" : "") + (ctl ? " · contrôle " + quandCtl : "");
+  box.innerHTML = `<div class="mt-head" style="background:${MT_GRAD[c]}">
+      <button type="button" class="mt-bk" id="mt-bk" aria-label="Retour"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <div class="mt-top"><span class="mt-big">${ICO(HM_IC[hmHash(m.id + "i") % HM_IC.length])}</span><div><h1>${esc(m.title)}</h1><p>${esc(sous)}</p></div></div>
+    </div>
+    <div class="mt-body">
+      <div class="hm-card mt-kpi"><div><b>${ch.lus}/${ch.tot}</b><span>chapitres lus</span></div><div><b>${q.tot ? Math.round(q.ok / q.tot * 100) + " %" : "–"}</b><span>QCM validés</span></div><div><b>${ctl ? (jc <= 0 ? "Auj." : "J-" + jc) : (q.err || 0)}</b><span>${ctl ? "contrôle" : "à revoir"}</span></div></div>
+      <div id="mt-reprise"></div>
+      <div class="mt-seg" id="mt-seg"><button type="button" data-o="cm">CM${(m.cm||[]).length ? " · " + m.cm.length : ""}</button><button type="button" data-o="td">TD${(m.td||[]).length ? " · " + m.td.length : ""}</button><button type="button" data-o="ent">S'entraîner</button></div>
+      <div id="mt-liste"></div>
+    </div>
+    <div class="mt-sticky"><button type="button" class="hm-cta hm-press" id="mt-go">${q.tot ? (ctl ? "Réviser pour " + quandCtl : "Réviser cette matière") : "S'entraîner"}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></div>`;
+  document.getElementById("mt-bk").addEventListener("click",()=>{ haptic(); if(document.documentElement.dataset.mtDepuis === "subjects"){ renderSubjectCards(curSemestre); showScreen("subjects"); } else { renderSemestres(); showScreen("semestres"); } });
+  document.getElementById("mt-go").addEventListener("click",()=>{
+    haptic(); curSubj = m;
+    if(!q.tot){ openSubject(m.id); setTab(2); return; }
+    choisirScope("grand"); retourSession = ()=>ouvrirMatiere(m.id, MT_ONGLET); startSession("qcm");
+  });
+  // reprendre la lecture là où on s'était arrêté dans cette matière
+  const der = lectureCharger().dernier[m.id];
+  if(der){
+    const chs = m[der.type] || [], ci = chs.findIndex(x=>x.label === der.label);
+    if(ci >= 0){
+      const pc = partiesChapitre(chs[ci].label);
+      const r = el("button","hm-card mt-reprise hm-press"); r.type = "button";
+      r.innerHTML = `<span class="hm-ic hm-doux-${c}">${ICO("reprendre")}</span><span class="t"><span class="k">Reprendre</span><span class="t1" style="display:block">${esc(pc.court)}${pc.titre ? " · " + esc(pc.titre.replace(/^Séance du /, "")) : ""}</span></span><span class="mt-chev">${'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>'}</span>`;
+      r.addEventListener("click",()=>{ haptic(); ouvrirChapitreMatiere(m, der.type, ci); });
+      document.getElementById("mt-reprise").appendChild(r);
+    }
+  }
+  const seg = document.getElementById("mt-seg");
+  seg.querySelectorAll("button").forEach(b=>{
+    b.classList.toggle("on", b.dataset.o === MT_ONGLET);
+    b.addEventListener("click",()=>{
+      haptic();
+      if(b.dataset.o === "ent"){ openSubject(m.id); setTab(2); return; }
+      MT_ONGLET = b.dataset.o; renderMatiere();
+    });
+  });
+  const liste = document.getElementById("mt-liste");
+  const chs = m[MT_ONGLET] || [];
+  if(!chs.length){
+    liste.innerHTML = `<div class="hm-card hm-vide"><span class="hm-ic hm-doux-${c}">${ICO(MT_ONGLET)}</span>Aucun ${MT_ONGLET.toUpperCase()} pour l'instant.</div>`;
+    return;
+  }
+  const chev = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
+  const coche = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>';
+  chs.forEach((x, i)=>{
+    const pc = partiesChapitre(x.label);
+    const lu = estRevise(m, MT_ONGLET, x);
+    const n = (x.sections||[]).length;
+    const titre = pc.titre ? pc.titre.replace(/^Séance du /, "Séance du ") : pc.court;
+    const court = String(i + 1);
+    const b = el("button","hm-card mt-ch hm-press"); b.type = "button";
+    const etat = nouv.has(x.label) ? `<span class="mt-new hm-doux-r">Nouveau</span>` : lu ? `<span class="mt-ok hm-doux-g">${coche}</span>` : `<span class="mt-chev">${chev}</span>`;
+    b.innerHTML = `<span class="mt-cn ${lu ? "hm-doux-" + c : "hm-doux-v"}" style="${lu ? "" : "background:color-mix(in srgb,var(--text) 6%,transparent);color:var(--text-soft)"}">${esc(court)}</span>
+      <span class="t"><span class="t1">${esc(titre)}</span><span class="t2">${pc.titre ? esc(pc.court) + " · " : ""}${n} section${n > 1 ? "s" : ""}${x.clair ? " · En clair" : ""}</span></span>${etat}`;
+    b.addEventListener("click",()=>{ haptic(); ouvrirChapitreMatiere(m, MT_ONGLET, i); });
+    liste.appendChild(b);
+  });
+}
+function ouvrirChapitreMatiere(m, type, i){
+  curSemestre = SEMESTRES[m.id];
+  openSubject(m.id);
+  if(type === "cm") curCmIdx = i; else curTdIdx = i;
+  setTab(type === "cm" ? 0 : 1);
+}
 
 function renderSemestres(){
   try{ majBadgeProjets(); }catch(e){}
@@ -12749,7 +12900,7 @@ document.getElementById("pick-girly").addEventListener("click",()=>chooseTheme("
 document.getElementById("pick-purple").addEventListener("click",()=>chooseTheme("purple"));
 document.getElementById("btn-start").addEventListener("click",()=>{ renderSemestres(); showScreen("semestres"); });
 document.getElementById("btn-sem-back").addEventListener("click",()=>{ renderSemestres(); showScreen("semchoice"); });
-document.getElementById("btn-split-back").addEventListener("click",()=>{ renderSubjectCards(curSemestre); showScreen("subjects"); });
+document.getElementById("btn-split-back").addEventListener("click",()=>{ if(curSubj && MATIERE_OUVERTE === curSubj.id){ renderMatiere(); showScreen("matiere"); return; } renderSubjectCards(curSemestre); showScreen("subjects"); });
 // feuille de changement rapide de matière
 document.getElementById("split-chip").addEventListener("click",openSubjSheet);
 document.getElementById("subj-sheet").addEventListener("click",e=>{ if(e.target.id==="subj-sheet") closeSubjSheet(); });
