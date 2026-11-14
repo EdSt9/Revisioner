@@ -2635,6 +2635,28 @@ html[data-theme="girly"][data-mode="sombre"]{--text-mute:#b08a9c;}
 .sess-nav #sess-pos{font-weight:800;}
 /* titres des chapitres : la même police nette que le reste */
 .chap-titre,.section-title{font-family:var(--font-text) !important;font-weight:800 !important;letter-spacing:-.02em;}
+
+/* ══════════ PAGE D'UNE CLASSE ══════════ */
+.cls-hdbar{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+.cls-hdbar .cls-pill{position:relative;display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px !important;border:none !important;border-radius:12px !important;background:rgba(255,255,255,.18) !important;color:#fff !important;font:inherit;font-weight:800 !important;font-size:13.5px !important;}
+.cls-hdbar .cls-pill svg{width:16px;height:16px;color:#fff;}
+.cls-hdbar .cls-pill.on{background:#fff !important;color:var(--accent) !important;}
+.cls-hdbar .tp-pt{width:7px;height:7px;border-radius:50%;background:#ff8ab4;}
+.cls-hdbar .nb{top:-6px;right:-6px;}
+.cls-suivre{border:none !important;border-radius:20px !important;background:var(--surface-solid) !important;box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04) !important;padding:12px 14px !important;}
+.cls-suivre b{font-weight:800;}
+.cls-sec{margin:18px 4px 10px;display:flex;justify-content:space-between;align-items:baseline;}
+.cls-sec span{font-size:13px;color:var(--text-mute);font-weight:700;}
+.cls-liste{padding:4px 14px;}
+.cls-ligne{display:flex;align-items:center;gap:12px;width:100%;padding:12px 0;border:none;background:none;font:inherit;color:var(--text);text-align:left;cursor:pointer;}
+.cls-ligne+.cls-ligne{border-top:1px solid color-mix(in srgb,var(--text) 7%,transparent);}
+.cls-l-ic{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;font-weight:800;font-size:14px;flex-shrink:0;}
+.cls-l-t{flex:1;min-width:0;}
+.cls-l-t b{display:block;font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cls-l-t small{display:block;font-size:12.5px;color:var(--text-soft);font-weight:600;margin-top:2px;}
+.cls-l-t i{font-style:normal;color:var(--ok);font-weight:800;}
+.cls-nv{font-style:normal;color:var(--new);font-weight:800;}
+.cls-l-ch{color:var(--text-mute);font-size:20px;}
 </style>
 </head>
 <body>
@@ -4157,7 +4179,11 @@ async function openClass(c){
   const attente = gere ? membres.filter(m=>m.role === "pending") : [];
   CLS_ATTENTE[c.id] = attente.length;
   const dedans = membres.filter(m=>m.role !== "pending" && m.role !== "retire");
-  const bar = el("div","cls-bar");
+  const hdp = document.querySelector("#screen-class .hd-plus");
+  let bar = hdp ? hdp.querySelector(".cls-hdbar") : null;
+  if(hdp && !bar){ bar = el("div","cls-hdbar"); hdp.appendChild(bar); }
+  if(!bar) bar = el("div","cls-bar");
+  bar.innerHTML = "";
   // un simple membre ne voit pas qui d'autre est dans la classe
   if(gere){
     const mp = el("button","cls-pill"); mp.type = "button";
@@ -4173,12 +4199,14 @@ async function openClass(c){
   const nMat = new Set(nouv.map(it=>it.subject_title)).size;
   const vue = CLS_VUE[c.id] || "cours";
   const autre = vue === "cours" ? nvDev.length : nouv.length;
-  const sel = el("button","chap-pick type-pick cls-vue"); sel.type = "button";
-  sel.innerHTML = `<span class="type-ic">${ICO(vue === "cours" ? "cm" : "calendrier")}</span><span class="chap-pick-txt">${vue === "cours" ? "Cours" : "Devoirs"}</span>` +
-    (autre ? '<span class="tp-pt" aria-label="Du nouveau dans l\'autre vue"></span>' : "") + `<span class="chap-pick-ic">${IC_CHEV_BAS}</span>`;
-  sel.addEventListener("click",()=>{ haptic(); choisirVueClasse(c, { nMat, nCours:nouv.length, nDev:nvDev.length, nAvenir:devs.filter(devoirAVenir).length, nItems:new Set(items.map(it=>it.subject_title)).size }); });
-  bar.appendChild(sel);
-  box.appendChild(bar);
+  // Cours / Devoirs : deux pastilles ; un point signale du nouveau dans l'autre
+  [["cours","Cours", nouv.length],["devoirs","Devoirs", nvDev.length]].forEach(([v, nom, nn])=>{
+    const b = el("button","cls-pill cls-vue-p" + (v === vue ? " on" : "")); b.type = "button";
+    b.innerHTML = esc(nom) + (nn && v !== vue ? '<span class="tp-pt" aria-label="Du nouveau"></span>' : "");
+    b.addEventListener("click",()=>{ haptic(); if(v !== vue){ CLS_VUE[c.id] = v; openClass(c); } });
+    bar.appendChild(b);
+  });
+  if(!hdp) box.appendChild(bar);
 
   if(vue === "devoirs"){
     renderDevoirsClasse(c, box, gere, devs);
@@ -4215,7 +4243,7 @@ async function openClass(c){
     }
     openClass(c);
   });
-  swc.style.marginBottom = "16px";
+  swc.style.marginBottom = "4px";
   box.appendChild(swc);
 
   // les projets partagés ici : chacun les ajoute à ses projets s'il le veut
@@ -4246,6 +4274,9 @@ async function openClass(c){
   }else{
     const parMatiere = {};
     items.forEach(it=>{ (parMatiere[it.subject_title] ||= []).push(it); });
+    const titreM = el("div","hm-sec cls-sec"); titreM.innerHTML = `<h3>Matières</h3><span>${Object.keys(parMatiere).length}</span>`; box.appendChild(titreM);
+    const liste = el("div","hm-card cls-liste"); box.appendChild(liste);
+    const COUL = ["v","b","g","y","r"];
     Object.keys(parMatiere)
       .sort((x,y)=>x.localeCompare(y,"fr",{ sensitivity:"base" }))
       .forEach(mat=>{
@@ -4255,20 +4286,12 @@ async function openClass(c){
         const nCh = tous.filter(it=>it.kind !== "revision").length;
         const aRev = tous.some(it=>it.kind === "revision");
         const detail = [nCh ? nCh + " chapitre" + (nCh > 1 ? "s" : "") : "", aRev ? "révisions" : ""].filter(Boolean).join(" · ");
-        const card = el("button","ecue-card cls-mat" + (nv.length ? " a-nouveau" : ""));
-        card.type = "button";
-        card.innerHTML = `<div class="ecue-top"><div class="ecue-info"><div class="ecue-name">${esc(mat)}</div>
-          <div class="ecue-meta">${tout ? `<span class="ecue-status ajour">✓ Dans tes cours</span>` : `<span class="cls-mat-n">${esc(detail)}</span>`}${isSubFollowed(c.id, mat) && !suitC ? `<span class="cls-mat-n">· suivie</span>` : ""}</div></div>
-          <span class="ecue-arrow">→</span></div>`;
-        card.addEventListener("click",()=>{ haptic(); ouvrirMatiereClasse(c, mat, tous, monRole); });
-        // comme dans « Tes matières » : un bandeau rose qui mène droit au nouveau
-        if(nv.length){
-          const bd = el("div","ecue-nouveau");
-          bd.innerHTML = `<span>✦ ${nv.length === 1 ? "Nouveau" : nv.length + " nouveaux"} : ${esc(nv.map(nomCourtItem).join(", "))}</span><b>›</b>`;
-          bd.addEventListener("click", ev=>{ ev.stopPropagation(); haptic(); openSharedItem(nv[0]); });
-          card.appendChild(bd);
-        }
-        box.appendChild(card);
+        const ligne = el("button","cls-ligne"); ligne.type = "button";
+        const cc = COUL[hmHash(mat) % COUL.length], ini = mat.replace(/[^A-Za-zÀ-ÿ]/g, "").slice(0, 2);
+        const sous = nv.length ? `<em class="cls-nv">✦ ${nv.length === 1 ? "1 nouveau" : nv.length + " nouveaux"}</em>` : tout ? `<i>✓ dans tes cours</i>` : "";
+        ligne.innerHTML = `<span class="cls-l-ic hm-doux-${cc}">${esc(ini.charAt(0).toUpperCase() + ini.slice(1).toLowerCase())}</span><span class="cls-l-t"><b>${esc(mat)}</b><small>${esc(detail)}${detail && sous ? " · " : ""}${sous}${isSubFollowed(c.id, mat) && !suitC && !tout ? " · suivie" : ""}</small></span><span class="cls-l-ch">›</span>`;
+        ligne.addEventListener("click",()=>{ haptic(); ouvrirMatiereClasse(c, mat, tous, monRole); });
+        liste.appendChild(ligne);
       });
   }
 
