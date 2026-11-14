@@ -2308,6 +2308,32 @@ html.tabbar-on[data-screen="classes"] .page-head .back-btn{visibility:hidden;}
 .qz-conf i{position:absolute;top:-14px;width:8px;height:14px;border-radius:2px;animation:qzFall 2.6s cubic-bezier(.3,.6,.5,1) forwards;}
 @keyframes qzFall{to{top:110%;transform:translateX(40px) rotate(540deg);}}
 @media(prefers-reduced-motion:reduce){.qz-pop,.qz-shake,.qz-medal,.qz-sheet,.qz-veil{animation:none;}.qz-conf{display:none;}}
+
+/* ══════════ REFONTE · PAGES DE LA BARRE DU BAS ET FEUILLES ══════════ */
+/* titres : la même police nette que l'accueil */
+html.tabbar-on .page-title,#screen-class .page-title,#screen-sites .page-title,#screen-planning .page-title,#screen-devoirs .page-title{font-family:var(--font-text);font-weight:800;font-size:28px;letter-spacing:-.025em;}
+html.tabbar-on .page-sub,html.tabbar-on .lex-sous{font-weight:600;color:var(--text-mute);}
+/* barre du haut sans trait, fondue dans le fond */
+html.tabbar-on .page-head{border-bottom-color:transparent !important;box-shadow:none !important;}
+/* cartes : arrondies, ombre douce, sans contour */
+.sem-tile{border:none;border-radius:24px;background:var(--surface-solid);box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04);}
+.sem-grid.liste .sem-tile{border-radius:18px;}
+html.tabbar-on .cal-row,#pick-list .cal-row{border-radius:18px;}
+/* segments : une pastille blanche qui glisse */
+.seg{border-radius:14px;padding:4px;background:color-mix(in srgb,var(--text) 6%,transparent);border:none;}
+.seg-opt{border-radius:11px;font-weight:700;}
+.seg-opt.active{background:var(--surface-solid);box-shadow:0 2px 8px rgba(0,0,0,.08);}
+/* feuilles du bas (mémo, compte, choix) */
+.sheet{border-radius:28px 28px 0 0;}
+.sheet-grip{width:42px;height:5px;background:color-mix(in srgb,var(--text) 14%,transparent);}
+.sheet-overlay{background:rgba(10,6,25,.35);}
+#pick-title{font-family:var(--font-text);font-weight:800;letter-spacing:-.02em;}
+.compte-av{background:linear-gradient(140deg,var(--accent),var(--accent-2)) !important;color:#fff !important;}
+/* pastille des cours : un point, pas un chiffre */
+.tb-nb.tb-point{min-width:12px;width:12px;height:12px;padding:0;font-size:0;top:-2px;right:-2px;}
+
+/* titres de l'interface : police nette ; le serif reste pour le contenu des cours */
+.sem-name,.sem-tile .sem-name,.project-title,.ecue-name,.vide-t,.aide-acc-t,.sheet-title,.sheet .sheet-title,.dev-name,.dv-nom,.edt-week,.edt-day-name,.exam-title,.plan-day,.ht-t,.next-title,.mode-name,.qc-name,.colle-carte-t,.fin-titre,.sr-title,.bilan-score{font-family:var(--font-text) !important;font-weight:800 !important;letter-spacing:-.015em;}
 </style>
 </head>
 <body>
@@ -9151,7 +9177,7 @@ function renderAccueil(anim){
         <defs><linearGradient id="hm-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="var(--c-r)"/></linearGradient></defs></svg>
         <div class="hm-rc"><b data-n="${fait}">${fait}</b><span>sur ${HM_OBJECTIF}</span></div></div>
       <div class="hm-side">
-        <div class="hm-sv"><div class="l">Chapitres lus<em>${chL}/${chT}</em></div><div class="hm-tr hm-doux-b"><i data-w="${pc(chL,chT)}" style="background:var(--c-b)"></i></div></div>
+        ${chT ? `<div class="hm-sv"><div class="l">Chapitres lus<em>${chL}/${chT}</em></div><div class="hm-tr hm-doux-b"><i data-w="${pc(chL,chT)}" style="background:var(--c-b)"></i></div></div>` : ""}
         <div class="hm-sv"><div class="l">QCM validés<em>${pc(qO,qT)} %</em></div><div class="hm-tr hm-doux-v"><i data-w="${pc(qO,qT)}" style="background:var(--accent)"></i></div></div>
         <div class="hm-sv"><div class="l">À revoir<em>${err}</em></div><div class="hm-tr hm-doux-r"><i data-w="${Math.min(100, err * 4)}" style="background:var(--c-r)"></i></div></div>
       </div></div>
@@ -9288,6 +9314,8 @@ function majTabbar(id){
   pose("mesdevoirs", BADGE_APP.dev || 0);
   let nc = 0; try{ nc = newSubjects().length + (BADGE_APP.proj || 0); }catch(e){}
   pose("semchoice", nc);
+  // les nouveautés de cours : un simple point, un gros chiffre stresse plus qu'il n'aide
+  const pc = document.querySelector('#tabbar [data-tb="semchoice"] .tb-nb'); if(pc){ pc.classList.add("tb-point"); pc.textContent = ""; pc.setAttribute("aria-label", nc ? "Nouveautés" : ""); }
 }
 document.querySelectorAll("#tabbar .tb").forEach(b=>b.addEventListener("click",()=>{
   haptic();
@@ -9542,16 +9570,17 @@ function renderAideAccueil(){
   const box = document.getElementById("aide-accueil"); if(!box) return;
   let vu = false; try{ vu = localStorage.getItem("revision_aide_accueil") === "1"; }catch(e){}
   box.hidden = vu || isCiva(); if(box.hidden) return;
-  const ic = id=>{ const b = document.getElementById(id); const sv = b && b.querySelector("svg"); return sv ? sv.outerHTML : ""; };
+  const ic = sel=>{ const b = document.querySelector(sel); const sv = b && b.querySelector("svg"); return sv ? sv.outerHTML : ""; };
   const lignes = [
-    [ic("btn-edt"), "Emploi du temps", "Importe-le une fois, tes cours s'affichent chaque jour."],
-    [ic("btn-news"), "Mes sites", "Tes liens utiles : ENT, Moodle, scolarité…"],
-    [ic("btn-classes"), "Classes", "Partage tes cours et tes exercices avec d'autres."],
-    [ic("btn-search"), "Rechercher", "Retrouve un mot dans tous tes cours."],
-    [ic("btn-memo"), "Mémo", "Le bouton rond en bas : tes tâches et tes notes rapides."]
+    [ic('#tabbar [data-tb="semchoice"]'), "Cours", "Le bouton du milieu, en bas : tes matières et tes chapitres."],
+    [ic('#tabbar [data-tb="edt"]'), "Agenda", "Importe ton emploi du temps une fois, tes cours s'affichent chaque jour."],
+    [ic('#tabbar [data-tb="classes"]'), "Classes", "Partage tes cours et tes exercices avec d'autres."],
+    [ic("#btn-search"), "Rechercher", "Retrouve un mot dans tous tes cours."],
+    [ic("#btn-memo"), "Mémo", "Tes tâches et tes notes rapides."],
+    ["<b style='font-size:13px'>" + esc(String(PSEUDO || "?").charAt(0).toUpperCase()) + "</b>", "Ton compte", "L'ambiance, les notifications et Mes sites."]
   ];
   box.className = "aide-acc rise";
-  box.innerHTML = `<div class="aide-acc-t">Bienvenue ! Voici ce que font les boutons</div>` +
+  box.innerHTML = `<div class="aide-acc-t">Bienvenue ! Voici où tout se trouve</div>` +
     lignes.map(([svg, nom, txt])=>`<div class="aide-acc-l"><span class="aide-acc-ic">${svg}</span><span><b>${nom}</b><small>${txt}</small></span></div>`).join("") +
     `<button type="button" class="aide-acc-ok">J'ai compris</button>`;
   box.querySelector(".aide-acc-ok").addEventListener("click",()=>{ haptic(); try{ localStorage.setItem("revision_aide_accueil","1"); }catch(e){} box.hidden = true; });
@@ -9761,7 +9790,8 @@ function ouvrirCompte(){
     r.addEventListener("click",()=>{ haptic(); fn(); });
     box.appendChild(r);
   };
-  if(!isCiva()) ligne("Revoir l'aide de l'accueil", "Ce que font les boutons du haut", ()=>{
+  ligne("Mes sites", "Tes liens utiles : ENT, Moodle, scolarité…", ()=>{ closePicker(); setTimeout(()=>document.getElementById("btn-news").click(), 320); });
+  if(!isCiva()) ligne("Revoir l'aide de l'accueil", "Ce que font les boutons", ()=>{
     try{ localStorage.removeItem("revision_aide_accueil"); }catch(e){}
     closePicker(); renderSemestres(); window.scrollTo(0, 0);
   });
