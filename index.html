@@ -2657,6 +2657,19 @@ html[data-theme="girly"][data-mode="sombre"]{--text-mute:#b08a9c;}
 .cls-l-t i{font-style:normal;color:var(--ok);font-weight:800;}
 .cls-nv{font-style:normal;color:var(--new);font-weight:800;}
 .cls-l-ch{color:var(--text-mute);font-size:20px;}
+
+/* la feuille d'un chapitre (CM, TD, S'entraîner, outils) au nouveau style */
+.mt-nom{font-family:var(--font-text) !important;font-weight:800 !important;letter-spacing:-.02em;font-size:22px !important;}
+.mt-ecue{font-weight:800 !important;letter-spacing:.04em;}
+.mt-rond{width:42px !important;height:42px !important;border-radius:14px !important;border:none !important;background:color-mix(in srgb,var(--text) 6%,transparent) !important;color:var(--text) !important;}
+#pick-list .mt-seg{display:flex;border:none !important;background:color-mix(in srgb,var(--text) 6%,transparent) !important;border-radius:16px !important;padding:4px !important;box-shadow:none !important;}
+#pick-list .mt-seg button{flex:1;border:none !important;background:none !important;border-radius:12px !important;color:var(--text-soft) !important;padding:9px 6px !important;}
+#pick-list .mt-seg button.on{background:var(--surface-solid) !important;color:var(--text) !important;box-shadow:0 2px 8px rgba(0,0,0,.08) !important;}
+#pick-list .mt-seg .mt-sn{font-weight:800;font-size:15px;}
+#pick-list .mt-seg small{font-weight:600;}
+.mt-lab{font-weight:800 !important;letter-spacing:.06em;}
+.mt-l{font-weight:700;}
+.mt-l .mt-n{font-weight:800;}
 </style>
 </head>
 <body>
@@ -7792,7 +7805,7 @@ function appliquerTaille(t){
   document.documentElement.style.setProperty("--zt", TAILLES[t] || 1);
   try{ localStorage.setItem("tailleTexte", t); }catch(_){}
 }
-appliquerTaille(tailleTexte());
+appliquerTaille("normal");
 // ══════════════════════════════════════════════════
 // CHERCHER DANS LE COURS OUVERT (la loupe de l'en-tête)
 // ══════════════════════════════════════════════════
@@ -11045,33 +11058,11 @@ function listeTypes(){
   document.querySelectorAll("#pick-sheet .pick-actions").forEach(n=>n.remove());
   const box = document.getElementById("pick-list");
   const s = curSubj || {};
-  // l'en-tête : le numéro et le nom de la matière, puis « Aa » (taille du texte) et l'accueil
+  // l'en-tête : le numéro et le nom de la matière, puis l'accueil (la taille du texte est dans le compte)
   const tete = document.getElementById("pick-title");
   tete.innerHTML = `<div class="mt-tete"><div class="mt-tt">${s.ecue ? `<span class="mt-ecue">${esc(s.ecue)}</span>` : ""}<span class="mt-nom">${esc(s.title || "Aller à")}</span></div>` +
-    `<button class="mt-rond mt-aa" type="button" aria-label="Taille du texte" aria-expanded="false"><span>Aa</span></button>` +
     `<button class="mt-rond mt-home" type="button" aria-label="Revenir à l'accueil">${ICO("accueil")}</button></div>`;
   box.innerHTML = "";
-  // « Aa » ouvre un curseur, fermé on ne le voit pas
-  const ordre = ["petit","normal","grand"];
-  const pop = el("div","mt-pop");
-  pop.innerHTML = `<div class="mt-curseur"><span class="mt-a1">A</span><input type="range" min="0" max="2" step="1" value="${ordre.indexOf(tailleTexte())}" aria-label="Taille du texte"><span class="mt-a2">A</span></div><div class="mt-apercu"></div>`;
-  const ap = pop.querySelector(".mt-apercu");
-  // un vrai paragraphe du cours ouvert, pour juger la taille sur du texte réel
-  const p0 = [...document.querySelectorAll("#screen-split .section p")].find(x=>x.textContent.trim().length > 70 && !/^(contrôle|partiel|examen|évaluation)/i.test(x.textContent.trim()));
-  let ex = p0 ? p0.textContent.trim().replace(/\s+/g, " ") : "";
-  if(ex.length > 110) ex = ex.slice(0, 110).replace(/\s+\S*$/, "") + "…";
-  ap.textContent = ex || "Le texte des cours s'affiche à cette taille.";
-  pop.querySelector("input").addEventListener("input", e=>{
-    const t = ordre[+e.target.value] || "normal";
-    if(t !== tailleTexte()){ haptic(); appliquerTaille(t); requestAnimationFrame(majProgression); }
-  });
-  box.appendChild(pop);
-  const btAa = tete.querySelector(".mt-aa");
-  btAa.addEventListener("click", ()=>{
-    haptic();
-    const ouvert = pop.classList.toggle("ouvert");
-    btAa.classList.toggle("on", ouvert); btAa.setAttribute("aria-expanded", ouvert);
-  });
   tete.querySelector(".mt-home").addEventListener("click", ()=>{ haptic(); document.getElementById("btn-split-home").click(); });
   // CM, TD, S'entraîner : un sélecteur à trois cases
   const seg = el("div","mt-seg");
