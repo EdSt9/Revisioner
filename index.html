@@ -2406,6 +2406,41 @@ html.morph-en-cours #mt-inner .mt-head{visibility:hidden;}
 .screen.active.relache{transition:transform .32s cubic-bezier(.2,.9,.25,1) !important;}
 @media(prefers-reduced-motion:reduce){#demarrage .dm-logo,.hm-bravo{animation:none;}.mt-morph{transition:none;}}
 .liens-seg{margin:6px 0 14px;}
+
+/* ══════════ REFONTE · PAGES RESTANTES ══════════ */
+/* connexion, choix de l'ambiance, bienvenue */
+.pick-mark{font-size:46px;}
+.pick-title,.pick-name,.welcome-title{font-family:var(--font-text) !important;font-weight:800 !important;letter-spacing:-.025em;}
+.pick-title{font-size:32px;}
+.welcome-title{font-size:36px;}
+.login-box input{border-radius:18px;padding:16px;background:rgba(255,255,255,.08);font-weight:600;}
+#screen-login .btn-primary,#screen-welcome .btn-primary{border-radius:17px;height:54px;padding:0 40px;font-weight:800;}
+#screen-login .btn-primary{background:#fff;color:#1e1a2e;box-shadow:0 10px 26px rgba(0,0,0,.35);width:100%;}
+.welcome-mark{width:auto;height:auto;background:none;box-shadow:none;font-size:72px;filter:drop-shadow(0 14px 28px var(--accent-glow));}
+/* Tes matières (liste d'un semestre) */
+.overview{border:none;border-radius:22px;background:var(--surface-solid);box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04);}
+.overview-title{font-weight:800;}
+.ue-header{background:none;box-shadow:none;padding:6px 4px;margin:18px 0 10px;border-radius:0;}
+.ue-header:active{transform:none;}
+.ue-badge{background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent);font-family:var(--font-text);font-weight:800;font-size:12.5px;border-radius:10px;}
+.ue-title{color:var(--text);font-size:14.5px;font-weight:800;letter-spacing:-.01em;}
+.ue-count{background:color-mix(in srgb,var(--text) 7%,transparent);color:var(--text-soft);}
+.ue-chev{color:var(--text-mute);}
+.ecue-card{border:none !important;border-radius:22px;background:var(--surface-solid);backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04);overflow:hidden;}
+.ecue-card:hover{transform:none;}
+.ecue-num{border:none;background:color-mix(in srgb,var(--accent) 12%,transparent);border-radius:11px;padding:6px 9px;font-weight:800;}
+.ecue-name{font-size:15.5px;}
+.ecue-arrow{color:var(--text-mute);}
+.ecue-nouveau{border-top:none;font-weight:700;}
+/* questions : la même police nette que le reste */
+.q-text,.fc-text{font-family:var(--font-text) !important;font-weight:700 !important;letter-spacing:-.01em;}
+#screen-session .q-text{font-weight:800 !important;}
+.fc-text{font-size:19px;line-height:1.45;}
+.fc-face{border:none !important;border-radius:26px !important;background:var(--surface-solid) !important;box-shadow:0 12px 32px color-mix(in srgb,var(--accent) 12%,transparent),0 1px 3px rgba(0,0,0,.05) !important;}
+.fc-back{background:linear-gradient(150deg,var(--accent),var(--accent-2)) !important;}
+.fc-back .fc-text,.fc-back .fc-label{color:#fff !important;}
+.fc-label{font-weight:800;letter-spacing:.06em;}
+#screen-session .sess-body textarea{border-radius:18px;}
 </style>
 </head>
 <body>
@@ -2425,7 +2460,7 @@ html.morph-en-cours #mt-inner .mt-head{visibility:hidden;}
 <!-- PSEUDO (identification) -->
 <div id="screen-login" class="screen">
   <div class="pick-inner">
-    <div class="pick-mark">✿</div>
+    <div class="pick-mark">💫</div>
     <h1 class="pick-title">Qui es-tu&nbsp;?</h1>
     <p class="pick-sub">Ton pseudo et ton code retrouvent tes cours et ta progression, sur n'importe quel appareil.</p>
     <div class="login-box">
@@ -2442,7 +2477,7 @@ html.morph-en-cours #mt-inner .mt-head{visibility:hidden;}
 <!-- THEME PICKER -->
 <div id="screen-pick" class="screen">
   <div class="pick-inner">
-    <div class="pick-mark">✿</div>
+    <div class="pick-mark">💫</div>
     <h1 class="pick-title">Choisis ton ambiance</h1>
     <p class="pick-sub">Le clair et le sombre suivent ton téléphone.</p>
     <div class="pick-row">
