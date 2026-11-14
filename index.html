@@ -378,42 +378,7 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 .ev-note{resize:none;line-height:1.5;}
 .ev-actions{display:flex;gap:10px;margin-top:16px;flex-shrink:0;}
 .ev-actions .btn{flex:0 0 auto;}
-.ev-actions .btn-primary{flex:1;animation:none;}
-
-/* rappels de contrôle sur l'accueil */.exam-card{background:var(--surface);border:1px solid var(--border);border-left-width:3px;
-  border-radius:var(--r-lg);padding:14px 16px;margin-bottom:14px;
-  box-shadow:0 4px 18px var(--shadow);
-  transition:opacity .25s ease,transform .25s var(--ease-spring);}
-.exam-card.controle{border-left-color:var(--warn);}
-.exam-card.devoir{border-left-color:var(--danger);}
-.exam-card.note{border-left-color:var(--info);}
-.exam-card.dismiss{opacity:0;transform:scale(.96) translateY(-6px);}
-.exam-top{display:flex;align-items:center;gap:9px;margin-bottom:9px;}
-.exam-when{font-size:12px;font-weight:700;color:var(--text-soft);}
-.exam-done{margin-left:auto;width:28px;height:28px;flex-shrink:0;cursor:pointer;
-  border-radius:50%;background:var(--surface-2,rgba(255,255,255,.06));
-  border:1px solid var(--border);color:var(--text-mute);font-size:13px;
-  transition:transform .18s var(--ease-spring),background .2s,color .2s,border-color .2s;}
-.exam-done:active{transform:scale(.88);}
-.exam-done:hover{background:var(--ok-soft);color:var(--ok);border-color:var(--ok);}
-.exam-title{font-family:var(--font-display);font-size:16px;font-weight:500;
-  color:var(--text);line-height:1.3;margin-bottom:4px;}
-.exam-meta{font-size:12px;color:var(--text-mute);}
-.exam-note{font-size:12.5px;color:var(--text-soft);margin-top:8px;line-height:1.45;
-  padding-left:9px;border-left:2px solid var(--border-strong);white-space:pre-wrap;}
-.exam-go{margin-top:11px;background:none;border:none;padding:0;cursor:pointer;
-  font-family:var(--font-text);font-size:12.5px;font-weight:600;color:var(--accent);}
-
-/* repli des sections de l'accueil */
-
-/* bouton déplier / replier les échéances */.alerts-more{display:flex;align-items:center;justify-content:center;gap:6px;
-  width:100%;cursor:pointer;background:none;border:none;
-  padding:4px 0 2px;margin:-4px 0 2px;
-  font-family:var(--font-text);font-size:13px;font-weight:600;color:var(--accent);
-  transition:opacity .2s;}
-.alerts-more:active{opacity:.6;}
-.am-chev{width:14px;height:14px;transition:transform .28s var(--ease-spring);}
-.am-chev.up{transform:rotate(180deg);}
+.ev-actions .btn-primary{flex:1;animation:none;}/* rappels de contrôle sur l'accueil *//* repli des sections de l'accueil *//* bouton déplier / replier les échéances */
 
 /* ── MÉMO (liste type iOS) ── */
 .memo-todos{display:flex;flex-direction:column;}
@@ -506,20 +471,7 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 .mo-note{font-size:12px;color:var(--text-soft);margin-top:7px;line-height:1.45;
   padding-left:8px;border-left:2px solid var(--warn);white-space:pre-wrap;}
 .mo-keep{margin-top:9px;background:none;border:none;padding:0;cursor:pointer;
-  font-family:var(--font-text);font-size:12.5px;font-weight:700;color:var(--warn);}
-
-/* bloc "cours du jour" sur l'accueil */.today-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);
-  padding:15px 17px;margin-bottom:18px;box-shadow:0 4px 18px var(--shadow);}
-.tc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;}
-.tc-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-mute);}
-.tc-all{background:none;border:none;cursor:pointer;font-family:var(--font-text);
-  font-size:12px;font-weight:600;color:var(--accent);padding:0;}
-.tc-row{display:flex;align-items:baseline;gap:10px;padding:6px 0;border-top:1px solid var(--border);}
-.tc-row:first-of-type{border-top:none;}
-.tc-row.past{opacity:.42;}
-.tc-time{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:700;color:var(--accent);flex-shrink:0;min-width:40px;}
-.tc-title{font-size:13.5px;color:var(--text);flex:1;min-width:0;overflow-wrap:break-word;}
-.tc-place{font-size:11px;color:var(--text-mute);flex-shrink:0;}
+  font-family:var(--font-text);font-size:12.5px;font-weight:700;color:var(--warn);}/* bloc "cours du jour" sur l'accueil */
 
 /* ── ACCUEIL : « L'essentiel » — aéré, typographique ── */#screen-semestres:not(.a-entete) .wrap{padding-top:calc(env(safe-area-inset-top) + 24px);}
 .home-icons{display:flex;gap:8px;justify-content:flex-end;margin-bottom:52px;}
@@ -533,15 +485,7 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 /* Bloc A savoir : nouveaux cours + echeances */
 
 /* Accueil vide : l'entree Semestres se centre verticalement */#screen-semestres .wrap.home-empty{display:flex;flex-direction:column;
-  min-height:calc(100dvh - 72px - env(safe-area-inset-top));box-sizing:border-box;}
-#screen-semestres .wrap.home-empty .sem-entry{margin-top:auto;margin-bottom:auto;}/* accueil : le prochain cours, puis Mes semestres, puis les nouveautés, bien espacés */
-/* accueil : deux tuiles côte à côte */
-.home-tuiles{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:12px;}
-.home-tuile{position:relative;display:flex;flex-direction:column;align-items:flex-start;text-align:left;min-height:120px;padding:16px;min-width:0;
-  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:0 4px 18px var(--shadow);
-  font-family:var(--font-text);color:var(--text);cursor:pointer;transition:transform .18s var(--ease-spring);}
-.home-tuile:active{transform:scale(.97);}
-.home-tuile[hidden]{display:none;}
+  min-height:calc(100dvh - 72px - env(safe-area-inset-top));box-sizing:border-box;}/* accueil : le prochain cours, puis Mes semestres, puis les nouveautés, bien espacés *//* accueil : deux tuiles côte à côte */
 .ht-ic{font-size:24px;line-height:1;margin-bottom:auto;}
 .ht-ic.ic-box{margin-bottom:auto;}
 .ht-lbl{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-top:12px;}
@@ -567,7 +511,6 @@ div.av-tete{cursor:default;}
 .av-row.fait .av-fait{background:var(--ok);border-color:var(--ok);color:#fff;}
 .av-row.fait .av-txt b{text-decoration:line-through;text-decoration-thickness:1.5px;color:var(--text-mute);}
 .av-row.fait .av-txt i{color:var(--ok);}
-.av-row.fait .av-dot{background:var(--ok);}
 .ev-badge.fait{background:var(--ok-soft);color:var(--ok);}
 .ev-badge.modifie{background:color-mix(in srgb,var(--new) 16%,transparent);color:var(--new);}
 #ev-liens{display:flex;flex-wrap:wrap;gap:8px;}
@@ -591,37 +534,12 @@ div.av-tete{cursor:default;}
 .av-row{display:flex;align-items:center;gap:12px;width:100%;padding:13px 16px;border:0;border-top:1px solid var(--border);background:none;
   font-family:var(--font-text);color:var(--text);text-align:left;cursor:pointer;}
 .av-row:first-child{border-top:0;}
-.av-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--c);}
 .av-txt{flex:1;min-width:0;}
 .av-txt b{display:block;font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .av-txt small{display:block;font-size:12.5px;color:var(--text-mute);margin-top:2px;}
 .av-txt i{font-style:normal;font-weight:700;color:var(--c);}
 .av-fl{color:var(--text-mute);font-size:20px;line-height:1;}
-.av-row.controle{--c:var(--warn);} .av-row.devoir{--c:var(--danger);} .av-row.note{--c:var(--info);}
-#home-reprise[hidden]{display:none;}
-#next-course[hidden]{display:none;}
-.next-tuile .ht-lbl{display:flex;align-items:center;gap:6px;}
-/* le sous-titre des tuiles carrées : jusqu'à deux lignes (le nom de la matière à reprendre) */
-.home-tuile:not(.next-tuile) .ht-s{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.35;}
-.next-tuile .ht-s{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
-.next-tuile.live{border-color:var(--accent);box-shadow:0 4px 22px var(--accent-glow);}
-.next-tuile.alerte{border-color:var(--warn);}
-.next-tuile{overflow:hidden;grid-column:1 / -1;}
-/* prochain cours : l'icône et le moment en haut, le nom en grand, l'heure et la salle avec leurs icônes */
-.nc-haut{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;margin-bottom:auto;}
-.nc-haut .ht-lbl{margin:0;min-width:0;}
-.nc-haut .ht-ic.ic-box{margin:0;flex-shrink:0;}
-.next-tuile .ht-t{font-size:24px;margin-top:10px;display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.next-tuile .ht-t.long{font-size:19px;}
-.nc-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;font-size:13px;color:var(--text-soft);margin-top:6px;}
-.nc-g{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;min-width:0;}
-.nc-meta span{display:flex;align-items:center;gap:5px;}
-.nc-meta svg,.nc-prof svg{width:14px;height:14px;color:var(--text-mute);flex-shrink:0;}
-/* la salle tout à droite, en gras : on la cherche des yeux en arrivant */
-.nc-salle{font-weight:600;color:var(--text);flex-shrink:0;white-space:nowrap;}
-.nc-prof{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text-soft);margin-top:4px;max-width:100%;}
-.nc-flag{font-weight:700;color:var(--warn);}
-.nc-flag.devo{color:var(--accent);}
+.av-row.controle{--c:var(--warn);} .av-row.devoir{--c:var(--danger);} .av-row.note{--c:var(--info);}/* le sous-titre des tuiles carrées : jusqu'à deux lignes (le nom de la matière à reprendre) *//* prochain cours : l'icône et le moment en haut, le nom en grand, l'heure et la salle avec leurs icônes *//* la salle tout à droite, en gras : on la cherche des yeux en arrivant */
 /* la pastille du minuteur, en bas à gauche, en face du bouton + */
 .pomo-pill{position:fixed;left:calc(env(safe-area-inset-left) + 16px);bottom:calc(env(safe-area-inset-bottom) + 30px);z-index:55;display:flex;align-items:center;gap:7px;height:44px;padding:0 16px 0 12px;border-radius:999px;border:1px solid var(--accent);background:var(--surface-solid);color:var(--text);font-family:var(--font-text);font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;box-shadow:0 6px 24px var(--accent-glow);cursor:pointer;}
 .pomo-pill .ico{width:18px;height:18px;color:var(--accent);}
@@ -662,11 +580,8 @@ div.av-tete{cursor:default;}
 .pomo-bt{height:50px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:var(--font-text);font-size:15px;font-weight:600;cursor:pointer;}
 .pomo-bt.primaire{background:var(--accent);border-color:var(--accent);color:#fff;}
 .pomo-bt.discret{background:none;border-color:transparent;color:var(--text-mute);height:40px;}
-.next-tuile .next-bar{position:absolute;left:0;right:0;bottom:0;height:4px;margin:0;border-radius:0;background:var(--accent-soft);}
-.next-tuile .next-bar>span{display:block;height:100%;background:var(--accent);}
 
 #sites-liste,#screen-mesdevoirs #home-know{margin-top:18px;}
-.sem-entry.reprise .sem-entry-ic{background:var(--accent-soft);}
 
 
 /* Memo : bouton flottant en bas a droite, accessible au pouce *//* visible uniquement sur l'accueil */.screen:not(.active) .memo-fab{display:none;}
@@ -689,16 +604,7 @@ div.av-tete{cursor:default;}
   border-color:var(--border-strong);
   /* une seule colonne : la tuile s'aligne sous Semestre 5, a gauche */
   grid-column:1;}
-.psy-tile .sem-badge{background:rgba(255,255,255,.08);}
-
-/* Entree unique vers les semestres */.sem-entry{display:flex;align-items:center;gap:14px;width:100%;cursor:pointer;
-  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);
-  padding:18px;font-family:var(--font-text);text-align:left;color:var(--text);
-  box-shadow:0 4px 18px var(--shadow);
-  transition:transform .18s var(--ease-spring),border-color .2s;}
-.sem-entry:active{transform:scale(.98);}
-.sem-entry-ic{width:48px;height:48px;border-radius:14px;flex-shrink:0;
-  background:rgba(255,255,255,.05);display:grid;place-items:center;font-size:22px;}
+.psy-tile .sem-badge{background:rgba(255,255,255,.08);}/* Entree unique vers les semestres */
 
 /* semestres en deux colonnes, compacts */.sem-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px 20px;margin-top:12px;}
 .sem-tile{position:relative;text-align:left;cursor:pointer;font-family:var(--font-text);
@@ -727,21 +633,8 @@ button.sem-groupe{width:100%;background:none;border:0;padding:0;cursor:pointer;f
 .sem-tile .sem-bar{height:5px;background:var(--surface-2,rgba(255,255,255,.06));border-radius:3px;overflow:hidden;}
 .sem-tile .sem-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:3px;
   transition:width .5s var(--ease-spring);}
-.sem-tile .sem-pct{font-size:11.5px;color:var(--text-mute);margin-top:7px;font-variant-numeric:tabular-nums;}
-/* libellé de groupe (façon Réglages iOS) *//* Chaque section = un en-tête + un corps. L'espace vient UNIQUEMENT
-   de la marge basse du corps, pour que tous les écarts soient identiques. */
-/* le tableau de bord contient Important + Mémo : même rythme *//* le libellé Mémo est cliquable : il replie la carte */
-
-/* barre "à revoir" : une seule ligne, le détail est dans les semestres */.review-bar{display:flex;align-items:center;gap:11px;width:100%;cursor:pointer;
-  background:var(--accent);border:none;border-radius:var(--r-lg);
-  padding:15px 17px;margin-bottom:4px;box-shadow:0 6px 22px var(--accent-glow);
-  font-family:var(--font-text);text-align:left;
-  transition:transform .18s var(--ease-spring);}
-.review-bar:active{transform:scale(.985);}
-.rb-count{background:rgba(255,255,255,.25);color:#fff;border-radius:9px;
-  padding:3px 10px;font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;flex-shrink:0;}
-.rb-text{color:#fff;font-size:15px;font-weight:600;flex:1;min-width:0;}
-.rb-go{color:#fff;font-size:13.5px;font-weight:700;opacity:.92;flex-shrink:0;}
+.sem-tile .sem-pct{font-size:11.5px;color:var(--text-mute);margin-top:7px;font-variant-numeric:tabular-nums;}/* libellé de groupe (façon Réglages iOS) *//* Chaque section = un en-tête + un corps. L'espace vient UNIQUEMENT
+   de la marge basse du corps, pour que tous les écarts soient identiques. *//* le tableau de bord contient Important + Mémo : même rythme *//* le libellé Mémo est cliquable : il replie la carte *//* barre "à revoir" : une seule ligne, le détail est dans les semestres */
 
 /* pastilles des matières à revoir, dans la carte de semestre */
 
@@ -941,8 +834,6 @@ button.sem-groupe{width:100%;background:none;border:0;padding:0;cursor:pointer;f
 .fp-tout{flex-shrink:0;background:none;border:0;padding:4px 0;cursor:pointer;color:var(--accent);font-family:var(--font-text);font-size:13px;font-weight:700;}
 .fp-ligne .rv-dot{opacity:.45;}
 .fp-ligne.fait .rv-dot{background:var(--ok);opacity:1;box-shadow:0 0 7px var(--ok);}
-.fp-ligne.m-note .rv-dot{background:var(--info);opacity:1;}
-.fp-ligne.m-note{border-color:var(--border-strong);}
 .fp-ligne.fait .cal-name{color:var(--text-soft);}
 .fp-etat{flex-shrink:0;font-size:11.5px;font-weight:700;border-radius:20px;padding:3px 9px;white-space:nowrap;}
 .fp-etat.ok{color:var(--ok);background:var(--ok-soft);}
@@ -1098,8 +989,6 @@ button.sem-groupe{width:100%;background:none;border:0;padding:0;cursor:pointer;f
 .lec-btn.lec-play svg{width:22px;height:22px;}
 .lec-btn.lec-speed{width:auto;min-width:46px;padding:0 8px;border-radius:21px;color:var(--accent);font-size:12.5px;}
 body.lec-on .screen.active::after{content:"";display:block;height:96px;}/* ── prochain cours ── */
-.next-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0;}
-.next-tuile.live .next-dot{animation:pulseDot 1.8s ease-in-out infinite;}
 @keyframes pulseDot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.35;transform:scale(.8);}}
 @keyframes flashSection{
   0%{background:transparent;}
@@ -1325,10 +1214,8 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
   padding:13px 14px;margin-bottom:9px;font-family:var(--font-text);}
 .cal-row:active{background:var(--accent-soft);}
 .cal-txt{flex:1;min-width:0;}
-.site-go{flex-shrink:0;color:var(--text-mute);}
 .cal-row.accent{border-color:var(--accent);background:var(--accent-soft);}
 .cal-row.accent .cal-name{color:var(--accent);}
-.site-go svg{width:18px;height:18px;display:block;}
 /* feuille à choix multiples : publier plusieurs chapitres d'un coup */.cal-row.deja{border-style:dashed;
   background-image:repeating-linear-gradient(135deg,var(--accent-soft) 0 7px,transparent 7px 15px);}
 .cal-row.deja .cal-name{color:var(--text-soft);}
@@ -1458,8 +1345,6 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .chap-pick.revise .rv-dot{background:var(--ok);opacity:1;box-shadow:0 0 7px var(--ok);}
 .chap-pick-txt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .tp-pt{width:8px;height:8px;border-radius:50%;background:var(--new);flex-shrink:0;box-shadow:0 0 6px var(--new);}
-.nb-ligne{flex-shrink:0;min-width:22px;height:22px;padding:0 7px;border-radius:11px;background:var(--new);color:#fff;font-size:12px;font-weight:800;display:grid;place-items:center;}
-.nv-txt{color:var(--new);font-weight:600;}
 .clair-minute{margin:0 0 26px;padding:18px 20px;border-radius:var(--r-lg);border:1px solid var(--accent);background:var(--accent-soft);}
 .clair-minute .recap-label{margin-bottom:8px;}
 .card-body.clair-txt,.clair-txt{white-space:normal;font-size:calc(15px * var(--zt,1));line-height:1.7;color:var(--text);}
@@ -1631,16 +1516,8 @@ body.pdf-ouvert #toast{z-index:340;}
 .mt-nom{font-family:var(--font-display);font-size:22px;font-weight:600;line-height:1.15;text-wrap:balance;}
 .mt-rond{width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--text-soft);display:grid;place-items:center;flex-shrink:0;cursor:pointer;padding:0;transition:background .2s,color .2s,border-color .2s;}
 .mt-rond .ico{width:19px;height:19px;}
-.mt-aa span{font-family:var(--font-display);font-size:17px;font-weight:500;}
 .mt-rond.on{background:var(--accent-soft);border-color:var(--border-strong);color:var(--accent);}
 .mt-rond:active{transform:scale(.94);}
-.mt-pop{max-height:0;overflow:hidden;opacity:0;transition:max-height .3s var(--ease-spring,ease),opacity .2s;}
-.mt-pop.ouvert{max-height:240px;opacity:1;}
-.mt-curseur{display:flex;align-items:center;gap:12px;padding:12px 16px;margin:4px 0 10px;border:1px solid var(--border);border-radius:16px;background:var(--surface);}
-.mt-curseur input{flex:1;min-width:0;accent-color:var(--accent);height:28px;}
-.mt-a1,.mt-a2{font-family:var(--font-display);color:var(--text-mute);}
-.mt-a1{font-size:13px;}.mt-a2{font-size:22px;}
-.mt-apercu{margin:0 0 12px;padding:12px 14px;border-radius:14px;border:1px dashed var(--border);color:var(--text-soft);font-size:calc(15px * var(--zt,1));line-height:1.5;}
 .mt-seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;margin:6px 0 0;border-radius:16px;border:1px solid var(--border);background:var(--seg-bg);}
 .mt-seg button{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;padding:10px 4px;border:0;border-radius:12px;background:none;color:var(--text-soft);font-family:var(--font-text);cursor:pointer;transition:background .2s,color .2s;}
 .mt-sn{font-size:14.5px;font-weight:600;white-space:nowrap;}
@@ -2221,7 +2098,7 @@ html.tabbar-on .cal-row,#pick-list .cal-row{border-radius:18px;}
 /* pastille des cours : un point, pas un chiffre */
 .tb-nb.tb-point{min-width:12px;width:12px;height:12px;padding:0;font-size:0;top:-2px;right:-2px;}
 
-/* titres de l'interface : police nette ; le serif reste pour le contenu des cours */.page-title,.lex-lettre,.lex-terme,.auteur-nom,.auteur-avatar,.psy-hero-title,.psy-nav-title,#screen-synthese .recap-num,.sem-name,.sem-tile .sem-name,.project-title,.ecue-name,.vide-t,.aide-acc-t,.sheet-title,.sheet .sheet-title,.dev-name,.dv-nom,.edt-week,.edt-day-name,.exam-title,.plan-day,.ht-t,.mode-name,.qc-name,.colle-carte-t,.fin-titre,.sr-title,.bilan-score{font-family:var(--font-text) !important;font-weight:800 !important;letter-spacing:-.015em;}
+/* titres de l'interface : police nette ; le serif reste pour le contenu des cours */.page-title,.lex-lettre,.lex-terme,.auteur-nom,.auteur-avatar,.psy-hero-title,.psy-nav-title,#screen-synthese .recap-num,.sem-name,.sem-tile .sem-name,.project-title,.ecue-name,.vide-t,.aide-acc-t,.sheet-title,.sheet .sheet-title,.dev-name,.dv-nom,.edt-week,.edt-day-name,.plan-day,.ht-t,.mode-name,.qc-name,.colle-carte-t,.fin-titre,.sr-title,.bilan-score{font-family:var(--font-text) !important;font-weight:800 !important;letter-spacing:-.015em;}
 
 /* ══════════ ANIMATIONS ══════════ */
 /* 4. les cartes arrivent l'une après l'autre (seulement à l'arrivée sur la page) */
@@ -2541,7 +2418,7 @@ html.tabbar-on .hd-row .back-btn{display:none !important;}
 @media(prefers-color-scheme:dark){html:not([data-mode="clair"]) :is(.sr-carte,.lex-item,.memo2-carte,.dev-card,.mode-card,.mn-carte,.mt-groupe,.qc-card,.results-detail,.auteur,.od-row,.ex-err,.recap){box-shadow:0 8px 24px rgba(0,0,0,.28) !important;}}
 html[data-mode="sombre"] :is(.sr-carte,.lex-item,.memo2-carte,.dev-card,.mode-card,.mn-carte,.mt-groupe,.qc-card,.results-detail,.auteur,.od-row,.ex-err,.recap){box-shadow:0 8px 24px rgba(0,0,0,.28) !important;}
 .qc-card.grand{box-shadow:0 0 0 2px var(--accent),0 10px 26px var(--accent-glow) !important;}
-.mode-icon,.qc-ic,.sr-ic{border-radius:14px !important;}
+.mode-icon,.sr-ic{border-radius:14px !important;}
 
 /* Projet Psycho / CPE : le titre est dans le bandeau, plus dans la page */
 #screen-psycho.hd-on #psycho-inner>.psy-hero{display:none !important;}
@@ -2748,7 +2625,16 @@ html[data-mode="sombre"] :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal
     <div class="hm-head">
       <div class="hm-row">
         <div class="hm-qui"><div class="hm-date" id="hm-date"></div><div class="hm-hello" id="hm-hello"></div></div>
-        <div class="hm-btns" id="hm-btns"></div>
+        <div class="hm-btns" id="hm-btns">
+    <button class="icon-btn" id="btn-search" aria-label="Rechercher">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      </button>
+    <button class="icon-btn compte-btn" id="btn-compte" aria-label="Mon compte"></button>
+    <button class="memo-fab" id="btn-memo" aria-label="Mémo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l2 2 4-4"/><rect x="4" y="4" width="16" height="16" rx="3"/></svg>
+      <span class="memo-fab-badge" id="memo-badge" hidden></span>
+    </button>
+    </div>
       </div>
       <div class="hm-week" id="hm-week"></div>
     </div>
@@ -2760,54 +2646,7 @@ html[data-mode="sombre"] :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal
       <div id="hm-mats"></div>
     </div>
     <!-- l'ancien accueil reste là, caché : ses boutons servent encore (barre du bas, raccourcis) -->
-    <div class="hm-ancien" hidden>
-    <div class="home-icons rise">
-      <button class="icon-btn compte-btn" id="btn-compte" aria-label="Mon compte"></button>
-      <button class="icon-btn" id="btn-edt" aria-label="Emploi du temps">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
-      </button>
-      <button class="icon-btn" id="btn-news" aria-label="Mes sites">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h13a1 1 0 0 1 1 1v12a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2V5z"/><path d="M8 9h6M8 13h6M8 17h3"/></svg>
-      </button>
-      <button class="icon-btn" id="btn-classes" aria-label="Mes classes">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 19v-1.5a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3V19"/><circle cx="9.5" cy="8" r="3"/><path d="M21 19v-1.5a3 3 0 0 0-2.3-2.9"/><path d="M15.5 5.2a3 3 0 0 1 0 5.6"/></svg>
-      </button>
-      <button class="icon-btn" id="btn-search" aria-label="Rechercher">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-      </button>
-    </div>
-
     
-
-    <!-- Le prochain cours en long, puis des tuiles carrées deux par ligne ; toutes de la même hauteur -->
-    <div class="home-tuiles rise" style="animation-delay:.06s">
-      <button class="home-tuile next-tuile" id="next-course" type="button" hidden></button>
-      <button class="home-tuile" id="sem-entry" type="button">
-        <span class="nb" id="sem-entry-nb" hidden></span>
-        <span class="ht-ic ic-box" id="sem-entry-ic"></span>
-        <span class="ht-t">Mes semestres</span>
-        <span class="ht-s" id="sem-entry-sub"></span>
-      </button>
-      <button class="home-tuile" id="dev-entry" type="button">
-        <span class="nb" id="dev-entry-nb" hidden></span>
-        <span class="ht-ic ic-box" id="dev-entry-ic"></span>
-        <span class="ht-t">Mes devoirs</span>
-        <span class="ht-s" id="dev-entry-sub"></span>
-      </button>
-      <button class="home-tuile" id="home-reprise" type="button" hidden></button>
-    </div>
-
-
-    <!-- Mémo : bouton flottant, toujours accessible au pouce -->
-    <button class="memo-fab" id="btn-memo" aria-label="Mémo">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l2 2 4-4"/><rect x="4" y="4" width="16" height="16" rx="3"/></svg>
-      <span class="memo-fab-badge" id="memo-badge" hidden></span>
-    </button>
-
-    <div id="today-courses" hidden></div>
-    <div id="dashboard" hidden></div>
-    <div id="sem-inner" hidden></div>
-    </div>
   </div>
 </div>
 
@@ -3454,7 +3293,6 @@ let sessionFil = null;
 let showAns = false, showHint = false, lastMotiv = "";
 let oqEcrit = "";   // ce qui est tapé dans une question ouverte, gardé le temps de la carte
 let timerVal = 20, timerInt = null;
-let _prevScreen = "semestres";
 const stats = {};
 
 const pick = a => a[Math.floor(Math.random() * a.length)];
@@ -4117,7 +3955,6 @@ function majPastillesClasses(){
   const connues = new Set(MY_CLASSES.map(c=>String(c.id)));
   const tot = Object.keys(o).filter(k=>!MY_CLASSES.length || connues.has(String(k))).reduce((s,k)=>s + (o[k] || 0), 0);
   BADGE_APP.cls = tot; poserBadgeApp(); try{ majTabbar(); }catch(e){}
-  pastille(document.getElementById("btn-classes"), tot, tot + " matière" + (tot > 1 ? "s" : "") + " avec du nouveau dans tes classes");
   document.querySelectorAll("#classes-list .cls-row[data-cls]").forEach(r=>{
     const n = o[r.dataset.cls] || 0;
     pastille(r, n, n + " matière" + (n > 1 ? "s" : "") + " avec du nouveau");
@@ -4165,13 +4002,6 @@ async function rafraichirNouveautesClasses(){
 }
 
 const IC_MEMBRES = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 19v-1.5a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3V19"/><circle cx="9.5" cy="8" r="3"/><path d="M21 19v-1.5a3 3 0 0 0-2.3-2.9"/><path d="M15.5 5.2a3 3 0 0 1 0 5.6"/></svg>';
-// « CM 1 · 15/09 » pour un bandeau de nouveautés
-function nomCourtItem(it){
-  if(!it.label) return KIND_LABEL[it.kind] || "Révisions";
-  const pc = partiesChapitre(it.label);
-  return pc.court + (pc.titre ? " · " + pc.titre.replace(/^Séance du /, "") : "");
-}
-
 async function openClass(c){
   curClass = c; CLS_GERE = c.role === "owner" || c.role === "adjoint";
   showScreen("class");
@@ -4358,26 +4188,6 @@ async function suivreToutesMatieres(c, items){
 }
 
 const CLS_VUE = {};      // classId → « cours » ou « devoirs »
-function choisirVueClasse(c, n){
-  document.querySelectorAll("#pick-sheet .pick-actions").forEach(x=>x.remove());
-  document.getElementById("pick-title").textContent = c.name;
-  const box = document.getElementById("pick-list");
-  box.innerHTML = "";
-  const vue = CLS_VUE[c.id] || "cours";
-  const lignes = [
-    { v:"cours", ic:"cm", nom:"Cours", sub:n.nItems + " matière" + (n.nItems > 1 ? "s" : ""), nv:n.nCours, txt:n.nCours ? n.nCours + " nouveau" + (n.nCours > 1 ? "x" : "") : "" },
-    { v:"devoirs", ic:"calendrier", nom:"Devoirs", sub:n.nAvenir ? n.nAvenir + " à venir" : "Aucun à venir", nv:n.nDev,
-      txt:n.nDev ? n.nDev + " nouveau" + (n.nDev > 1 ? "x" : "") : "" }
-  ];
-  lignes.forEach(l=>{
-    const r = el("button","cal-row chap-ligne" + (l.v === vue ? " actif" : "")); r.type = "button";
-    r.innerHTML = `<span class="type-ic ic-box">${ICO(l.ic)}</span><div class="cal-txt"><div class="cal-name">${l.nom}</div><div class="cal-url">${esc(l.sub)}${l.txt ? ` · <span class="nv-txt">${esc(l.txt)}</span>` : ""}</div></div>` +
-      (l.nv ? `<span class="nb-ligne">${l.nv}</span>` : "") + (l.v === vue ? `<span class="chap-ligne-ok">${COCHE_SVG}</span>` : "");
-    r.addEventListener("click",()=>{ haptic(); closePicker(); if(l.v !== vue){ CLS_VUE[c.id] = l.v; openClass(c); } });
-    box.appendChild(r);
-  });
-  document.getElementById("pick-sheet").classList.add("open");
-}
 
 // Une matière de la classe : ses chapitres, dans la même feuille que le choix d'un CM.
 // Point rose : nouveau. Point vert : déjà dans tes cours.
@@ -5320,7 +5130,6 @@ async function openSharedItem(it){
 // Chaque mot lu garde un lien vers sa place dans la page : c'est ce qui permet
 // de le surligner, et de reprendre la lecture là où on touche le texte.
 var TTS_OK = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
-var HL_OK = typeof Highlight !== "undefined" && typeof CSS !== "undefined" && !!CSS.highlights;
 var LEC = { phrases:[], i:0, depuis:0, blocs:[], racine:null, actif:false, pause:false, jeton:0,
             voix:null, bar:null, blocCourant:-1, motsSignales:false, minuteur:null, toucheA:0 };
 const LEC_VITESSES = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
@@ -5928,11 +5737,7 @@ function boutonPartager(type, ch, icone){
 }
 
 // ── Le prof du CM ou du TD, avec son mail ──
-const IC_PROF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>';
-const IC_MAIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3.5 7l8.5 6 8.5-6"/></svg>';
 // Lire un chapitre « en clair » ou « le cours » : un seul choix, gardé sur cet appareil.
-const IC_CLAIR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.8V16h5v-.3c0-.7.4-1.4 1-1.8A6 6 0 0 0 12 3z"/></svg>';
-const IC_LIVRE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5.5C4 4.5 7 4.5 12 6.5c5-2 8-2 10-1V19c-2-1-5-1-10 1-5-2-8-2-10-1z"/><path d="M12 6.5V20"/></svg>';
 // Les nombres et les % ne se coupent pas en fin de ligne : « 50 700 », « 12 % », « 6 € ».
 // On ne touche qu'au texte, jamais à l'intérieur des balises.
 function insec(html){
@@ -6993,7 +6798,7 @@ function showScreen(id){
     clearTimeout(CALME_T); CALME_T = setTimeout(()=>document.documentElement.classList.add("calme"), 900);
   }
   if(id !== "split" && typeof fermerRecherchePage === "function") fermerRecherchePage();
-  if(id === "semestres"){ renderReprise(); try{ renderAccueil(true); cascade(document.querySelector("#screen-semestres .hm-body"), ".hm-body > *, .hm-up > *, #hm-mats .hm-card"); }catch(e){ console.error(e); } }
+  if(id === "semestres"){ try{ renderAccueil(true); cascade(document.querySelector("#screen-semestres .hm-body"), ".hm-body > *, .hm-up > *, #hm-mats .hm-card"); }catch(e){ console.error(e); } }
   requestAnimationFrame(()=>ajusterBas(document.querySelector("#screen-" + id + " > .wrap, #screen-" + id + " > #psycho-inner")));
   const avant = document.documentElement.getAttribute("data-screen");
   if(avant && avant !== id) ECRAN_AVANT = avant;
@@ -8795,75 +8600,8 @@ function titreCours(t){
     .trim() || String(t || "Cours");
 }
 
-let NEXT_EV_KEY = null;   // le créneau déjà mis en avant, pour ne pas le répéter dessous
 
-function prochainCours(){
-  if(edtState !== "ok" && edtState !== "stale") return null;
-  const now = new Date();
-  for(let j = 0; j < 8; j++){
-    const jour = new Date(now); jour.setDate(now.getDate() + j);
-    const evs = eventsOn(jour).filter(e=>(e.end || e.start) > now);
-    if(evs.length) return { ev: evs[0], jours: j };
-  }
-  return null;
-}
 
-const IC_HORLOGE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>';
-const IC_LIEU = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
-function renderNextCourse(){
-  const box = document.getElementById("next-course");
-  if(!box) return;
-  box.innerHTML = ""; box.hidden = true;
-  NEXT_EV_KEY = null;
-  const trouve = prochainCours();
-  if(!trouve) return;
-  box.hidden = false;
-  NEXT_EV_KEY = evKey(trouve.ev);
-
-  const { ev, jours } = trouve;
-  const now  = new Date();
-  const live = ev.start <= now && (ev.end || ev.start) > now;
-
-  let quand;
-  if(live){
-    const reste = Math.round(((ev.end - now) / 60000));
-    quand = reste >= 60
-      ? "encore " + Math.floor(reste/60) + " h " + String(reste%60).padStart(2,"0")
-      : "encore " + reste + " min";
-  }else if(jours === 0){
-    const dans = Math.round((ev.start - now) / 60000);
-    quand = dans >= 60
-      ? "dans " + Math.floor(dans/60) + " h " + String(dans%60).padStart(2,"0")
-      : "dans " + dans + " min";
-  }else if(jours === 1){
-    quand = "demain";
-  }else{
-    quand = ev.start.toLocaleDateString("fr-FR", { weekday:"long" });
-  }
-
-  // un rappel posé sur ce créneau doit se voir avant d'y aller
-  const n = evNote(ev) || {};
-  const flag = n.type === "controle" ? { cls:"ctrl", txt:"⚠️ Contrôle" }
-             : n.type === "devoir"   ? { cls:"devo", txt:"📎 À rendre" } : null;
-
-  // le nom du cours en grand ; au-dessus, l'icône à gauche et le moment à droite ; dessous, l'heure et la salle
-  box.className = "home-tuile next-tuile" + (live ? " live" : "") + (flag && flag.cls === "ctrl" ? " alerte" : "");
-  const horaire = hhmm(ev.start) + (ev.end ? " → " + hhmm(ev.end) : "");
-  // le prof : celui noté sur le cours, sinon celui du calendrier de la fac, sinon celui de la matière
-  const pr = profDuCours(ev), prof = pr && pr.nom ? pr.nom : "";
-  box.innerHTML = `<span class="nc-haut"><span class="ht-ic ic-box">${ICO("calendrier")}</span><span class="ht-lbl">${live ? '<span class="next-dot"></span>En cours · ' + esc(quand) : "Prochain · " + esc(quand)}</span></span>
-    <span class="ht-t">${esc(nomCourt(ev.title))}</span>
-    ${prof ? `<span class="nc-prof">${IC_PROF_MINI}${esc(prof)}</span>` : ""}
-    <span class="nc-meta"><span class="nc-g"><span>${IC_HORLOGE}${horaire}</span>${flag ? `<span class="nc-flag ${flag.cls}">${esc(flag.txt)}</span>` : ""}</span>${ev.place ? `<span class="nc-salle">${IC_LIEU}${esc(ev.place)}</span>` : ""}</span>`;
-  if(live && ev.end){
-    const fait = Math.max(0, Math.min(1, (now - ev.start) / (ev.end - ev.start)));
-    const bar = el("span","next-bar"); bar.innerHTML = `<span style="width:${Math.round(fait*100)}%"></span>`;
-    box.appendChild(bar);
-  }
-  box.onclick = ()=>{ haptic(); openEDT(); };
-  // un nom trop long pour une ligne passe un peu plus petit avant d'être coupé
-  requestAnimationFrame(()=>{ const t = box.querySelector(".ht-t"); if(t && t.scrollWidth > t.clientWidth + 1) t.classList.add("long"); });
-}
 
 // Le panneau se recale tout seul : à 15h30 pile, le cours suivant prend la place.
 let horlogeCours = null;
@@ -8872,65 +8610,20 @@ function demarrerHorlogeCours(){
   horlogeCours = setInterval(()=>{
     if(document.hidden) return;
     const scr = document.documentElement.getAttribute("data-screen");
-    if(scr === "semestres"){ renderNextCourse(); try{ renderAccueil(); }catch(e){} }
+    if(scr === "semestres"){ try{ renderAccueil(); }catch(e){} }
   }, 30000);
 }
 
 function renderTodayCourses(){
-  const box = document.getElementById("today-courses");
-  if(!box) return;
-  box.innerHTML = ""; box.hidden = true;
-  renderNextCourse();
   majTuileDevoirs(pendingAlerts(true, true));
   try{ renderAccueil(); }catch(e){ console.error(e); }
   demarrerHorlogeCours();
-  // la liste du jour a été retirée de l'accueil : le panneau au-dessus suffit,
-  // et « Tout voir » mène à l'emploi du temps complet.
-  return;
-
-  const now = new Date();
-  let evs = eventsOn(now);
-  let label = "Aujourd'hui";
-  // après le dernier cours du jour, on montre déjà demain
-  if(!evs.length || evs.every(e=>(e.end||e.start) < now)){
-    const tomorrow = new Date(now); tomorrow.setDate(now.getDate()+1);
-    const next = eventsOn(tomorrow);
-    if(next.length){ evs = next; label = "Demain"; }
-  }
-  if(!evs.length) return;
-  // le cours déjà affiché en grand au-dessus sort de la liste, quel que soit
-  // le nombre de créneaux du jour. S'il ne reste rien, la carte disparaît.
-  evs = evs.filter(e=>evKey(e) !== NEXT_EV_KEY);
-  if(!evs.length) return;
-
-  box.hidden = false;
-  const card = el("div","today-card rise");
-  card.style.animationDelay = ".1s";
-  const rows = evs.map(e=>{
-    const past = (e.end||e.start) < now && label === "Aujourd'hui";
-    return `<div class="tc-row${past?" past":""}">
-      <span class="tc-time">${hhmm(e.start)}</span>
-      <span class="tc-title">${esc(titreCours(e.title))}</span>
-      ${e.place?`<span class="tc-place">${esc(e.place)}</span>`:``}
-    </div>`;
-  }).join("");
-  card.innerHTML = `
-    <div class="tc-head">
-      <span class="tc-label">📅 ${label}</span>
-      <button class="tc-all" id="tc-all">Tout voir →</button>
-    </div>
-    ${rows}`;
-  card.querySelector("#tc-all").addEventListener("click",()=>{ haptic(); openEDT(); });
-  box.appendChild(card);
 }
 
 // ══════════════════════════════════════════════════
 // TABLEAU DE BORD (à réviser aujourd'hui)
 // ══════════════════════════════════════════════════
 // ── Rappels de contrôles / devoirs à venir ──
-const ALERTS_KEY = "revision_alerts_open_v1";
-function alertsExpanded(){ try{ return localStorage.getItem(ALERTS_KEY) === "1"; }catch(e){ return false; } }
-function setAlertsExpanded(v){ try{ localStorage.setItem(ALERTS_KEY, v?"1":"0"); }catch(e){} }
 
 // échéances annotées encore à traiter (utilisé par le dashboard)
 function pendingAlerts(tous, avecFaits){
@@ -8953,65 +8646,6 @@ function pendingAlerts(tous, avecFaits){
   return near.length ? near : all;
 }
 
-function renderExamAlerts(box, pool){
-  const now = new Date();
-  pool = pool || pendingAlerts();
-  const expanded = alertsExpanded();
-  const list = expanded ? pool : pool.slice(0, 3);
-  if(!list.length) return;
-
-  list.forEach((e, i)=>{
-    const n = evNote(e);
-    const days = Math.max(0, Math.ceil((e.start - now) / 86400000));
-    const when = days === 0 ? "aujourd'hui" : days === 1 ? "demain" : "dans " + days + " jours";
-    const subj = n.subj ? SUBJECTS.find(x=>x.id===n.subj) : null;
-    const due  = subj ? dueCount(subj) : 0;
-
-    const kind = n.type || "note";
-    const kindLabel = kind==="controle" ? "Contrôle" : kind==="devoir" ? "À rendre" : "Note";
-    const card = el("div","exam-card rise " + kind);
-    card.style.animationDelay = (0.03 + i*0.04) + "s";
-    card.innerHTML = `
-      <div class="exam-top">
-        <span class="ev-badge ${kind}">${kindLabel}</span>
-        <span class="exam-when">${when}</span>
-        <button class="exam-done" aria-label="Marquer comme prêt">✓</button>
-      </div>
-      <div class="exam-title">${esc(titreCours(e.title))}</div>
-      <div class="exam-meta">${JOURS[e.start.getDay()]} ${e.start.getDate()} ${MOIS[e.start.getMonth()]} · ${hhmm(e.start)}</div>
-      ${n.note?`<div class="exam-note">${esc(n.note)}</div>`:``}
-      ${subj?`<button class="exam-go">Réviser ${esc(subj.title)}${due?` · ${due} carte${due>1?"s":""}`:``} →</button>`:``}`;
-
-    card.querySelector(".exam-done").addEventListener("click",ev=>{
-      ev.stopPropagation(); haptic();
-      const k = evKey(e);
-      EDTNOTES[k] = Object.assign({}, n, { done:true });
-      notesSave();
-      card.classList.add("dismiss");
-      setTimeout(()=>renderDashboard(), 260);
-    });
-    const go = card.querySelector(".exam-go");
-    if(go) go.addEventListener("click",ev=>{
-      ev.stopPropagation(); haptic();
-      curSemestre = SEMESTRES[subj.id];
-      openSubject(subj.id); setTab(2);
-    });
-    box.appendChild(card);
-  });
-
-  // bouton déplier / replier quand il y a plus de 3 échéances
-  if(pool.length > 3){
-    const more = el("button","alerts-more");
-    const hidden = pool.length - 3;
-    more.innerHTML = expanded
-      ? `<span>Voir moins</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="am-chev up"><path d="M6 9l6 6 6-6"/></svg>`
-      : `<span>Voir ${hidden} de plus</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="am-chev"><path d="M6 9l6 6 6-6"/></svg>`;
-    more.addEventListener("click",()=>{
-      haptic(); setAlertsExpanded(!expanded); renderDashboard();
-    });
-    box.appendChild(more);
-  }
-}
 
 // ── En-tête d'accueil : salutation + date ──
 // ══════════════════════════════════════════════════
@@ -9110,17 +8744,9 @@ function marquerDevoirsVus(alerts){
   clsVusSave();
   if(notes) notesSave();
 }
-// La tuile « Mes devoirs » de l'accueil : ce qui reste à faire, le prochain, et la pastille des nouveaux
+// la pastille de l'onglet Devoirs : les devoirs nouveaux (pas encore vus)
 function majTuileDevoirs(alerts){
-  const nb = document.getElementById("dev-entry-nb");
-  if(nb){ const k = devoirsNouveaux(alerts).length; BADGE_APP.dev = k; poserBadgeApp(); try{ majTabbar(); }catch(e){} nb.textContent = k; nb.hidden = !k; nb.setAttribute("aria-label", k + " devoir" + (k > 1 ? "s" : "") + " nouveau" + (k > 1 ? "x" : "")); }
-  const ic = document.getElementById("dev-entry-ic"); if(ic && !ic.firstChild) ic.innerHTML = ICO("devoirs");
-  const sub = document.getElementById("dev-entry-sub"); if(!sub) return;
-  const now = new Date(); now.setHours(0,0,0,0);
-  // « à faire » : les contrôles et les rendus pas encore cochés. Une simple note n'est pas à faire.
-  const reste = (alerts || []).filter(e=>{ const N = evNote(e) || {}; return !N.done && typeDevoir(N) !== "note"; });
-  if(!reste.length){ sub.textContent = (alerts || []).length ? "Rien à faire" : "Rien à venir"; return; }
-  sub.textContent = reste.length + " à faire";
+  BADGE_APP.dev = devoirsNouveaux(alerts).length; poserBadgeApp(); try{ majTabbar(); }catch(e){}
 }
 // le genre d'une échéance, comme sur la liste : contrôle, à rendre, ou simple note
 function typeDevoir(N){
@@ -9217,18 +8843,6 @@ function marquerFait(k, fait){
   toast(fait ? "Marqué comme fait." : "Remis à faire.");
 }
 
-// sous-titre du bouton « Mes semestres »
-function renderSemEntry(){
-  const sub = document.getElementById("sem-entry-sub");
-  if(!sub) return;
-  const n = SUBJECTS.length;
-  sub.textContent = n ? n + " matière" + (n > 1 ? "s" : "") : "Commence ici : crée ton premier semestre";
-  const ic = document.getElementById("sem-entry-ic"); if(ic && !ic.firstChild) ic.innerHTML = ICO("semestres");
-  const nb = document.getElementById("sem-entry-nb");
-  if(nb){ const k = newSubjects().length; nb.textContent = k; nb.hidden = !k; nb.setAttribute("aria-label", k + " matière" + (k > 1 ? "s" : "") + " avec du nouveau"); }
-}
-
-
 // ── Feuille Mémo (ouverte depuis l'icône du haut) ──
 function openMemoSheet(){
   refreshMemoSheet();
@@ -9255,7 +8869,6 @@ function updateMemoBadge(){
 }
 
 // ── Mémo : tâches + notes ──
-const MEMOOPEN_KEY = "revision_memo_open_v1";
 
 // onglet ouvert dans le mémo : « taches » ou « notes »
 var memoVue = "taches";
@@ -9445,36 +9058,13 @@ function renderMemo(box){
 }
 
 // état déplié/replié des sections repliables de l'accueil
-const SEM_KEY  = "revision_sem_open_v1";
-const SOON_KEY = "revision_soon_open_v1";
 
 // applique l'état d'une section (en-tête + contenu)
 
 // état déplié/replié de la section Important
-const IMP_KEY = "revision_important_open_v1";
 
-function renderDashboard(){
-  const box = document.getElementById("dashboard");
-  box.innerHTML = "";
-
-  // échéances annotées (contrôles, à rendre, notes) — priorité 2
-  const alerts = pendingAlerts();
-  renderExamAlerts(box, alerts);
-
-  // à réviser — priorité 4, une ligne discrète
-  const withContent = SUBJECTS.filter(s => totalCards(s) > 0);
-  // le nombre de matières, pas de cartes : un millier de cartes, c'est écrasant
-  const totalDue = withContent.filter(s=>dueCount(s) > 0).length;
-  if(totalDue > 0){
-    const bar = el("button","review-bar rise");
-    bar.innerHTML = `
-      <span class="rb-count">${totalDue}</span>
-      <span class="rb-text">matière${totalDue>1?"s":""} à réviser</span>
-      <span class="rb-go">Réviser →</span>`;
-    bar.addEventListener("click",()=>{ haptic(); startGlobalSession(); });
-    box.appendChild(bar);
-  }
-}
+// ancien tableau de bord : c'est maintenant le nouvel accueil qu'on redessine
+function renderDashboard(){ try{ renderAccueil(); }catch(e){} }
 
 // ══════════════════════════════════════════════════
 // MATIÈRES
@@ -9524,35 +9114,6 @@ function makeEcueCard(s){
     { label:"Modifier", doux:true, fn:()=>editMatiere(s) },
     { label:"Supprimer", fn:()=>confirmerSuppressionMatiere(s) }
   ], true);
-}
-// ── Accueil : reprendre le dernier cours lu ──
-function renderReprise(){
-  const b = document.getElementById("home-reprise"); if(!b) return;
-  b.hidden = true;
-  const g = lectureCharger().global; if(!g) return;
-  const subj = SUBJECTS.find(x=>x.id === g.id); if(!subj) return;
-  const chs = subj[g.type] || [];
-  const ci = chs.findIndex(c=>c.label === g.label); if(ci < 0) return;
-  const ch = chs[ci], n = (ch.sections||[]).length;
-  const pos = lectureCharger().pos[cleVu(subj, g.type, ch)] || 0;
-  // chapitre fini et révisé : on propose le suivant
-  let cible = ci, lbl = "Reprendre ta lecture", sous = (pos > 0 ? "Section " + (pos + 1) + "/" + n + " · " : "") + subj.title;
-  if(pos === 0 && estRevise(subj, g.type, ch) && chs[ci + 1]){ cible = ci + 1; lbl = "À lire ensuite"; sous = subj.title; }
-  const pc = partiesChapitre(chs[cible].label);
-  b.innerHTML = `<span class="ht-ic ic-box">${ICO("reprendre")}</span>
-    <span class="ht-lbl">${lbl === "Reprendre ta lecture" ? "Reprendre" : lbl}</span>
-    <span class="ht-t">${esc(pc.court)}${pc.titre ? " · " + esc(pc.titre.replace(/^Séance du /, "")) : ""}</span>
-    <span class="ht-s">${esc(sous)}</span>`;
-  b.onclick = ()=>{
-    haptic();
-    curSemestre = SEMESTRES[subj.id];
-    openSubject(subj.id);
-    if(cible !== ci || curTab !== (g.type === "cm" ? 0 : 1)){
-      if(g.type === "cm") curCmIdx = cible; else curTdIdx = cible;
-      setTab(g.type === "cm" ? 0 : 1);
-    }
-  };
-  b.hidden = false;
 }
 
 // ══════════ NOUVEL ACCUEIL (2026) ══════════
@@ -9771,7 +9332,7 @@ function renderAccueil(anim){
   }catch(e){}
   items.sort((a,b)=>a.d - b.d);
   const secA = el("div","hm-sec"); secA.innerHTML = `<h3>À venir</h3><button type="button">Tout voir</button>`;
-  secA.querySelector("button").addEventListener("click",()=>{ haptic(); document.getElementById("dev-entry").click(); });
+  secA.querySelector("button").addEventListener("click",()=>{ haptic(); ouvrirMesDevoirs(); });
   boxA.appendChild(secA);
   if(!items.length){
     const v = el("div","hm-card hm-vide"); v.innerHTML = `<span class="hm-ic hm-doux-g">${ICO("valide")}</span>Rien à rendre pour l'instant. Profites-en.`;
@@ -9855,9 +9416,9 @@ document.querySelectorAll("#tabbar .tb").forEach(b=>b.addEventListener("click",(
   const cle = b.dataset.tb, ici = document.documentElement.getAttribute("data-screen");
   if(cle === ici || (cle === "classes" && ici === "sites")){ window.scrollTo({ top:0, behavior:"smooth" }); return; }
   if(cle === "semestres"){ renderSemestres(); showScreen("semestres"); }
-  else if(cle === "mesdevoirs") document.getElementById("dev-entry").click();
-  else if(cle === "semchoice") document.getElementById("sem-entry").click();
-  else if(cle === "edt") document.getElementById("btn-edt").click();
+  else if(cle === "mesdevoirs") ouvrirMesDevoirs();
+  else if(cle === "semchoice") showScreen("semchoice");
+  else if(cle === "edt") openEDT();
   else if(cle === "classes") openSitesSheet();   // l'onglet Liens s'ouvre sur Mes sites
 }));
 
@@ -10081,8 +9642,7 @@ function renderSemestres(){
   majBoutonCompte();
   renderAideAccueil();
   renderKnowBlock();
-  renderReprise();
-  renderSemEntry();
+
   updateMemoBadge();
   try{ renderAccueil(); majTabbar(); }catch(e){ console.error(e); }
   const wrap=document.getElementById("semchoice-inner"); wrap.innerHTML="";
@@ -10361,7 +9921,7 @@ async function ouvrirDepuisNotif(data){
       if(e && matiereDeNote(e, evNote(e) || {})){ openControle(e); return; }
       if(e){ openEDTAt(e.start); return; }
     }
-    document.getElementById("dev-entry").click(); return;
+    ouvrirMesDevoirs(); return;
   }
   // une étape de projet : la liste des étapes de ce projet
   if(data.type === "projet"){
@@ -10888,7 +10448,6 @@ function sectionsVisibles(){
   if(!pane || pane.id === "pane-2" || !pane.dataset.somm) return null;
   return { scr, pane, secs:[...pane.querySelectorAll(".section[data-sec]")] };
 }
-const IC_CHEV_G = '<svg class="somm-fl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
 const IC_CHEV_D = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>';
 // l'onglet Sommaire se range pendant le défilement, et revient dès qu'on s'arrête
 let RANGE_T = null;
@@ -14017,12 +13576,11 @@ async function refreshPartage(){
 document.addEventListener("visibilitychange",()=>{ if(!document.hidden) refreshPartage(); });
 window.addEventListener("focus", refreshPartage);
 
-document.getElementById("btn-classes").addEventListener("click",()=>{ haptic(); openClasses(); });
-document.getElementById("dev-entry").addEventListener("click",()=>{
+function ouvrirMesDevoirs(){
   haptic(); renderKnowBlock(); showScreen("mesdevoirs"); window.scrollTo(0, 0);
   // les étiquettes « Nouveau » restent affichées pendant cette visite ; la pastille, elle, s'éteint
   marquerDevoirsVus(pendingAlerts(true, true));
-});
+}
 document.getElementById("btn-sites-back").addEventListener("click",()=>{ haptic(); renderSemestres(); showScreen("semestres"); });
 document.getElementById("btn-mesdevoirs-back").addEventListener("click",()=>{ haptic(); renderSemestres(); showScreen("semestres"); });
 
@@ -14085,21 +13643,14 @@ document.getElementById("btn-split-search").addEventListener("click",()=>{ hapti
 })();
 // sections repliables de l'accueil
 // le bouton Mémo ouvre la feuille mémo
-document.getElementById("btn-edt").addEventListener("click",()=>{ haptic(); openEDT(); });
 // actualités de la licence : ouvre la page de scolarité dans le navigateur.
 // Appui long pour la remplacer par celle de sa propre formation.
 document.querySelectorAll("[data-liens]").forEach(b=>b.addEventListener("click",()=>{
   haptic();
   const ici = document.documentElement.getAttribute("data-screen");
   if(b.dataset.liens === "sites" && ici !== "sites") openSitesSheet();
-  else if(b.dataset.liens === "classes" && ici !== "classes") document.getElementById("btn-classes").click();
+  else if(b.dataset.liens === "classes" && ici !== "classes") openClasses();
 }));
-document.getElementById("btn-news").addEventListener("click",()=>{
-  haptic();
-  openSitesSheet();
-});
-// entrée unique vers les semestres
-document.getElementById("sem-entry").addEventListener("click",()=>{ haptic(); showScreen("semchoice"); });
 document.getElementById("btn-semchoice-back").addEventListener("click",()=>{ renderSemestres(); showScreen("semestres"); });
 document.getElementById("btn-memo").addEventListener("click",()=>{ haptic(); openMemoSheet(); });
 document.getElementById("memo-overlay").addEventListener("click", e=>{
