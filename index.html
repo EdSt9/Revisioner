@@ -2537,6 +2537,25 @@ html[data-screen="pick"]{background:var(--bg) !important;background-image:none !
 .btn:disabled{opacity:.4;}
 @media(prefers-color-scheme:dark){html:not([data-mode="clair"]) .btn:not(.ghost),html:not([data-mode="clair"]) .fs-ok{background:var(--accent) !important;color:#fff !important;}}
 html[data-mode="sombre"] .btn:not(.ghost),html[data-mode="sombre"] .fs-ok{background:var(--accent) !important;color:#fff !important;}
+
+/* ══════════ CONTRÔLE : CE QUI TOMBE ══════════ */
+.ev-chs{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.ev-ch{padding:9px 13px;border-radius:12px;border:2px solid transparent;background:color-mix(in srgb,var(--text) 6%,transparent);color:var(--text-soft);font:inherit;font-weight:800;font-size:13.5px;cursor:pointer;transition:background .2s,color .2s,border-color .2s;}
+.ev-ch.on{background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent);border-color:var(--accent);}
+.ev-ch.tout.on{background:var(--accent);color:#fff;}
+.ev-chs-aide{font-size:12.5px;color:var(--text-mute);font-weight:600;margin-top:8px;line-height:1.4;}
+.ct-top{display:flex;align-items:center;justify-content:space-between;}
+.ct-modif{border:none;border-radius:13px;background:rgba(255,255,255,.2);color:#fff;font:inherit;font-weight:800;font-size:13.5px;padding:10px 14px;cursor:pointer;}
+.ct-head .ct-k{font-size:12.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;opacity:.88;margin-top:18px;}
+.ct-head h1{font-size:24px;font-weight:800;letter-spacing:-.02em;margin-top:4px;line-height:1.2;}
+.ct-head p{font-size:14px;font-weight:700;opacity:.9;margin-top:4px;}
+#screen-controle .mt-head{padding-bottom:28px !important;}
+#screen-controle .mt-body{margin-top:0 !important;padding-top:4px;}
+.ct-sec{margin-top:14px;}
+.mt-ctl{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 16px;margin-bottom:12px;border:none;font:inherit;color:var(--text);cursor:pointer;}
+.mt-ctl .t{flex:1;min-width:0;}
+.mt-ctl .t1{display:block;font-weight:800;font-size:15px;}
+.mt-ctl .t2{display:block;font-size:12.5px;color:var(--text-soft);font-weight:600;margin-top:2px;}
 </style>
 </head>
 <body>
@@ -2702,6 +2721,7 @@ html[data-mode="sombre"] .btn:not(.ghost),html[data-mode="sombre"] .fs-ok{backgr
 </div>
 
 <!-- UNE MATIÈRE : en-tête à sa couleur, chiffres clés, chapitres -->
+<div id="screen-controle" class="screen"><div class="wrap mt-wrap" id="ct-inner"></div></div>
 <div id="screen-matiere" class="screen">
   <div class="wrap mt-wrap" id="mt-inner"></div>
 </div>
@@ -2927,6 +2947,7 @@ html[data-mode="sombre"] .btn:not(.ghost),html[data-mode="sombre"] .fs-ok{backgr
 
       <div class="ev-label">Matière liée</div>
       <select class="ev-select" id="ev-subj"></select>
+      <div id="ev-chs"></div>
 
       <div class="ev-label">Note perso</div>
       <textarea class="ev-note" id="ev-note" rows="3" placeholder="Chapitres à revoir, consignes…"></textarea>
@@ -3315,7 +3336,7 @@ let rateesSession = new Set();
 let flipped = false, selOpt = null, confirmed = false;
 let sessionDueOnly = false;
 let globalSession = false;
-let sessionMix = null;   // id de la matière quand la série mélange QCM, flashcards et textes à trous
+let sessionMix = null, MIX_CHS = null;   // id de la matière quand la série mélange QCM, flashcards et textes à trous
 // session lancée depuis un thème du fil psycho (questions de plusieurs matières)
 let sessionFil = null;
 let showAns = false, showHint = false, lastMotiv = "";
@@ -4387,8 +4408,10 @@ function suitAgenda(cid){ return !!agendaSuivi()[cid]; }
 function peutPublier(c){ return !!c && (c.role === "owner" || c.role === "adjoint"); }
 function jourIso(d){ return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); }
 function devoirAVenir(it){ return !!(it.payload && it.payload.date && it.payload.date >= jourIso(new Date())); }
-function sigDevoir(p){ return [p.type || "", String(p.note || "").trim(), p.date || "", p.heure || ""].join("|") + (p.fin ? "|" + p.fin : ""); }
-function memeContenu(a, b){ return (a.type || "") === (b.type || "") && String(a.note || "").trim() === String(b.note || "").trim(); }
+function chsSig(x){ return Array.isArray(x && x.chs) ? x.chs.slice().sort().join("¦") : ""; }
+function sigDevoir(p){ return [p.type || "", String(p.note || "").trim(), p.date || "", p.heure || ""].join("|") + (p.fin ? "|" + p.fin : "") + (chsSig(p) ? "|" + chsSig(p) : ""); }
+function memeContenu(a, b){ return (a.type || "") === (b.type || "") && String(a.note || "").trim() === String(b.note || "").trim() && chsSig(a) === chsSig(b); }
+function chsDe(p){ return Array.isArray(p && p.chs) && p.chs.length ? { chs:p.chs.slice() } : {}; }
 const LIEN_DEVOIR = ["src","cls","v","base","auteur","moi"];
 function couperLien(N){ LIEN_DEVOIR.forEach(f=>delete N[f]); }
 // « Garder les deux » : le devoir de la classe reste à côté du tien, dans N.autres.
@@ -4453,26 +4476,26 @@ function appliquerDevoirsSuivis(){
     if(!e) return;
     const k = evKey(e), p = it.payload, sig = sigDevoir(p);
     const N = EDTNOTES[k];
-    const lien = { src:it.id, cls:it.class_id, v:sig, base:{ type:p.type || "", note:p.note || "" }, auteur:it.author, moi:it.author === whoAmI() };
+    const lien = { src:it.id, cls:it.class_id, v:sig, base:Object.assign({ type:p.type || "", note:p.note || "" }, chsDe(p)), auteur:it.author, moi:it.author === whoAmI() };
     if(e.jour) Object.assign(lien, { titre:it.subject_title, heure:p.heure || "", fin:p.fin || "" });
-    const aCote = { src:it.id, cls:it.class_id, auteur:it.author, type:p.type || "", note:p.note || "", v:sig };
+    const aCote = Object.assign({ src:it.id, cls:it.class_id, auteur:it.author, type:p.type || "", note:p.note || "", v:sig }, chsDe(p));
     // effacé exprès, ou « garder le mien » : on ne revient pas tant que l'auteur n'a rien changé
     if(estIgnore(N, it.id, sig)) return;
     // déjà gardé à côté de ta note : il suit simplement les mises à jour
     const a = autresDe(N).find(x=>x.src === it.id);
     if(a){
-      if(a.v !== sig){ Object.assign(a, { type:p.type || "", note:p.note || "", v:sig, auteur:it.author, modifie:true }); change = true; }
+      if(a.v !== sig){ delete a.chs; Object.assign(a, { type:p.type || "", note:p.note || "", v:sig, auteur:it.author, modifie:true }, chsDe(p)); change = true; }
       return;
     }
     if(!N || (!N.type && !String(N.note || "").trim())){
-      EDTNOTES[k] = Object.assign({ type:p.type || "", note:p.note || "", subj:(N && N.subj) || "", done:!!(N && N.done) }, lien);
+      EDTNOTES[k] = Object.assign({ type:p.type || "", note:p.note || "", subj:(N && N.subj) || "", done:!!(N && N.done) }, chsDe(p), lien);
       change = true; return;
     }
     if(N.src === it.id){
       if(N.v === sig) return;
       // pas retouché depuis la dernière version reçue : on suit
       if(memeContenu(N, N.base || {}) || memeContenu(N, p)){
-        Object.assign(N, { type:p.type || "", note:p.note || "" }, lien); change = true;
+        delete N.chs; Object.assign(N, { type:p.type || "", note:p.note || "" }, chsDe(p), lien); change = true;
         if(!N.moi) N.modifie = true;
         return;
       }
@@ -4608,14 +4631,14 @@ async function partagerAnnotation(k, e, cid, silence){
     if(!cid || !plein) return true;
     const sj = e.jour ? (N.subj ? SUBJECTS.find(x=>x.id === N.subj) : null) : matiereDuCours(e);
     const payload = e.jour
-      ? Object.assign({ label:e.iso, date:e.iso, heure:N.heure || "", jour:true, type:N.type || "", note:String(N.note || "").trim().slice(0, 400), cours:"" }, N.fin ? { fin:N.fin } : {})
-      : { label:jourIso(e.start), date:jourIso(e.start), heure:hhmm(e.start), type:N.type || "", note:String(N.note || "").trim().slice(0, 400), cours:nomCourt(e.title) };
+      ? Object.assign({ label:e.iso, date:e.iso, heure:N.heure || "", jour:true, type:N.type || "", note:String(N.note || "").trim().slice(0, 400), cours:"" }, N.fin ? { fin:N.fin } : {}, chsDe(N))
+      : Object.assign({ label:jourIso(e.start), date:jourIso(e.start), heure:hhmm(e.start), type:N.type || "", note:String(N.note || "").trim().slice(0, 400), cours:nomCourt(e.title) }, chsDe(N));
     const titre = e.jour ? nomDevoirJour(N, sj) : sj ? sj.title : nomCourt(e.title).replace(/\s+(CM|TD)(\s*\d+)?$/i, "");
     let id = N.moi && N.src && N.cls === cid ? N.src : null;
     if(id) await api("item_update", { item_id:id, payload });
     else id = ((await api("item_publish", { class_id:cid, kind:"agenda", subject_title:titre, payload })).item || {}).id;
     if(!id) throw new Error("sans id");
-    Object.assign(N, { src:id, cls:cid, moi:true, auteur:whoAmI(), v:sigDevoir(payload), base:{ type:payload.type, note:payload.note } });
+    Object.assign(N, { src:id, cls:cid, moi:true, auteur:whoAmI(), v:sigDevoir(payload), base:Object.assign({ type:payload.type, note:payload.note }, chsDe(payload)) });
     const it = { id, class_id:cid, author:whoAmI(), kind:"agenda", subject_title:titre, label:payload.label, payload };
     DEVCLS[cid] = (DEVCLS[cid] || []).filter(x=>x.id !== id).concat([it]); devclsSave();
     clsVus().vus[id] = 1; clsVusSave();
@@ -6753,7 +6776,7 @@ if(window.ResizeObserver){
 })();
 // à quelle profondeur est chaque écran : sert à savoir si on avance ou si on revient
 const PROFONDEUR = { login:0, pick:0, welcome:0, semestres:0, semchoice:1, edt:1, classes:1, search:1, mesdevoirs:1, sites:1, index:2, planning:1, psycho:1,
-  class:2, shared:3, subjects:2, matiere:2.5, split:3, qcmchoix:4, lexique:4, synthese:4, auteurs:4, devoirs:4, session:5 };
+  class:2, shared:3, subjects:2, matiere:2.5, controle:2.6, split:3, qcmchoix:4, lexique:4, synthese:4, auteurs:4, devoirs:4, session:5 };
 function profondeurEcran(id){ return PROFONDEUR[id] ?? 2; }
 let CALME_T = null, SANS_ENTREE = false;
 // une page qui en remplace une autre dans le même écran (projets) : elle entre comme une page
@@ -8384,9 +8407,11 @@ function courseCard(e){
 
 // ── Feuille : annoter un créneau ──
 let evEditing = null;
+let EV_CHS = new Set();
 function openEvSheet(e, opts){
   evEditing = e;
   const n = evNote(e) || { type:(opts && opts.type) || "", note:"", subj:"", done:false };
+  EV_CHS = new Set(Array.isArray(n.chs) ? n.chs : []);
   document.getElementById("ev-title").textContent = e.jour ? (evNote(e) ? e.title : "Nouveau devoir") : e.title ? nomCourt(e.title) : "Cours";
   const d = e.start;
   document.getElementById("ev-when").textContent = e.jour
@@ -8468,7 +8493,48 @@ function majLiensFiche(){
   const ls = liensDe(document.getElementById("ev-note").value);
   box.innerHTML = ls.map(u=>`<a class="ev-lien" href="${esc(urlComplete(u)).replace(/"/g,"%22")}" target="_blank" rel="noopener noreferrer">↗ ${esc(libelleUrl(u))}</a>`).join("");
 }
-function majReviserFiche(){
+// la matière d'un créneau annoté : celle choisie, sinon celle du cours
+function matiereDeNote(e, N){ return (N && N.subj && SUBJECTS.find(x=>x.id === N.subj)) || (e && !e.jour ? matiereDuCours(e) : null) || null; }
+// les chapitres rattachés à un contrôle ou un rendu (vide : toute la matière)
+function chapitresDeNote(sj, N){
+  if(!sj || !N || !Array.isArray(N.chs) || !N.chs.length) return [];
+  const out = [];
+  ["cm","td"].forEach(t=>(sj[t] || []).forEach((ch, i)=>{ if(N.chs.includes(ch.label)) out.push({ type:t, i, ch }); }));
+  return out;
+}
+function nomsChapitres(chs){
+  const n = chs.map(x=>partiesChapitre(x.ch.label).court);
+  return n.length > 1 ? n.slice(0, -1).join(", ") + " et " + n[n.length - 1] : n.join("");
+}
+function renderEvChs(){
+  const box = document.getElementById("ev-chs"); if(!box || !evEditing) return;
+  box.innerHTML = "";
+  const type = (document.querySelector("#ev-types .ev-type.active") || {}).dataset?.type || "";
+  if(type !== "controle" && type !== "devoir") return;
+  const id = document.getElementById("ev-subj").value;
+  const sj = (id && SUBJECTS.find(x=>x.id === id)) || (!evEditing.jour ? matiereDuCours(evEditing) : null);
+  if(!sj) return;
+  const chs = [...(sj.cm || []), ...(sj.td || [])];
+  if(!chs.length) return;
+  [...EV_CHS].forEach(l=>{ if(!chs.some(c=>c.label === l)) EV_CHS.delete(l); });
+  const lab = el("div","ev-label"); lab.textContent = "Ce qui tombe"; box.appendChild(lab);
+  const z = el("div","ev-chs");
+  const tout = el("button","ev-ch tout" + (EV_CHS.size ? "" : " on")); tout.type = "button"; tout.textContent = "Tout";
+  tout.addEventListener("click",()=>{ haptic(); EV_CHS.clear(); renderEvChs(); majReviserFiche(true); });
+  z.appendChild(tout);
+  chs.forEach(c=>{
+    const b = el("button","ev-ch" + (EV_CHS.has(c.label) ? " on" : "")); b.type = "button";
+    b.textContent = partiesChapitre(c.label).court;
+    b.addEventListener("click",()=>{ haptic(); if(EV_CHS.has(c.label)) EV_CHS.delete(c.label); else EV_CHS.add(c.label); renderEvChs(); majReviserFiche(true); });
+    z.appendChild(b);
+  });
+  box.appendChild(z);
+  const h = el("div","ev-chs-aide");
+  h.textContent = EV_CHS.size ? EV_CHS.size + " chapitre" + (EV_CHS.size > 1 ? "s choisis" : " choisi") + ". « Tout » si ça porte sur toute la matière." : "Toute la matière. Touche les CM et TD qui tombent pour les rattacher.";
+  box.appendChild(h);
+}
+function majReviserFiche(sansChs){
+  if(!sansChs) renderEvChs();
   const box = document.getElementById("ev-reviser"); if(!box || !evEditing) return;
   box.innerHTML = "";
   const type = (document.querySelector("#ev-types .ev-type.active") || {}).dataset?.type || "";
@@ -8476,6 +8542,14 @@ function majReviserFiche(){
   const id = document.getElementById("ev-subj").value;
   const sj = (id && SUBJECTS.find(x=>x.id === id)) || matiereDuCours(evEditing);
   if(!sj) return;
+  if(EV_CHS.size){
+    const e0 = evEditing, n = EV_CHS.size;
+    const b = el("button","ev-reviser"); b.type = "button";
+    b.innerHTML = `<span>${ICO("entrainer")}</span><span class="ev-share-t"><b>Réviser ${n > 1 ? "ces " + n + " chapitres" : "ce chapitre"}</b><small>Enregistre d'abord, puis ouvre la page du contrôle</small></span><span class="av-fl">›</span>`;
+    b.addEventListener("click",()=>{ haptic(); saveEvSheet(); openControle(e0); });
+    box.appendChild(b);
+    return;
+  }
   const b = el("button","ev-reviser"); b.type = "button";
   b.innerHTML = `<span>${ICO("entrainer")}</span><span class="ev-share-t"><b>Réviser ${esc(sj.title)}</b><small>QCM, fiches et textes à trous de la matière</small></span><span class="av-fl">›</span>`;
   b.addEventListener("click",()=>{
@@ -8524,8 +8598,11 @@ function saveEvSheet(){
   // le lien avec un devoir de classe est gardé : c'est lui qui dit si on l'a retouché
   const garde = {};
   ["src","cls","v","base","auteur","moi","ignore","ignores","autres","titre","heure","fin"].forEach(f=>{ if(prev[f] !== undefined) garde[f] = prev[f]; });
+  // les chapitres qui tombent, seulement pour un contrôle ou un rendu relié à une matière
+  const sjN = (subj && SUBJECTS.find(x=>x.id === subj)) || (!evEditing.jour ? matiereDuCours(evEditing) : null);
+  const chs = (type === "controle" || type === "devoir") && sjN ? [...EV_CHS].filter(l=>[...(sjN.cm || []), ...(sjN.td || [])].some(c=>c.label === l)) : [];
   if(!type && !subj && !note && !prev.src && !autresDe(prev).length){ delete EDTNOTES[k]; }
-  else EDTNOTES[k] = Object.assign({ type, subj, note, done: document.getElementById("ev-fait").classList.contains("on") }, garde);
+  else EDTNOTES[k] = Object.assign({ type, subj, note, done: document.getElementById("ev-fait").classList.contains("on") }, chs.length ? { chs } : {}, garde);
   // un devoir reçu qu'on vide : on le met de côté, il ne revient que s'il change
   if(!type && !note && prev.src && !prev.moi){
     const N0 = { type:"", subj, note:"", done:false };
@@ -9340,8 +9417,9 @@ function hmControles(){
   const o = {};
   pendingAlerts(true, false).forEach(e=>{
     const N = evNote(e) || {};
-    if(typeDevoir(N) !== "controle" || !N.subj) return;
-    if(!o[N.subj] || e.start < o[N.subj].start) o[N.subj] = e;
+    const sj = typeDevoir(N) === "controle" ? matiereDeNote(e, N) : null;
+    if(!sj) return;
+    if(!o[sj.id] || e.start < o[sj.id].start) o[sj.id] = e;
   });
   return o;
 }
@@ -9503,11 +9581,13 @@ function renderAccueil(anim){
   const items = [];
   pendingAlerts(true, false).forEach(e=>{
     const N = evNote(e) || {}; const ty = typeDevoir(N); if(ty === "note") return;
-    const subj = N.subj ? SUBJECTS.find(x=>x.id === N.subj) : null;
+    const subj = matiereDeNote(e, N);
+    const chsN = chapitresDeNote(subj, N);
     let s = "", sc = "";
-    if(ty === "controle" && subj){ const q = hmQcm(subj); const reste = q.tot - q.ok; s = reste ? reste + " QCM à valider" : "Tout est révisé"; sc = reste ? "var(--c-r)" : "var(--c-g)"; }
+    if(chsN.length){ s = nomsChapitres(chsN); sc = ty === "controle" ? "var(--c-r)" : "#c98300"; }
+    else if(ty === "controle" && subj){ const q = hmQcm(subj); const reste = q.tot - q.ok; s = reste ? reste + " QCM à valider" : "Tout est révisé"; sc = reste ? "var(--c-r)" : "var(--c-g)"; }
     else { const l = String(N.note || N.titre || "").split("\n")[0].trim(); s = l || (ty === "controle" ? "Contrôle" : "À rendre"); sc = "var(--text-soft)"; }
-    items.push({ d:e.start, n:(ty === "controle" ? "Contrôle " : "À rendre · ") + (subj ? subj.title : nomCourt(e.title)), s, sc, c:ty === "controle" ? "r" : "y", ic:"devoirs", go:()=>openEDTAt(e.start) });
+    items.push({ d:e.start, n:(ty === "controle" ? "Contrôle " : "À rendre · ") + (subj ? subj.title : nomCourt(e.title)), s, sc, c:ty === "controle" ? "r" : "y", ic:"devoirs", go:()=>subj ? openControle(e) : openEDTAt(e.start) });
   });
   try{
     projetsVisibles().forEach(pid=>{
@@ -9612,6 +9692,73 @@ document.querySelectorAll("#tabbar .tb").forEach(b=>b.addEventListener("click",(
 }));
 
 
+
+// ══════════ LA PAGE D'UN CONTRÔLE (ou d'un rendu) ══════════
+// Ce qui tombe, chapitre par chapitre (un appui l'ouvre), et la révision mélangée sur ces chapitres.
+let CONTROLE_OUVERT = null, CT_RETOUR = null;
+function openControle(e){
+  const ici = document.documentElement.getAttribute("data-screen");
+  if(ici !== "controle" && ici !== "split" && ici !== "session"){
+    const mid = MATIERE_OUVERTE;
+    CT_RETOUR = ici === "matiere" ? ()=>{ ouvrirMatiere(mid); }
+      : ici === "edt" ? ()=>showScreen("edt")
+      : ()=>{ renderSemestres(); showScreen("semestres"); };
+  }
+  CONTROLE_OUVERT = e;
+  renderControle();
+  showScreen("controle");
+  window.scrollTo(0, 0);
+}
+function renderControle(){
+  const e = CONTROLE_OUVERT, box = document.getElementById("ct-inner"); if(!e || !box) return;
+  const N = evNote(e) || {}, sj = matiereDeNote(e, N);
+  const ty = typeDevoir(N), chs = chapitresDeNote(sj, N);
+  const j = hmJoursAvant(e.start);
+  const c = sj ? hmCouleur(sj) : "v";
+  const quand = e.start.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long" }) + (e.jour ? (N.heure ? ", " + N.heure : "") : ", " + hhmm(e.start));
+  const chev = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
+  const coche = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>';
+  box.innerHTML = `<div class="mt-head ct-head" style="background:${MT_GRAD[c]}">
+      <div class="ct-top"><button type="button" class="mt-bk" id="ct-bk" aria-label="Retour"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <button type="button" class="ct-modif" id="ct-modif">Modifier</button></div>
+      <div class="ct-k">${ty === "controle" ? "Contrôle" : "À rendre"} · ${j <= 0 ? "aujourd'hui" : j === 1 ? "demain" : "J-" + j}</div>
+      <h1>${esc(sj ? sj.title : nomCourt(e.title))}</h1><p>${esc(quand.charAt(0).toUpperCase() + quand.slice(1))}</p>
+    </div>
+    <div class="mt-body">
+      <div class="hm-sec ct-sec"><h3>Ce qui tombe</h3></div>
+      <div id="ct-liste"></div>
+    </div>
+    <div class="mt-sticky"><button type="button" class="hm-cta hm-press" id="ct-go"></button></div>`;
+  document.getElementById("ct-bk").addEventListener("click",()=>{ haptic(); CONTROLE_OUVERT = null; (CT_RETOUR || (()=>{ renderSemestres(); showScreen("semestres"); }))(); });
+  document.getElementById("ct-modif").addEventListener("click",()=>{ haptic(); openEvSheet(e); });
+  const liste = document.getElementById("ct-liste");
+  if(!sj){
+    liste.innerHTML = `<div class="hm-card hm-vide"><span class="hm-ic hm-doux-v">${ICO("cm")}</span>Relie ce ${ty === "controle" ? "contrôle" : "rendu"} à une matière avec « Modifier ».</div>`;
+    document.querySelector(".mt-sticky").remove();
+    return;
+  }
+  if(!chs.length){
+    const b = el("button","hm-card mt-ch hm-press"); b.type = "button";
+    b.innerHTML = `<span class="mt-cn hm-doux-${c}">${ICO("cm")}</span><span class="t"><span class="t1">Toute la matière</span><span class="t2">Touche « Modifier » pour choisir les CM et TD qui tombent</span></span><span class="mt-chev">${chev}</span>`;
+    b.addEventListener("click",()=>{ haptic(); ouvrirMatiere(sj.id); });
+    liste.appendChild(b);
+  }
+  chs.forEach(x=>{
+    const pc = partiesChapitre(x.ch.label), lu = estRevise(sj, x.type, x.ch), n = (x.ch.sections || []).length;
+    const b = el("button","hm-card mt-ch hm-press"); b.type = "button";
+    b.innerHTML = `<span class="mt-cn ${lu ? "hm-doux-g" : ""}" style="${lu ? "" : "background:color-mix(in srgb,var(--text) 6%,transparent);color:var(--text-soft)"}">${lu ? coche : esc(pc.court.replace(/\s*·.*$/, "").replace(/^(CM|TD)\s*/i, "") || "•")}</span>
+      <span class="t"><span class="t1">${esc(pc.court)}${pc.titre ? " · " + esc(pc.titre.replace(/^Séance du /, "")) : ""}</span><span class="t2">${lu ? "Lu · " : ""}${n} section${n > 1 ? "s" : ""}</span></span><span class="mt-chev">${chev}</span>`;
+    b.addEventListener("click",()=>{ haptic(); ouvrirChapitreMatiere(sj, x.type, x.i); });
+    liste.appendChild(b);
+  });
+  const go = document.getElementById("ct-go");
+  go.innerHTML = (chs.length ? "Réviser " + (chs.length > 1 ? "ces " + chs.length + " chapitres" : "ce chapitre") : "Réviser cette matière") + chev;
+  go.addEventListener("click",()=>{
+    haptic();
+    retourSession = ()=>openControle(e);
+    if(!startRevisionMatiere(sj, chs.map(x=>x.ch.label))) toast("Pas encore d'exercices sur " + (chs.length > 1 ? "ces chapitres" : "ce chapitre") + ". Relis-les d'un appui.");
+  });
+}
 // ══════════ PAGE D'UNE MATIÈRE ══════════
 // En-tête à la couleur de la matière, trois chiffres, « Reprendre », les chapitres (CM / TD),
 // et un bouton en bas pour réviser ses QCM (le contrôle à venir en tête).
@@ -9623,7 +9770,7 @@ function ouvrirMatiere(id, onglet, depuis){
   const m = SUBJECTS.find(x=>x.id === id); if(!m) return;
   const reduit = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   const r0 = depuis && !reduit ? depuis.getBoundingClientRect() : null;
-  MATIERE_OUVERTE = id; curSubj = m; curSemestre = SEMESTRES[id];
+  MATIERE_OUVERTE = id; curSubj = m; curSemestre = SEMESTRES[id]; CONTROLE_OUVERT = null;
   if(onglet) MT_ONGLET = onglet;
   else if(!(m.cm||[]).length && (m.td||[]).length) MT_ONGLET = "td";
   else MT_ONGLET = "cm";
@@ -9657,6 +9804,7 @@ function renderMatiere(){
     </div>
     <div class="mt-body">
       <div class="hm-card mt-kpi"><div><b>${ch.lus}/${ch.tot}</b><span>chapitres lus</span></div><div><b>${q.tot ? Math.round(q.ok / q.tot * 100) + " %" : "–"}</b><span>QCM validés</span></div><div><b>${ctl ? (jc <= 0 ? "Auj." : "J-" + jc) : (q.err || 0)}</b><span>${ctl ? "contrôle" : "erreurs"}</span></div></div>
+      <div id="mt-ctl"></div>
       <div id="mt-reprise"></div>
       <div class="mt-seg" id="mt-seg"><button type="button" data-o="cm">CM${(m.cm||[]).length ? " · " + m.cm.length : ""}</button><button type="button" data-o="td">TD${(m.td||[]).length ? " · " + m.td.length : ""}</button><button type="button" data-o="ent">S'entraîner</button></div>
       <div id="mt-liste"></div>
@@ -9666,8 +9814,17 @@ function renderMatiere(){
   document.getElementById("mt-go").addEventListener("click",()=>{
     haptic(); curSubj = m;
     retourSession = ()=>ouvrirMatiere(m.id, MT_ONGLET);
-    if(!startRevisionMatiere(m)){ openSubject(m.id); setTab(2); }
+    const chsC = ctl ? chapitresDeNote(m, evNote(ctl)).map(x=>x.ch.label) : [];
+    if(!startRevisionMatiere(m, chsC.length ? chsC : null)){ openSubject(m.id); setTab(2); }
   });
+  // le contrôle à venir : ce qui tombe, un appui ouvre sa page
+  if(ctl){
+    const chsC = chapitresDeNote(m, evNote(ctl));
+    const bn = el("button","hm-card mt-ctl hm-press"); bn.type = "button";
+    bn.innerHTML = `<span class="hm-ic hm-doux-r">${ICO("devoirs")}</span><span class="t"><span class="t1">Contrôle ${esc(quandCtl)}</span><span class="t2">${chsC.length ? esc(nomsChapitres(chsC)) : "Toute la matière"}</span></span><span class="mt-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>`;
+    bn.addEventListener("click",()=>{ haptic(); openControle(ctl); });
+    document.getElementById("mt-ctl").appendChild(bn);
+  }
   // reprendre la lecture là où on s'était arrêté dans cette matière
   const der = lectureCharger().dernier[m.id];
   if(der){
@@ -12310,13 +12467,13 @@ function startSession(m){
 // ── « Réviser cette matière » : une série qui mélange les exercices ──
 // Surtout des QCM (ils font avancer « QCM validés »), plus quelques flashcards et textes à trous,
 // glissés entre eux. Ce qui n'est pas encore validé passe d'abord. Pas de questions ouvertes : trop longues.
-function startRevisionMatiere(subj){
+function startRevisionMatiere(subj, chs){
   exam = null; document.getElementById("sess-score").className = "nav-score";
   idx=0; score=0; answers=[]; rateesSession = new Set(); sessionFil = null;
   flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv=""; oqEcrit="";
-  globalSession = false; sessionScope = "grand"; sessionMix = subj.id; curSubj = subj;
+  globalSession = false; sessionScope = "grand"; sessionMix = subj.id; curSubj = subj; MIX_CHS = chs || null;
   const prend = m=>{
-    const all = itemsDuScope(subj, m, "grand").map(({item,i})=>({ item:(m === "qcm" || m === "tr") ? melangerQCM(item) : item, mode:m, subj, key:cardKey(subj.id, m, item, i) }));
+    const all = itemsDuScope(subj, m, "grand").filter(({item})=>!chs || !chs.length || chs.includes(item.ch)).map(({item,i})=>({ item:(m === "qcm" || m === "tr") ? melangerQCM(item) : item, mode:m, subj, key:cardKey(subj.id, m, item, i) }));
     return shuffle(all.filter(x=>!estAcquise(x.key))).concat(shuffle(all.filter(x=>estAcquise(x.key))));
   };
   const Q = prend("qcm"), F = prend("fc"), T = prend("tr");
@@ -12679,7 +12836,7 @@ function showResults(){
     if(restant > 0) sec("Continuer", startGlobalSession);
   } else {
     prim("Terminer", ()=>quitterSession());
-    if(sessionMix){ const sj = SUBJECTS.find(x=>x.id === sessionMix); sec("Recommencer", ()=>startRevisionMatiere(sj)); }
+    if(sessionMix){ const sj = SUBJECTS.find(x=>x.id === sessionMix), chs = MIX_CHS; sec("Recommencer", ()=>startRevisionMatiere(sj, chs)); }
     else sec("Recommencer", ()=>startSession(curMode));
   }
   wrap.appendChild(row);
@@ -13370,7 +13527,7 @@ document.getElementById("pick-girly").addEventListener("click",()=>chooseTheme("
 document.getElementById("pick-purple").addEventListener("click",()=>chooseTheme("purple"));
 document.getElementById("btn-start").addEventListener("click",()=>{ renderSemestres(); showScreen("semestres"); });
 document.getElementById("btn-sem-back").addEventListener("click",()=>{ renderSemestres(); showScreen("semchoice"); });
-document.getElementById("btn-split-back").addEventListener("click",()=>{ if(curSubj && MATIERE_OUVERTE === curSubj.id){ renderMatiere(); showScreen("matiere"); return; } renderSubjectCards(curSemestre); showScreen("subjects"); });
+document.getElementById("btn-split-back").addEventListener("click",()=>{ if(CONTROLE_OUVERT){ renderControle(); showScreen("controle"); return; } if(curSubj && MATIERE_OUVERTE === curSubj.id){ renderMatiere(); showScreen("matiere"); return; } renderSubjectCards(curSemestre); showScreen("subjects"); });
 // feuille de changement rapide de matière
 document.getElementById("split-chip").addEventListener("click",openSubjSheet);
 document.getElementById("subj-sheet").addEventListener("click",e=>{ if(e.target.id==="subj-sheet") closeSubjSheet(); });
@@ -13832,7 +13989,7 @@ document.getElementById("type-pick").addEventListener("click",()=>{ haptic(); li
 // Balayer le contenu d'une matière : gauche/droite = onglet suivant/précédent
 document.getElementById("ev-fait").addEventListener("click", function(){ haptic(); this.classList.toggle("on"); });
 document.getElementById("ev-note").addEventListener("input", majLiensFiche);
-document.getElementById("ev-subj").addEventListener("change", ()=>majReviserFiche());
+document.getElementById("ev-subj").addEventListener("change", ()=>{ EV_CHS.clear(); majReviserFiche(); });
 document.querySelectorAll("#ev-types .ev-type").forEach(b=>b.addEventListener("click", ()=>setTimeout(majReviserFiche, 0)));
 onSwipe(document.querySelector("#screen-split .content-scroll"), {
   onLeft:  ()=>{ if(curTab < 2){ haptic(); setTab(curTab + 1); } },
