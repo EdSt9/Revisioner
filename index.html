@@ -6710,7 +6710,7 @@ function poserHdOnglet(id){
   // les boutons de la page (+, lien) quittent la barre fine du haut pour l'en-tête
   scr.querySelectorAll(".page-head [data-entete]").forEach(b=>act.appendChild(b));
   const plus = hd.querySelector(".hd-plus");
-  if(id === "edt"){ const c = wrap.querySelector(".edt-ctrl"); if(c) plus.appendChild(c); const w = el("div","hd-wk"); w.id = "hd-wk"; plus.appendChild(w); }
+  if(id === "edt"){ const c = wrap.querySelector(".edt-ctrl"); if(c) plus.appendChild(c); }
   if(id === "sites" || id === "classes"){ const sg = wrap.querySelector(".liens-seg"); if(sg) plus.appendChild(sg); }
   if(id === "mesdevoirs"){ const st = el("div","hd-stats"); st.id = "hd-stats"; plus.appendChild(st); }
 }
