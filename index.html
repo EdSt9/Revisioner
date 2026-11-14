@@ -2542,6 +2542,30 @@ html.tabbar-on .hd-row .back-btn{display:none !important;}
 html[data-mode="sombre"] :is(.sr-carte,.lex-item,.memo2-carte,.dev-card,.mode-card,.mn-carte,.mt-groupe,.qc-card,.results-detail,.auteur,.od-row,.ex-err,.recap){box-shadow:0 8px 24px rgba(0,0,0,.28) !important;}
 .qc-card.grand{box-shadow:0 0 0 2px var(--accent),0 10px 26px var(--accent-glow) !important;}
 .mode-icon,.qc-ic,.sr-ic{border-radius:14px !important;}
+
+/* Projet Psycho / CPE : le titre est dans le bandeau, plus dans la page */
+#screen-psycho.hd-on #psycho-inner>.psy-hero{display:none !important;}
+#screen-psycho.hd-on>.page-head{display:none !important;}
+#screen-psycho.hd-on #psycho-inner{padding-top:8px !important;}
+.hd-psy-mark{font-size:26px;line-height:1;margin-bottom:6px;}
+.hd-row .psy-back{flex-shrink:0;align-self:flex-start;width:40px !important;height:40px !important;border-radius:13px !important;background:rgba(255,255,255,.2) !important;color:#fff !important;font-size:0 !important;padding:0 !important;margin:0 !important;display:grid !important;place-items:center;border:none !important;}
+.hd-row .psy-back svg{width:20px;height:20px;}
+
+/* page du contrôle : la note du devoir, la fiche */
+.ct-note{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;margin-bottom:12px;}
+.ct-note .t{flex:1;min-width:0;}
+.ct-note .k{display:block;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text-mute);}
+.ct-note .t1{display:block;font-weight:700;font-size:14.5px;line-height:1.45;margin-top:2px;white-space:pre-line;overflow-wrap:anywhere;}
+.ct-seg{margin:6px 0 12px;}
+.ct-fiche{padding:16px;margin-bottom:12px;}
+.ct-fiche-t{font-weight:800;font-size:16px;margin-bottom:8px;}
+.ct-fiche-l{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:7px;}
+.ct-fiche-l li{font-size:14.5px;line-height:1.5;padding-left:2px;}
+.ct-fiche-l li::marker{color:var(--accent);font-weight:800;}
+.ct-fiche-m{font-size:14.5px;line-height:1.55;}
+.ct-fiche-m p+p{margin-top:8px;}
+.ct-fiche-v{font-size:13.5px;color:var(--text-soft);font-weight:600;}
+.ct-fiche-go{margin-top:10px;border:none;background:none;padding:4px 0;color:var(--accent);font:inherit;font-weight:800;font-size:13.5px;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -6797,10 +6821,26 @@ if(window.ResizeObserver){
   document.querySelectorAll(".screen > .wrap, #psycho-inner").forEach(w=>ro.observe(w));
   addEventListener("resize", ()=>ajusterBas(document.querySelector(".screen.active > .wrap, .screen.active > #psycho-inner")));
 }
+
+// Projet Psycho et Concours CPE : leur titre (icône, titre, phrase) monte dans le même bandeau coloré
+function poserHdPsycho(){
+  const scr = document.getElementById("screen-psycho"), pi = document.getElementById("psycho-inner");
+  if(!scr || !pi) return;
+  const hero = pi.querySelector(":scope > .psy-hero");
+  let hd = scr.querySelector(":scope > .hd-onglet");
+  if(!hero){ if(hd) hd.remove(); scr.classList.remove("hd-on"); return; }
+  if(!hd){ hd = el("div","hd-onglet hd-page hd-psy"); scr.insertBefore(hd, pi); }
+  scr.classList.add("hd-on");
+  const q = c=>{ const x = hero.querySelector(c); return x ? x.innerHTML : ""; };
+  const ancien = hd.querySelector(".back-btn, .psy-back");   // gardé : un nouveau dessin ne le recrée pas toujours
+  hd.innerHTML = `<div class="hd-row"><div class="hd-titres"><div class="hd-psy-mark">${q(".psy-hero-mark")}</div><h1 class="hd-t">${q(".psy-hero-title")}</h1></div><div class="hd-act"></div></div><div class="hd-plus">${q(".psy-hero-sub") ? `<p class="hd-sous">${q(".psy-hero-sub")}</p>` : ""}</div>`;
+  const back = scr.querySelector(":scope > .page-head .back-btn, :scope > .page-head .psy-back") || ancien;
+  if(back){ back.classList.add("back-btn"); hd.querySelector(".hd-row").insertBefore(back, hd.querySelector(".hd-titres")); }
+}
 // le Projet Psycho se redessine en entier : on replace son bouton retour à chaque fois
 (function(){
   const pi = document.getElementById("psycho-inner");
-  if(pi && window.MutationObserver) new MutationObserver(()=>poserEntete(document.getElementById("screen-psycho"))).observe(pi, { childList:true });
+  if(pi && window.MutationObserver) new MutationObserver(()=>{ poserEntete(document.getElementById("screen-psycho")); poserHdPsycho(); }).observe(pi, { childList:true });
 })();
 // à quelle profondeur est chaque écran : sert à savoir si on avance ou si on revient
 const PROFONDEUR = { login:0, pick:0, welcome:0, semestres:0, semchoice:1, edt:1, classes:1, search:1, mesdevoirs:1, sites:1, index:2, planning:1, psycho:1,
@@ -9697,7 +9737,7 @@ document.querySelectorAll("#tabbar .tb").forEach(b=>b.addEventListener("click",(
 
 // ══════════ LA PAGE D'UN CONTRÔLE (ou d'un rendu) ══════════
 // Ce qui tombe, chapitre par chapitre (un appui l'ouvre), et la révision mélangée sur ces chapitres.
-let CONTROLE_OUVERT = null, CT_RETOUR = null;
+let CONTROLE_OUVERT = null, CT_RETOUR = null, CT_VUE = "ch";
 function openControle(e){
   const ici = document.documentElement.getAttribute("data-screen");
   if(ici !== "controle" && ici !== "split" && ici !== "session"){
@@ -9706,6 +9746,7 @@ function openControle(e){
       : ici === "edt" ? ()=>showScreen("edt")
       : ()=>{ renderSemestres(); showScreen("semestres"); };
   }
+  if(CONTROLE_OUVERT !== e) CT_VUE = "ch";
   CONTROLE_OUVERT = e;
   renderControle();
   showScreen("controle");
@@ -9727,13 +9768,43 @@ function renderControle(){
       <h1>${esc(sj ? sj.title : nomCourt(e.title))}</h1><p>${esc(quand.charAt(0).toUpperCase() + quand.slice(1))}</p>
     </div>
     <div class="mt-body">
-      <div class="hm-sec ct-sec"><h3>Ce qui tombe</h3></div>
+      ${String(N.note || "").trim() ? `<div class="hm-card ct-note"><span class="hm-ic hm-doux-y">${ICO("oq")}</span><span class="t"><span class="k">Ta note</span><span class="t1">${noteAvecLiens(String(N.note).trim())}</span></span></div>` : ""}
+      ${chs.length ? `<div class="mt-seg ct-seg" id="ct-seg"><button type="button" data-v="ch">Chapitres · ${chs.length}</button><button type="button" data-v="fiche">Ma fiche</button></div>` : `<div class="hm-sec ct-sec"><h3>Ce qui tombe</h3></div>`}
       <div id="ct-liste"></div>
     </div>
     <div class="mt-sticky"><button type="button" class="hm-cta hm-press" id="ct-go"></button></div>`;
   document.getElementById("ct-bk").addEventListener("click",()=>{ haptic(); CONTROLE_OUVERT = null; (CT_RETOUR || (()=>{ renderSemestres(); showScreen("semestres"); }))(); });
   document.getElementById("ct-modif").addEventListener("click",()=>{ haptic(); openEvSheet(e); });
   const liste = document.getElementById("ct-liste");
+  // la fiche : les « À retenir » des chapitres qui tombent, sur une seule page
+  const seg = document.getElementById("ct-seg");
+  if(seg){
+    seg.querySelectorAll("button").forEach(b=>{
+      b.classList.toggle("on", b.dataset.v === CT_VUE);
+      b.addEventListener("click",()=>{ haptic(); CT_VUE = b.dataset.v; renderControle(); });
+    });
+    if(CT_VUE === "fiche"){
+      chs.forEach(x=>{
+        const pc = partiesChapitre(x.ch.label);
+        const c2 = el("div","hm-card ct-fiche");
+        const pts = (x.ch.recap || []).filter(Boolean);
+        const minute = x.ch.clair && x.ch.clair.minute;
+        c2.innerHTML = `<div class="ct-fiche-t">${esc(pc.court)}${pc.titre ? " · " + esc(pc.titre.replace(/^Séance du /, "")) : ""}</div>` +
+          (pts.length ? `<ol class="ct-fiche-l">${pts.map(t=>`<li>${esc(t)}</li>`).join("")}</ol>`
+            : minute ? `<div class="ct-fiche-m">${minute}</div>`
+            : `<div class="ct-fiche-v">Pas encore de résumé pour ce chapitre : ouvre-le pour le relire.</div>`);
+        c2.addEventListener("click",ev=>{ if(ev.target.closest("a")) return; });
+        const lien = el("button","ct-fiche-go"); lien.type = "button"; lien.textContent = "Relire le chapitre ›";
+        lien.addEventListener("click",()=>{ haptic(); ouvrirChapitreMatiere(sj, x.type, x.i); });
+        c2.appendChild(lien);
+        liste.appendChild(c2);
+      });
+      const go0 = document.getElementById("ct-go");
+      go0.innerHTML = "Réviser " + (chs.length > 1 ? "ces " + chs.length + " chapitres" : "ce chapitre") + chev;
+      go0.addEventListener("click",()=>{ haptic(); retourSession = ()=>openControle(e); if(!startRevisionMatiere(sj, chs.map(x=>x.ch.label))) toast("Pas encore d'exercices sur ces chapitres."); });
+      return;
+    }
+  }
   if(!sj){
     liste.innerHTML = `<div class="hm-card hm-vide"><span class="hm-ic hm-doux-v">${ICO("cm")}</span>Relie ce ${ty === "controle" ? "contrôle" : "rendu"} à une matière avec « Modifier ».</div>`;
     document.querySelector(".mt-sticky").remove();
@@ -12511,17 +12582,33 @@ function startGlobalSession(){
   flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv=""; oqEcrit="";
   globalSession = true;
   sessionScope = "all";
-  const all = [];
+  const all = [], prio = [];
+  // un contrôle dans les 14 jours : ses chapitres passent en premier (même pas encore « dus »)
+  const cibles = {};
+  try{
+    pendingAlerts(true, false).forEach(e=>{
+      const N = evNote(e) || {}; if(typeDevoir(N) !== "controle" || N.done) return;
+      const j = hmJoursAvant(e.start); if(j < 0 || j > 14) return;
+      const sj = matiereDeNote(e, N); if(!sj) return;
+      const chs = Array.isArray(N.chs) && N.chs.length ? N.chs : null;
+      if(!(sj.id in cibles)) cibles[sj.id] = chs;
+      else if(cibles[sj.id] === null || !chs) cibles[sj.id] = null;   // une fois « toute la matière », ça le reste
+      else cibles[sj.id] = cibles[sj.id].concat(chs);
+    });
+  }catch(err){}
   SUBJECTS.forEach(s=>{
     ["fc","qcm","oq","tr"].forEach(m=>{
       exos(s, m).forEach((item,i)=>{
         const key = cardKey(s.id,m,item,i);
-        if(srsIsDue(key)) all.push({ item: (m === "qcm" || m === "tr") ? melangerQCM(item) : item, mode:m, subj:s, key });
+        const visee = m !== "oq" && (s.id in cibles) && (!cibles[s.id] || cibles[s.id].includes(item && item.ch));
+        const entree = ()=>({ item: (m === "qcm" || m === "tr") ? melangerQCM(item) : item, mode:m, subj:s, key });
+        if(visee && (srsIsDue(key) || !estAcquise(key))) prio.push(entree());
+        else if(srsIsDue(key)) all.push(entree());
       });
     });
   });
-  if(!all.length) return;
-  queue = shuffle(all).slice(0, SERIE_MAX);
+  if(!all.length && !prio.length) return;
+  queue = shuffle(prio).concat(shuffle(all)).slice(0, SERIE_MAX);
   sessionDueOnly = true;
   clearInterval(timerInt);
   showScreen("session");
