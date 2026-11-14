@@ -179,7 +179,7 @@ body{width:100%;min-height:100vh;min-height:100lvh;
 html[data-theme="purple"] .psy-mini-msg,
 html[data-theme="purple"] .psy-motiv,
 html[data-theme="purple"] .psy-congrats,
-html[data-theme="purple"] .motiv{display:none!important;}
+html[data-theme="purple"] .motiv{display:none;}
 .btn-primary{font-family:var(--font-text);font-size:16px;font-weight:600;color:#fff;background:var(--accent);border:none;cursor:pointer;
   padding:15px 40px;border-radius:50px;box-shadow:0 8px 24px var(--accent-glow);transition:transform .25s var(--ease-spring),box-shadow .25s;animation:rise .5s var(--ease-spring) .2s both;}
 .btn-primary:active{transform:scale(.97);}
@@ -692,7 +692,7 @@ button.sem-groupe{width:100%;background:none;border:0;padding:0;cursor:pointer;f
 .head-row .back-btn{margin-bottom:0;padding:0;flex-shrink:0;}
 /* toutes les pages : le même en-tête que dans un cours, au même endroit */.page-head .head-row{min-height:36px;}
 .page-head .home-icons{margin:0 0 0 auto;gap:8px;flex:1;}
-.compte-btn{margin-right:auto;border-radius:50% !important;background:var(--accent) !important;color:#fff !important;border:0 !important;font-family:var(--font-text);font-size:15px;font-weight:700;}
+.compte-btn{margin-right:auto;border-radius:50%;background:var(--accent);color:#fff;border:0;font-family:var(--font-text);font-size:15px;font-weight:700;}
 .page-head .icon-btn{width:36px;height:36px;border-radius:11px;}
 .page-head .icon-btn svg{width:17px;height:17px;}
 .page-head .psy-back{margin:0;padding:0;}
@@ -731,8 +731,8 @@ button.sem-groupe{width:100%;background:none;border:0;padding:0;cursor:pointer;f
 .sheet .ev-type.devo.active{background:var(--danger-soft);color:var(--danger);}
 /* boutons : on ferme en glissant la feuille vers le bas ou en touchant à côté ; l'action principale prend la largeur ; supprimer est un lien rouge */.sheet .fs-actions,.sheet .ev-actions{padding:14px 20px 0;align-items:center;}
 .sheet .fs-actions #fs-cancel,.sheet .fs-actions #cal-close{display:none;}
-.sheet .fs-del,.sheet #ev-clear{flex:0 0 auto!important;background:none!important;border:0!important;box-shadow:none!important;color:var(--danger)!important;padding:13px 6px!important;font-weight:600;}
-.sheet #ev-clear{color:var(--text-soft)!important;}
+.sheet .fs-del,.sheet #ev-clear{flex:0 0 auto;background:none;border:0;box-shadow:none;color:var(--danger);padding:13px 6px!important;font-weight:600;}
+.sheet #ev-clear{color:var(--text-soft);}
 .sheet .fs-ok,.sheet #ev-save{flex:1;border-radius:14px;}
 .sheet .fs-hint.cal-sep{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-mute);margin:18px 2px 8px!important;}
 /* ── bouton flottant « + » et formulaire de création ── */.fab{position:fixed;right:18px;bottom:calc(env(safe-area-inset-bottom) + 24px);z-index:55;
@@ -1201,8 +1201,8 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .chap-row>.chap-seg{flex:1;min-width:0;margin-bottom:0;}
 /* pastille pointillée : même hauteur que les chapitres, pour rester sur la ligne */
 .chap-row>.pen-inline{margin-top:5px;}
-.fs-del{background:transparent;color:#ff6b6b;border-color:rgba(255,107,107,.4);flex:0 0 auto!important;
-  padding-left:18px!important;padding-right:18px!important;}
+.fs-del{background:transparent;color:#ff6b6b;border-color:rgba(255,107,107,.4);flex:0 0 auto;
+  padding-left:18px;padding-right:18px;}
 .fs-body{overflow-y:auto;padding:0 14px;-webkit-overflow-scrolling:touch;}
 .fs-field{margin-bottom:13px;}
 .fs-label{font-size:12px;color:var(--text-mute);margin:0 4px 6px;}
@@ -1242,7 +1242,7 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .mn-ouvrir{display:none !important;}
 .page-head .head-row>.back-btn+[data-entete][hidden]+[data-entete]{margin-left:auto;}
 .plus-entete{color:var(--accent);}
-.plus-entete[hidden],.pick-plus[hidden]{display:none !important;}
+.plus-entete[hidden],.pick-plus[hidden]{display:none;}
 .sheet-title{font-size:17px;color:var(--text);text-align:center;margin-bottom:14px;flex-shrink:0;}
 .sheet-list{overflow-y:auto;padding:0 14px;-webkit-overflow-scrolling:touch;}
 .sheet-ue{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-mute);margin:14px 6px 8px;}
@@ -1715,7 +1715,7 @@ textarea::placeholder{color:var(--text-mute);}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}.fc{transition:none;}}
 /* Fluidité : les éléments n'apparaissent en glissant qu'à l'arrivée sur un écran.
    Un rafraîchissement sur place (cocher, filtrer, publier) ne refait pas l'animation. */
-html.calme .rise{animation:none!important;}
+html.calme .rise{animation:none;}
 /* Fluidité : le flou d'arrière-plan reste sur les barres et les voiles, qui passent au-dessus du contenu.
    Sur les cartes, il coûtait cher au défilement (surtout sur iPhone) sans rien changer à l'œil. */
 .card,.ecue-card,.mode-card,.q-box,.auteur,.overview,.psy-nav-card{backdrop-filter:none;-webkit-backdrop-filter:none;}
@@ -1742,7 +1742,7 @@ html.calme .rise{animation:none!important;}
 .psy-mini-msg{background:var(--psurface2);border-radius:12px;padding:10px 14px;font-size:12.5px;color:var(--pac);line-height:1.5;margin:14px 0;font-style:italic;text-align:center;}
 .psy-nav-card{display:flex;gap:14px;text-align:left;width:100%;cursor:pointer;font-family:var(--font-text);padding:18px 20px;margin-bottom:12px;transition:transform .3s var(--ease-spring),box-shadow .3s,border-color .3s;}
 .psy-nav-card:hover{border-color:var(--pborder2);}
-.psy-nav-card{align-items:center!important;}
+.psy-nav-card{align-items:center;}
 .psy-nav-icon{width:44px!important;height:44px!important;}
 .psy-nav-arrow{margin-top:0!important;display:grid;place-items:center;align-self:center;}
 .psy-nav-arrow svg{width:16px;height:16px;}
@@ -1821,7 +1821,7 @@ html.calme .rise{animation:none!important;}
 .hm-doux-r{background:color-mix(in srgb,var(--c-r) 14%,transparent);color:var(--c-r);}
 @media(prefers-color-scheme:dark){html:not([data-mode="clair"]) .hm-doux-y{color:var(--c-y);}}
 html[data-mode="sombre"] .hm-doux-y{color:var(--c-y);}
-#screen-semestres>.hm-wrap{padding:0 !important;max-width:none !important;width:100%;}
+#screen-semestres>.hm-wrap{padding:0 !important;max-width:none;width:100%;}
 .hm-head{position:relative;overflow:hidden;color:#fff;padding:calc(env(safe-area-inset-top) + 20px) 18px 96px;
   background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 85%,#000) 0%,var(--accent) 48%,var(--accent-2) 100%);border-radius:0 0 34px 34px;}
 .hm-head:before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.08);right:-90px;top:-60px;pointer-events:none;}
@@ -1831,10 +1831,10 @@ html[data-mode="sombre"] .hm-doux-y{color:var(--c-y);}
 .hm-date:first-letter{text-transform:uppercase;}
 .hm-hello{font-size:27px;font-weight:800;letter-spacing:-.02em;margin-top:2px;line-height:1.1;}
 .hm-btns{display:flex;gap:10px;flex-shrink:0;}
-.hm-btns>button{position:relative !important;inset:auto !important;width:42px !important;height:42px !important;border-radius:14px !important;
-  background:rgba(255,255,255,.2) !important;color:#fff !important;box-shadow:none !important;border:none !important;display:grid;place-items:center;margin:0 !important;transform:none !important;}
+.hm-btns>button{position:relative;inset:auto;width:42px;height:42px;border-radius:14px;
+  background:rgba(255,255,255,.2);color:#fff;box-shadow:none;border:none;display:grid;place-items:center;margin:0;transform:none;}
 .hm-btns>button svg{width:20px;height:20px;}
-.hm-btns>#btn-compte{background:#fff !important;color:var(--accent) !important;font-weight:800;font-size:16px;}
+.hm-btns>#btn-compte{background:#fff;color:var(--accent);font-weight:800;font-size:16px;}
 .hm-btns .memo-fab-badge{top:-5px;right:-5px;}
 .hm-week{position:relative;z-index:1;display:flex;justify-content:space-between;margin:20px auto 0;max-width:520px;}
 .hm-d{width:44px;height:62px;border-radius:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#fff;border:none;background:none;font:inherit;cursor:pointer;}
@@ -1919,7 +1919,7 @@ html.tabbar-on .tabbar{display:flex;}
 .tb-nb{position:absolute;top:-6px;right:12px;min-width:18px;height:18px;border-radius:9px;background:var(--new);color:#fff;font-size:10.5px;font-weight:800;display:grid;place-items:center;padding:0 5px;border:2px solid var(--surface-solid);}
 .tb-rond .tb-nb{top:-6px;right:-6px;}
 .hm-btns>.memo-fab{display:grid !important;}
-.tb-nb[hidden],.hm-btns [hidden]{display:none !important;}
+.tb-nb[hidden],.hm-btns [hidden]{display:none;}
 .hm-mi .t,.hm-mi .t1,.hm-mi .t2,.hm-sl,.hm-sl .t1,.hm-sl .t2{display:block;}
 html.tabbar-on .screen.active>.wrap{padding-bottom:calc(112px + env(safe-area-inset-bottom)) !important;}
 html.tabbar-on[data-screen="semchoice"] .page-head .back-btn,
@@ -1929,7 +1929,7 @@ html.tabbar-on[data-screen="classes"] .page-head .back-btn,
 html.tabbar-on[data-screen="sites"] .page-head .back-btn{visibility:hidden;}
 
 /* ══════════ PAGE MATIÈRE ══════════ */
-#screen-matiere>.mt-wrap{padding:0 !important;max-width:none !important;width:100%;}
+#screen-matiere>.mt-wrap{padding:0;max-width:none;width:100%;}
 .mt-head{position:relative;overflow:hidden;color:#fff;padding:calc(env(safe-area-inset-top) + 14px) 18px 92px;border-radius:0 0 34px 34px;}
 .mt-head:before{content:"";position:absolute;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.1);right:-80px;top:-70px;pointer-events:none;}
 .mt-bk{position:relative;z-index:1;width:42px;height:42px;border-radius:14px;border:none;background:rgba(255,255,255,.22);color:#fff;display:grid;place-items:center;cursor:pointer;}
@@ -1974,7 +1974,7 @@ html.tabbar-on[data-screen="sites"] .page-head .back-btn{visibility:hidden;}
 #screen-split .clair-minute .clair-txt b{color:#fff;font-weight:800;}
 #screen-split .clair-minute .clair-txt li::before{background:#fff;}
 #pane-0,#pane-1{counter-reset:sect;}
-#pane-0 .section-title,#pane-1 .section-title{counter-increment:sect;display:flex;align-items:center;gap:10px;border-left:none !important;padding-left:0 !important;}
+#pane-0 .section-title,#pane-1 .section-title{counter-increment:sect;display:flex;align-items:center;gap:10px;border-left:none;padding-left:0;}
 #pane-0 .section-title::before,#pane-1 .section-title::before{content:counter(sect);flex-shrink:0;width:28px;height:28px;border-radius:10px;display:grid;place-items:center;
   font-family:var(--font-text);font-size:12.5px;font-weight:800;background:color-mix(in srgb,var(--accent) 13%,transparent);color:var(--accent);}
 #pane-0 .card,#pane-1 .card{border-radius:22px;border:none;box-shadow:var(--hm-ombre);background:var(--hm-carte);}
@@ -2034,7 +2034,7 @@ html.tabbar-on[data-screen="sites"] .page-head .back-btn{visibility:hidden;}
 .page-title{font-size:28px;}
 html.tabbar-on .page-sub,html.tabbar-on .lex-sous{font-weight:600;color:var(--text-mute);}
 /* barre du haut sans trait, fondue dans le fond */
-html.tabbar-on .page-head{border-bottom-color:transparent !important;box-shadow:none !important;}
+html.tabbar-on .page-head{border-bottom-color:transparent;box-shadow:none;}
 /* cartes : arrondies, ombre douce, sans contour */
 .sem-tile{border:none;border-radius:24px;background:var(--surface-solid);box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04);}
 .sem-grid.liste .sem-tile{border-radius:18px;}
@@ -2048,11 +2048,11 @@ html.tabbar-on .cal-row,#pick-list .cal-row{border-radius:18px;}
 .sheet-grip{width:42px;height:5px;background:color-mix(in srgb,var(--text) 14%,transparent);}
 .sheet-overlay{background:rgba(10,6,25,.35);}
 #pick-title{font-family:var(--font-text);font-weight:800;letter-spacing:-.02em;}
-.compte-av{background:linear-gradient(140deg,var(--accent),var(--accent-2)) !important;color:#fff !important;}
+.compte-av{background:linear-gradient(140deg,var(--accent),var(--accent-2));color:#fff;}
 /* pastille des cours : un point, pas un chiffre */
 .tb-nb.tb-point{min-width:12px;width:12px;height:12px;padding:0;font-size:0;top:-2px;right:-2px;}
 
-/* titres de l'interface : police nette ; le serif reste pour le contenu des cours */.page-title,.lex-lettre,.lex-terme,.auteur-nom,.auteur-avatar,.psy-hero-title,.psy-nav-title,#screen-synthese .recap-num,.sem-name,.sem-tile .sem-name,.project-title,.ecue-name,.vide-t,.aide-acc-t,.sheet-title,.sheet .sheet-title,.dev-name,.dv-nom,.edt-week,.edt-day-name,.plan-day,.ht-t,.mode-name,.qc-name,.colle-carte-t,.fin-titre,.sr-title,.bilan-score{font-family:var(--font-text) !important;font-weight:800 !important;letter-spacing:-.015em;}
+/* titres de l'interface : police nette ; le serif reste pour le contenu des cours */.page-title,.lex-lettre,.lex-terme,.auteur-nom,.auteur-avatar,.psy-hero-title,.psy-nav-title,#screen-synthese .recap-num,.sem-name,.sem-tile .sem-name,.project-title,.ecue-name,.vide-t,.aide-acc-t,.sheet-title,.sheet .sheet-title,.dev-name,.dv-nom,.edt-week,.edt-day-name,.plan-day,.ht-t,.mode-name,.qc-name,.colle-carte-t,.fin-titre,.sr-title,.bilan-score{font-family:var(--font-text);font-weight:800;letter-spacing:-.015em;}
 
 /* ══════════ ANIMATIONS ══════════ */
 /* 4. les cartes arrivent l'une après l'autre (seulement à l'arrivée sur la page) */
@@ -2121,17 +2121,17 @@ html.morph-en-cours #mt-inner .mt-head{visibility:hidden;}
 .ecue-arrow{color:var(--text-mute);}
 .ecue-nouveau{border-top:none;font-weight:700;}
 /* questions : la même police nette que le reste */
-.q-text,.fc-text{font-family:var(--font-text) !important;font-weight:700 !important;letter-spacing:-.01em;}
-#screen-session .q-text{font-weight:800 !important;}
+.q-text,.fc-text{font-family:var(--font-text);font-weight:700;letter-spacing:-.01em;}
+#screen-session .q-text{font-weight:800;}
 .fc-text{font-size:19px;line-height:1.45;}
-.fc-face{border:none !important;border-radius:26px !important;background:var(--surface-solid) !important;box-shadow:0 12px 32px color-mix(in srgb,var(--accent) 12%,transparent),0 1px 3px rgba(0,0,0,.05) !important;}
-.fc-back{background:linear-gradient(150deg,var(--accent),var(--accent-2)) !important;}
-.fc-back .fc-text,.fc-back .fc-label{color:#fff !important;}
+.fc-face{border:none;border-radius:26px;background:var(--surface-solid);box-shadow:0 12px 32px color-mix(in srgb,var(--accent) 12%,transparent),0 1px 3px rgba(0,0,0,.05);}
+.fc-back{background:linear-gradient(150deg,var(--accent),var(--accent-2));}
+.fc-back .fc-text,.fc-back .fc-label{color:#fff;}
 .fc-label{font-weight:800;letter-spacing:.06em;}
 #screen-session .sess-body textarea{border-radius:18px;}
 
 /* ══════════ CONNEXION ══════════ */
-html[data-screen="login"]{background:var(--bg) !important;background-image:none !important;}
+html[data-screen="login"]{background:var(--bg);background-image:none;}
 #screen-login.active{display:block;padding:0;text-align:left;}
 .cx-head{position:relative;overflow:hidden;background:linear-gradient(150deg,#4b2fc0,#6c4cdc 45%,#c4458f 80%,#e0356e);color:#fff;text-align:center;padding:calc(env(safe-area-inset-top) + 64px) 24px 110px;border-radius:0 0 40px 40px;}
 .cx-head:before,.cx-head:after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.1);}
@@ -2184,7 +2184,7 @@ html.glisse-retour #somm-flot,html.glisse-retour #somm-panneau{opacity:0;pointer
 .obj-opt b{font-size:20px;font-weight:800;width:44px;}
 .obj-opt span{font-weight:700;font-size:14px;color:var(--text-soft);}
 /* ══════════ ÉCRAN DE L'AMBIANCE ══════════ */
-html[data-screen="pick"]{background:var(--bg) !important;background-image:none !important;}
+html[data-screen="pick"]{background:var(--bg);background-image:none;}
 #screen-pick.active{display:block;padding:0;}
 .amb-wrap{max-width:440px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 56px) 18px 40px;text-align:center;}
 .amb-logo{font-size:58px;line-height:1;animation:dmIn .9s cubic-bezier(.3,1.5,.5,1) both;}
@@ -2202,12 +2202,12 @@ html[data-screen="pick"]{background:var(--bg) !important;background-image:none !
 .amb-prev .l1{left:44px;right:10px;top:16px;height:6px;border-radius:3px;background:#eee;}
 .amb-prev .l2{left:44px;right:30px;top:28px;height:6px;border-radius:3px;background:#eee;}
 /* ══════════ FIN DE CHAPITRE, CARTES PSYCHO / CPE, EXAMEN ══════════ */
-.fin-chap{border:none !important;border-radius:24px !important;background:var(--surface-solid) !important;box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04);padding:18px 16px 8px !important;}
-.fin-etape{border-top-color:color-mix(in srgb,var(--text) 7%,transparent) !important;padding:13px 0 !important;}
-.fin-num{width:38px !important;height:38px !important;border-radius:13px !important;font-weight:800 !important;}
+.fin-chap{border:none;border-radius:24px;background:var(--surface-solid);box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04);padding:18px 16px 8px;}
+.fin-etape{border-top-color:color-mix(in srgb,var(--text) 7%,transparent) !important;padding:13px 0;}
+.fin-num{width:38px;height:38px;border-radius:13px;font-weight:800;}
 .fin-nom{font-weight:800;}
-.psy-nav-card{border:none !important;border-radius:24px !important;background:var(--surface-solid) !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04) !important;}
-.psy-nav-icon{border-radius:15px !important;}
+.psy-nav-card{border:none;border-radius:24px;background:var(--surface-solid);backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04);}
+.psy-nav-icon{border-radius:15px;}
 .ex-grille{gap:7px;}
 .ex-grille button{width:38px;height:38px;border-radius:12px;border:none;background:var(--surface-solid);box-shadow:0 4px 12px color-mix(in srgb,var(--accent) 10%,transparent);font-weight:800;font-size:13.5px;color:var(--text-soft);}
 .ex-grille button.fait{background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);box-shadow:none;border:none;}
@@ -2215,9 +2215,9 @@ html[data-screen="pick"]{background:var(--bg) !important;background-image:none !
 
 /* ══════════ LES MÊMES BOUTONS PARTOUT ══════════ */
 /* principal : sombre en clair, à ta couleur en sombre ; secondaire : gris doux */
-.btn,.fs-ok,#screen-welcome .btn-primary{border:none !important;border-radius:17px !important;min-height:52px;padding:0 18px !important;font-family:var(--font-text) !important;font-weight:800 !important;font-size:15.5px !important;background:var(--text) !important;color:var(--bg) !important;box-shadow:none !important;}
+.btn,.fs-ok,#screen-welcome .btn-primary{border:none !important;border-radius:17px !important;min-height:52px;padding:0 18px !important;font-family:var(--font-text);font-weight:800 !important;font-size:15.5px !important;background:var(--text);color:var(--bg);box-shadow:none;}
 .btn:hover{transform:none;}
-.btn.ghost{background:color-mix(in srgb,var(--text) 6%,transparent) !important;color:var(--text) !important;border:none !important;}
+.btn.ghost{background:color-mix(in srgb,var(--text) 6%,transparent);color:var(--text);border:none;}
 .btn:disabled{opacity:.4;}
 @media(prefers-color-scheme:dark){html:not([data-mode="clair"]) .btn:not(.ghost),html:not([data-mode="clair"]) .fs-ok{background:var(--accent) !important;color:#fff !important;}}
 html[data-mode="sombre"] .btn:not(.ghost),html[data-mode="sombre"] .fs-ok{background:var(--accent) !important;color:#fff !important;}
@@ -2233,8 +2233,8 @@ html[data-mode="sombre"] .btn:not(.ghost),html[data-mode="sombre"] .fs-ok{backgr
 .ct-head .ct-k{font-size:12.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;opacity:.88;margin-top:18px;}
 .ct-head h1{font-size:24px;font-weight:800;letter-spacing:-.02em;margin-top:4px;line-height:1.2;}
 .ct-head p{font-size:14px;font-weight:700;opacity:.9;margin-top:4px;}
-#screen-controle .mt-head{padding-bottom:28px !important;}
-#screen-controle .mt-body{margin-top:0 !important;padding-top:4px;}
+#screen-controle .mt-head{padding-bottom:28px;}
+#screen-controle .mt-body{margin-top:0;padding-top:4px;}
 .ct-sec{margin-top:14px;}
 .mt-ctl{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 16px;margin-bottom:12px;border:none;font:inherit;color:var(--text);cursor:pointer;}
 .mt-ctl .t{flex:1;min-width:0;}
@@ -2243,7 +2243,7 @@ html[data-mode="sombre"] .btn:not(.ghost),html[data-mode="sombre"] .fs-ok{backgr
 
 /* ══════════ AGENDA, DEVOIRS, CLASSES, SITES : LE NOUVEAU STYLE ══════════ */
 /* cartes : arrondies, ombre douce, sans contour */
-.edt-course,.av-carte,.cls-row,.cal-row{border:none !important;background:var(--surface-solid) !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04);}
+.edt-course,.av-carte,.cls-row,.cal-row{border:none;background:var(--surface-solid) !important;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04);}
 @media(prefers-color-scheme:dark){html:not([data-mode="clair"]) .edt-course,html:not([data-mode="clair"]) .av-carte,html:not([data-mode="clair"]) .cls-row,html:not([data-mode="clair"]) .cal-row{box-shadow:0 8px 24px rgba(0,0,0,.28);}}
 html[data-mode="sombre"] .edt-course,html[data-mode="sombre"] .av-carte,html[data-mode="sombre"] .cls-row,html[data-mode="sombre"] .cal-row{box-shadow:0 8px 24px rgba(0,0,0,.28);}
 /* agenda : les jours comme des titres de section, chaque cours avec une barre de couleur */
@@ -2267,17 +2267,17 @@ html[data-mode="sombre"] .edt-course,html[data-mode="sombre"] .av-carte,html[dat
 .edt-note{font-weight:600;}
 .ev-badge{border-radius:8px;font-weight:800;}
 /* mes devoirs : semaines en titres, une carte par semaine */
-.av-semaine{font-family:var(--font-text);font-weight:800 !important;font-size:16px !important;color:var(--text) !important;margin:22px 4px 10px !important;letter-spacing:-.01em;}
-.av-carte{border-radius:24px !important;}
-.av-row{padding:15px 18px !important;border-top-color:color-mix(in srgb,var(--text) 7%,transparent) !important;}
-.av-txt b{font-weight:800 !important;font-size:15px !important;}
+.av-semaine{font-family:var(--font-text);font-weight:800;font-size:16px;color:var(--text);margin:22px 4px 10px;letter-spacing:-.01em;}
+.av-carte{border-radius:24px;}
+.av-row{padding:15px 18px;border-top-color:color-mix(in srgb,var(--text) 7%,transparent);}
+.av-txt b{font-weight:800;font-size:15px;}
 .av-txt small{font-weight:600;}
 /* classes et sites */
-.cls-row{border-radius:22px !important;}
-.cls-name{font-weight:800 !important;}
+.cls-row{border-radius:22px;}
+.cls-name{font-weight:800;}
 .cls-sub{font-weight:600;}
-.cls-tag{border-radius:10px !important;font-weight:800 !important;}
-.cal-row{border-radius:20px !important;padding:15px 16px !important;margin-bottom:10px !important;}
+.cls-tag{border-radius:10px;font-weight:800;}
+.cal-row{border-radius:20px !important;padding:15px 16px;margin-bottom:10px;}
 .cal-name{font-weight:800;}
 .cal-row:active,.cls-row:active{transform:scale(.985);}
 /* une ligne qu'on glisse (sites, calendriers) : la carte couvre ses boutons cachés */
@@ -2286,25 +2286,25 @@ html[data-mode="sombre"] .edt-course,html[data-mode="sombre"] .av-carte,html[dat
 .swipe-front>.cal-row,.swipe .cal-row{margin-bottom:0 !important;}
 
 /* ══════════ EN-TÊTES COMPACTS : AGENDA, DEVOIRS, LIENS ══════════ */
-html.tabbar-on .screen.hd-on>.page-head{display:none !important;}
-.screen.hd-on>.wrap>.page-title,.screen.hd-on>.wrap>.page-sub,.screen.hd-on>.wrap>.lex-sous,.screen.hd-on .edt-titlerow{display:none !important;}
-.screen.hd-on>.wrap{padding-top:6px !important;}
+html.tabbar-on .screen.hd-on>.page-head{display:none;}
+.screen.hd-on>.wrap>.page-title,.screen.hd-on>.wrap>.page-sub,.screen.hd-on>.wrap>.lex-sous,.screen.hd-on .edt-titlerow{display:none;}
+.screen.hd-on>.wrap{padding-top:6px;}
 .hd-onglet{position:relative;overflow:hidden;color:#fff;background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 85%,#000),var(--accent) 50%,var(--accent-2));padding:calc(env(safe-area-inset-top) + 12px) 16px 18px;border-radius:0 0 30px 30px;}
 .hd-onglet::after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.08);right:-70px;top:-90px;pointer-events:none;}
 .hd-row{display:flex;align-items:center;gap:8px;position:relative;z-index:1;max-width:520px;margin:0 auto;}
 .hd-t{flex:1;font-size:27px;font-weight:800;letter-spacing:-.025em;}
 .hd-act{display:flex;gap:8px;}
-.hd-act>button{width:40px !important;height:40px !important;border-radius:13px !important;border:none !important;background:rgba(255,255,255,.2) !important;color:#fff !important;box-shadow:none !important;display:grid;place-items:center;}
-.hd-act>button[hidden]{display:none !important;}
+.hd-act>button{width:40px;height:40px;border-radius:13px;border:none;background:rgba(255,255,255,.2);color:#fff;box-shadow:none;display:grid;place-items:center;}
+.hd-act>button[hidden]{display:none;}
 .hd-act svg{width:19px;height:19px;}
 .hd-plus{position:relative;z-index:1;max-width:520px;margin:0 auto;}
 /* agenda */
-.hd-plus .edt-ctrl{margin:12px 0 0 !important;}
-.hd-plus .seg{background:rgba(255,255,255,.18) !important;}
-.hd-plus .seg-opt{color:#fff !important;opacity:.85;}
-.hd-plus .seg-opt.active{background:#fff !important;color:var(--accent) !important;opacity:1;}
-.hd-plus .edt-arrow{width:32px !important;height:32px !important;border-radius:10px !important;background:rgba(255,255,255,.18) !important;color:#fff !important;}
-.hd-plus .edt-week{color:#fff !important;font-weight:800 !important;}
+.hd-plus .edt-ctrl{margin:12px 0 0;}
+.hd-plus .seg{background:rgba(255,255,255,.18);}
+.hd-plus .seg-opt{color:#fff;opacity:.85;}
+.hd-plus .seg-opt.active{background:#fff;color:var(--accent);opacity:1;}
+.hd-plus .edt-arrow{width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.18);color:#fff;}
+.hd-plus .edt-week{color:#fff;font-weight:800;}
 .hd-wk{display:flex;justify-content:space-between;margin-top:12px;}
 .hd-d{width:42px;padding:7px 0;border:none;border-radius:14px;background:none;color:#fff;font:inherit;text-align:center;cursor:pointer;}
 .hd-d small{display:block;font-size:10.5px;font-weight:800;opacity:.8;}
@@ -2315,14 +2315,14 @@ html.tabbar-on .screen.hd-on>.page-head{display:none !important;}
 .hd-d.on{background:#fff;color:var(--accent);}
 .hd-d.on i{background:var(--accent);}
 /* liens */
-.hd-plus .liens-seg{background:rgba(255,255,255,.18) !important;}
+.hd-plus .liens-seg{background:rgba(255,255,255,.18);}
 /* devoirs */
 .hd-stats{display:flex;}
 .hd-stats div{background:rgba(255,255,255,.16);}
 .hd-stats b{font-weight:800;}
-#screen-mesdevoirs #home-know{margin-top:4px !important;}
-#screen-mesdevoirs .av-carte,#screen-class .av-carte{background:none !important;box-shadow:none !important;border-radius:0 !important;overflow:visible;display:flex;flex-direction:column;gap:9px;}
-.av-row.dv-carte{border-top:none !important;border-radius:20px;background:var(--surface-solid);box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04);padding:12px 14px !important;}
+#screen-mesdevoirs #home-know{margin-top:4px;}
+#screen-mesdevoirs .av-carte,#screen-class .av-carte{background:none !important;box-shadow:none;border-radius:0;overflow:visible;display:flex;flex-direction:column;gap:9px;}
+.av-row.dv-carte{border-top:none;border-radius:20px;background:var(--surface-solid);box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04);padding:12px 14px;}
 .dv-j{width:52px;height:52px;border-radius:16px;display:grid;place-content:center;text-align:center;font-weight:800;font-size:15px;line-height:1.05;flex-shrink:0;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c);}
 .dv-j small{display:block;font-size:10.5px;font-weight:800;opacity:.8;margin-top:2px;}
 .av-row.devoir{--c:#d98a00;} .av-row.controle{--c:var(--ko);}
@@ -2333,7 +2333,7 @@ html.tabbar-on .screen.hd-on>.page-head{display:none !important;}
 .dv-carte.fait .av-txt b{text-decoration:line-through;}
 .dv-carte .av-fait{margin-left:auto;}
 /* mes sites : une grille de tuiles */
-#sites-liste{margin-top:6px !important;}
+#sites-liste{margin-top:6px;}
 .st-grille{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .st-tuile{display:flex;flex-direction:column;align-items:flex-start;text-align:left;min-width:0;padding:16px 14px;border:none;border-radius:22px;background:var(--surface-solid);box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04);font:inherit;color:var(--text);cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
 .st-tuile:active{transform:scale(.97);}
@@ -2342,42 +2342,42 @@ html.tabbar-on .screen.hd-on>.page-head{display:none !important;}
 .st-tuile small{font-size:12px;color:var(--text-soft);font-weight:600;margin-top:2px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .st-ajout{align-items:center;justify-content:center;min-height:124px;background:none;box-shadow:none;border:2px dashed color-mix(in srgb,var(--accent) 30%,transparent);color:var(--accent);font-weight:800;}
 /* classes : cartes plus grandes */
-#classes-list{margin-top:6px !important;}
-.cls-row{padding:14px !important;}
-.cls-ic{width:50px !important;height:50px !important;border-radius:16px !important;font-size:24px !important;background:color-mix(in srgb,var(--accent) 10%,transparent) !important;}
-.cls-name{font-size:16px !important;}
+#classes-list{margin-top:6px;}
+.cls-row{padding:14px;}
+.cls-ic{width:50px;height:50px;border-radius:16px;font-size:24px;background:color-mix(in srgb,var(--accent) 10%,transparent);}
+.cls-name{font-size:16px;}
 
 /* ══════════ EN-TÊTE COLORÉ SUR LES AUTRES PAGES ══════════ */
-.screen.hd-on>.page-head{display:none !important;}
+.screen.hd-on>.page-head{display:none;}
 .screen.hd-on>.wrap>.page-eyebrow{display:none;}
 .hd-titres{flex:1;min-width:0;}
-.hd-page .hd-t{font-family:var(--font-text) !important;font-size:25px !important;font-weight:800 !important;letter-spacing:-.025em;line-height:1.15;margin:0 !important;color:#fff !important;overflow-wrap:break-word;}
-.hd-page .page-eyebrow{color:#fff !important;opacity:.85;font-size:11.5px !important;font-weight:800 !important;letter-spacing:.08em;text-transform:uppercase;margin:0 0 2px !important;}
-.hd-sous{color:#fff !important;opacity:.88;font-size:13.5px !important;font-weight:600 !important;line-height:1.45 !important;margin:8px 0 0 !important;}
-.hd-row .back-btn{flex-shrink:0;align-self:flex-start;width:40px;height:40px;border-radius:13px;background:rgba(255,255,255,.2) !important;color:#fff !important;font-size:0 !important;padding:0 !important;margin:0 !important;place-items:center;}
+.hd-page .hd-t{font-family:var(--font-text);font-size:25px;font-weight:800;letter-spacing:-.025em;line-height:1.15;margin:0;color:#fff;overflow-wrap:break-word;}
+.hd-page .page-eyebrow{color:#fff;opacity:.85;font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin:0 0 2px;}
+.hd-sous{color:#fff !important;opacity:.88;font-size:13.5px;font-weight:600;line-height:1.45;margin:8px 0 0;}
+.hd-row .back-btn{flex-shrink:0;align-self:flex-start;width:40px;height:40px;border-radius:13px;background:rgba(255,255,255,.2);color:#fff;font-size:0;padding:0;margin:0;place-items:center;}
 .hd-row .back-btn svg{width:20px;height:20px;}
 .hd-page .hd-row{align-items:flex-start;}
 .hd-act{align-self:flex-start;}
-.hd-act .vue-seg{margin:0 !important;background:rgba(255,255,255,.18) !important;}
-.hd-act .vue-seg .seg-opt{color:#fff !important;opacity:.8;padding:7px 9px !important;}
-.hd-act .vue-seg .seg-opt.active{background:#fff !important;color:var(--accent) !important;opacity:1;}
+.hd-act .vue-seg{margin:0;background:rgba(255,255,255,.18);}
+.hd-act .vue-seg .seg-opt{color:#fff;opacity:.8;padding:7px 9px;}
+.hd-act .vue-seg .seg-opt.active{background:#fff;color:var(--accent);opacity:1;}
 .hd-act .vue-seg svg{width:18px;height:18px;}
 
 /* onglets : pas de bouton retour dans l'en-tête */
-html.tabbar-on .hd-row .back-btn{display:none !important;}
+html.tabbar-on .hd-row .back-btn{display:none;}
 /* toutes les cartes restantes : sans contour, ombre douce, comme le reste de l'app */
-.sr-carte,.lex-item,.memo2-carte,.dev-card,.mode-card,.mn-carte,.mt-groupe,.qc-card,.results-detail,.auteur,.od-row,.ex-err,.recap{border:none !important;background:var(--surface-solid) !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;border-radius:22px !important;box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04) !important;}
+.sr-carte,.lex-item,.memo2-carte,.dev-card,.mode-card,.mn-carte,.mt-groupe,.qc-card,.results-detail,.auteur,.od-row,.ex-err,.recap{border:none !important;background:var(--surface-solid) !important;backdrop-filter:none;-webkit-backdrop-filter:none;border-radius:22px !important;box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04) !important;}
 @media(prefers-color-scheme:dark){html:not([data-mode="clair"]) :is(.sr-carte,.lex-item,.memo2-carte,.dev-card,.mode-card,.mn-carte,.mt-groupe,.qc-card,.results-detail,.auteur,.od-row,.ex-err,.recap){box-shadow:0 8px 24px rgba(0,0,0,.28) !important;}}
 html[data-mode="sombre"] :is(.sr-carte,.lex-item,.memo2-carte,.dev-card,.mode-card,.mn-carte,.mt-groupe,.qc-card,.results-detail,.auteur,.od-row,.ex-err,.recap){box-shadow:0 8px 24px rgba(0,0,0,.28) !important;}
 .qc-card.grand{box-shadow:0 0 0 2px var(--accent),0 10px 26px var(--accent-glow) !important;}
 .mode-icon,.sr-ic{border-radius:14px !important;}
 
 /* Projet Psycho / CPE : le titre est dans le bandeau, plus dans la page */
-#screen-psycho.hd-on #psycho-inner>.psy-hero{display:none !important;}
-#screen-psycho.hd-on>.page-head{display:none !important;}
-#screen-psycho.hd-on #psycho-inner{padding-top:8px !important;}
+#screen-psycho.hd-on #psycho-inner>.psy-hero{display:none;}
+#screen-psycho.hd-on>.page-head{display:none;}
+#screen-psycho.hd-on #psycho-inner{padding-top:8px;}
 .hd-psy-mark{font-size:26px;line-height:1;margin-bottom:6px;}
-.hd-row .psy-back{flex-shrink:0;align-self:flex-start;width:40px !important;height:40px !important;border-radius:13px !important;background:rgba(255,255,255,.2) !important;color:#fff !important;font-size:0 !important;padding:0 !important;margin:0 !important;place-items:center;border:none !important;}
+.hd-row .psy-back{flex-shrink:0;align-self:flex-start;width:40px;height:40px;border-radius:13px;background:rgba(255,255,255,.2);color:#fff;font-size:0;padding:0;margin:0;place-items:center;border:none;}
 .hd-row .psy-back svg{width:20px;height:20px;}
 
 /* page du contrôle : la note du devoir, la fiche */
@@ -2397,12 +2397,12 @@ html[data-mode="sombre"] :is(.sr-carte,.lex-item,.memo2-carte,.dev-card,.mode-ca
 .ct-fiche-go{margin-top:10px;border:none;background:none;padding:4px 0;color:var(--accent);font:inherit;font-weight:800;font-size:13.5px;cursor:pointer;}
 
 /* Devoirs et Liens : un en-tête aussi court que celui de l'Agenda (une ligne sous le titre) */
-.hd-stats{gap:8px !important;margin-top:12px !important;}
-.hd-stats div{display:flex;align-items:center;justify-content:center;gap:5px;height:38px;padding:0 8px !important;border-radius:12px !important;white-space:nowrap;flex:1 1 auto !important;min-width:0;}
-.hd-stats b{display:inline !important;font-size:16px !important;}
-.hd-stats small{font-size:13px !important;font-weight:700 !important;opacity:.9;}
-.hd-plus .liens-seg{margin:12px 0 0 !important;padding:3px !important;}
-.hd-plus .liens-seg .seg-opt{padding:7px 10px !important;font-size:13.5px !important;}
+.hd-stats{gap:8px;margin-top:12px;}
+.hd-stats div{display:flex;align-items:center;justify-content:center;gap:5px;height:38px;padding:0 8px;border-radius:12px;white-space:nowrap;flex:1 1 auto;min-width:0;}
+.hd-stats b{display:inline;font-size:16px;}
+.hd-stats small{font-size:13px;font-weight:700;opacity:.9;}
+.hd-plus .liens-seg{margin:12px 0 0;padding:3px;}
+.hd-plus .liens-seg .seg-opt{padding:7px 10px;font-size:13.5px;}
 
 /* taille du texte : toute l'app grandit (pages, feuilles, barre du bas) */
 html.texte-grand .screen,html.texte-grand .sheet,html.texte-grand .qz-sheet,html.texte-grand .obj-feuille,html.texte-grand .tabbar{zoom:1.1;}
@@ -2418,27 +2418,27 @@ html[data-theme="purple"][data-mode="sombre"]{--text-mute:#9086b3;}
 html[data-theme="girly"][data-mode="sombre"]{--text-mute:#b08a9c;}
 
 /* ══════════ LE MÉMO : dans Devoirs, au nouveau style ══════════ */
-.hd-act>.memo-fab{position:relative !important;inset:auto !important;right:auto !important;bottom:auto !important;top:auto !important;display:grid !important;transform:none !important;opacity:1 !important;}
-.hd-act>.memo-fab svg{width:19px !important;height:19px !important;}
+.hd-act>.memo-fab{position:relative;inset:auto;right:auto;bottom:auto;top:auto;display:grid !important;transform:none;opacity:1;}
+.hd-act>.memo-fab svg{width:19px;height:19px;}
 .hd-act .memo-fab-badge{position:absolute;top:-5px;right:-5px;}
 .memo2-titre{font-size:22px;font-weight:800;letter-spacing:-.02em;margin:2px 2px 12px;}
-.memo2-seg{border:none !important;background:color-mix(in srgb,var(--text) 6%,transparent) !important;border-radius:14px !important;padding:4px !important;}
-.memo2-seg button{border-radius:11px !important;font-weight:800 !important;font-size:14px !important;color:var(--text-soft) !important;}
-.memo2-seg button.on{background:var(--surface-solid) !important;color:var(--text) !important;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.memo2-seg{border:none;background:color-mix(in srgb,var(--text) 6%,transparent);border-radius:14px;padding:4px;}
+.memo2-seg button{border-radius:11px;font-weight:800;font-size:14px;color:var(--text-soft);}
+.memo2-seg button.on{background:var(--surface-solid);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.08);}
 .memo2-carte{border:none !important;border-radius:20px !important;background:var(--surface-solid) !important;box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04) !important;}
 .memo2 .memo-slide{background:var(--surface-solid) !important;padding:14px 16px !important;}
 .memo2 .memo-todo,.memo2 .memo-add{border-top-color:color-mix(in srgb,var(--text) 7%,transparent) !important;}
 .memo2 .memo-text{font-weight:700;}
 .memo2 .memo-check{border-radius:8px !important;}
-.memo2 .memo-add{padding:14px 16px !important;}
-.memo2 .memo-plus{border-radius:8px !important;}
-.memo2-notes{border:none !important;border-radius:20px !important;background:color-mix(in srgb,var(--text) 5%,transparent) !important;padding:16px !important;font-size:15.5px !important;line-height:1.55 !important;min-height:300px !important;box-shadow:none !important;}
+.memo2 .memo-add{padding:14px 16px;}
+.memo2 .memo-plus{border-radius:8px;}
+.memo2-notes{border:none;border-radius:20px;background:color-mix(in srgb,var(--text) 5%,transparent);padding:16px;font-size:15.5px;line-height:1.55;min-height:300px;box-shadow:none;}
 .memo2-notes:focus{background:var(--surface-solid) !important;box-shadow:0 0 0 2px var(--accent) !important;}
 
 /* ══════════ DERNIERS ÉLÉMENTS À L'ANCIEN STYLE ══════════ */
 /* champs de saisie : fond doux, sans contour ; un anneau de couleur quand on écrit */
-.fs-input,.fs-area,.ev-select,.ev-note,#lex-input,.search-input{border:none !important;border-radius:16px !important;background:color-mix(in srgb,var(--text) 5%,transparent) !important;box-shadow:none !important;font-weight:600;}
-.fs-input:focus,.fs-area:focus,.ev-select:focus,.ev-note:focus{background:var(--surface-solid) !important;box-shadow:0 0 0 2px var(--accent) !important;}
+.fs-input,.fs-area,.ev-select,.ev-note,#lex-input,.search-input{border:none !important;border-radius:16px !important;background:color-mix(in srgb,var(--text) 5%,transparent) !important;box-shadow:none;font-weight:600;}
+.fs-input:focus,.fs-area:focus,.ev-select:focus,.ev-note:focus{background:var(--surface-solid) !important;box-shadow:0 0 0 2px var(--accent);}
 .fs-label,.ev-label{font-weight:800 !important;letter-spacing:.05em;}
 /* Aucun / Contrôle / À rendre : un sélecteur comme les autres */
 .ev-types{gap:0 !important;padding:4px;border-radius:14px;background:color-mix(in srgb,var(--text) 6%,transparent);}
@@ -2447,32 +2447,32 @@ html[data-theme="girly"][data-mode="sombre"]{--text-mute:#b08a9c;}
 .ev-type.ctrl.active{color:var(--ko) !important;}
 .ev-type.devo.active{color:#d98a00 !important;}
 /* listes de choix dans les feuilles (changer de matière…) */
-.sheet-item{border:none !important;border-radius:16px !important;padding:12px 14px !important;}
-.sheet-item.current{background:color-mix(in srgb,var(--accent) 10%,transparent) !important;}
-.sheet-item .si-num,.ss-num{border:none !important;background:color-mix(in srgb,var(--accent) 12%,transparent);border-radius:9px !important;padding:4px 8px !important;font-weight:800 !important;}
+.sheet-item{border:none !important;border-radius:16px;padding:12px 14px;}
+.sheet-item.current{background:color-mix(in srgb,var(--accent) 10%,transparent);}
+.sheet-item .si-num,.ss-num{border:none;background:color-mix(in srgb,var(--accent) 12%,transparent);border-radius:9px;padding:4px 8px;font-weight:800;}
 .sheet-item .si-name{font-weight:700;}
 /* la barre du haut d'un chapitre : le bandeau coloré, en plus fin */
-#screen-split>.split-head{background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 85%,#000),var(--accent) 50%,var(--accent-2)) !important;color:#fff;border-bottom:none !important;border-radius:0 0 22px 22px;box-shadow:0 6px 20px var(--accent-glow);backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}
-#screen-split>.split-head .back-btn{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.2) !important;color:#fff !important;font-size:0 !important;padding:0 !important;place-items:center;}
+#screen-split>.split-head{background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 85%,#000),var(--accent) 50%,var(--accent-2));color:#fff;border-bottom:none;border-radius:0 0 22px 22px;box-shadow:0 6px 20px var(--accent-glow);backdrop-filter:none;-webkit-backdrop-filter:none;}
+#screen-split>.split-head .back-btn{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.2);color:#fff;font-size:0;padding:0;place-items:center;}
 #screen-split>.split-head .back-btn svg{width:19px;height:19px;}
-#screen-split>.split-head .head-search,#screen-split>.split-head .icon-btn{color:#fff !important;background:rgba(255,255,255,.2) !important;border:none !important;border-radius:12px !important;}
-#screen-split>.split-head .subj-chip,#screen-split>.split-head .type-pick{color:#fff !important;background:rgba(255,255,255,.2) !important;border:none !important;}
-#screen-split>.split-head .type-pick *,#screen-split>.split-head .subj-chip *{color:#fff !important;}
+#screen-split>.split-head .head-search,#screen-split>.split-head .icon-btn{color:#fff;background:rgba(255,255,255,.2);border:none;border-radius:12px;}
+#screen-split>.split-head .subj-chip,#screen-split>.split-head .type-pick{color:#fff;background:rgba(255,255,255,.2);border:none;}
+#screen-split>.split-head .type-pick *,#screen-split>.split-head .subj-chip *{color:#fff;}
 /* la barre du haut d'une série : le retour en petit carré */
-.sess-nav .nav-back{width:38px;height:38px;border-radius:12px;background:color-mix(in srgb,var(--text) 6%,transparent);font-size:0 !important;padding:0;place-items:center;}
+.sess-nav .nav-back{width:38px;height:38px;border-radius:12px;background:color-mix(in srgb,var(--text) 6%,transparent);font-size:0;padding:0;place-items:center;}
 .sess-nav .nav-back svg{width:19px;height:19px;}
 .sess-nav #sess-pos{font-weight:800;}
 /* titres des chapitres : la même police nette que le reste */
-.chap-titre,.section-title{font-family:var(--font-text) !important;font-weight:800 !important;letter-spacing:-.02em;}
+.chap-titre,.section-title{font-family:var(--font-text);font-weight:800;letter-spacing:-.02em;}
 
 /* ══════════ PAGE D'UNE CLASSE ══════════ */
 .cls-hdbar{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
-.cls-hdbar .cls-pill{position:relative;display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px !important;border:none !important;border-radius:12px !important;background:rgba(255,255,255,.18) !important;color:#fff !important;font:inherit;font-weight:800 !important;font-size:13.5px !important;}
+.cls-hdbar .cls-pill{position:relative;display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:none;border-radius:12px;background:rgba(255,255,255,.18);color:#fff;font:inherit;font-weight:800;font-size:13.5px;}
 .cls-hdbar .cls-pill svg{width:16px;height:16px;color:#fff;}
-.cls-hdbar .cls-pill.on{background:#fff !important;color:var(--accent) !important;}
+.cls-hdbar .cls-pill.on{background:#fff;color:var(--accent);}
 .cls-hdbar .tp-pt{width:7px;height:7px;border-radius:50%;background:#ff8ab4;}
 .cls-hdbar .nb{top:-6px;right:-6px;}
-.cls-suivre{border:none !important;border-radius:20px !important;background:var(--surface-solid) !important;box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04) !important;padding:12px 14px !important;}
+.cls-suivre{border:none;border-radius:20px;background:var(--surface-solid);box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04) !important;padding:12px 14px;}
 .cls-suivre b{font-weight:800;}
 .cls-sec{margin:18px 4px 10px;display:flex;justify-content:space-between;align-items:baseline;}
 .cls-sec span{font-size:13px;color:var(--text-mute);font-weight:700;}
@@ -2488,33 +2488,33 @@ html[data-theme="girly"][data-mode="sombre"]{--text-mute:#b08a9c;}
 .cls-l-ch{color:var(--text-mute);font-size:20px;}
 
 /* la feuille d'un chapitre (CM, TD, S'entraîner, outils) au nouveau style */
-.mt-nom{font-family:var(--font-text) !important;font-weight:800 !important;letter-spacing:-.02em;font-size:22px !important;}
-.mt-ecue{font-weight:800 !important;letter-spacing:.04em;}
-.mt-rond{width:42px !important;height:42px !important;border-radius:14px !important;border:none !important;background:color-mix(in srgb,var(--text) 6%,transparent) !important;color:var(--text) !important;}
-#pick-list .mt-seg{display:flex;border:none !important;background:color-mix(in srgb,var(--text) 6%,transparent) !important;border-radius:16px !important;padding:4px !important;box-shadow:none !important;}
-#pick-list .mt-seg button{flex:1;border:none !important;background:none !important;border-radius:12px !important;color:var(--text-soft) !important;padding:9px 6px !important;}
-#pick-list .mt-seg button.on{background:var(--surface-solid) !important;color:var(--text) !important;box-shadow:0 2px 8px rgba(0,0,0,.08) !important;}
+.mt-nom{font-family:var(--font-text);font-weight:800;letter-spacing:-.02em;font-size:22px;}
+.mt-ecue{font-weight:800;letter-spacing:.04em;}
+.mt-rond{width:42px;height:42px;border-radius:14px;border:none;background:color-mix(in srgb,var(--text) 6%,transparent);color:var(--text);}
+#pick-list .mt-seg{display:flex;border:none;background:color-mix(in srgb,var(--text) 6%,transparent);border-radius:16px;padding:4px;box-shadow:none;}
+#pick-list .mt-seg button{flex:1;border:none;background:none;border-radius:12px;color:var(--text-soft);padding:9px 6px;}
+#pick-list .mt-seg button.on{background:var(--surface-solid);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.08);}
 #pick-list .mt-seg .mt-sn{font-weight:800;font-size:15px;}
 #pick-list .mt-seg small{font-weight:600;}
-.mt-lab{font-weight:800 !important;letter-spacing:.06em;}
+.mt-lab{font-weight:800;letter-spacing:.06em;}
 .mt-l{font-weight:700;}
 .mt-l .mt-n{font-weight:800;}
 
 /* boutons retour carrés : la flèche bien au centre (le mot « Retour », invisible, ne la pousse plus) */
-.hd-row .back-btn,.hd-row .psy-back,#screen-split>.split-head .back-btn,.sess-nav .nav-back{display:flex !important;align-items:center !important;justify-content:center !important;gap:0 !important;line-height:0 !important;text-indent:0;overflow:hidden;}
-.hd-row .back-btn svg,.hd-row .psy-back svg,#screen-split>.split-head .back-btn svg,.sess-nav .nav-back svg{margin:0 !important;flex-shrink:0;display:block;}
+.hd-row .back-btn,.hd-row .psy-back,#screen-split>.split-head .back-btn,.sess-nav .nav-back{display:flex;align-items:center;justify-content:center;gap:0;line-height:0;text-indent:0;overflow:hidden;}
+.hd-row .back-btn svg,.hd-row .psy-back svg,#screen-split>.split-head .back-btn svg,.sess-nav .nav-back svg{margin:0;flex-shrink:0;display:block;}
 #screen-class .av-row.note{--c:var(--info);}
 .av-row.fait .dv-j{--c:var(--ok);}
 
 /* ══════════ PLUS AUCUN CONTOUR DE L'ANCIEN STYLE ══════════ */
 /* les cartes : fond plein, ombre douce */
-:is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal-row,.card,.chap-share,.cls-row,.cls-suivre,.colle-carte,.colle-sec,.cours-pdf,.deja-vu,.dev-card,.ecue-card,.edt-course,.ev-autre,.ev-share,.ex-err,.ex-row,.exam-card,.exam-done,.fil-theme,.fin-chap,.hint-box,.home-tuile,.idx-entree,.lex-item,.mem-row,.memo2-carte,.mn-carte,.mode-card,.mt-groupe,.od-row,.overview,.plan-row,.prof-row,.qc-card,.recap,.results-detail,.sem-entry,.sem-tile,.sess-subj,.sr-carte,.today-card){border-color:transparent !important;background-color:var(--surface-solid) !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04);}
+:is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal-row,.card,.chap-share,.cls-row,.cls-suivre,.colle-carte,.colle-sec,.cours-pdf,.deja-vu,.dev-card,.ecue-card,.edt-course,.ev-autre,.ev-share,.ex-err,.ex-row,.exam-card,.exam-done,.fil-theme,.fin-chap,.hint-box,.home-tuile,.idx-entree,.lex-item,.mem-row,.memo2-carte,.mn-carte,.mode-card,.mt-groupe,.od-row,.overview,.plan-row,.prof-row,.qc-card,.recap,.results-detail,.sem-entry,.sem-tile,.sess-subj,.sr-carte,.today-card){border-color:transparent !important;background-color:var(--surface-solid) !important;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04);}
 @media(prefers-color-scheme:dark){html:not([data-mode="clair"]) :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal-row,.card,.chap-share,.cls-row,.cls-suivre,.colle-carte,.colle-sec,.cours-pdf,.deja-vu,.dev-card,.ecue-card,.edt-course,.ev-autre,.ev-share,.ex-err,.ex-row,.exam-card,.exam-done,.fil-theme,.fin-chap,.hint-box,.home-tuile,.idx-entree,.lex-item,.mem-row,.memo2-carte,.mn-carte,.mode-card,.mt-groupe,.od-row,.overview,.plan-row,.prof-row,.qc-card,.recap,.results-detail,.sem-entry,.sem-tile,.sess-subj,.sr-carte,.today-card){box-shadow:0 8px 24px rgba(0,0,0,.28);}}
 html[data-mode="sombre"] :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal-row,.card,.chap-share,.cls-row,.cls-suivre,.colle-carte,.colle-sec,.cours-pdf,.deja-vu,.dev-card,.ecue-card,.edt-course,.ev-autre,.ev-share,.ex-err,.ex-row,.exam-card,.exam-done,.fil-theme,.fin-chap,.hint-box,.home-tuile,.idx-entree,.lex-item,.mem-row,.memo2-carte,.mn-carte,.mode-card,.mt-groupe,.od-row,.overview,.plan-row,.prof-row,.qc-card,.recap,.results-detail,.sem-entry,.sem-tile,.sess-subj,.sr-carte,.today-card){box-shadow:0 8px 24px rgba(0,0,0,.28);}
 /* dans une feuille, une carte posée sur une carte : juste un fond doux */
 .sheet :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal-row,.card,.chap-share,.cls-row,.cls-suivre,.colle-carte,.colle-sec,.cours-pdf,.deja-vu,.dev-card,.ecue-card,.edt-course,.ev-autre,.ev-share,.ex-err,.ex-row,.exam-card,.exam-done,.fil-theme,.fin-chap,.hint-box,.home-tuile,.idx-entree,.lex-item,.mem-row,.memo2-carte,.mn-carte,.mode-card,.mt-groupe,.od-row,.overview,.plan-row,.prof-row,.qc-card,.recap,.results-detail,.sem-entry,.sem-tile,.sess-subj,.sr-carte,.today-card){background-color:color-mix(in srgb,var(--text) 5%,transparent) !important;box-shadow:none !important;}
 /* les pastilles et petits boutons : fond doux, sans contour */
-:is(.auteur-tag,.auteur-retenir,.chap-pick,.colle-pas-titre,.dev-doc,.dev-lien,.dev-pts,.ev-autre-x,.ex-chip,.fs-opt,.grade-btn,.mem-act,.mt-rond,.od-bt button,.pick-actions button,.pomo-bt,.sr-num,.sr-plus,.search-box,.sheet-home,.lec-start,.mt-curseur,.sheet .ev-types,.sheet .fs-choice,.wrap .icon-btn){border-color:transparent !important;background-color:color-mix(in srgb,var(--text) 6%,transparent) !important;box-shadow:none !important;}
+:is(.auteur-tag,.auteur-retenir,.chap-pick,.colle-pas-titre,.dev-doc,.dev-lien,.dev-pts,.ev-autre-x,.ex-chip,.fs-opt,.grade-btn,.mem-act,.mt-rond,.od-bt button,.pick-actions button,.pomo-bt,.sr-num,.sr-plus,.search-box,.sheet-home,.lec-start,.mt-curseur,.sheet .ev-types,.sheet .fs-choice,.wrap .icon-btn){border-color:transparent;background-color:color-mix(in srgb,var(--text) 6%,transparent);box-shadow:none;}
 </style>
 </head>
 <body>
@@ -2582,10 +2582,6 @@ html[data-mode="sombre"] :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
       </button>
     <button class="icon-btn compte-btn" id="btn-compte" aria-label="Mon compte"></button>
-    <button class="memo-fab" id="btn-memo" aria-label="Mémo">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l2 2 4-4"/><rect x="4" y="4" width="16" height="16" rx="3"/></svg>
-      <span class="memo-fab-badge" id="memo-badge" hidden></span>
-    </button>
     </div>
       </div>
       <div class="hm-week" id="hm-week"></div>
@@ -2614,20 +2610,14 @@ html[data-mode="sombre"] :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal
 
 <!-- MATIÈRES -->
 <!-- CHOIX DU SEMESTRE -->
-<div id="screen-semchoice" class="screen">
-  <div class="wrap">
-    <button class="back-btn rise" id="btn-semchoice-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
-    <div class="vue-tete rise" style="animation-delay:.04s"><h1 class="page-title">Cours</h1><div class="seg vue-seg" id="vue-sem" role="group" aria-label="Affichage"><button type="button" class="seg-opt" data-vue="bloc" aria-label="Afficher en blocs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/></svg></button><button type="button" class="seg-opt" data-vue="liste" aria-label="Afficher en liste"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.5" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.5" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></button></div></div>
+<div id="screen-semchoice" class="screen a-entete hd-on"><div class="split-head page-head"><div class="head-row"></div></div>
+  <div class="hd-onglet hd-page"><div class="hd-row"><button class="back-btn" id="btn-semchoice-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>Retour</button><div class="hd-titres"><h1 class="page-title hd-t">Cours</h1></div><div class="hd-act"><div class="seg vue-seg" id="vue-sem" role="group" aria-label="Affichage" hidden=""><button type="button" class="seg-opt active" data-vue="bloc" aria-label="Afficher en blocs" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="4" width="6.5" height="6.5" rx="1.6"></rect><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"></rect><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"></rect><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"></rect></svg></button><button type="button" class="seg-opt" data-vue="liste" aria-label="Afficher en liste" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11"></path><circle cx="4.5" cy="6" r="1.2" fill="currentColor" stroke="none"></circle><circle cx="4.5" cy="12" r="1.2" fill="currentColor" stroke="none"></circle><circle cx="4.5" cy="18" r="1.2" fill="currentColor" stroke="none"></circle></svg></button></div></div></div><div class="hd-plus"></div></div><div class="wrap">
     <div class="sem-grid rise" id="semchoice-inner" style="animation-delay:.08s"></div>
   </div>
 </div>
 
-<div id="screen-subjects" class="screen">
-  <div class="wrap">
-    <button class="back-btn rise" id="btn-sem-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
-    <div class="page-eyebrow rise" id="subjects-eyebrow" style="animation-delay:.03s">Semestre</div>
-    <h1 class="page-title rise" style="animation-delay:.06s">Tes matières</h1>
-    <p class="page-sub rise" style="animation-delay:.09s">Groupées par UE. Touche une matière pour l'ouvrir.</p>
+<div id="screen-subjects" class="screen a-entete hd-on"><div class="split-head page-head"><div class="head-row"></div></div>
+  <div class="hd-onglet hd-page"><div class="hd-row"><button class="back-btn" id="btn-sem-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>Retour</button><div class="hd-titres"><div class="page-eyebrow" id="subjects-eyebrow" style="animation-delay:.03s">Semestre</div><h1 class="page-title hd-t">Tes matières</h1></div><div class="hd-act"></div></div><div class="hd-plus"><p class="page-sub hd-sous" style="animation-delay:.09s">Groupées par UE. Touche une matière pour l'ouvrir.</p></div></div><div class="wrap">
     <div class="overview rise" id="overview" style="animation-delay:.12s"></div>
     <div class="subj-list" id="subj-cards"></div>
   </div>
@@ -2695,53 +2685,40 @@ html[data-mode="sombre"] :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal
 <div class="toast" id="toast"></div>
 
 <!-- MON PLANNING (saisi à la main) -->
-<div id="screen-planning" class="screen">
-  <div class="wrap">
-    <button class="back-btn rise" id="btn-plan-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
-    <h1 class="page-title rise" style="animation-delay:.03s">Mon planning</h1>
-    <p class="page-sub rise" style="animation-delay:.06s">Ton emploi du temps saisi à la main, pour qui n'a pas de lien iCal.</p>
+<div id="screen-planning" class="screen a-entete hd-on"><div class="split-head page-head"><div class="head-row"></div></div>
+  <div class="hd-onglet hd-page"><div class="hd-row"><button class="back-btn" id="btn-plan-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>Retour</button><div class="hd-titres"><h1 class="page-title hd-t">Mon planning</h1></div><div class="hd-act"></div></div><div class="hd-plus"><p class="page-sub hd-sous" style="animation-delay:.06s">Ton emploi du temps saisi à la main, pour qui n'a pas de lien iCal.</p></div></div><div class="wrap">
     <div id="plan-inner" class="rise" style="animation-delay:.1s"></div>
   </div>
 </div>
 
 <!-- DEVOIRS CORRIGÉS -->
-<div id="screen-devoirs" class="screen">
-  <div class="wrap">
-    <button class="back-btn rise" id="btn-dev-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
-    <h1 class="page-title rise" style="animation-delay:.03s">Devoirs</h1>
-    <p class="page-sub rise" id="dev-sub" style="animation-delay:.06s">Rédige tes réponses ici. Quand la correction arrive, le devoir passe dans Corrigés.</p>
+<div id="screen-devoirs" class="screen a-entete hd-on"><div class="split-head page-head"><div class="head-row"></div></div>
+  <div class="hd-onglet hd-page"><div class="hd-row"><button class="back-btn" id="btn-dev-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>Retour</button><div class="hd-titres"><h1 class="page-title hd-t">Devoirs</h1></div><div class="hd-act"></div></div><div class="hd-plus"><p class="page-sub hd-sous" id="dev-sub" style="animation-delay:.06s">Rédige tes réponses ici. Quand la correction arrive, le devoir passe dans Corrigés.</p></div></div><div class="wrap">
     <div id="dev-inner" class="rise" style="animation-delay:.1s"></div>
   </div>
 </div>
 
 <!-- MES CLASSES -->
-<div id="screen-classes" class="screen">
-  <div class="wrap">
-    <button class="back-btn rise" id="btn-classes-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
+<div id="screen-classes" class="screen a-entete hd-on"><div class="split-head page-head"><div class="head-row"><button class="back-btn" id="btn-classes-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>Retour</button></div></div>
+  <div class="hd-onglet"><div class="hd-row"><h1 class="hd-t">Liens</h1><div class="hd-act"></div></div><div class="hd-plus"><div class="seg liens-seg rise" style="animation-delay:.04s"><button type="button" class="seg-opt" data-liens="sites">Mes sites</button><button type="button" class="seg-opt active" data-liens="classes">Classes</button></div></div></div><div class="wrap">
     <div class="edt-titlerow rise" style="animation-delay:.03s">
       <h1 class="page-title" style="margin:0">Liens</h1>
     </div>
-    <div class="seg liens-seg rise" style="animation-delay:.04s"><button type="button" class="seg-opt" data-liens="sites">Mes sites</button><button type="button" class="seg-opt active" data-liens="classes">Classes</button></div>
     <p class="page-sub rise" style="animation-delay:.06s">Des dossiers de cours partagés. On y entre avec un code, après validation.</p>
     <div id="classes-list" class="rise" style="animation-delay:.1s"></div>
   </div>
 </div>
 
 <!-- UNE CLASSE -->
-<div id="screen-class" class="screen">
-  <div class="wrap">
-    <button class="back-btn rise" id="btn-class-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
-    <h1 class="page-title rise" id="class-title" style="animation-delay:.03s"></h1>
+<div id="screen-class" class="screen a-entete hd-on"><div class="split-head page-head"><div class="head-row"></div></div>
+  <div class="hd-onglet hd-page"><div class="hd-row"><button class="back-btn" id="btn-class-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>Retour</button><div class="hd-titres"><h1 class="page-title hd-t" id="class-title"></h1></div><div class="hd-act"></div></div><div class="hd-plus"></div></div><div class="wrap">
     <div id="class-inner" class="rise" style="animation-delay:.08s"></div>
   </div>
 </div>
 
 <!-- LECTURE D'UN CHAPITRE PARTAGÉ -->
-<div id="screen-shared" class="screen">
-  <div class="wrap">
-    <button class="back-btn rise" id="btn-shared-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
-    <h1 class="page-title rise" id="shared-title" style="animation-delay:.03s"></h1>
-    <p class="page-sub rise" id="shared-sub" style="animation-delay:.06s"></p>
+<div id="screen-shared" class="screen a-entete hd-on"><div class="split-head page-head"><div class="head-row"></div></div>
+  <div class="hd-onglet hd-page"><div class="hd-row"><button class="back-btn" id="btn-shared-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>Retour</button><div class="hd-titres"><h1 class="page-title hd-t" id="shared-title"></h1></div><div class="hd-act"></div></div><div class="hd-plus"><p class="page-sub hd-sous" id="shared-sub" style="animation-delay:.06s"></p></div></div><div class="wrap">
     <div id="shared-inner" class="rise" style="animation-delay:.1s"></div>
   </div>
 </div>
@@ -2784,19 +2761,12 @@ html[data-mode="sombre"] :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal
 <!-- AUTEURS -->
 <!-- RECHERCHE -->
 <!-- EMPLOI DU TEMPS -->
-<div id="screen-edt" class="screen">
-  <div class="wrap">
-    <button class="back-btn rise" id="btn-edt-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
-    <div class="edt-titlerow rise" style="animation-delay:.03s">
-      <h1 class="page-title" style="margin:0">Emploi du temps</h1>
-      <button class="icon-btn" data-entete id="edt-add" aria-label="Ajouter un cours ou un devoir">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-      </button>
-      <button class="icon-btn" data-entete id="edt-link" aria-label="Lien de l'emploi du temps">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>
-      </button>
-    </div>
-    <div class="edt-ctrl rise" style="animation-delay:.05s">
+<div id="screen-edt" class="screen a-entete hd-on"><div class="split-head page-head"><div class="head-row"><button class="back-btn" id="btn-edt-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>Retour</button></div></div>
+  <div class="hd-onglet"><div class="hd-row"><h1 class="hd-t">Agenda</h1><div class="hd-act"><button class="icon-btn" data-entete="" id="edt-add" aria-label="Ajouter un cours ou un devoir">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+      </button><button class="icon-btn" data-entete="" id="edt-link" aria-label="Lien de l'emploi du temps">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"></path><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"></path></svg>
+      </button></div></div><div class="hd-plus"><div class="edt-ctrl rise" style="animation-delay:.05s">
     <div class="seg" id="edt-seg">
       <button class="seg-opt active" data-mode="week">Semaine</button>
       <button class="seg-opt" data-mode="day">Jour</button>
@@ -2806,6 +2776,9 @@ html[data-mode="sombre"] :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal
       <div class="edt-week" id="edt-week"></div>
       <button class="edt-arrow" id="edt-next" aria-label="Suivant">→</button>
     </div>
+    </div></div></div><div class="wrap">
+    <div class="edt-titlerow rise" style="animation-delay:.03s">
+      <h1 class="page-title" style="margin:0">Emploi du temps</h1>
     </div>
     <div id="edt-body"></div>
   </div>
@@ -2876,27 +2849,22 @@ html[data-mode="sombre"] :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal
   </div>
 </div>
 
-<div id="screen-search" class="screen">
-  <div class="wrap">
-    <button class="back-btn rise" id="btn-search-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
-    <h1 class="page-title rise" style="animation-delay:.03s">Rechercher</h1>
+<div id="screen-search" class="screen a-entete hd-on"><div class="split-head page-head"><div class="head-row"></div></div>
+  <div class="hd-onglet hd-page"><div class="hd-row"><button class="back-btn" id="btn-search-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>Retour</button><div class="hd-titres"><h1 class="page-title hd-t">Rechercher</h1></div><div class="hd-act"></div></div><div class="hd-plus"></div></div><div class="wrap">
     <div class="search-box rise" style="animation-delay:.06s">
-      <svg class="search-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-      <input type="text" id="search-input" placeholder="Une notion, un auteur, un mot-clé…" autocomplete="off"/>
+      <svg class="search-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+      <input type="text" id="search-input" placeholder="Une notion, un auteur, un mot-clé…" autocomplete="off">
       <button class="search-clear" id="search-clear" aria-label="Effacer">✕</button>
     </div>
     <div id="search-results"></div>
   </div>
 </div>
 
-<div id="screen-lexique" class="screen">
-  <div class="wrap">
-    <button class="back-btn rise" id="btn-lex-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
-    <h1 class="page-title rise" style="animation-delay:.03s">Lexique</h1>
-    <div class="lex-sous rise" id="lex-sous" style="animation-delay:.05s"></div>
+<div id="screen-lexique" class="screen a-entete hd-on"><div class="split-head page-head"><div class="head-row"></div></div>
+  <div class="hd-onglet hd-page"><div class="hd-row"><button class="back-btn" id="btn-lex-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>Retour</button><div class="hd-titres"><h1 class="page-title hd-t">Lexique</h1></div><div class="hd-act"></div></div><div class="hd-plus"><div class="lex-sous hd-sous" id="lex-sous" style="animation-delay:.05s"></div></div></div><div class="wrap">
     <div class="search-box rise" style="animation-delay:.07s">
-      <svg class="search-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-      <input type="text" id="lex-input" placeholder="Filtrer les termes…" autocomplete="off"/>
+      <svg class="search-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+      <input type="text" id="lex-input" placeholder="Filtrer les termes…" autocomplete="off">
       <button class="search-clear" id="lex-clear" aria-label="Effacer">✕</button>
     </div>
     <div class="lex-lettres" id="lex-lettres"></div>
@@ -2904,35 +2872,32 @@ html[data-mode="sombre"] :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal
   </div>
 </div>
 
-<div id="screen-sites" class="screen">
-  <div class="wrap">
-    <button class="back-btn rise" id="btn-sites-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
+<div id="screen-sites" class="screen a-entete hd-on"><div class="split-head page-head"><div class="head-row"><button class="back-btn" id="btn-sites-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>Retour</button></div></div>
+  <div class="hd-onglet"><div class="hd-row"><h1 class="hd-t">Liens</h1><div class="hd-act"></div></div><div class="hd-plus"><div class="seg liens-seg rise" style="animation-delay:.04s"><button type="button" class="seg-opt active" data-liens="sites">Mes sites</button><button type="button" class="seg-opt" data-liens="classes">Classes</button></div></div></div><div class="wrap">
     <h1 class="page-title rise" style="animation-delay:.03s">Liens</h1>
-    <div class="seg liens-seg rise" style="animation-delay:.04s"><button type="button" class="seg-opt active" data-liens="sites">Mes sites</button><button type="button" class="seg-opt" data-liens="classes">Classes</button></div>
     <div class="lex-sous rise" style="animation-delay:.05s">Tes liens utiles, à un geste</div>
     <div id="sites-liste" class="rise" style="animation-delay:.07s"></div>
   </div>
 </div>
-<div id="screen-mesdevoirs" class="screen">
-  <div class="wrap">
-    <button class="back-btn rise" id="btn-mesdevoirs-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
+<div id="screen-mesdevoirs" class="screen a-entete hd-on"><div class="split-head page-head"><div class="head-row"><button class="back-btn" id="btn-mesdevoirs-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>Retour</button></div></div>
+  <div class="hd-onglet"><div class="hd-row"><h1 class="hd-t">Devoirs</h1><div class="hd-act"><button class="memo-fab" id="btn-memo" aria-label="Mémo : tâches et notes">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l2 2 4-4"></path><rect x="4" y="4" width="16" height="16" rx="3"></rect></svg>
+      <span class="memo-fab-badge" id="memo-badge" hidden=""></span>
+    </button></div></div><div class="hd-plus"><div class="hd-stats" id="hd-stats"><div><b>0</b><small>contrôle</small></div><div><b>0</b><small>rendu</small></div><div><small>prochain</small><b>–</b></div></div></div></div><div class="wrap">
     <h1 class="page-title rise" style="animation-delay:.03s">Mes devoirs</h1>
     <div class="lex-sous rise" style="animation-delay:.05s">Tes contrôles, tes rendus et tes notes, semaine par semaine</div>
-    <div id="home-know" class="rise" style="animation-delay:.07s"></div>
+    <div id="home-know" class="rise" style="animation-delay:.07s"><div class="etat-vide"><span class="vide-ic"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"></rect><path d="M8 3v4M16 3v4M3 10h18"></path></svg></span><div class="vide-t">Rien à venir</div><div class="vide-s">Pose un devoir, un contrôle ou une note sur un cours de ton emploi du temps, ou touche le + en haut. Il apparaîtra ici.</div></div></div>
   </div>
 </div>
-<div id="screen-index" class="screen">
-  <div class="wrap">
-    <button class="back-btn rise" id="btn-idx-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
-    <h1 class="page-title rise" style="animation-delay:.03s">Index</h1>
-    <div class="lex-sous rise" id="idx-sous" style="animation-delay:.05s">Tes auteurs et tes notions, de la L1 à la L3</div>
+<div id="screen-index" class="screen a-entete hd-on"><div class="split-head page-head"><div class="head-row"></div></div>
+  <div class="hd-onglet hd-page"><div class="hd-row"><button class="back-btn" id="btn-idx-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>Retour</button><div class="hd-titres"><h1 class="page-title hd-t">Index</h1></div><div class="hd-act"></div></div><div class="hd-plus"><div class="lex-sous hd-sous" id="idx-sous" style="animation-delay:.05s">Tes auteurs et tes notions, de la L1 à la L3</div></div></div><div class="wrap">
     <div class="seg idx-seg rise" id="idx-genre" style="animation-delay:.06s">
       <button type="button" class="seg-opt active" data-g="auteur">Auteurs</button>
       <button type="button" class="seg-opt" data-g="notion">Notions</button>
     </div>
     <div class="search-box rise" style="animation-delay:.07s">
-      <svg class="search-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-      <input type="text" id="idx-input" placeholder="Filtrer…" autocomplete="off"/>
+      <svg class="search-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+      <input type="text" id="idx-input" placeholder="Filtrer…" autocomplete="off">
       <button class="search-clear" id="idx-clear" aria-label="Effacer">✕</button>
     </div>
     <button type="button" class="idx-multi rise" id="idx-multi" style="animation-delay:.08s"><span class="sw"></span>Seulement ce que j'ai vu sur plusieurs années</button>
@@ -2942,24 +2907,16 @@ html[data-mode="sombre"] :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal
 </div>
 
 <!-- AUTEURS -->
-<div id="screen-auteurs" class="screen">
-  <div class="wrap">
-    <button class="back-btn rise" id="btn-auteurs-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
-    <div class="page-eyebrow rise" id="auteurs-eyebrow" style="animation-delay:.03s"></div>
-    <h1 class="page-title rise" style="animation-delay:.06s">Les auteurs</h1>
-    <p class="page-sub rise" id="auteurs-sub" style="animation-delay:.09s"></p>
+<div id="screen-auteurs" class="screen a-entete hd-on"><div class="split-head page-head"><div class="head-row"></div></div>
+  <div class="hd-onglet hd-page"><div class="hd-row"><button class="back-btn" id="btn-auteurs-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>Retour</button><div class="hd-titres"><div class="page-eyebrow" id="auteurs-eyebrow" style="animation-delay:.03s"></div><h1 class="page-title hd-t">Les auteurs</h1></div><div class="hd-act"></div></div><div class="hd-plus"><p class="page-sub hd-sous" id="auteurs-sub" style="animation-delay:.09s"></p></div></div><div class="wrap">
     <div id="auteurs-inner"></div>
   </div>
 </div>
 
 <!-- CHOIX DU QCM -->
-<div id="screen-qcmchoix" class="screen">
-  <div class="wrap">
-    <button class="head-search qc-plus rise" id="btn-qcmchoix-add" type="button" aria-label="Ajouter" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button>
-    <button class="back-btn rise" id="btn-qcmchoix-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>
-    <div class="page-eyebrow rise" id="qcmchoix-eyebrow" style="animation-delay:.03s"></div>
-    <h1 class="page-title rise" id="qcmchoix-titre" style="animation-delay:.06s">QCM</h1>
-    <p class="page-sub rise" id="qcmchoix-sub" style="animation-delay:.09s">Un QCM réussi est validé. Chaque session reprend d'abord ceux qui ne le sont pas encore.</p>
+<div id="screen-qcmchoix" class="screen a-entete hd-on"><div class="split-head page-head"><div class="head-row"></div></div>
+  <div class="hd-onglet hd-page"><div class="hd-row"><button class="back-btn" id="btn-qcmchoix-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>Retour</button><div class="hd-titres"><div class="page-eyebrow" id="qcmchoix-eyebrow" style="animation-delay:.03s"></div><h1 class="page-title hd-t" id="qcmchoix-titre">QCM</h1></div><div class="hd-act"></div></div><div class="hd-plus"><p class="page-sub hd-sous" id="qcmchoix-sub" style="animation-delay:.09s">Un QCM réussi est validé. Chaque session reprend d'abord ceux qui ne le sont pas encore.</p></div></div><div class="wrap">
+    <button class="head-search qc-plus rise" id="btn-qcmchoix-add" type="button" aria-label="Ajouter" hidden=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></button>
     <div id="qcmchoix-inner"></div>
   </div>
 </div>
@@ -6600,49 +6557,13 @@ Object.keys(FAB_ACTIONS).forEach(id=>{
   b.setAttribute("data-entete",""); b.setAttribute("aria-label", FAB_ACTIONS[id].label);
   b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>';
   b.addEventListener("click",()=>{ haptic(); FAB_ACTIONS[id].fn(); });
-  const premier = w.querySelector("[data-entete]");
-  if(premier) premier.before(b); else w.appendChild(b);
+  const zone = w.parentNode.querySelector(":scope > .hd-onglet .hd-act") || w;   // les pages à en-tête coloré : directement dedans
+  const premier = zone.querySelector("[data-entete]");
+  const memo = zone.querySelector(":scope > .memo-fab");   // le Mémo reste le premier
+  if(zone !== w){ if(memo) memo.after(b); else zone.prepend(b); } else if(premier) premier.before(b); else w.appendChild(b);
 });
 document.querySelectorAll(".screen").forEach(poserEntete);
-// ══════════ EN-TÊTES COMPACTS DES PAGES DU BAS (Agenda, Devoirs, Liens) ══════════
-// Titre et boutons sur une ligne, dans un bandeau coloré comme l'accueil ; ce qui pilote la page juste dessous.
-const HD_ONGLETS = { edt:"Agenda", mesdevoirs:"Devoirs", sites:"Liens", classes:"Liens" };
-function poserHdOnglet(id){
-  const scr = document.getElementById("screen-" + id); if(!scr || scr.querySelector(":scope > .hd-onglet")) return;
-  const wrap = scr.querySelector(":scope > .wrap"); if(!wrap) return;
-  const hd = el("div","hd-onglet"); hd.innerHTML = `<div class="hd-row"><h1 class="hd-t">${HD_ONGLETS[id]}</h1><div class="hd-act"></div></div><div class="hd-plus"></div>`;
-  scr.insertBefore(hd, wrap);
-  scr.classList.add("hd-on");
-  const act = hd.querySelector(".hd-act");
-  // les boutons de la page (+, lien) quittent la barre fine du haut pour l'en-tête
-  scr.querySelectorAll(".page-head [data-entete]").forEach(b=>act.appendChild(b));
-  const plus = hd.querySelector(".hd-plus");
-  if(id === "edt"){ const c = wrap.querySelector(".edt-ctrl"); if(c) plus.appendChild(c); }
-  if(id === "sites" || id === "classes"){ const sg = wrap.querySelector(".liens-seg"); if(sg) plus.appendChild(sg); }
-  if(id === "mesdevoirs"){ const st = el("div","hd-stats"); st.id = "hd-stats"; plus.appendChild(st); }
-}
-Object.keys(HD_ONGLETS).forEach(poserHdOnglet);
-// ══════════ LE MÊME EN-TÊTE SUR TOUTES LES AUTRES PAGES ══════════
-// Le titre (et son surtitre, sa phrase) passent dans le bandeau coloré, avec le retour et les boutons.
-// On déplace les éléments eux-mêmes : le code qui les remplit (par leur id) continue de marcher.
-function poserHdPage(id){
-  const scr = document.getElementById("screen-" + id); if(!scr || scr.querySelector(":scope > .hd-onglet")) return;
-  const wrap = scr.querySelector(":scope > .wrap"); if(!wrap) return;
-  const h1 = wrap.querySelector(".page-title"); if(!h1) return;
-  const hd = el("div","hd-onglet hd-page"); hd.innerHTML = `<div class="hd-row"><div class="hd-titres"></div><div class="hd-act"></div></div><div class="hd-plus"></div>`;
-  scr.insertBefore(hd, wrap); scr.classList.add("hd-on");
-  const row = hd.querySelector(".hd-row"), titres = hd.querySelector(".hd-titres"), act = hd.querySelector(".hd-act");
-  const back = scr.querySelector(":scope > .page-head .back-btn"); if(back) row.insertBefore(back, titres);
-  const eb = wrap.querySelector(".page-eyebrow"); if(eb){ eb.classList.remove("rise"); titres.appendChild(eb); }
-  h1.classList.remove("rise"); h1.removeAttribute("style"); h1.classList.add("hd-t"); titres.appendChild(h1);
-  const sous = wrap.querySelector(":scope > .page-sub, :scope > .lex-sous"); if(sous){ sous.classList.remove("rise"); sous.classList.add("hd-sous"); hd.querySelector(".hd-plus").appendChild(sous); }
-  scr.querySelectorAll(".page-head [data-entete]").forEach(b=>act.appendChild(b));
-  wrap.querySelectorAll(":scope > [data-entete]").forEach(b=>act.appendChild(b));
-  // Cours : blocs / liste, à côté des boutons
-  const vue = wrap.querySelector(".vue-seg"); if(vue) act.appendChild(vue);
-  const tete = wrap.querySelector(".vue-tete"); if(tete && !tete.children.length) tete.remove();
-}
-["semchoice","subjects","planning","devoirs","class","shared","search","lexique","index","auteurs","qcmchoix"].forEach(poserHdPage);
+// Les en-têtes colorés des pages (titre, retour, boutons) sont écrits directement dans le HTML.
 
 // la semaine affichée, sous les réglages de l'agenda : un point les jours de cours, un appui ouvre le jour
 function majHdSemaine(){
@@ -6668,7 +6589,6 @@ function majHdSemaine(){
 }
 
 // le bouton mémo est « fixed » : il sort du contenu qui glisse, sinon il glisserait avec lui
-(function(){ const m = document.getElementById("btn-memo"), d = document.querySelector("#screen-mesdevoirs .hd-act"); if(m && d){ m.setAttribute("aria-label","Mémo : tâches et notes"); d.insertBefore(m, d.firstChild); } })();
 // Pas de jeu en bas des pages : la marge du bas sert à respirer quand la page défile.
 // Si tout tient presque sur l'écran, cette marge ne doit pas, à elle seule, faire défiler la page.
 // Avec le bouton flottant, on lui laisse sa place ; sans lui, juste la barre d'accueil de l'iPhone.
