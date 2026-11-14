@@ -2566,6 +2566,14 @@ html[data-mode="sombre"] :is(.sr-carte,.lex-item,.memo2-carte,.dev-card,.mode-ca
 .ct-fiche-m p+p{margin-top:8px;}
 .ct-fiche-v{font-size:13.5px;color:var(--text-soft);font-weight:600;}
 .ct-fiche-go{margin-top:10px;border:none;background:none;padding:4px 0;color:var(--accent);font:inherit;font-weight:800;font-size:13.5px;cursor:pointer;}
+
+/* Devoirs et Liens : un en-tête aussi court que celui de l'Agenda (une ligne sous le titre) */
+.hd-stats{gap:8px !important;margin-top:12px !important;}
+.hd-stats div{display:flex;align-items:center;justify-content:center;gap:5px;height:38px;padding:0 8px !important;border-radius:12px !important;white-space:nowrap;flex:1 1 auto !important;min-width:0;}
+.hd-stats b{display:inline !important;font-size:16px !important;}
+.hd-stats small{font-size:13px !important;font-weight:700 !important;opacity:.9;}
+.hd-plus .liens-seg{margin:12px 0 0 !important;padding:3px !important;}
+.hd-plus .liens-seg .seg-opt{padding:7px 10px !important;font-size:13.5px !important;}
 </style>
 </head>
 <body>
@@ -9020,7 +9028,7 @@ function renderKnowBlock(){
       const nc = reste.filter(e=>ty(e) === "controle").length, nr = reste.filter(e=>ty(e) === "devoir").length;
       const pro = reste.filter(e=>ty(e) === "controle" || ty(e) === "devoir").sort((a,b)=>a.start - b.start)[0];
       const jp = pro ? hmJoursAvant(pro.start) : null;
-      st.innerHTML = `<div><b>${nc}</b><small>contrôle${nc > 1 ? "s" : ""} à venir</small></div><div><b>${nr}</b><small>rendu${nr > 1 ? "s" : ""}</small></div><div><b>${pro ? (jp <= 0 ? "Auj." : "J-" + jp) : "–"}</b><small>le prochain</small></div>`;
+      st.innerHTML = `<div><b>${nc}</b><small>contrôle${nc > 1 ? "s" : ""}</small></div><div><b>${nr}</b><small>rendu${nr > 1 ? "s" : ""}</small></div><div><small>prochain</small><b>${pro ? (jp <= 0 ? "auj." : "J-" + jp) : "–"}</b></div>`;
     } }
   if(!alerts.length){
     box.innerHTML = vide("calendrier", "Rien à venir", "Pose un devoir, un contrôle ou une note sur un cours de ton emploi du temps, ou touche le + en haut. Il apparaîtra ici.");
