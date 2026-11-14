@@ -2382,9 +2382,43 @@ html:not(.calme) .cas{animation:casUp .5s cubic-bezier(.2,.9,.25,1) both;animati
 .fin-chap.vu .fin-rv.fait .fin-num{animation:qzPop .55s cubic-bezier(.3,1.6,.5,1);}
 .fin-chap.vu{animation:casUp .5s cubic-bezier(.2,.9,.25,1);}
 @media(prefers-reduced-motion:reduce){.cas,.fin-chap.vu,.fin-chap.vu .fin-num,.tb-mid.boing .tb-rond{animation:none !important;}.tb-ind,.tb svg{transition:none;}}
+
+/* objectif du jour */
+.hm-obj{display:flex;align-items:center;gap:6px;margin-top:14px;}
+.hm-obj span{flex:1;font-size:13px;font-weight:800;color:var(--text-soft);}
+.hm-obj button{width:48px;height:32px;border-radius:11px;border:none;background:color-mix(in srgb,var(--text) 6%,transparent);color:var(--text);font:inherit;font-weight:800;font-size:13.5px;cursor:pointer;transition:background .25s,color .25s,box-shadow .25s;}
+.hm-obj button.on{background:var(--accent);color:#fff;box-shadow:0 6px 14px color-mix(in srgb,var(--accent) 35%,transparent);}
+.hm-bravo{margin-top:12px;padding:11px 13px;border-radius:14px;background:color-mix(in srgb,var(--c-g) 14%,transparent);color:var(--c-g);font-weight:800;font-size:13.5px;animation:qzPop .5s cubic-bezier(.3,1.6,.5,1);}
+.hm-obj+.hm-cta,.hm-bravo+.hm-cta{margin-top:12px;}
+/* écran de démarrage */
+#demarrage{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:var(--bg);transition:opacity .45s ease;}
+#demarrage.fin{opacity:0;pointer-events:none;}
+#demarrage .dm-logo{font-size:84px;line-height:1;animation:dmIn 1s cubic-bezier(.3,1.5,.5,1) both;filter:drop-shadow(0 14px 28px var(--accent-glow));}
+#demarrage.fin .dm-logo{transform:scale(1.25);transition:transform .5s ease;}
+#demarrage .dm-bas{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 26px);text-align:center;font-size:11px;font-weight:600;color:var(--text-mute);letter-spacing:.01em;}
+@keyframes dmIn{0%{transform:scale(.55) rotate(-25deg);opacity:0;}100%{transform:none;opacity:1;}}
+/* ouvrir une matière : la carte devient l'en-tête */
+.mt-morph{position:fixed;z-index:70;overflow:hidden;pointer-events:none;transition:left .46s cubic-bezier(.2,.9,.25,1),top .46s cubic-bezier(.2,.9,.25,1),width .46s cubic-bezier(.2,.9,.25,1),height .46s cubic-bezier(.2,.9,.25,1),border-radius .46s cubic-bezier(.2,.9,.25,1);}
+html.morph-en-cours #mt-inner .mt-head{visibility:hidden;}
+/* glisser depuis le bord gauche pour revenir */
+.screen.active.au-doigt{transition:none !important;box-shadow:-12px 0 30px rgba(0,0,0,.14);}
+.screen.active.relache{transition:transform .32s cubic-bezier(.2,.9,.25,1) !important;}
+@media(prefers-reduced-motion:reduce){#demarrage .dm-logo,.hm-bravo{animation:none;}.mt-morph{transition:none;}}
 </style>
 </head>
 <body>
+<div id="demarrage" aria-hidden="true"><div class="dm-logo">💫</div><div class="dm-bas">© 2026 Révisioner. Tous droits réservés.</div></div>
+<script>
+// à l'ouverture de l'app seulement (pas en actualisant la même page) ; s'efface tout seul
+(function(){
+  var d = document.getElementById("demarrage");
+  try{ var t = localStorage.getItem("revision_theme_v1"); if(t) document.documentElement.setAttribute("data-theme", t); }catch(e){}
+  var vu = false; try{ vu = sessionStorage.getItem("revision_demarrage") === "1"; sessionStorage.setItem("revision_demarrage","1"); }catch(e){}
+  if(vu){ d.remove(); return; }
+  var reduit = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  setTimeout(function(){ d.classList.add("fin"); setTimeout(function(){ d.remove(); }, 600); }, reduit ? 300 : 1200);
+})();
+</script>
 
 <!-- PSEUDO (identification) -->
 <div id="screen-login" class="screen">
@@ -9076,7 +9110,7 @@ function makeEcueCard(s){
       </div>
       <span class="ecue-arrow">→</span>
     </div>`;
-  card.addEventListener("click",()=>{ document.documentElement.dataset.mtDepuis = "subjects"; ouvrirMatiere(s.id); });
+  card.addEventListener("click",()=>{ document.documentElement.dataset.mtDepuis = "subjects"; ouvrirMatiere(s.id, null, card); });
   // les chapitres ajoutés depuis la dernière visite : un bandeau rose en bas de la carte
   if(nv){
     card.classList.add("a-nouveau");
@@ -9191,7 +9225,9 @@ function hmSerie(){
   return { n, fait, sept };
 }
 
-const HM_OBJECTIF = 25;     // une série : 25 questions
+// objectif du jour, au choix : 10, 25 ou 50 questions (réglage de chaque appareil)
+const OBJ_KEY = "revision_objectif_v1";
+function hmObjectif(){ let v = 25; try{ v = +localStorage.getItem(OBJ_KEY) || 25; }catch(e){} return [10,25,50].includes(v) ? v : 25; }
 let HM_DERNIER = "";
 function renderAccueil(anim){
   const head = document.getElementById("hm-hello"); if(!head) return;
@@ -9222,6 +9258,7 @@ function renderAccueil(anim){
   mats.forEach(m=>{ const c = hmChapitres(m), q = hmQcm(m); chT += c.tot; chL += c.lus; qT += q.tot; qO += q.ok; err += q.err; });
   const t0 = today0();
   const auj = Object.keys(SRS).filter(k=>{ const c = SRS[k]; return c && c.last === t0; }).length;
+  const HM_OBJECTIF = hmObjectif();
   const fait = Math.min(auj, HM_OBJECTIF);
   const serie = hmSerie();
   const pc = (a,b)=>b ? Math.round(a / b * 100) : 0;
@@ -9240,6 +9277,8 @@ function renderAccueil(anim){
         <div class="hm-sv"><div class="l">QCM validés<em>${pc(qO,qT)} %</em></div><div class="hm-tr hm-doux-v"><i data-w="${pc(qO,qT)}" style="background:var(--accent)"></i></div></div>
         <div class="hm-sv"><div class="l">À revoir<em>${err}</em></div><div class="hm-tr hm-doux-r"><i data-w="${Math.min(100, err * 4)}" style="background:var(--c-r)"></i></div></div>
       </div></div>
+    <div class="hm-obj"><span>Mon objectif</span>${[10,25,50].map(v=>`<button type="button" class="${v === HM_OBJECTIF ? "on" : ""}" data-obj="${v}">${v}</button>`).join("")}</div>
+    ${auj >= HM_OBJECTIF ? `<div class="hm-bravo">✓ Objectif atteint. Tout le reste, c'est du bonus.</div>` : ""}
     <button type="button" class="hm-cta hm-press" id="hm-go">${ctaTxt}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
     <div class="hm-serie"><span class="f"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 3.5 5 5.5 5 10.5A5 5 0 0 1 7 13c0-2 .8-3.3 2-4.5.2 1.6 1 2.6 2 3 0-3.5-.8-6.3 1-9.5z"/></svg></span>${serieTxt}
       <span class="hm-dots">${serie.sept.map(x=>`<i class="${x ? "" : "o"}"></i>`).join("")}</span></div>`;
@@ -9248,6 +9287,9 @@ function renderAccueil(anim){
   if(neuf){
     HM_DERNIER = jour; boxJ.innerHTML = jour;
     document.getElementById("hm-go").addEventListener("click",()=>{ haptic(); startGlobalSession(); });
+    boxJ.querySelectorAll("[data-obj]").forEach(b=>b.addEventListener("click",()=>{
+      haptic(); try{ localStorage.setItem(OBJ_KEY, b.dataset.obj); }catch(e){} renderAccueil(true);
+    }));
   }
   if(neuf || anim){
     const arc = boxJ.querySelector(".arc"), num = boxJ.querySelector(".hm-rc b"), bars = boxJ.querySelectorAll(".hm-tr i");
@@ -9360,7 +9402,7 @@ function renderAccueil(anim){
       const b = el("button","hm-mi hm-press"); b.type = "button";
       b.innerHTML = `<span class="hm-ic hm-doux-${c}">${ICO(HM_IC[hmHash(m.id + "i") % HM_IC.length])}</span><span class="t"><span class="t1">${esc(m.title)}</span><span class="t2">${esc(sous)}</span></span>
         <span class="hm-pr"><svg viewBox="0 0 42 42"><circle cx="21" cy="21" r="17" fill="none" stroke="color-mix(in srgb,${HM_HEX[c]} 16%,transparent)" stroke-width="5"/><circle cx="21" cy="21" r="17" fill="none" stroke="${HM_HEX[c]}" stroke-width="5" stroke-linecap="round" stroke-dasharray="106.8" stroke-dashoffset="${106.8 * (1 - p / 100)}"/></svg><b>${q.tot ? p : "–"}</b></span>`;
-      b.addEventListener("click",()=>{ haptic(); document.documentElement.dataset.mtDepuis = "semestres"; ouvrirMatiere(m.id); });
+      b.addEventListener("click",()=>{ haptic(); document.documentElement.dataset.mtDepuis = "semestres"; ouvrirMatiere(m.id, null, b); });
       card.appendChild(b);
     });
     boxM.appendChild(card);
@@ -9418,8 +9460,10 @@ let MATIERE_OUVERTE = null, MT_ONGLET = "cm";
 const MT_GRAD = { v:"linear-gradient(160deg,color-mix(in srgb,var(--accent) 85%,#000),var(--accent) 50%,var(--accent-2))",
   b:"linear-gradient(160deg,#1f63d6,#3a86ff 50%,#7fb0ff)", g:"linear-gradient(160deg,#0b8a5d,#14b87e 50%,#5fd9a9)",
   y:"linear-gradient(160deg,#e07b00,#f5a524 50%,#ffc766)", r:"linear-gradient(160deg,#d12a6b,#ff4d8d 50%,#ff8ab4)" };
-function ouvrirMatiere(id, onglet){
+function ouvrirMatiere(id, onglet, depuis){
   const m = SUBJECTS.find(x=>x.id === id); if(!m) return;
+  const reduit = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const r0 = depuis && !reduit ? depuis.getBoundingClientRect() : null;
   MATIERE_OUVERTE = id; curSubj = m; curSemestre = SEMESTRES[id];
   if(onglet) MT_ONGLET = onglet;
   else if(!(m.cm||[]).length && (m.td||[]).length) MT_ONGLET = "td";
@@ -9427,6 +9471,15 @@ function ouvrirMatiere(id, onglet){
   renderMatiere();
   cascade(document.getElementById("mt-inner"), ".mt-kpi, .mt-reprise, .mt-seg, .mt-ch");
   showScreen("matiere");
+  if(r0 && r0.width){
+    // la carte touchée grandit jusqu'à devenir l'en-tête de la page
+    const wrap = document.querySelector("#screen-matiere > .wrap"); if(wrap) wrap.classList.remove("glisse-av","glisse-ar");
+    const head = document.querySelector("#mt-inner .mt-head"); const r1 = head.getBoundingClientRect();
+    const f = el("div","mt-morph"); f.style.cssText = `left:${r0.left}px;top:${r0.top}px;width:${r0.width}px;height:${r0.height}px;border-radius:22px;background:${head.style.background}`;
+    document.body.appendChild(f); document.documentElement.classList.add("morph-en-cours");
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{ f.style.left = r1.left + "px"; f.style.top = r1.top + "px"; f.style.width = r1.width + "px"; f.style.height = r1.height + "px"; f.style.borderRadius = getComputedStyle(head).borderRadius; }));
+    setTimeout(()=>{ document.documentElement.classList.remove("morph-en-cours"); f.style.transition = "opacity .2s"; f.style.opacity = 0; setTimeout(()=>f.remove(), 220); }, 470);
+  }
   window.scrollTo(0, 0);
 }
 function renderMatiere(){
@@ -12403,7 +12456,8 @@ function showResults(){
     <h2>${titre}${n && ok / n >= .5 ? " !" : ""}</h2><p>${esc(doux)}</p>
     <div class="hm-card qz-bilan"><span class="hm-ic hm-doux-g" style="flex-shrink:0">${'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M5 12l5 5 9-10"/></svg>'}</span><span><span class="t1">${ok} sur ${n}</span><span class="t2">${esc(nomSerie)}</span></span></div>
     ${aRevoir.length ? `<div class="results-detail"><div class="results-detail-label">À revoir</div>${aRevoir.map(a=>`<div class="result-row ko"><span class="result-ic">✕</span><span class="result-q">${esc(a.q)}</span></div>`).join("")}</div>` : ""}`;
-  if(n && ok / n >= .5) setTimeout(confettis, 250);
+  if(n && ok / n >= .5){ setTimeout(confettis, 250);
+    if(navigator.vibrate){ try{ navigator.vibrate([12,70,12,70,20]); }catch(e){} } else { haptic(); setTimeout(haptic, 130); setTimeout(haptic, 260); } }
   const row = el("div");
   const prim = (txt, fn)=>{ const b = el("button","hm-cta hm-press"); b.type = "button"; b.textContent = txt; b.addEventListener("click",()=>{ haptic(); fn(); }); row.appendChild(b); };
   const sec = (txt, fn)=>{ const b = el("button","qz-sec hm-press"); b.type = "button"; b.textContent = txt; b.addEventListener("click",()=>{ haptic(); fn(); }); row.appendChild(b); };
@@ -12514,7 +12568,8 @@ function feuilleReponse(cur, question, body){
     inn.appendChild(nb);
   }
   body.appendChild(veil); body.appendChild(sh);
-  if(navigator.vibrate) try{ navigator.vibrate(ok ? 15 : [30,40,30]); }catch(e){}
+  if(navigator.vibrate){ try{ navigator.vibrate(ok ? 15 : [30,40,30]); }catch(e){} }
+  else { haptic(); if(!ok) setTimeout(haptic, 140); }
 }
 function confettis(){
   if(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -13982,6 +14037,47 @@ async function doLogin(){
     }
   }
 }
+
+// ── Glisser depuis le bord gauche pour revenir (comme sur l'iPhone) ──
+// Sur les pages qui ont un bouton retour ; pas pendant une série de QCM, pour ne pas la quitter par erreur.
+(function(){
+  let x0 = null, y0 = null, dx = 0, scr = null, actif = false;
+  const boutonRetour = ()=>{
+    const id = document.documentElement.getAttribute("data-screen");
+    if(!id || id === "session" || document.documentElement.classList.contains("tabbar-on")) return null;
+    if(id === "matiere") return document.getElementById("mt-bk");
+    const cands = [...document.querySelectorAll(".page-head .back-btn, #screen-" + id + " .back-btn, #screen-" + id + " .nav-back, #screen-" + id + " .psy-back")];
+    return cands.find(b=>b.offsetParent && !b.closest("[hidden]")) || null;
+  };
+  addEventListener("touchstart", e=>{
+    const t = e.touches[0]; if(e.touches.length > 1 || t.clientX > 22) return;
+    if(e.target && e.target.closest && e.target.closest("#somm-flot, .sheet-overlay.open, input, textarea")) return;
+    if(!boutonRetour()) return;
+    x0 = t.clientX; y0 = t.clientY; dx = 0; actif = false; scr = document.querySelector(".screen.active");
+  }, { passive:true });
+  addEventListener("touchmove", e=>{
+    if(x0 === null || !scr) return;
+    const t = e.touches[0]; dx = Math.max(0, t.clientX - x0);
+    if(!actif){ if(Math.abs(t.clientY - y0) > 14 && Math.abs(t.clientY - y0) > dx){ x0 = null; return; } if(dx < 8) return; actif = true; scr.classList.add("au-doigt"); }
+    scr.style.transform = "translateX(" + dx + "px)";
+  }, { passive:true });
+  const fin = ()=>{
+    if(x0 === null || !scr){ x0 = null; return; }
+    x0 = null; const s = scr; scr = null;
+    if(!actif) return;
+    s.classList.remove("au-doigt");
+    if(dx > innerWidth * .33){
+      const b = boutonRetour();
+      s.classList.add("relache"); s.style.transform = "translateX(" + innerWidth + "px)";
+      setTimeout(()=>{ s.classList.remove("relache"); s.style.transform = ""; if(b) b.click(); }, 200);
+    } else {
+      s.classList.add("relache"); s.style.transform = "";
+      setTimeout(()=>s.classList.remove("relache"), 340);
+    }
+  };
+  addEventListener("touchend", fin, { passive:true });
+  addEventListener("touchcancel", fin, { passive:true });
+})();
 function afterLogin(row){
   updatePersonalText();   // le pseudo est connu : on ajuste les messages
   if(!row) applyContent(null);
