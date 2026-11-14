@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
 <meta name="theme-color" content="#fdf5f8" media="(prefers-color-scheme: light)"/>
 <meta name="theme-color" content="#1a0d15" media="(prefers-color-scheme: dark)"/>
-<script>try{var m=localStorage.getItem("revision_mode_v1");if(m==="clair"||m==="sombre")document.documentElement.setAttribute("data-mode",m);}catch(e){}</script>
+<script>try{var tt=localStorage.getItem("revision_texte_v1");if(tt==="grand"||tt==="tresgrand")document.documentElement.classList.add("texte-"+tt);}catch(e){}try{var m=localStorage.getItem("revision_mode_v1");if(m==="clair"||m==="sombre")document.documentElement.setAttribute("data-mode",m);}catch(e){}</script>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -2574,6 +2574,19 @@ html[data-mode="sombre"] :is(.sr-carte,.lex-item,.memo2-carte,.dev-card,.mode-ca
 .hd-stats small{font-size:13px !important;font-weight:700 !important;opacity:.9;}
 .hd-plus .liens-seg{margin:12px 0 0 !important;padding:3px !important;}
 .hd-plus .liens-seg .seg-opt{padding:7px 10px !important;font-size:13.5px !important;}
+
+/* taille du texte : toute l'app grandit (pages, feuilles, barre du bas) */
+html.texte-grand .screen,html.texte-grand .sheet,html.texte-grand .qz-sheet,html.texte-grand .obj-feuille,html.texte-grand .tabbar{zoom:1.1;}
+html.texte-tresgrand .screen,html.texte-tresgrand .sheet,html.texte-tresgrand .qz-sheet,html.texte-tresgrand .obj-feuille,html.texte-tresgrand .tabbar{zoom:1.2;}
+/* mes sites : le petit bouton pour modifier */
+.st-tuile{position:relative;}
+.st-plus{position:absolute;top:10px;right:10px;padding:6px 8px;border-radius:10px;font-size:11px;font-weight:800;letter-spacing:1px;color:var(--text-mute);background:color-mix(in srgb,var(--text) 5%,transparent);}
+/* textes gris : un peu plus lisibles */
+html[data-theme="purple"]{--text-mute:#6c6585;}
+html[data-theme="girly"]{--text-mute:#7a5f6c;}
+@media(prefers-color-scheme:dark){html[data-theme="purple"]:not([data-mode="clair"]){--text-mute:#9086b3;}html[data-theme="girly"]:not([data-mode="clair"]){--text-mute:#b08a9c;}}
+html[data-theme="purple"][data-mode="sombre"]{--text-mute:#9086b3;}
+html[data-theme="girly"][data-mode="sombre"]{--text-mute:#b08a9c;}
 </style>
 </head>
 <body>
@@ -2586,7 +2599,10 @@ html[data-mode="sombre"] :is(.sr-carte,.lex-item,.memo2-carte,.dev-card,.mode-ca
   var vu = false; try{ vu = sessionStorage.getItem("revision_demarrage") === "1"; sessionStorage.setItem("revision_demarrage","1"); }catch(e){}
   if(vu){ d.remove(); return; }
   var reduit = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-  setTimeout(function(){ d.classList.add("fin"); setTimeout(function(){ d.remove(); }, 600); }, reduit ? 300 : 1200);
+  var t0 = Date.now(), fini = false;
+  function finir(){ if(fini) return; fini = true; d.classList.add("fin"); setTimeout(function(){ d.remove(); }, 600); }
+  window.addEventListener("load", function(){ setTimeout(finir, Math.max(0, (reduit ? 200 : 700) - (Date.now() - t0))); });
+  setTimeout(finir, 1600);
 })();
 </script>
 
@@ -3659,7 +3675,8 @@ function renderSites(){
     const t = el("button","st-tuile"); t.type = "button";
     const c = COUL[hmHash(nom) % COUL.length];
     const ini = nom.replace(/[^A-Za-zÀ-ÿ0-9]/g, "").slice(0, 2) || "•";
-    t.innerHTML = `<span class="st-ic hm-doux-${c}">${esc(ini.charAt(0).toUpperCase() + ini.slice(1).toLowerCase())}</span><b>${esc(nom)}</b><small>${esc(domaineDe(site.url))}</small>`;
+    t.innerHTML = `<span class="st-ic hm-doux-${c}">${esc(ini.charAt(0).toUpperCase() + ini.slice(1).toLowerCase())}</span><b>${esc(nom)}</b><small>${esc(domaineDe(site.url))}</small><span class="st-plus" role="button" aria-label="Modifier ${esc(nom)}">•••</span>`;
+    t.querySelector(".st-plus").addEventListener("click", ev=>{ ev.stopPropagation(); haptic(); editSite(i); });
     t.addEventListener("click",()=>{ if(t._long) { t._long = false; return; } haptic(); window.open(site.url, "_blank", "noopener"); });
     onLongPress(t, ()=>{ t._long = true; editSite(i); });
     grille.appendChild(t);
@@ -3670,7 +3687,7 @@ function renderSites(){
   box.appendChild(grille);
   if(sites.length){
     const h = el("div","fs-hint");
-    h.textContent = "Appui long sur un site pour le modifier ou le supprimer.";
+    h.textContent = "Touche ••• (ou appui long) pour modifier ou supprimer un site.";
     h.style.cssText = "margin:12px 4px 4px;text-align:center";
     box.appendChild(h);
   }
@@ -9721,7 +9738,8 @@ function placerTrait(){
   if(!t || !nav) return;
   if(!b || b.classList.contains("tb-mid")){ t.style.opacity = 0; return; }
   const r = b.getBoundingClientRect(), n = nav.getBoundingClientRect();
-  t.style.opacity = 1; t.style.transform = "translateX(" + (r.left - n.left + r.width / 2 - 14) + "px)";
+  const z = parseFloat(getComputedStyle(nav).zoom) || 1;   // taille du texte agrandie : la barre est zoomée
+  t.style.opacity = 1; t.style.transform = "translateX(" + ((r.left - n.left + r.width / 2) / z - 14) + "px)";
 }
 addEventListener("resize", ()=>requestAnimationFrame(placerTrait));
 // les cartes d'une page arrivent l'une après l'autre
@@ -10229,7 +10247,20 @@ try{
 async function ouvrirDepuisNotif(data){
   if(!data || !PSEUDO) return;
   // un rappel : la liste de mes devoirs, comme depuis l'accueil
-  if(data.type === "rappel"){ closePicker(); document.getElementById("dev-entry").click(); return; }
+  // un seul devoir : sa page (le contrôle et ses chapitres) ; sinon la liste des devoirs
+  if(data.type === "rappel"){
+    closePicker();
+    if(data.cle){
+      let e = null;
+      try{
+        if(String(data.cle).startsWith("jour|")) e = echeanceEv(data.cle);
+        else { if(!EDT.length) await loadEDT(); e = EDT.find(x=>evKey(x) === data.cle) || null; }
+      }catch(err){}
+      if(e && matiereDeNote(e, evNote(e) || {})){ openControle(e); return; }
+      if(e){ openEDTAt(e.start); return; }
+    }
+    document.getElementById("dev-entry").click(); return;
+  }
   // une étape de projet : la liste des étapes de ce projet
   if(data.type === "projet"){
     closePicker();
@@ -10306,6 +10337,24 @@ function ouvrirCompte(){
   });
   box.appendChild(segM);
   const hM = el("div","fs-hint compte-hint"); hM.style.marginBottom = "14px"; hM.textContent = "Auto suit le réglage de ton téléphone."; box.appendChild(hM);
+  // la taille du texte : toute l'app grandit d'un coup (réglage de cet appareil)
+  const labT = el("div","fs-label compte-lab"); labT.textContent = "Taille du texte"; box.appendChild(labT);
+  const segT = el("div","seg compte-seg");
+  let tAct = "normal"; try{ tAct = localStorage.getItem("revision_texte_v1") || "normal"; }catch(e){}
+  [["normal","Normale"],["grand","Grande"],["tresgrand","Très grande"]].forEach(([v, nom])=>{
+    const o = el("button","seg-opt" + (v === tAct ? " active" : "")); o.type = "button"; o.textContent = nom;
+    o.addEventListener("click",()=>{
+      haptic();
+      try{ if(v === "normal") localStorage.removeItem("revision_texte_v1"); else localStorage.setItem("revision_texte_v1", v); }catch(e){}
+      document.documentElement.classList.remove("texte-grand","texte-tresgrand");
+      if(v !== "normal") document.documentElement.classList.add("texte-" + v);
+      segT.querySelectorAll(".seg-opt").forEach(x=>x.classList.toggle("active", x === o));
+      requestAnimationFrame(placerTrait);
+    });
+    segT.appendChild(o);
+  });
+  box.appendChild(segT);
+  const hT = el("div","fs-hint compte-hint"); hT.style.marginBottom = "14px"; hT.textContent = "Agrandit tout : textes, boutons et cartes. Le « Aa » d'un chapitre règle en plus le texte du cours."; box.appendChild(hT);
   // Pomodoro : une option, pas une tuile
   const labP = el("div","fs-label compte-lab"); labP.textContent = "Pomodoro"; box.appendChild(labP);
   const segP = el("div","seg compte-seg");
@@ -11209,11 +11258,14 @@ function renderCoursePane(type){
     if(pastille) pastille.classList.toggle("revise", estRevise(curSubj, type, ch));
   });
   // arrivée en bas après avoir lu : le chapitre se coche tout seul (on peut toujours l'enlever)
+  const ouvertA = Date.now();
   if("IntersectionObserver" in window){
     const obs = new IntersectionObserver(es=>{
       if(!es[0].isIntersecting || !fin.isConnected) return;
       obs.disconnect();
       if(window.scrollY < 300) return;   // chapitre visible d'un coup : pas lu pour autant
+      // survolé en quelques secondes : pas lu non plus (20 s, plus 4 s par section, 2 min au plus)
+      if(Date.now() - ouvertA < Math.min(120000, 20000 + 4000 * (ch.sections || []).length)) return;
       fin.classList.add("vu");
       if(!estRevise(curSubj, type, ch)){
         basculerRevise(curSubj, type, ch); majRv();
