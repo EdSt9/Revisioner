@@ -2382,10 +2382,6 @@ html[data-screen="pick"]{background:var(--bg) !important;background-image:none !
 .ex-grille button.fait{background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);box-shadow:none;border:none;}
 .ex-grille button.ici{background:var(--accent);color:#fff;border:none;box-shadow:0 6px 14px color-mix(in srgb,var(--accent) 35%,transparent);}
 
-/* un mot sous chaque bouton du haut de l'accueil */
-.hm-btns{align-items:flex-start;}
-.hm-btns>button{overflow:visible !important;margin-bottom:16px;}
-.hm-btns>button::after{content:attr(data-lbl);position:absolute;left:50%;top:calc(100% + 4px);transform:translateX(-50%);font-size:10.5px;font-weight:800;color:#fff;opacity:.92;white-space:nowrap;letter-spacing:0;pointer-events:none;}
 /* ══════════ LES MÊMES BOUTONS PARTOUT ══════════ */
 /* principal : sombre en clair, à ta couleur en sombre ; secondaire : gris doux */
 .btn,.fs-ok,#screen-welcome .btn-primary{border:none !important;border-radius:17px !important;min-height:52px;padding:0 18px !important;font-family:var(--font-text) !important;font-weight:800 !important;font-size:15.5px !important;background:var(--text) !important;color:var(--bg) !important;box-shadow:none !important;}
@@ -2458,6 +2454,69 @@ html[data-mode="sombre"] .edt-course,html[data-mode="sombre"] .av-carte,html[dat
 .swipe{border-radius:20px !important;margin-bottom:10px !important;}
 .swipe-front{border-radius:20px;}
 .swipe-front>.cal-row,.swipe .cal-row{margin-bottom:0 !important;}
+
+/* ══════════ EN-TÊTES COMPACTS : AGENDA, DEVOIRS, LIENS ══════════ */
+html.tabbar-on .screen.hd-on>.page-head{display:none !important;}
+.screen.hd-on>.wrap>.page-title,.screen.hd-on>.wrap>.page-sub,.screen.hd-on>.wrap>.lex-sous,.screen.hd-on .edt-titlerow{display:none !important;}
+.screen.hd-on>.wrap{padding-top:6px !important;}
+.hd-onglet{position:relative;overflow:hidden;color:#fff;background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 85%,#000),var(--accent) 50%,var(--accent-2));padding:calc(env(safe-area-inset-top) + 12px) 16px 18px;border-radius:0 0 30px 30px;}
+.hd-onglet::after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.08);right:-70px;top:-90px;pointer-events:none;}
+.hd-row{display:flex;align-items:center;gap:8px;position:relative;z-index:1;max-width:520px;margin:0 auto;}
+.hd-t{flex:1;font-size:27px;font-weight:800;letter-spacing:-.025em;}
+.hd-act{display:flex;gap:8px;}
+.hd-act>button{width:40px !important;height:40px !important;border-radius:13px !important;border:none !important;background:rgba(255,255,255,.2) !important;color:#fff !important;box-shadow:none !important;display:grid;place-items:center;}
+.hd-act>button[hidden]{display:none !important;}
+.hd-act svg{width:19px;height:19px;}
+.hd-plus{position:relative;z-index:1;max-width:520px;margin:0 auto;}
+/* agenda */
+.hd-plus .edt-ctrl{margin:12px 0 0 !important;}
+.hd-plus .seg{background:rgba(255,255,255,.18) !important;}
+.hd-plus .seg-opt{color:#fff !important;opacity:.85;}
+.hd-plus .seg-opt.active{background:#fff !important;color:var(--accent) !important;opacity:1;}
+.hd-plus .edt-arrow{width:32px !important;height:32px !important;border-radius:10px !important;background:rgba(255,255,255,.18) !important;color:#fff !important;}
+.hd-plus .edt-week{color:#fff !important;font-weight:800 !important;}
+.hd-wk{display:flex;justify-content:space-between;margin-top:12px;}
+.hd-d{width:42px;padding:7px 0;border:none;border-radius:14px;background:none;color:#fff;font:inherit;text-align:center;cursor:pointer;}
+.hd-d small{display:block;font-size:10.5px;font-weight:800;opacity:.8;}
+.hd-d b{display:block;font-size:17px;font-weight:800;margin-top:2px;}
+.hd-d i{display:block;width:5px;height:5px;border-radius:50%;background:#fff;margin:4px auto 0;opacity:.85;}
+.hd-d i.vide{opacity:0;}
+.hd-d.auj{background:rgba(255,255,255,.18);}
+.hd-d.on{background:#fff;color:var(--accent);}
+.hd-d.on i{background:var(--accent);}
+/* liens */
+.hd-plus .liens-seg{margin:14px 0 0 !important;background:rgba(255,255,255,.18) !important;}
+/* devoirs */
+.hd-stats{display:flex;gap:8px;margin-top:14px;}
+.hd-stats div{flex:1;background:rgba(255,255,255,.16);border-radius:15px;padding:10px 12px;}
+.hd-stats b{display:block;font-size:22px;font-weight:800;}
+.hd-stats small{font-size:11.5px;font-weight:800;opacity:.88;}
+#screen-mesdevoirs #home-know{margin-top:4px !important;}
+#screen-mesdevoirs .av-carte{background:none !important;box-shadow:none !important;border-radius:0 !important;overflow:visible;display:flex;flex-direction:column;gap:9px;}
+.av-row.dv-carte{border-top:none !important;border-radius:20px;background:var(--surface-solid);box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04);padding:12px 14px !important;}
+.dv-j{width:52px;height:52px;border-radius:16px;display:grid;place-content:center;text-align:center;font-weight:800;font-size:15px;line-height:1.05;flex-shrink:0;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c);}
+.dv-j small{display:block;font-size:10.5px;font-weight:800;opacity:.8;margin-top:2px;}
+.av-row.devoir{--c:#d98a00;} .av-row.controle{--c:var(--ko);}
+.dv-carte .av-txt small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dv-chs{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;}
+.dv-chs span{font-size:11px;font-weight:800;padding:3px 7px;border-radius:7px;background:color-mix(in srgb,var(--c-g) 14%,transparent);color:var(--c-g);}
+.dv-carte.fait{opacity:.55;}
+.dv-carte.fait .av-txt b{text-decoration:line-through;}
+.dv-carte .av-fait{margin-left:auto;}
+/* mes sites : une grille de tuiles */
+#sites-liste{margin-top:6px !important;}
+.st-grille{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.st-tuile{display:flex;flex-direction:column;align-items:flex-start;text-align:left;min-width:0;padding:16px 14px;border:none;border-radius:22px;background:var(--surface-solid);box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04);font:inherit;color:var(--text);cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+.st-tuile:active{transform:scale(.97);}
+.st-ic{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-weight:800;font-size:16px;margin-bottom:12px;}
+.st-tuile b{font-size:15px;font-weight:800;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.st-tuile small{font-size:12px;color:var(--text-soft);font-weight:600;margin-top:2px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.st-ajout{align-items:center;justify-content:center;min-height:124px;background:none;box-shadow:none;border:2px dashed color-mix(in srgb,var(--accent) 30%,transparent);color:var(--accent);font-weight:800;}
+/* classes : cartes plus grandes */
+#classes-list{margin-top:6px !important;}
+.cls-row{padding:14px !important;}
+.cls-ic{width:50px !important;height:50px !important;border-radius:16px !important;font-size:24px !important;background:color-mix(in srgb,var(--accent) 10%,transparent) !important;}
+.cls-name{font-size:16px !important;}
 </style>
 </head>
 <body>
@@ -3536,26 +3595,26 @@ function renderSites(){
   box.innerHTML = "";
   const sites = mesSites();
   if(!sites.length) box.innerHTML = vide("lien", "Aucun site pour l'instant", "Ajoute ceux où tu vas souvent : ENT, Moodle, scolarité, emploi du temps…");
+  const grille = el("div","st-grille");
+  const COUL = ["v","b","g","y","r"];
   sites.forEach((site,i)=>{
-    const row = el("button","cal-row");
-    row.type = "button";
-    row.innerHTML = `<div class="cal-txt"><div class="cal-name">${esc(site.nom || domaineDe(site.url))}</div>` +
-      `<div class="cal-url">${esc(domaineDe(site.url))}</div></div><span class="site-go">${chevronR}</span>`;
-    row.addEventListener("click",()=>{ haptic(); window.open(site.url, "_blank", "noopener"); });
-    onLongPress(row, ()=>editSite(i));
-    const ligne = swipeRow(row, [{ label:"Modifier", doux:true, fn:()=>editSite(i) }, { label:"Supprimer", fn:()=>{
-      sites.splice(i, 1);
-      saveContent();
-      toast("Site supprimé.");
-      renderSites();
-    }}]);
-    ligne.style.marginBottom = "9px";
-    box.appendChild(ligne);
+    const nom = site.nom || domaineDe(site.url);
+    const t = el("button","st-tuile"); t.type = "button";
+    const c = COUL[hmHash(nom) % COUL.length];
+    const ini = nom.replace(/[^A-Za-zÀ-ÿ0-9]/g, "").slice(0, 2) || "•";
+    t.innerHTML = `<span class="st-ic hm-doux-${c}">${esc(ini.charAt(0).toUpperCase() + ini.slice(1).toLowerCase())}</span><b>${esc(nom)}</b><small>${esc(domaineDe(site.url))}</small>`;
+    t.addEventListener("click",()=>{ if(t._long) { t._long = false; return; } haptic(); window.open(site.url, "_blank", "noopener"); });
+    onLongPress(t, ()=>{ t._long = true; editSite(i); });
+    grille.appendChild(t);
   });
+  const aj = el("button","st-tuile st-ajout"); aj.type = "button"; aj.innerHTML = `<span>+ Ajouter</span>`;
+  aj.addEventListener("click",()=>{ haptic(); editSite(-1); });
+  grille.appendChild(aj);
+  box.appendChild(grille);
   if(sites.length){
     const h = el("div","fs-hint");
-    h.textContent = "Glisse un site vers la gauche pour le modifier ou le supprimer.";
-    h.style.cssText = "margin:10px 4px 4px;text-align:center";
+    h.textContent = "Appui long sur un site pour le modifier ou le supprimer.";
+    h.style.cssText = "margin:12px 4px 4px;text-align:center";
     box.appendChild(h);
   }
 }
@@ -6613,6 +6672,47 @@ Object.keys(FAB_ACTIONS).forEach(id=>{
   if(premier) premier.before(b); else w.appendChild(b);
 });
 document.querySelectorAll(".screen").forEach(poserEntete);
+// ══════════ EN-TÊTES COMPACTS DES PAGES DU BAS (Agenda, Devoirs, Liens) ══════════
+// Titre et boutons sur une ligne, dans un bandeau coloré comme l'accueil ; ce qui pilote la page juste dessous.
+const HD_ONGLETS = { edt:"Agenda", mesdevoirs:"Devoirs", sites:"Liens", classes:"Liens" };
+function poserHdOnglet(id){
+  const scr = document.getElementById("screen-" + id); if(!scr || scr.querySelector(":scope > .hd-onglet")) return;
+  const wrap = scr.querySelector(":scope > .wrap"); if(!wrap) return;
+  const hd = el("div","hd-onglet"); hd.innerHTML = `<div class="hd-row"><h1 class="hd-t">${HD_ONGLETS[id]}</h1><div class="hd-act"></div></div><div class="hd-plus"></div>`;
+  scr.insertBefore(hd, wrap);
+  scr.classList.add("hd-on");
+  const act = hd.querySelector(".hd-act");
+  // les boutons de la page (+, lien) quittent la barre fine du haut pour l'en-tête
+  scr.querySelectorAll(".page-head [data-entete]").forEach(b=>act.appendChild(b));
+  const plus = hd.querySelector(".hd-plus");
+  if(id === "edt"){ const c = wrap.querySelector(".edt-ctrl"); if(c) plus.appendChild(c); const w = el("div","hd-wk"); w.id = "hd-wk"; plus.appendChild(w); }
+  if(id === "sites" || id === "classes"){ const sg = wrap.querySelector(".liens-seg"); if(sg) plus.appendChild(sg); }
+  if(id === "mesdevoirs"){ const st = el("div","hd-stats"); st.id = "hd-stats"; plus.appendChild(st); }
+}
+Object.keys(HD_ONGLETS).forEach(poserHdOnglet);
+// la semaine affichée, sous les réglages de l'agenda : un point les jours de cours, un appui ouvre le jour
+function majHdSemaine(){
+  const box = document.getElementById("hd-wk"); if(!box) return;
+  const t0 = new Date(); t0.setHours(0,0,0,0);
+  const ref = new Date(t0);
+  if(edtMode === "day") ref.setDate(ref.getDate() + edtWeekOffset); else ref.setDate(ref.getDate() + 7 * edtWeekOffset);
+  const lun = mondayOf(ref); lun.setHours(0,0,0,0);
+  const noms = ["LUN","MAR","MER","JEU","VEN","SAM","DIM"];
+  box.innerHTML = "";
+  for(let i = 0; i < 7; i++){
+    const d = new Date(lun); d.setDate(lun.getDate() + i);
+    const b = el("button","hd-d" + (sameDay(d, t0) ? " auj" : "") + (edtMode === "day" && sameDay(d, ref) ? " on" : "")); b.type = "button";
+    const a = joursOn(d).length;
+    b.innerHTML = `<small>${noms[i]}</small><b>${d.getDate()}</b>${a ? "<i></i>" : "<i class='vide'></i>"}`;
+    b.addEventListener("click",()=>{
+      haptic(); setEdtMode("day");
+      document.querySelectorAll("#edt-seg .seg-opt").forEach(x=>x.classList.toggle("active", x.dataset.mode === "day"));
+      edtWeekOffset = Math.round((d - t0) / 86400000); renderEDT();
+    });
+    box.appendChild(b);
+  }
+}
+
 // le bouton mémo est « fixed » : il sort du contenu qui glisse, sinon il glisserait avec lui
 (function(){ const m = document.getElementById("btn-memo"), h = document.getElementById("hm-btns"); if(m && h) h.insertBefore(m, h.firstChild); })();
 // Pas de jeu en bas des pages : la marge du bas sert à respirer quand la page défile.
@@ -7948,6 +8048,7 @@ function eventsOnWeek(offset){
   return EDT.filter(e=>e.start >= start && e.start < end);
 }
 function renderEDT(){
+  try{ setTimeout(majHdSemaine, 0); }catch(e){}
   const body = document.getElementById("edt-body");
   const label= document.getElementById("edt-week");
   body.innerHTML = "";
@@ -8825,6 +8926,15 @@ function renderKnowBlock(){
   // tout ce qui arrive. Déplié : tout. Plié : seulement le titre et sa flèche.
   const alerts = pendingAlerts(true, true);
   majTuileDevoirs(alerts);
+  { const st = document.getElementById("hd-stats");
+    if(st){
+      const reste = alerts.filter(e=>{ const n = evNote(e) || {}; return !n.done; });
+      const ty = e=>{ const n = evNote(e) || {}; return n.type || ((!n.note && autresDe(n)[0]) ? autresDe(n)[0].type : ""); };
+      const nc = reste.filter(e=>ty(e) === "controle").length, nr = reste.filter(e=>ty(e) === "devoir").length;
+      const pro = reste.filter(e=>ty(e) === "controle" || ty(e) === "devoir").sort((a,b)=>a.start - b.start)[0];
+      const jp = pro ? hmJoursAvant(pro.start) : null;
+      st.innerHTML = `<div><b>${nc}</b><small>contrôle${nc > 1 ? "s" : ""} à venir</small></div><div><b>${nr}</b><small>rendu${nr > 1 ? "s" : ""}</small></div><div><b>${pro ? (jp <= 0 ? "Auj." : "J-" + jp) : "–"}</b><small>le prochain</small></div>`;
+    } }
   if(!alerts.length){
     box.innerHTML = vide("calendrier", "Rien à venir", "Pose un devoir, un contrôle ou une note sur un cours de ton emploi du temps, ou touche le + en haut. Il apparaîtra ici.");
     return;
@@ -8851,9 +8961,12 @@ function renderKnowBlock(){
     const lignes = String(nn.note || (autresDe(nn)[0] || {}).note || "").trim().split("\n").map(x=>x.trim()).filter(Boolean);
     if(e.titreNote) lignes.shift();
     const apercu = (lignes[0] || "").replace(/(?:https?:\/\/|www\.)[^\s<>"']+/gi, u=>libelleUrl(u).split("/")[0]);
-    const row = el("div","av-row " + cle + (fait ? " fait" : "")); row.setAttribute("role","button"); row.tabIndex = 0;
-    row.innerHTML = `<button type="button" class="av-fait" aria-pressed="${fait}" aria-label="${fait ? "Marquer comme pas fait" : "Marquer comme fait"}">${COCHE_SVG}</button>` +
-      `<span class="av-txt"><b>${esc(nomCourt(e.title))}</b><small><i>${fait ? "Fait" : tag}</i> · ${quand}</small>${apercu ? `<small class="av-note">${esc(apercu)}</small>` : ""}</span>` +
+    const row = el("div","av-row dv-carte " + cle + (fait ? " fait" : "")); row.setAttribute("role","button"); row.tabIndex = 0;
+    const sjD = matiereDeNote(e, nn), chsD = chapitresDeNote(sjD, nn);
+    const jj = j === 0 ? "Auj." : "J-" + j, jl = j === 0 ? "" : j === 1 ? "demain" : HM_JOURS[new Date(e.start).getDay()];
+    row.innerHTML = `<span class="dv-j">${jj}<small>${jl}</small></span>` +
+      `<span class="av-txt"><b>${esc(nomCourt(e.title))}</b><small><i>${fait ? "Fait" : tag}</i>${apercu ? " · " + esc(apercu) : ""}</small>${chsD.length ? `<span class="dv-chs">${chsD.map(x=>`<span>${esc(partiesChapitre(x.ch.label).court)}</span>`).join("")}</span>` : ""}</span>` +
+      `<button type="button" class="av-fait" aria-pressed="${fait}" aria-label="${fait ? "Marquer comme pas fait" : "Marquer comme fait"}">${COCHE_SVG}</button>` +
       (etatDevoir(e) === "nouveau" ? `<span class="chap-pick-new">Nouveau</span>` : etatDevoir(e) === "modifie" ? `<span class="chap-pick-new">Modifié</span>` : `<span class="av-fl">›</span>`);
     // le rond coche ou décoche ; le reste de la ligne ouvre l'agenda à ce jour
     row.querySelector(".av-fait").addEventListener("click", ev=>{
@@ -8861,7 +8974,7 @@ function renderKnowBlock(){
       marquerFait(evKey(e), !fait);
       renderKnowBlock();
     });
-    row.addEventListener("click",()=>{ haptic(); openEDTAt(e.start); });
+    row.addEventListener("click",()=>{ haptic(); if(sjD && (cle === "controle" || cle === "devoir")) openControle(e); else openEDTAt(e.start); });
     card.appendChild(row);
   });
 }
