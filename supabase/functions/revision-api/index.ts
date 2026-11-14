@@ -305,7 +305,7 @@ function jourDe(iso: string): number {
   return new Date(Date.UTC(y, m - 1, d)).getUTCDay();
 }
 
-type Echeance = { date: string; type: "controle" | "devoir"; nom: string; note: string; subj: string };
+type Echeance = { date: string; type: "controle" | "devoir"; nom: string; note: string; subj: string; cle: string; chs: string[] };
 // Ce qu'il reste à réviser par matière, calculé par l'app (users.srs.__bilan) : q = QCM pas encore validés, e = erreurs à revoir.
 type Bilan = Record<string, { q?: number; e?: number }>;
 // Une étape de projet : p = projet, t = titre, d = début (AAAA-MM-JJ ou vide), f = fin, ok = cochée.
@@ -350,11 +350,17 @@ function echeances(notes: Record<string, any> | null, matieres: Record<string, s
     const nom = matiere || titreDevoir || brut;
     let note = String(N.note ?? "").replace(/\s+/g, " ").trim();
     if (matiere && titreDevoir && titreDevoir !== matiere) note = titreDevoir + (note ? " : " + note : "");
-    out.push({ date, type: N.type, nom: nom || "Devoir", note: note.length > 60 ? note.slice(0, 57) + "…" : note, subj: String(N.subj ?? "") });
+    // les chapitres qui tombent (« TD 1 · 11/09 » → « TD 1 »), choisis dans l'app
+    const chs = Array.isArray(N.chs) ? N.chs.map((c: unknown) => String(c ?? "").split(" · ")[0].trim()).filter(Boolean).slice(0, 8) : [];
+    out.push({ date, type: N.type, nom: nom || "Devoir", note: note.length > 60 ? note.slice(0, 57) + "…" : note, subj: String(N.subj ?? ""), cle: k, chs });
   }
   return out.sort((a, b) => a.date.localeCompare(b.date));
 }
 const quoi = (e: Echeance) => (e.type === "controle" ? "Contrôle" : "À rendre");
+// « TD 1, TD 2 et TD 3 »
+const enListe = (xs: string[]) => xs.length > 1 ? xs.slice(0, -1).join(", ") + " et " + xs[xs.length - 1] : xs.join("");
+// un seul devoir : la notification ouvre directement sa page dans l'app
+const dataDe = (es: Echeance[]) => es.length === 1 ? { type: "rappel", cle: es[0].cle } : { type: "rappel" };
 
 async function envoyerRappels(force: boolean, aBlanc: boolean) {
   const ici = aParis();
@@ -395,8 +401,8 @@ async function envoyerRappels(force: boolean, aBlanc: boolean) {
         : veille[0].type === "controle" ? "Demain : contrôle" : "Demain : devoir à rendre";
       await envoyer(u.pseudo, "rappels", {
         title: titre,
-        body: [veille.map((e) => `${quoi(e)} · ${e.nom}${e.note ? " — " + e.note : ""}`).join("\n"), resteAReviser(veille, u.bilan)].filter(Boolean).join("\n"),
-        tag: `rappel:veille:${demain}`, data,
+        body: [veille.map((e) => `${quoi(e)} · ${e.nom}${e.note ? " — " + e.note : ""}${e.chs.length ? "\nÀ réviser : " + enListe(e.chs) : ""}`).join("\n"), resteAReviser(veille, u.bilan)].filter(Boolean).join("\n"),
+        tag: `rappel:veille:${demain}`, data: dataDe(veille),
       });
       envoyes++;
     }
@@ -406,8 +412,8 @@ async function envoyerRappels(force: boolean, aBlanc: boolean) {
       const jour = JOURS[jourDe(dansTrois)];
       await envoyer(u.pseudo, "rappels", {
         title: controles.length > 1 ? `${controles.length} contrôles ${jour}` : `Contrôle ${jour}`,
-        body: `${controles.map((e) => e.nom).join(", ")}, ${jour} ${jourCourt(dansTrois)}. ` + (resteAReviser(controles, u.bilan) || "Pense à réviser."),
-        tag: `rappel:j3:${dansTrois}`, data,
+        body: `${controles.map((e) => e.nom + (e.chs.length ? " (" + enListe(e.chs) + ")" : "")).join(", ")}, ${jour} ${jourCourt(dansTrois)}. ` + (resteAReviser(controles, u.bilan) || "Pense à réviser."),
+        tag: `rappel:j3:${dansTrois}`, data: dataDe(controles),
       });
       envoyes++;
     }
