@@ -2605,6 +2605,36 @@ html[data-theme="girly"][data-mode="sombre"]{--text-mute:#b08a9c;}
 .memo2 .memo-plus{border-radius:8px !important;}
 .memo2-notes{border:none !important;border-radius:20px !important;background:color-mix(in srgb,var(--text) 5%,transparent) !important;padding:16px !important;font-size:15.5px !important;line-height:1.55 !important;min-height:300px !important;box-shadow:none !important;}
 .memo2-notes:focus{background:var(--surface-solid) !important;box-shadow:0 0 0 2px var(--accent) !important;}
+
+/* ══════════ DERNIERS ÉLÉMENTS À L'ANCIEN STYLE ══════════ */
+/* champs de saisie : fond doux, sans contour ; un anneau de couleur quand on écrit */
+.fs-input,.fs-area,.ev-select,.ev-note,#lex-input,.search-input{border:none !important;border-radius:16px !important;background:color-mix(in srgb,var(--text) 5%,transparent) !important;box-shadow:none !important;font-weight:600;}
+.fs-input:focus,.fs-area:focus,.ev-select:focus,.ev-note:focus{background:var(--surface-solid) !important;box-shadow:0 0 0 2px var(--accent) !important;}
+.fs-label,.ev-label{font-weight:800 !important;letter-spacing:.05em;}
+/* Aucun / Contrôle / À rendre : un sélecteur comme les autres */
+.ev-types{gap:0 !important;padding:4px;border-radius:14px;background:color-mix(in srgb,var(--text) 6%,transparent);}
+.ev-type{border:none !important;background:none !important;border-radius:11px !important;font-weight:800 !important;color:var(--text-soft) !important;padding:9px 6px !important;}
+.ev-type.active{background:var(--surface-solid) !important;color:var(--text) !important;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.ev-type.ctrl.active{color:var(--ko) !important;}
+.ev-type.devo.active{color:#d98a00 !important;}
+/* listes de choix dans les feuilles (changer de matière…) */
+.sheet-item{border:none !important;border-radius:16px !important;padding:12px 14px !important;}
+.sheet-item.current{background:color-mix(in srgb,var(--accent) 10%,transparent) !important;}
+.sheet-item .si-num,.ss-num{border:none !important;background:color-mix(in srgb,var(--accent) 12%,transparent);border-radius:9px !important;padding:4px 8px !important;font-weight:800 !important;}
+.sheet-item .si-name{font-weight:700;}
+/* la barre du haut d'un chapitre : le bandeau coloré, en plus fin */
+#screen-split>.split-head{background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 85%,#000),var(--accent) 50%,var(--accent-2)) !important;color:#fff;border-bottom:none !important;border-radius:0 0 22px 22px;box-shadow:0 6px 20px var(--accent-glow);backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}
+#screen-split>.split-head .back-btn{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.2) !important;color:#fff !important;font-size:0 !important;padding:0 !important;display:grid !important;place-items:center;}
+#screen-split>.split-head .back-btn svg{width:19px;height:19px;}
+#screen-split>.split-head .head-search,#screen-split>.split-head .icon-btn{color:#fff !important;background:rgba(255,255,255,.2) !important;border:none !important;border-radius:12px !important;}
+#screen-split>.split-head .subj-chip,#screen-split>.split-head .type-pick{color:#fff !important;background:rgba(255,255,255,.2) !important;border:none !important;}
+#screen-split>.split-head .type-pick *,#screen-split>.split-head .subj-chip *{color:#fff !important;}
+/* la barre du haut d'une série : le retour en petit carré */
+.sess-nav .nav-back{width:38px;height:38px;border-radius:12px;background:color-mix(in srgb,var(--text) 6%,transparent);font-size:0 !important;padding:0;display:grid;place-items:center;}
+.sess-nav .nav-back svg{width:19px;height:19px;}
+.sess-nav #sess-pos{font-weight:800;}
+/* titres des chapitres : la même police nette que le reste */
+.chap-titre,.section-title{font-family:var(--font-text) !important;font-weight:800 !important;letter-spacing:-.02em;}
 </style>
 </head>
 <body>
