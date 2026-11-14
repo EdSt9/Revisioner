@@ -2258,6 +2258,56 @@ html.tabbar-on[data-screen="classes"] .page-head .back-btn{visibility:hidden;}
 #pane-0 .section-title::before,#pane-1 .section-title::before{content:counter(sect);flex-shrink:0;width:28px;height:28px;border-radius:10px;display:grid;place-items:center;
   font-family:var(--font-text);font-size:12.5px;font-weight:800;background:color-mix(in srgb,var(--accent) 13%,transparent);color:var(--accent);}
 #pane-0 .card,#pane-1 .card{border-radius:22px;border:none;box-shadow:var(--hm-ombre);background:var(--hm-carte);}
+
+/* ══════════ REFONTE · SÉRIE DE QCM ══════════ */
+#screen-session .prog-track{height:10px;border-radius:6px;background:color-mix(in srgb,var(--text) 8%,transparent);}
+#screen-session .prog-fill{border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--accent-2));}
+#screen-session .sess-nav{border-bottom:none;}
+#screen-session .sess-body{padding-bottom:calc(60px + env(safe-area-inset-bottom));}
+#screen-session .sx-qlbl{font-size:12.5px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;}
+#screen-session .q-box{background:none;border:none;box-shadow:none;padding:6px 2px 4px;}
+#screen-session .q-text{font-size:21px;font-weight:800;line-height:1.32;letter-spacing:-.015em;margin-top:8px;}
+#screen-session .opts{gap:10px;}
+#screen-session .opt{border:2px solid transparent;border-radius:18px;padding:16px;font-weight:700;font-size:15.5px;line-height:1.35;background:var(--surface-solid);box-shadow:var(--shadow);}
+#screen-session .opt .opt-letter{width:30px;height:30px;border-radius:10px;border:none;background:color-mix(in srgb,var(--text) 7%,transparent);color:var(--text-soft);font-weight:800;transition:.25s;}
+#screen-session .opt.correct{border-color:var(--ok);background:var(--ok-soft);}
+#screen-session .opt.correct .opt-letter{background:var(--ok);color:#fff;}
+#screen-session .opt.wrong{border-color:var(--ko);background:var(--ko-soft);}
+#screen-session .opt.wrong .opt-letter{background:var(--ko);color:#fff;}
+#screen-session .opt.qz-dim{opacity:.5;}
+#screen-session .opt:disabled{cursor:default;}
+.qz-pop{animation:qzPop .45s cubic-bezier(.3,1.6,.5,1);}
+@keyframes qzPop{40%{transform:scale(1.04);}}
+.qz-shake{animation:qzShake .4s;}
+@keyframes qzShake{20%{transform:translateX(-7px);}40%{transform:translateX(7px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}}
+.qz-veil{position:fixed;inset:0;z-index:58;background:rgba(10,6,25,.18);animation:qzFade .3s .35s both;}
+@keyframes qzFade{from{opacity:0;}}
+.qz-sheet{position:fixed;z-index:60;left:0;right:0;bottom:0;max-height:78vh;overflow-y:auto;background:var(--surface-solid);border-radius:28px 28px 0 0;padding:20px 18px calc(24px + env(safe-area-inset-bottom));box-shadow:0 -10px 40px rgba(0,0,0,.18);animation:qzUp .45s .35s cubic-bezier(.2,.9,.25,1) both;}
+@keyframes qzUp{from{transform:translateY(105%);}}
+.qz-sheet .in{max-width:440px;margin:0 auto;}
+.qz-verdict{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:800;}
+.qz-verdict .vi{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;color:#fff;flex-shrink:0;}
+.qz-verdict .vi svg{width:20px;height:20px;}
+.qz-sheet p{font-size:15px;line-height:1.55;margin-top:10px;color:var(--text-soft);font-weight:600;}
+.qz-sheet p b{color:var(--text);}
+.qz-sheet .grade-row{margin-top:16px;}
+.qz-sheet .hm-cta{margin-top:16px;}
+/* fin de série */
+.qz-end{max-width:440px;margin:0 auto;padding:30px 6px 20px;text-align:center;}
+.qz-medal{width:116px;height:116px;border-radius:38px;margin:0 auto;background:linear-gradient(140deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;box-shadow:0 18px 40px var(--accent-glow);animation:qzPop .7s cubic-bezier(.3,1.6,.5,1);}
+.qz-medal svg{width:54px;height:54px;}
+.qz-end h2{font-size:27px;font-weight:800;letter-spacing:-.02em;margin-top:22px;}
+.qz-end>p{font-size:15.5px;color:var(--text-soft);font-weight:600;margin-top:8px;line-height:1.5;}
+.qz-bilan{display:flex;align-items:center;gap:12px;text-align:left;margin-top:20px;padding:14px 16px;}
+.qz-bilan .t1{font-weight:800;font-size:16px;display:block;}
+.qz-bilan .t2{font-size:13px;color:var(--text-mute);font-weight:600;display:block;margin-top:2px;}
+.qz-end .results-detail{text-align:left;margin-top:18px;}
+.qz-end .hm-cta{margin-top:20px;}
+.qz-end .qz-sec{width:100%;margin-top:10px;height:50px;border-radius:17px;border:none;background:color-mix(in srgb,var(--text) 6%,transparent);color:var(--text);font:inherit;font-weight:800;font-size:15px;cursor:pointer;}
+.qz-conf{position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden;}
+.qz-conf i{position:absolute;top:-14px;width:8px;height:14px;border-radius:2px;animation:qzFall 2.6s cubic-bezier(.3,.6,.5,1) forwards;}
+@keyframes qzFall{to{top:110%;transform:translateX(40px) rotate(540deg);}}
+@media(prefers-reduced-motion:reduce){.qz-pop,.qz-shake,.qz-medal,.qz-sheet,.qz-veil{animation:none;}.qz-conf{display:none;}}
 </style>
 </head>
 <body>
@@ -12080,31 +12130,15 @@ function renderQCM(cur,body){
   const opts=el("div","opts");
   cur.opts.forEach((o,i)=>{
     const b=el("button","opt");
-    if(confirmed){ if(i===cur.c)b.classList.add("correct"); else if(i===selOpt)b.classList.add("wrong"); b.disabled=true; }
+    if(confirmed){ if(i===cur.c)b.classList.add("correct","qz-pop"); else if(i===selOpt)b.classList.add("wrong","qz-shake"); else b.classList.add("qz-dim"); b.disabled=true; }
     const letter=confirmed&&i===cur.c?"✓":confirmed&&i===selOpt?"✗":String.fromCharCode(65+i);
     b.innerHTML=`<span class="opt-letter">${letter}</span><span>${esc(o)}</span>`;
     b.addEventListener("click",()=>{ haptic(); doQCM(i,cur); });
     opts.appendChild(b);
   });
   wrap.appendChild(opts);
-  if(confirmed){
-    const ok=selOpt===cur.c;
-    const exp=el("div","expl "+(ok?"good":"bad"));
-    exp.innerHTML=explicationHtml(cur, selOpt);
-    if(exp.innerHTML) wrap.appendChild(exp);
-    const key = queue[idx].key;
-    if(ok){
-      // bonne réponse : on demande si c'était facile ou laborieux
-      wrap.appendChild(gradeRow(key, g=>doGrade(g, cur.q)));
-    } else {
-      // mauvaise réponse : la carte revient forcément
-      const row=el("div","btn-row");
-      const nb=el("button","btn"); nb.textContent=idx+1>=queue.length?"Voir les résultats":"Suivante →";
-      nb.addEventListener("click",()=>doGrade(0, cur.q));
-      row.appendChild(nb); wrap.appendChild(row);
-    }
-  }
   body.appendChild(wrap);
+  if(confirmed) feuilleReponse(cur, cur.q, body);
 }
 // ══════════════════════════════════════════════════
 // COMPARAISON LOCALE : quelles notions du corrigé se retrouvent
@@ -12214,32 +12248,28 @@ function showResults(){
     const r = itemsDuScope(curSubj, curMode, "erreurs").length;
     sous = r ? "Il te reste " + r + " erreur" + (r > 1 ? "s" : "") + " à reprendre." : "Plus aucune erreur, bravo.";
   } else if(aRevoir.length && curMode === "qcm") sous += aRevoir.length > 1 ? " Elles iront dans « Mes erreurs »." : " Elle ira dans « Mes erreurs ».";
-  wrap.innerHTML=`
-    <div class="sx-score"><div class="sx-ring"><svg width="76" height="76"><circle cx="38" cy="38" r="32" stroke="var(--accent-soft)" stroke-width="7" fill="none"/><circle cx="38" cy="38" r="32" stroke="var(--accent)" stroke-width="7" fill="none" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${n ? C*(1-ok/n) : C}"/></svg><b>${ok}/${n}</b></div>
-      <div><div class="t">${titre}</div><div class="s">${esc(sous)}</div></div></div>
+  wrap.className = "qz-end";
+  const etoile = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17.1 6.4 20l1.1-6.2L2.9 9.4l6.3-.9z"/></svg>';
+  const nomSerie = sessionFil ? "Fil rouge" : globalSession ? "Révision du jour" : (curSubj ? curSubj.title : "");
+  const doux = (!globalSession && !sessionFil && sessionScope === "erreurs") ? sous : !n ? "" : ok === n ? "Tu as tout bon. Cette série est validée." : "Les questions ratées reviendront plus tard, sans pression.";
+  wrap.innerHTML = `<div class="qz-medal">${etoile}</div>
+    <h2>${titre}${n && ok / n >= .5 ? " !" : ""}</h2><p>${esc(doux)}</p>
+    <div class="hm-card qz-bilan"><span class="hm-ic hm-doux-g" style="flex-shrink:0">${'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M5 12l5 5 9-10"/></svg>'}</span><span><span class="t1">${ok} sur ${n}</span><span class="t2">${esc(nomSerie)}</span></span></div>
     ${aRevoir.length ? `<div class="results-detail"><div class="results-detail-label">À revoir</div>${aRevoir.map(a=>`<div class="result-row ko"><span class="result-ic">✕</span><span class="result-q">${esc(a.q)}</span></div>`).join("")}</div>` : ""}`;
-  const row=el("div","btn-row");
+  if(n && ok / n >= .5) setTimeout(confettis, 250);
+  const row = el("div");
+  const prim = (txt, fn)=>{ const b = el("button","hm-cta hm-press"); b.type = "button"; b.textContent = txt; b.addEventListener("click",()=>{ haptic(); fn(); }); row.appendChild(b); };
+  const sec = (txt, fn)=>{ const b = el("button","qz-sec hm-press"); b.type = "button"; b.textContent = txt; b.addEventListener("click",()=>{ haptic(); fn(); }); row.appendChild(b); };
   if(sessionFil){
     const th = sessionFil;
-    const b1=el("button","btn ghost"); b1.textContent="Recommencer";
-    b1.addEventListener("click",()=>startFilSession(th)); row.appendChild(b1);
-    const b2=el("button","btn"); b2.textContent="Terminer";
-    b2.addEventListener("click",()=>(FIL_RETOUR || renderFilPsycho)());
-    row.appendChild(b2);
+    prim("Terminer", ()=>(FIL_RETOUR || renderFilPsycho)());
+    sec("Recommencer", ()=>startFilSession(th));
   } else if(globalSession){
-    if(restant>0){
-      const b1=el("button","btn ghost"); b1.textContent="Continuer";
-      b1.addEventListener("click",startGlobalSession); row.appendChild(b1);
-    }
-    const b2=el("button","btn"); b2.textContent="Terminer";
-    b2.addEventListener("click",()=>{ renderSemestres(); showScreen("semestres"); });
-    row.appendChild(b2);
+    prim("Retour à l'accueil", ()=>{ renderSemestres(); showScreen("semestres"); });
+    if(restant > 0) sec("Continuer", startGlobalSession);
   } else {
-    const b1=el("button","btn ghost"); b1.textContent="Recommencer";
-    b1.addEventListener("click",()=>startSession(curMode)); row.appendChild(b1);
-    const b2=el("button","btn"); b2.textContent="Terminer";
-    b2.addEventListener("click",()=>quitterSession());
-    row.appendChild(b2);
+    prim("Terminer", ()=>quitterSession());
+    sec("Recommencer", ()=>startSession(curMode));
   }
   wrap.appendChild(row);
   body.appendChild(wrap);
@@ -12290,7 +12320,7 @@ function renderTR(cur,body){
   const opts=el("div","opts");
   cur.opts.forEach((o,i)=>{
     const b=el("button","opt");
-    if(confirmed){ if(i===cur.c)b.classList.add("correct"); else if(i===selOpt)b.classList.add("wrong"); b.disabled=true; }
+    if(confirmed){ if(i===cur.c)b.classList.add("correct","qz-pop"); else if(i===selOpt)b.classList.add("wrong","qz-shake"); else b.classList.add("qz-dim"); b.disabled=true; }
     const letter=confirmed&&i===cur.c?"✓":confirmed&&i===selOpt?"✗":String.fromCharCode(65+i);
     b.innerHTML=`<span class="opt-letter">${letter}</span><span>${esc(o)}</span>`;
     b.addEventListener("click",()=>{ haptic(); doQCM(i,cur); });
@@ -12298,32 +12328,59 @@ function renderTR(cur,body){
   });
   wrap.appendChild(opts);
 
-  if(confirmed){
-    if(!ok){
-      const bonne=el("div","q-box");
-      bonne.innerHTML=`<div class="q-text">${esc(cur.texte||"").replace(/_{2,}|\.\.\./, `<span class="trou">${esc(cur.opts[cur.c])}</span>`)}</div>`;
-      wrap.appendChild(bonne);
-    }
-    if(cur.e){
-      const exp=el("div","expl "+(ok?"good":"bad"));
-      exp.innerHTML=explicationHtml(cur, selOpt);
-      wrap.appendChild(exp);
-    }
-    // même notation que les autres modes, pour que le score et la mémorisation suivent
-    const key = queue[idx].key;
-    const question = cur.texte || "";
-    if(ok){
-      wrap.appendChild(gradeRow(key, g=>doGrade(g, question)));
-    } else {
-      const row=el("div","btn-row");
-      const nb=el("button","btn"); nb.textContent=idx+1>=queue.length?"Voir les résultats":"Suivante →";
-      nb.addEventListener("click",()=>doGrade(0, question));
-      row.appendChild(nb); wrap.appendChild(row);
-    }
+  if(confirmed && !ok){
+    const bonne=el("div","q-box");
+    bonne.innerHTML=`<div class="q-text">${esc(cur.texte||"").replace(/_{2,}|\.\.\./, `<span class="trou">${esc(cur.opts[cur.c])}</span>`)}</div>`;
+    wrap.appendChild(bonne);
   }
   body.appendChild(wrap);
+  // même notation que les autres modes, pour que le score et la mémorisation suivent
+  if(confirmed) feuilleReponse(cur, cur.texte || "", body);
 }
 
+
+// Après une réponse (QCM, texte à trous) : la feuille qui monte du bas.
+// Juste : « À retenir » puis Difficile / Facile. Faux : « Ta réponse », « À retenir », puis Suivante.
+function feuilleReponse(cur, question, body){
+  const ok = selOpt === cur.c, bonne = cur.opts[cur.c];
+  document.getElementById("sess-prog").style.width = ((idx+1)/queue.length*100) + "%";
+  const pourquoiPas = selOpt >= 0 && !ok && cur.w ? cur.w[cur.opts[selOpt]] : "";
+  const coche = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>';
+  const croix = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  let h = `<div class="qz-verdict"><span class="vi" style="background:${ok ? "var(--ok)" : "var(--ko)"}">${ok ? coche : croix}</span>${ok ? "Bonne réponse" : selOpt < 0 ? "Temps écoulé" : "Pas tout à fait"}</div>`;
+  if(!ok){
+    if(pourquoiPas) h += `<p><b>Ta réponse :</b> ${esc(pourquoiPas)}</p>`;
+    h += `<p><b>La bonne réponse :</b> ${esc(bonne)}</p>`;
+  }
+  if(cur.e) h += `<p><b>À retenir :</b> ${esc(cur.e)}</p>`;
+  const veil = el("div","qz-veil");
+  const sh = el("div","qz-sheet"); const inn = el("div","in"); inn.innerHTML = h; sh.appendChild(inn);
+  const key = queue[idx].key;
+  if(ok){
+    // bonne réponse : on demande si c'était facile ou laborieux
+    inn.appendChild(gradeRow(key, g=>doGrade(g, question)));
+  } else {
+    // mauvaise réponse : la carte revient forcément
+    const nb = el("button","hm-cta hm-press"); nb.type = "button";
+    nb.textContent = idx+1 >= queue.length ? "Voir mon bilan" : "Question suivante";
+    nb.addEventListener("click",()=>{ haptic(); doGrade(0, question); });
+    inn.appendChild(nb);
+  }
+  body.appendChild(veil); body.appendChild(sh);
+  if(navigator.vibrate) try{ navigator.vibrate(ok ? 15 : [30,40,30]); }catch(e){}
+}
+function confettis(){
+  if(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const c = el("div","qz-conf");
+  const cs = ["var(--accent)","var(--accent-2)","#f5a524","#14b87e","#3a86ff"];
+  for(let k = 0; k < 60; k++){
+    const i = document.createElement("i");
+    i.style.left = Math.random()*100 + "%"; i.style.background = cs[k % 5];
+    i.style.animationDelay = Math.random()*.6 + "s"; i.style.transform = "rotate(" + Math.random()*360 + "deg)";
+    c.appendChild(i);
+  }
+  document.body.appendChild(c); setTimeout(()=>c.remove(), 3400);
+}
 function doQCM(i,cur){
   if(confirmed)return;
   clearInterval(timerInt);
