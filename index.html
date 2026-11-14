@@ -2524,6 +2524,19 @@ html[data-screen="pick"]{background:var(--bg) !important;background-image:none !
 .ex-grille button{width:38px;height:38px;border-radius:12px;border:none;background:var(--surface-solid);box-shadow:0 4px 12px color-mix(in srgb,var(--accent) 10%,transparent);font-weight:800;font-size:13.5px;color:var(--text-soft);}
 .ex-grille button.fait{background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);box-shadow:none;border:none;}
 .ex-grille button.ici{background:var(--accent);color:#fff;border:none;box-shadow:0 6px 14px color-mix(in srgb,var(--accent) 35%,transparent);}
+
+/* un mot sous chaque bouton du haut de l'accueil */
+.hm-btns{align-items:flex-start;}
+.hm-btns>button{overflow:visible !important;margin-bottom:16px;}
+.hm-btns>button::after{content:attr(data-lbl);position:absolute;left:50%;top:calc(100% + 4px);transform:translateX(-50%);font-size:10.5px;font-weight:800;color:#fff;opacity:.92;white-space:nowrap;letter-spacing:0;pointer-events:none;}
+/* ══════════ LES MÊMES BOUTONS PARTOUT ══════════ */
+/* principal : sombre en clair, à ta couleur en sombre ; secondaire : gris doux */
+.btn,.fs-ok,#screen-welcome .btn-primary{border:none !important;border-radius:17px !important;min-height:52px;padding:0 18px !important;font-family:var(--font-text) !important;font-weight:800 !important;font-size:15.5px !important;background:var(--text) !important;color:var(--bg) !important;box-shadow:none !important;}
+.btn:hover{transform:none;}
+.btn.ghost{background:color-mix(in srgb,var(--text) 6%,transparent) !important;color:var(--text) !important;border:none !important;}
+.btn:disabled{opacity:.4;}
+@media(prefers-color-scheme:dark){html:not([data-mode="clair"]) .btn:not(.ghost),html:not([data-mode="clair"]) .fs-ok{background:var(--accent) !important;color:#fff !important;}}
+html[data-mode="sombre"] .btn:not(.ghost),html[data-mode="sombre"] .fs-ok{background:var(--accent) !important;color:#fff !important;}
 </style>
 </head>
 <body>
@@ -3302,6 +3315,7 @@ let rateesSession = new Set();
 let flipped = false, selOpt = null, confirmed = false;
 let sessionDueOnly = false;
 let globalSession = false;
+let sessionMix = null;   // id de la matière quand la série mélange QCM, flashcards et textes à trous
 // session lancée depuis un thème du fil psycho (questions de plusieurs matières)
 let sessionFil = null;
 let showAns = false, showHint = false, lastMotiv = "";
@@ -9385,7 +9399,7 @@ function renderAccueil(anim){
   const head = document.getElementById("hm-hello"); if(!head) return;
   // les vrais boutons montent dans l'en-tête (une seule fois)
   const btns = document.getElementById("hm-btns");
-  if(btns) ["btn-memo","btn-search","btn-compte"].forEach(id=>{ const x = document.getElementById(id); if(x && x.parentNode !== btns) btns.appendChild(x); });
+  if(btns) [["btn-memo","Mémo"],["btn-search","Chercher"],["btn-compte","Compte"]].forEach(([id, lbl])=>{ const x = document.getElementById(id); if(!x) return; x.dataset.lbl = lbl; if(x.parentNode !== btns) btns.appendChild(x); });
   const now = new Date();
   document.getElementById("hm-date").textContent = now.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long" });
   const h = now.getHours();
@@ -9647,12 +9661,12 @@ function renderMatiere(){
       <div class="mt-seg" id="mt-seg"><button type="button" data-o="cm">CM${(m.cm||[]).length ? " · " + m.cm.length : ""}</button><button type="button" data-o="td">TD${(m.td||[]).length ? " · " + m.td.length : ""}</button><button type="button" data-o="ent">S'entraîner</button></div>
       <div id="mt-liste"></div>
     </div>
-    <div class="mt-sticky"><button type="button" class="hm-cta hm-press" id="mt-go">${q.tot ? (ctl ? "Réviser pour " + quandCtl : "Réviser cette matière") : "S'entraîner"}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></div>`;
+    <div class="mt-sticky"><button type="button" class="hm-cta hm-press" id="mt-go">${ctl ? "Réviser pour " + quandCtl : "Réviser cette matière"}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></div>`;
   document.getElementById("mt-bk").addEventListener("click",()=>{ haptic(); if(document.documentElement.dataset.mtDepuis === "subjects"){ renderSubjectCards(curSemestre); showScreen("subjects"); } else { renderSemestres(); showScreen("semestres"); } });
   document.getElementById("mt-go").addEventListener("click",()=>{
     haptic(); curSubj = m;
-    if(!q.tot){ openSubject(m.id); setTab(2); return; }
-    choisirScope("grand"); retourSession = ()=>ouvrirMatiere(m.id, MT_ONGLET); startSession("qcm");
+    retourSession = ()=>ouvrirMatiere(m.id, MT_ONGLET);
+    if(!startRevisionMatiere(m)){ openSubject(m.id); setTab(2); }
   });
   // reprendre la lecture là où on s'était arrêté dans cette matière
   const der = lectureCharger().dernier[m.id];
@@ -11504,6 +11518,16 @@ function renderTrainPane(){
   pane.appendChild(intro);
   const scope = "all";
   const grid=el("div","mode-grid");
+  // mes erreurs : en premier, dès qu'il y en a
+  const nErr = itemsDuScope(curSubj, "qcm", "erreurs").length;
+  if(nErr){
+    const card = el("button","mode-card mode-erreurs");
+    card.innerHTML = `<div class="mode-icon">${ICO("qcm")}</div>
+      <div class="mode-info"><div class="mode-name">Mes erreurs</div><div class="mode-desc">Les questions ratées, à reprendre</div></div>
+      <span class="mode-count mode-due">${nErr}</span>`;
+    card.addEventListener("click",()=>{ haptic(); choisirScope("erreurs"); startSession("qcm"); });
+    grid.appendChild(card);
+  }
   // mode examen : dès qu'il y a de quoi faire un vrai sujet
   const nExam = examSources(curSubj).reduce((k,x)=>k + x.n, 0);
   if(nExam >= 5){
@@ -11516,7 +11540,7 @@ function renderTrainPane(){
   }
   const modes=[
     {m:"fc",icon:ICO("fc"),title:"Flashcards",desc:"Question → retourne → tu te notes"},
-    {m:"qcm",icon:ICO("qcm"),title:"QCM",desc:"4 choix · 20 s · explication après"},
+    {m:"qcm",icon:ICO("qcm"),title:"QCM par chapitre",desc:"4 choix · 20 s · explication après"},
     {m:"oq",icon:ICO("oq"),title:"Questions ouvertes",desc:"Rédige, puis compare au corrigé"},
     {m:"tr",icon:ICO("tr"),title:"Texte à trous",desc:"Le bon mot · 4 choix · 15 s"},
   ];
@@ -12246,6 +12270,7 @@ function finirExamen(tempsEcoule){
   window.scrollTo(0, 0);
 }
 function startSession(m){
+  sessionMix = null;
   exam = null; document.getElementById("sess-score").className = "nav-score";
   curMode=m; idx=0; score=0; answers=[]; rateesSession = new Set(); sessionFil = null;
   flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv=""; oqEcrit="";
@@ -12281,8 +12306,47 @@ function startSession(m){
   renderSess();
 }
 
+
+// ── « Réviser cette matière » : une série qui mélange les exercices ──
+// Surtout des QCM (ils font avancer « QCM validés »), plus quelques flashcards et textes à trous,
+// glissés entre eux. Ce qui n'est pas encore validé passe d'abord. Pas de questions ouvertes : trop longues.
+function startRevisionMatiere(subj){
+  exam = null; document.getElementById("sess-score").className = "nav-score";
+  idx=0; score=0; answers=[]; rateesSession = new Set(); sessionFil = null;
+  flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv=""; oqEcrit="";
+  globalSession = false; sessionScope = "grand"; sessionMix = subj.id; curSubj = subj;
+  const prend = m=>{
+    const all = itemsDuScope(subj, m, "grand").map(({item,i})=>({ item:(m === "qcm" || m === "tr") ? melangerQCM(item) : item, mode:m, subj, key:cardKey(subj.id, m, item, i) }));
+    return shuffle(all.filter(x=>!estAcquise(x.key))).concat(shuffle(all.filter(x=>estAcquise(x.key))));
+  };
+  const Q = prend("qcm"), F = prend("fc"), T = prend("tr");
+  let nF = Math.min(5, F.length), nT = Math.min(5, T.length);
+  const nQ = Math.min(Q.length, SERIE_MAX - nF - nT);
+  // pas assez de QCM : on complète avec les autres exercices
+  let reste = SERIE_MAX - nQ - nF - nT;
+  while(reste > 0 && (nF < F.length || nT < T.length)){ if(nF < F.length){ nF++; reste--; } if(reste > 0 && nT < T.length){ nT++; reste--; } }
+  // les autres exercices alternent, puis se répartissent régulièrement entre les QCM
+  const autres = []; const f = F.slice(0, nF), t = T.slice(0, nT);
+  while(f.length || t.length){ if(f.length) autres.push(f.shift()); if(t.length) autres.push(t.shift()); }
+  const qs = Q.slice(0, nQ), total = qs.length + autres.length;
+  queue = [];
+  const pas = autres.length ? total / autres.length : 0;
+  let prochain = pas ? pas / 2 : Infinity;
+  for(let k = 0; k < total; k++){
+    if(autres.length && (k >= prochain || !qs.length)){ queue.push(autres.shift()); prochain += pas; }
+    else queue.push(qs.shift());
+  }
+  queue = queue.filter(Boolean);
+  if(!queue.length) return false;
+  sessionDueOnly = false; curMode = queue[0].mode;
+  clearInterval(timerInt);
+  showScreen("session");
+  renderSess();
+  return true;
+}
 // ── Session globale : toutes les cartes dues, toutes matières confondues ──
 function startGlobalSession(){
+  sessionMix = null;
   exam = null; document.getElementById("sess-score").className = "nav-score";
   idx=0; score=0; answers=[]; rateesSession = new Set(); sessionFil = null;
   flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv=""; oqEcrit="";
@@ -12348,7 +12412,7 @@ function renderSess(){
   const cur   = entry.item;
   const mode  = entry.mode;          // le mode vient de la carte (sessions multi-matières)
   curMode = mode;
-  document.getElementById("sess-pos").textContent = titreSession(mode) + " · " + (idx+1) + " / " + queue.length;
+  document.getElementById("sess-pos").textContent = (sessionMix ? "Révision" : titreSession(mode)) + " · " + (idx+1) + " / " + queue.length;
   const sc = document.getElementById("sess-score"); sc.className = "nav-score sx-temps"; sc.textContent = "";
   document.getElementById("sess-prog").style.width=(idx/queue.length*100)+"%";
   const body=document.getElementById("sess-body"); body.innerHTML="";
@@ -12575,7 +12639,7 @@ function showResults(){
   document.getElementById("sess-prog").style.width="100%";
   const body=document.getElementById("sess-body"); body.innerHTML="";
   // le score d'un chapitre ne doit pas écraser celui de la matière entière
-  if(!globalSession && curSubj && (sessionScope === "all" || sessionScope === "grand")) stats[curSubj.id+"_"+curMode]={score,total:queue.length};
+  if(!globalSession && !sessionMix && curSubj && (sessionScope === "all" || sessionScope === "grand")) stats[curSubj.id+"_"+curMode]={score,total:queue.length};
   // reste à revoir : sur la matière (session simple) ou sur tout (session globale)
   const restant = sessionFil ? 0 : globalSession
     ? SUBJECTS.reduce((n,s)=>n+dueCount(s),0)
@@ -12615,7 +12679,8 @@ function showResults(){
     if(restant > 0) sec("Continuer", startGlobalSession);
   } else {
     prim("Terminer", ()=>quitterSession());
-    sec("Recommencer", ()=>startSession(curMode));
+    if(sessionMix){ const sj = SUBJECTS.find(x=>x.id === sessionMix); sec("Recommencer", ()=>startRevisionMatiere(sj)); }
+    else sec("Recommencer", ()=>startSession(curMode));
   }
   wrap.appendChild(row);
   body.appendChild(wrap);
@@ -12822,6 +12887,7 @@ function questionsDuTheme(th){
   return out;
 }
 function startFilSession(th){
+  sessionMix = null;
   exam = null; document.getElementById("sess-score").className = "nav-score";
   curMode = "qcm"; idx = 0; score = 0; answers = []; rateesSession = new Set();
   flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv=""; oqEcrit="";
