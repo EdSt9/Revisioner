@@ -2492,3 +2492,14 @@ html[data-mode="sombre"] :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal
 .hd-psy-mark .ico-ui{width:30px;height:30px;color:#fff;}
 .projet-alerte .ico-ui{width:20px;height:20px;}
 .psy-step-urgent .ico-ui,.psy-step-tag .ico-ui,.psy-step-date .ico-ui{display:inline-block;width:13px;height:13px;vertical-align:-2px;margin-right:4px;}
+/* page Cours au style de l'accueil : titres de section comme « Mes matières », une couleur par tuile */
+.sem-groupe{font-size:19px;font-weight:800;letter-spacing:-.02em;text-transform:none;color:var(--text);margin:10px 4px -6px;}
+.sem-groupe:first-child{margin-top:0;}
+.sem-groupe::after{display:none;}
+.sem-groupe .sem-chev{margin-left:auto;}
+.sem-tile .sem-badge{background:color-mix(in srgb,var(--tc,var(--accent)) 14%,transparent);}
+.sem-tile .sem-badge .ico-ui{color:var(--tc,var(--accent));}
+.sem-tile .sem-bar{background:color-mix(in srgb,var(--tc,var(--accent)) 14%,transparent);}
+.sem-tile .sem-bar-fill{background:var(--tc,var(--accent));}
+.sem-tile .sem-pct{color:var(--tc,var(--text-mute));font-weight:700;}
+

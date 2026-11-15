@@ -6077,6 +6077,8 @@ function icone(x){
   if(!k) return esc(String(x || ""));
   return `<svg class="ico ico-ui" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${UI_IC[k] || MAT_IC[k]}</svg>`;
 }
+// la couleur de chaque tuile de Cours : vert pour les semestres (des plantes), rose pour Psycho, jaune pour CPE, bleu pour les archives
+const TUILE_COUL = { v:"var(--accent)", b:"var(--c-b)", g:"var(--c-g)", y:"#e09a00", r:"var(--c-r)" };
 function iconeSemestre(sem){ return SEM_IC[Math.max(0, Math.min(6, Math.floor(sem)))]; }
 // « 🌱 Dès maintenant » → « Dès maintenant » : la frise a déjà ses repères
 const sansEmoji = t=>String(t || "").replace(/^(\p{Extended_Pictographic}\ufe0f?\s*)+/u, "");
@@ -6633,7 +6635,7 @@ function renderSemestres(){
     const dues = list.filter(x=>["cm","td"].some(t=>(x[t]||[]).some(ch=>!estRevise(x, t, ch))));
     const nvSem = list.filter(x=>nouveauxDe(x).length).length;
     const t = tuileDe("sem:" + sem);
-    const card=el("button","sem-tile rise");
+    const card=el("button","sem-tile rise"); card.style.setProperty("--tc", TUILE_COUL.g);
     card.innerHTML=`
       <div class="sem-tile-top">
         <div class="sem-badge">${icone(t.icone || iconeSemestre(sem))}</div>
@@ -6652,7 +6654,7 @@ function renderSemestres(){
   // Projet Psycho : réservé à Civa et Nana, invisible pour les autres comptes
   if(isCloseFriend()){
     const t = tuileDe("psy");
-    const psy = el("button","sem-tile psy-tile rise");
+    const psy = el("button","sem-tile psy-tile rise"); psy.style.setProperty("--tc", TUILE_COUL.r);
     psy.innerHTML = `
       <div class="sem-tile-top"><div class="sem-badge">${icone(t.icone || "tetecoeur")}</div></div>
       <div class="sem-name">${esc(t.titre || psyTitle())}</div>
@@ -6666,7 +6668,7 @@ function renderSemestres(){
   // les autres projets : reçus d'une classe (et Concours CPE chez Civa)
   mesProjets().forEach(pid=>{
     const pj = PROJETS[pid], t = tuileDe("projet:" + pid), pct = projetAvancement(pid);
-    const b = el("button","sem-tile psy-tile rise");
+    const b = el("button","sem-tile psy-tile rise"); b.style.setProperty("--tc", TUILE_COUL[pid === "cpe" ? "y" : "v"]);
     b.innerHTML = `
       <div class="sem-tile-top"><div class="sem-badge">${icone(t.icone || pj.icone)}</div></div>
       <div class="sem-name">${esc(t.titre || pj.titre)}</div>
@@ -7050,7 +7052,7 @@ function ajouterArchives(wrap, archives, placer){
     try{ localStorage.setItem("revision_archives_ouvert", ouvert ? "0" : "1"); }catch(e){}
     renderSemestres();
   };
-  const tu = el("button","sem-tile arch-tuile rise" + (ouvert ? " ouvert" : "")); tu.type = "button";
+  const tu = el("button","sem-tile arch-tuile rise" + (ouvert ? " ouvert" : "")); tu.type = "button"; tu.style.setProperty("--tc", TUILE_COUL.b);
   tu.setAttribute("aria-expanded", ouvert ? "true" : "false");
   tu.innerHTML = `<div class="sem-tile-top"><div class="sem-badge">${icone("archives")}</div></div>
     <div class="sem-name">L1 et L2</div>
