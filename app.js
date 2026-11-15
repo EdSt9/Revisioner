@@ -6312,12 +6312,13 @@ function renderAccueil(anim){
       </div></div>
     ${auj >= HM_OBJECTIF ? `<div class="hm-bravo">✓ Objectif atteint. Tout le reste, c'est du bonus.</div>` : ""}
     <button type="button" class="hm-cta hm-press" id="hm-go">${ctaTxt}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+    ${(()=>{ const a = apercuRevision(); return `<div class="hm-apercu${a.vide ? " vide" : ""}">${a.txt}</div>`; })()}
     <div class="hm-ligne">${serie.n ? `🔥 <b>${serie.n} jour${serie.n > 1 ? "s" : ""}</b> de suite` : "Une série par jour, à ton rythme"}<span class="pt"></span><button type="button" class="hm-objbtn" id="hm-obj">objectif <b>${HM_OBJECTIF}</b> par jour ›</button></div>`;
   const boxJ = document.getElementById("hm-jour");
   const neuf = jour !== HM_DERNIER;
   if(neuf){
     HM_DERNIER = jour; boxJ.innerHTML = jour;
-    document.getElementById("hm-go").addEventListener("click",()=>{ haptic(); startGlobalSession(); });
+    document.getElementById("hm-go").addEventListener("click",()=>{ haptic(); lancerRevisionJour(); });
     document.getElementById("hm-obj").addEventListener("click",()=>{ haptic(); choisirObjectif(); });
     const ring = boxJ.querySelector(".hm-ring"); if(ring){ ring.style.cursor = "pointer"; ring.addEventListener("click",()=>{ haptic(); choisirObjectif(); }); }
   }
@@ -9357,15 +9358,28 @@ function startGlobalSession(){
   flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv=""; oqEcrit="";
   globalSession = true;
   sessionScope = "all";
-  const all = [], prio = [];
+  const { prio, all, neuf } = choixRevision();
+  if(!all.length && !prio.length && !neuf.length) return false;
+  queue = shuffle(prio).concat(shuffle(all), shuffle(neuf)).slice(0, SERIE_MAX);
+  sessionDueOnly = true;
+  clearInterval(timerInt);
+  showScreen("session");
+  renderSess();
+  return true;
+}
+// Ce que la révision du jour va proposer : les chapitres des contrôles proches d'abord, puis ce qui est à revoir.
+function choixRevision(){
+  const all = [], prio = [], neuf = [];
+  const semIds = new Set(hmMatieresSem().map(x=>x.id));
   // un contrôle dans les 14 jours : ses chapitres passent en premier (même pas encore « dus »)
-  const cibles = {};
+  const cibles = {}, quand = {};
   try{
     pendingAlerts(true, false).forEach(e=>{
       const N = evNote(e) || {}; if(typeDevoir(N) !== "controle" || N.done) return;
       const j = hmJoursAvant(e.start); if(j < 0 || j > 14) return;
       const sj = matiereDeNote(e, N); if(!sj) return;
       const chs = Array.isArray(N.chs) && N.chs.length ? N.chs : null;
+      if(!(sj.id in quand) || e.start < quand[sj.id]) quand[sj.id] = e.start;
       if(!(sj.id in cibles)) cibles[sj.id] = chs;
       else if(cibles[sj.id] === null || !chs) cibles[sj.id] = null;   // une fois « toute la matière », ça le reste
       else cibles[sj.id] = cibles[sj.id].concat(chs);
@@ -9378,16 +9392,61 @@ function startGlobalSession(){
         const visee = m !== "oq" && (s.id in cibles) && (!cibles[s.id] || cibles[s.id].includes(item && item.ch));
         const entree = ()=>({ item: (m === "qcm" || m === "tr") ? melangerQCM(item) : item, mode:m, subj:s, key });
         if(visee && (srsIsDue(key) || !estAcquise(key))) prio.push(entree());
-        else if(srsIsDue(key)) all.push(entree());
+        else if(aRevoir(key)) all.push(entree());                                   // déjà fait, et son tour est revenu
+        else if(!SRS[key] && semIds.has(s.id) && m !== "oq") neuf.push(entree());   // jamais fait : seulement le semestre en cours
       });
     });
   });
-  if(!all.length && !prio.length) return;
-  queue = shuffle(prio).concat(shuffle(all)).slice(0, SERIE_MAX);
-  sessionDueOnly = true;
+  return { prio, all, neuf, cibles, quand };
+}
+// « Prévention des conduites à risques » → « Prévention »
+const nomBref = t=>String(t || "").split(/ (?:des|de|du|d'|et|à|aux|en|:) /)[0].replace(/^(Introduction à la|Introduction aux|Introduction à) /i, "");
+// la phrase sous le bouton : ce que la série va contenir
+function apercuRevision(){
+  const { prio, all, neuf, quand } = choixRevision();
+  const n = Math.min(SERIE_MAX, prio.length + all.length + neuf.length);
+  if(!n) return { vide:true, txt:"Rien à revoir aujourd'hui : tout ce que tu as travaillé est à jour." };
+  const mats = [...new Set(prio.map(x=>x.subj.id))].sort((a,b)=>quand[a] - quand[b]).map(id=>SUBJECTS.find(x=>x.id === id)).filter(Boolean);
+  const ex = n + " exercice" + (n > 1 ? "s" : "");
+  if(mats.length){
+    const noms = mats.slice(0, 2).map(m=>"<b>" + esc(nomBref(m.title)) + "</b>").join(" et ") + (mats.length > 2 ? " (+" + (mats.length - 2) + ")" : "");
+    return { txt:`${ex}, ${noms} en priorité (contrôle${mats.length > 1 ? "s" : ""} bientôt)` };
+  }
+  const a = Math.min(all.length, n), b = n - a;
+  const bouts = [a ? `<b>${a}</b> à revoir` : "", b ? `<b>${b}</b> nouveau${b > 1 ? "x" : ""} du semestre` : ""].filter(Boolean);
+  return { txt:`${ex} : ${bouts.join(" et ")}` };
+}
+// Rien à revoir : une série libre, faite de ce qui n'est pas encore acquis (semestre en cours d'abord)
+function startSerieLibre(){
+  const sem = hmMatieresSem(), base = sem.length ? sem : SUBJECTS, pris = [];
+  base.forEach(s=>["qcm","fc","tr"].forEach(m=>exos(s, m).forEach((item,i)=>{
+    const key = cardKey(s.id,m,item,i);
+    if(!estAcquise(key)) pris.push({ item:(m === "qcm" || m === "tr") ? melangerQCM(item) : item, mode:m, subj:s, key });
+  })));
+  if(!pris.length){ toast("Tout est acquis. Bravo !"); return; }
+  sessionMix = null; exam = null; document.getElementById("sess-score").className = "nav-score";
+  idx=0; score=0; answers=[]; rateesSession = new Set(); sessionFil = null;
+  flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv=""; oqEcrit="";
+  globalSession = true; sessionScope = "all";
+  queue = shuffle(pris).slice(0, SERIE_MAX);
+  sessionDueOnly = false;
   clearInterval(timerInt);
   showScreen("session");
   renderSess();
+}
+// le bouton de l'accueil : la révision du jour, ou, s'il n'y a rien à revoir, deux propositions
+function lancerRevisionJour(){
+  if(startGlobalSession() !== false) return;
+  const prochain = pendingAlerts(true, false).map(e=>({ e, N:evNote(e) || {} }))
+    .filter(x=>typeDevoir(x.N) === "controle" && !x.N.done && hmJoursAvant(x.e.start) >= 0)
+    .sort((a,b)=>a.e.start - b.e.start).map(x=>({ ...x, sj:matiereDeNote(x.e, x.N) })).find(x=>x.sj);
+  openForm("Rien à revoir aujourd'hui", [], "Faire une série libre", ()=>{ setTimeout(startSerieLibre, 320); },
+    null, prochain ? { label:"Réviser " + nomBref(prochain.sj.title) + " (contrôle " + (hmJoursAvant(prochain.e.start) <= 1 ? "demain" : "dans " + hmJoursAvant(prochain.e.start) + " jours") + ")",
+      fn:()=>startRevisionMatiere(prochain.sj, Array.isArray(prochain.N.chs) && prochain.N.chs.length ? prochain.N.chs : null) } : null);
+  const p = el("div","fs-hint");
+  p.textContent = "Tout ce que tu as déjà travaillé est à jour. Tu peux quand même t'entraîner : une série libre reprend ce que tu ne maîtrises pas encore.";
+  p.style.cssText = "margin:2px 4px 6px;font-size:14px;line-height:1.55;text-align:center";
+  document.getElementById("fs-body").appendChild(p);
 }
 // le titre court d'une session : « CM 3 », « Grand QCM », « Mes erreurs »…
 function titreSession(mode){

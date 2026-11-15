@@ -2542,3 +2542,8 @@ button.mt-big{border:0;color:inherit;cursor:pointer;font:inherit;padding:0;}
 /* la grille d'icônes montre la couleur choisie juste au-dessus */
 .fs-ic{color:var(--pc,var(--accent));background:color-mix(in srgb,var(--pc,var(--accent)) 9%,var(--surface-2,rgba(127,127,127,.08)));}
 .fs-ic.on{background:color-mix(in srgb,var(--pc,var(--accent)) 22%,transparent);box-shadow:inset 0 0 0 2px var(--pc,var(--accent));}
+/* sous « Commencer mes révisions » : ce que la série va contenir */
+.hm-apercu{text-align:center;font-size:13.5px;font-weight:600;line-height:1.4;color:var(--text-soft);margin:12px 6px 0;}
+.hm-apercu b{color:var(--text);font-weight:800;}
+.hm-apercu.vide{color:var(--text-mute);}
+.hm-apercu + .hm-ligne{margin-top:6px;}
