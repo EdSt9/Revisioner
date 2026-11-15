@@ -2507,3 +2507,8 @@ html[data-mode="sombre"] :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal
 .hm-hs{scroll-padding-inline:16px;}
 .hm-up{display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-start;}
 .hm-up .s{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+/* PDF : chaque page garde sa place avant d'être dessinée, puis s'affiche en image */
+.pdf-page{background:#fff;border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.18);overflow:hidden;}
+.pdf-page .pdf-img{display:block;width:100%;height:100%;opacity:0;transition:opacity .2s;}
+.pdf-page.pret .pdf-img{opacity:1;}
+

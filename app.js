@@ -3720,6 +3720,7 @@ function entreeDansEcran(cible){
 let ECRAN_AVANT = null;   // la page d'où l'on vient : visible derrière pendant le glisser
 function showScreen(id){
   lecteurStop();
+  setTimeout(()=>{ try{ memoriserPage(); }catch(e){} }, 0);
   // arrivée sur un autre écran : les animations d'entrée jouent, puis on se calme.
   // Le même écran redessiné (cocher une étape, filtrer) reste calme.
   if(document.documentElement.getAttribute("data-screen") !== id){
@@ -4392,7 +4393,7 @@ function ouvrirPdf(doc){
   const fermer = ()=>{ ferme = true; haptic();
     if(LEC.racine && v.contains(LEC.racine)) lecteurStop();
     document.body.classList.remove("pdf-ouvert");
-    v.classList.remove("on"); setTimeout(()=>v.remove(), 330); document.removeEventListener("keydown", echap); };
+    v.classList.remove("on"); setTimeout(()=>{ if(v._pdfFin) v._pdfFin(); v.remove(); }, 330); document.removeEventListener("keydown", echap); };
   const echap = e=>{ if(e.key === "Escape") fermer(); };
   document.addEventListener("keydown", echap);
   v.querySelector(".pdf-fermer").addEventListener("click", fermer);
@@ -4414,16 +4415,46 @@ function ouvrirPdf(doc){
       const pdf = await lib.getDocument({ data: new Uint8Array(await blob.arrayBuffer()) }).promise;
       if(ferme) return;
       zone.innerHTML = "";
-      const larg = Math.min(zone.clientWidth - 20, 820), dpr = Math.min(window.devicePixelRatio || 1, 3);
+      // Mémoire : dessiner toutes les pages d'un coup, en ×3, fait couper l'app par iOS sur les gros PDF.
+      // Chaque page est dessinée quand elle approche de l'écran, en ×2 au plus, puis gardée en image (légère, déchargeable).
+      const larg = Math.min(zone.clientWidth - 20, 820), dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const aDessiner = [];
+      let enCours = false;
+      const dessinerSuite = async ()=>{
+        if(enCours) return; enCours = true;
+        while(aDessiner.length && !ferme){
+          const { page, vp0, pg, n } = aDessiner.shift();
+          try{
+            const vp = page.getViewport({ scale: (larg / vp0.width) * dpr });
+            const c = document.createElement("canvas"); c.width = Math.floor(vp.width); c.height = Math.floor(vp.height);
+            await page.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise;
+            const b = await new Promise(ok=>c.toBlob(ok, "image/jpeg", .9));
+            c.width = c.height = 0;
+            if(ferme || !b) break;
+            const img = new Image(); img.alt = "Page " + n; img.className = "pdf-img"; img.src = URL.createObjectURL(b);
+            img.onload = ()=>pg.classList.add("pret");
+            pg.insertBefore(img, pg.firstChild);
+            page.cleanup();
+          }catch(e){}
+        }
+        enCours = false;
+      };
+      const io = "IntersectionObserver" in window ? new IntersectionObserver(es=>es.forEach(en=>{
+        if(!en.isIntersecting) return;
+        io.unobserve(en.target);
+        aDessiner.push(en.target._pdf); aDessiner.sort((a,b)=>a.n - b.n); dessinerSuite();
+      }), { root:zone, rootMargin:"1200px 0px" }) : null;
+      v._pdfFin = ()=>{ if(io) io.disconnect(); v.querySelectorAll("img.pdf-img").forEach(i=>URL.revokeObjectURL(i.src)); try{ pdf.destroy(); }catch(e){} };
       for(let n = 1; n <= pdf.numPages; n++){
         if(ferme) return;
         const page = await pdf.getPage(n);
-        const vp0 = page.getViewport({ scale:1 }), vp = page.getViewport({ scale: (larg / vp0.width) * dpr });
+        const vp0 = page.getViewport({ scale:1 });
         const pg = el("div","pdf-page");
-        const c = document.createElement("canvas"); c.width = Math.floor(vp.width); c.height = Math.floor(vp.height);
-        c.setAttribute("aria-label", "Page " + n);
-        pg.appendChild(c); zone.appendChild(pg);
-        await page.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise;
+        pg.style.aspectRatio = vp0.width + " / " + vp0.height;
+        pg.setAttribute("aria-label", "Page " + n);
+        zone.appendChild(pg);
+        pg._pdf = { page, vp0, pg, n };
+        if(io) io.observe(pg); else { aDessiner.push(pg._pdf); dessinerSuite(); }
         // le texte de la page, invisible, posé sur l'image : c'est lui qu'on lit et qu'on surligne
         try{
           const vpc = page.getViewport({ scale: pg.clientWidth / vp0.width });
