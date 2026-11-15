@@ -2557,3 +2557,4 @@ button.mt-big{border:0;color:inherit;cursor:pointer;font:inherit;padding:0;}
 .hm-doux-s{background:color-mix(in srgb,#0ea5e9 14%,transparent);color:#0b95d4;}
 @media(prefers-color-scheme:dark){html:not([data-mode="clair"]) .hm-doux-i{color:#8f8ff0;} html:not([data-mode="clair"]) .hm-doux-l{color:#86bf2a;}}
 html[data-mode="sombre"] .hm-doux-i{color:#8f8ff0;} html[data-mode="sombre"] .hm-doux-l{color:#86bf2a;}
+.cls-l-ic .ico{width:22px;height:22px;}
