@@ -292,14 +292,14 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding
 
 /* badges type */.ev-badge{display:inline-block;vertical-align:middle;margin-right:7px;
   font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:3px 7px;}
-.ev-badge.controle{background:var(--warn-soft);color:var(--warn);}
-.ev-badge.devoir{background:var(--danger-soft);color:var(--danger);}
+.ev-badge.controle{background:var(--danger-soft);color:var(--danger);}
+.ev-badge.devoir{background:var(--warn-soft);color:var(--warn);}
 .ev-badge.note{background:var(--info-soft);color:var(--info);}
 
 .edt-course{cursor:pointer;transition:transform .18s var(--ease-spring),border-color .2s;}
 .edt-course:active{transform:scale(.985);}
-.edt-course.flagged.controle{border-color:var(--warn);}
-.edt-course.flagged.devoir{border-color:var(--danger);}
+.edt-course.flagged.controle{border-color:var(--danger);}
+.edt-course.flagged.devoir{border-color:var(--warn);}
 .edt-course.flagged.note{border-color:var(--info);}
 .edt-note{font-size:12px;color:var(--text-soft);margin-top:6px;line-height:1.45;
   padding-left:9px;border-left:2px solid var(--border-strong);white-space:pre-wrap;}
@@ -768,8 +768,8 @@ button.sem-groupe{width:100%;background:none;border:0;padding:0;cursor:pointer;f
 .fp-ligne.fait .cal-name{color:var(--text-soft);}
 .fp-etat{flex-shrink:0;font-size:11.5px;font-weight:700;border-radius:20px;padding:3px 9px;white-space:nowrap;}
 .fp-etat.ok{color:var(--ok);background:var(--ok-soft);}
-.fp-etat.devoir{color:var(--danger);background:var(--danger-soft);}
-.fp-etat.controle{color:var(--warn);background:var(--warn-soft);}
+.fp-etat.devoir{color:var(--warn);background:var(--warn-soft);}
+.fp-etat.controle{color:var(--danger);background:var(--danger-soft);}
 .fp-etat.note{color:var(--info);background:var(--info-soft);}
 .fp-etat.maj{color:var(--warn);background:var(--warn-soft);}
 .fp-actions{display:flex;flex-wrap:wrap;gap:8px;margin:-2px 4px 10px;}
@@ -817,8 +817,8 @@ button.sem-groupe{width:100%;background:none;border:0;padding:0;cursor:pointer;f
 .on>.ev-sw::after{transform:translateX(19px);}
 .ev-recu{margin-top:14px;font-size:12.5px;line-height:1.45;color:var(--text-mute);}
 .cf-tag{font-size:11.5px;font-weight:700;border-radius:20px;padding:2px 8px;margin-right:4px;}
-.cf-tag.controle{color:var(--warn);background:var(--warn-soft);}
-.cf-tag.devoir{color:var(--danger);background:var(--danger-soft);}
+.cf-tag.controle{color:var(--danger);background:var(--danger-soft);}
+.cf-tag.devoir{color:var(--warn);background:var(--warn-soft);}
 .cf-tag.note{color:var(--info);background:var(--info-soft);}
 .ev-autre{display:flex;align-items:center;gap:10px;margin-top:14px;padding:12px 14px;border-radius:14px;
   background:var(--surface);border:1px solid var(--border);}
@@ -2479,3 +2479,81 @@ html[data-mode="sombre"] :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal
 .sheet :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal-row,.card,.chap-share,.cls-row,.cls-suivre,.colle-carte,.colle-sec,.cours-pdf,.deja-vu,.dev-card,.ecue-card,.edt-course,.ev-autre,.ev-share,.ex-err,.ex-row,.exam-card,.exam-done,.fil-theme,.fin-chap,.hint-box,.home-tuile,.idx-entree,.lex-item,.mem-row,.memo2-carte,.mn-carte,.mode-card,.mt-groupe,.od-row,.overview,.plan-row,.prof-row,.qc-card,.recap,.results-detail,.sem-entry,.sem-tile,.sess-subj,.sr-carte,.today-card){background-color:color-mix(in srgb,var(--text) 5%,transparent) !important;box-shadow:none !important;}
 /* les pastilles et petits boutons : fond doux, sans contour */
 :is(.auteur-tag,.auteur-retenir,.chap-pick,.colle-pas-titre,.dev-doc,.dev-lien,.dev-pts,.ev-autre-x,.ex-chip,.fs-opt,.grade-btn,.mem-act,.mt-rond,.od-bt button,.pick-actions button,.pomo-bt,.sr-num,.sr-plus,.search-box,.sheet-home,.lec-start,.mt-curseur,.sheet .ev-types,.sheet .fs-choice,.wrap .icon-btn){border-color:transparent;background-color:color-mix(in srgb,var(--text) 6%,transparent);box-shadow:none;}
+/* icônes dessinées à la place des emojis (semestres, projets, archives, rubriques) */
+.ico-ui{display:block;flex-shrink:0;}
+.sem-badge .ico-ui,.psy-nav-icon .ico-ui{width:25px;height:25px;color:var(--accent);}
+.sem-grid.liste .sem-badge .ico-ui{width:22px;height:22px;}
+.od-ic .ico-ui{width:21px;height:21px;margin:0 auto;color:var(--accent);}
+.fp-ic .ico-ui,.cls-projet-ic .ico-ui,.fil-ic .ico-ui{width:21px;height:21px;color:var(--accent);}
+.cls-ic .ico-ui{width:26px;height:26px;color:var(--accent);}
+.psy-info-icon .ico-ui{width:22px;height:22px;color:var(--accent);}
+.psy-spe-icon .ico-ui{width:26px;height:26px;color:var(--accent);}
+.psy-hero-mark .ico-ui{width:26px;height:26px;color:var(--accent);}
+.hd-psy-mark .ico-ui{width:30px;height:30px;color:#fff;}
+.projet-alerte .ico-ui{width:20px;height:20px;}
+.psy-step-urgent .ico-ui,.psy-step-tag .ico-ui,.psy-step-date .ico-ui{display:inline-block;width:13px;height:13px;vertical-align:-2px;margin-right:4px;}
+/* page Cours au style de l'accueil : titres de section comme « Mes matières », une couleur par tuile */
+.sem-groupe{font-size:19px;font-weight:800;letter-spacing:-.02em;text-transform:none;color:var(--text);margin:10px 4px -6px;}
+.sem-groupe:first-child{margin-top:0;}
+.sem-groupe::after{display:none;}
+.sem-groupe .sem-chev{margin-left:auto;}
+.sem-tile .sem-badge{background:color-mix(in srgb,var(--tc,var(--accent)) 14%,transparent);}
+.sem-tile .sem-badge .ico-ui{color:var(--tc,var(--accent));}
+.sem-tile .sem-bar{background:color-mix(in srgb,var(--tc,var(--accent)) 14%,transparent);}
+.sem-tile .sem-bar-fill{background:var(--tc,var(--accent));}
+.sem-tile .sem-pct{color:var(--tc,var(--text-mute));font-weight:700;}
+
+/* « À venir » : les tuiles se calent à 16 pt du bord comme le reste ; contenu en haut, sous-titre sur deux lignes au plus */
+.hm-hs{scroll-padding-inline:16px;}
+.hm-up{display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-start;}
+.hm-up .s{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+/* PDF : chaque page garde sa place avant d'être dessinée, puis s'affiche en image */
+.pdf-page{background:#fff;border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.18);overflow:hidden;}
+.pdf-page .pdf-img{display:block;width:100%;height:100%;opacity:0;transition:opacity .2s;}
+.pdf-page.pret .pdf-img{opacity:1;}
+
+/* Agenda : un cours marqué ressort à la couleur de son étiquette (barre, teinte légère, heure) */
+.edt-course.flagged.controle{--mc:var(--ko);} .edt-course.flagged.devoir{--mc:var(--warn);} .edt-course.flagged.note{--mc:var(--info);}
+.edt-course.a-mat{background:color-mix(in srgb,var(--mc) 10%,var(--surface-solid)) !important;}
+.edt-course.flagged.a-mat::before{background:var(--mc);}
+.edt-course.a-mat .edt-time>span:first-child{color:var(--mc);}
+/* un devoir fait passe au vert, comme dans Devoirs */
+.edt-course.flagged.done{--mc:var(--ok);opacity:.85;}
+/* choisir une icône : la grille des icônes dessinées, dans les formulaires */
+.fs-icones{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;max-height:262px;overflow-y:auto;padding:2px 2px 6px;-webkit-overflow-scrolling:touch;}
+.fs-ic{position:relative;aspect-ratio:1;border:0;border-radius:14px;background:var(--surface-2,rgba(127,127,127,.08));display:grid;place-items:center;color:var(--accent);cursor:pointer;font:inherit;}
+.fs-ic .ico-ui{width:24px;height:24px;}
+.fs-ic.auto .ico-ui{width:20px;height:20px;margin-bottom:9px;}
+.fs-ic small{position:absolute;bottom:4px;left:0;right:0;text-align:center;font-size:9px;font-weight:800;color:var(--text-mute);}
+.fs-ic.on{background:var(--accent-soft);box-shadow:inset 0 0 0 2px var(--accent);}
+button.mt-big{border:0;color:inherit;cursor:pointer;font:inherit;padding:0;}
+.cls-ic{cursor:pointer;}
+/* les trois couleurs en plus (turquoise, orange, terre), comme les cinq d'origine */
+.hm-doux-c{background:color-mix(in srgb,#12a9a0 14%,transparent);color:#12a9a0;}
+.hm-doux-o{background:color-mix(in srgb,#f26b3a 14%,transparent);color:#f26b3a;}
+.hm-doux-t{background:color-mix(in srgb,#a8703f 16%,transparent);color:#a8703f;}
+/* choisir une couleur : une rangée de pastilles */
+.fs-couleurs{display:flex;flex-wrap:wrap;gap:10px;padding:2px 2px 4px;}
+.fs-coul{width:34px;height:34px;border-radius:50%;border:0;background:var(--fc);cursor:pointer;font:800 13px var(--font-text,inherit);color:#fff;position:relative;}
+.fs-coul.on{box-shadow:0 0 0 3px var(--surface-solid),0 0 0 5px var(--fc);}
+/* la couleur d'une classe */
+.cls-row .cls-ic{background:color-mix(in srgb,var(--cc,var(--accent)) 12%,transparent);}
+.cls-row .cls-ic .ico-ui{color:var(--cc,var(--accent));}
+/* la grille d'icônes montre la couleur choisie juste au-dessus */
+.fs-ic{color:var(--pc,var(--accent));background:color-mix(in srgb,var(--pc,var(--accent)) 9%,var(--surface-2,rgba(127,127,127,.08)));}
+.fs-ic.on{background:color-mix(in srgb,var(--pc,var(--accent)) 22%,transparent);box-shadow:inset 0 0 0 2px var(--pc,var(--accent));}
+/* sous « Commencer mes révisions » : ce que la série va contenir */
+.hm-apercu{text-align:center;font-size:13.5px;font-weight:600;line-height:1.4;color:var(--text-soft);margin:12px 6px 0;}
+.hm-apercu b{color:var(--text);font-weight:800;}
+.hm-apercu.vide{color:var(--text-mute);}
+.hm-apercu + .hm-ligne{margin-top:6px;}
+.hm-apercu .pt{display:inline-block;width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.5;margin:0 8px;vertical-align:middle;}
+/* l'anneau du jour se touche pour régler l'objectif */
+.hm-rc .hm-rc-reg{font-style:normal;color:var(--accent);font-weight:800;}
+/* quatre couleurs en plus : indigo, citron vert, fuchsia, bleu ciel */
+.hm-doux-i{background:color-mix(in srgb,#5b5bd6 14%,transparent);color:#5b5bd6;}
+.hm-doux-l{background:color-mix(in srgb,#65a30d 15%,transparent);color:#5a920c;}
+.hm-doux-f{background:color-mix(in srgb,#c03fd0 14%,transparent);color:#c03fd0;}
+.hm-doux-s{background:color-mix(in srgb,#0ea5e9 14%,transparent);color:#0b95d4;}
+@media(prefers-color-scheme:dark){html:not([data-mode="clair"]) .hm-doux-i{color:#8f8ff0;} html:not([data-mode="clair"]) .hm-doux-l{color:#86bf2a;}}
+html[data-mode="sombre"] .hm-doux-i{color:#8f8ff0;} html[data-mode="sombre"] .hm-doux-l{color:#86bf2a;}

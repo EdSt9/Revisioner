@@ -3034,8 +3034,8 @@ const SUBJECTS = [
 
 // Nom, sous-titre (section) et icône proposés pour certains semestres. Ce que tu personnalises dans l'app passe devant.
 const TUILES_DEFAUT = {
-  "sem:1.5":{ titre:"Semestre 1", sous:"L1 SESS (UPEC)", icone:"🌱" },
-  "sem:2":  { titre:"Semestre 2", sous:"L1 SESS (UPEC)", icone:"✏️" },
+  "sem:1.5":{ titre:"Semestre 1", sous:"L1 SESS (UPEC)" },
+  "sem:2":  { titre:"Semestre 2", sous:"L1 SESS (UPEC)" },
 };
 const SEMESTRES = {}; SUBJECTS.forEach(s=>{ SEMESTRES[s.id] = UES[s.ue].sem; });
 const TIME_ESTIMATES = {}; SUBJECTS.forEach(s=>{ TIME_ESTIMATES[s.id] = ""; });

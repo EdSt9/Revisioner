@@ -421,7 +421,7 @@ function openForm(title, fields, okLabel, onSubmit, onDelete, extra){
     onDelete();
     closeForm();
   } : null;
-  body.innerHTML = "";
+  body.innerHTML = ""; body.style.removeProperty("--pc");
   fields.forEach(f=>{
     const w = el("div","fs-field");
     const l = el("div","fs-label"); l.textContent = f.label; w.appendChild(l);
@@ -444,6 +444,34 @@ function openForm(title, fields, okLabel, onSubmit, onDelete, extra){
       });
       w.appendChild(row);
       w.appendChild(inp);   // le champ caché doit être dans la page, sinon la valeur est perdue
+    }else if(f.type === "couleur"){
+      inp = el("input","fs-input"); inp.type = "hidden"; inp.value = f.value || "";
+      const row = el("div","fs-couleurs");
+      ((f.defaut ? [""] : []).concat(COULEURS_CHOIX)).forEach(k=>{
+        const b = el("button","fs-coul" + (k === inp.value ? " on" : "") + (k ? "" : " auto")); b.type = "button";
+        b.style.setProperty("--fc", HM_HEX[k || f.defaut] || f.defaut);
+        b.setAttribute("aria-label", k ? "Couleur " + k : "Couleur automatique");
+        if(!k) b.textContent = "A";
+        b.addEventListener("click",()=>{ haptic(); inp.value = k; row.querySelectorAll(".fs-coul").forEach(x=>x.classList.remove("on")); b.classList.add("on"); apercu(); });
+        row.appendChild(b);
+      });
+      // les icônes en dessous prennent la couleur choisie : on voit le résultat avant d'enregistrer
+      const apercu = ()=>body.style.setProperty("--pc", HM_HEX[inp.value || f.defaut] || f.defaut || "var(--accent)");
+      apercu();
+      w.appendChild(row); w.appendChild(inp);
+    }else if(f.type === "icone"){
+      // toutes les icônes dessinées, au choix ; « Auto » garde celle que l'app donne d'elle-même
+      inp = el("input","fs-input"); inp.type = "hidden"; inp.value = f.value || "";
+      const g = el("div","fs-icones");
+      const cases = (f.defaut ? [""] : []).concat(ICONES_CHOIX);
+      cases.forEach(k=>{
+        const b = el("button","fs-ic" + (k === inp.value ? " on" : "") + (k ? "" : " auto")); b.type = "button";
+        b.setAttribute("aria-label", k || "Icône automatique");
+        b.innerHTML = k ? icone(k) : icone(f.defaut) + "<small>Auto</small>";
+        b.addEventListener("click",()=>{ haptic(); inp.value = k; g.querySelectorAll(".fs-ic").forEach(x=>x.classList.remove("on")); b.classList.add("on"); });
+        g.appendChild(b);
+      });
+      w.appendChild(g); w.appendChild(inp);
     }else{
       inp = f.type === "area" ? el("textarea","fs-area") : el("input","fs-input");
       if(f.type !== "area") inp.type = f.type || "text";
@@ -765,7 +793,9 @@ async function openClasses(){
     row.type = "button"; row.dataset.cls = c.id;
     const tag = c.role === "owner" ? "CRÉATEUR" : c.role === "adjoint" ? "ADJOINT"
               : c.role === "pending" ? "EN ATTENTE" : "MEMBRE";
-    row.innerHTML = `<div class="cls-ic">${esc(iconeClasse(c))}</div>
+    const cc = (USER_SETTINGS.clsCouleurs || {})[c.id];
+    if(cc && HM_HEX[cc]) row.style.setProperty("--cc", HM_HEX[cc]);
+    row.innerHTML = `<div class="cls-ic">${icone(iconeClasse(c))}</div>
       <div class="cls-txt"><div class="cls-name">${esc(c.name)}</div>
       ${(()=>{ const o = c.role === "owner" ? "toi" : (c.owner || c.owner_pseudo || c.owner_name || c.created_by || ""); return o ? `<div class="cls-sub">créée par ${esc(o)}</div>` : ""; })()}</div>
       <span class="cls-tag">${tag}</span>`;
@@ -777,8 +807,9 @@ async function openClasses(){
       }
       openClass(c);
     });
-    // appui long : changer l'icône, comme pour les tuiles des semestres
+    // toucher l'icône, ou appui long sur la ligne : changer l'icône
     onLongPress(row, ()=>changerIconeClasse(c));
+    row.querySelector(".cls-ic").addEventListener("click", ev=>{ ev.stopPropagation(); haptic(); changerIconeClasse(c); });
     box.appendChild(row);
   });
   majPastillesClasses();
@@ -787,18 +818,20 @@ async function openClasses(){
 
 // ── Icône d'une classe : chacun choisit la sienne, gardée dans ses réglages ──
 // Une nouvelle classe reçoit la première icône pas encore prise par une autre.
-const CLS_ICONES = ["📚","🎓","🧠","✏️","💡","🧭","🌱","🎯","🔬","🗂️","📐","🌍"];
+const CLS_ICONES = ["grp","edu","livre","boussole","ecole","cible","ampoule","com","globe","plume","rech","pousse"];
+const estCleIcone = k=>!!(k && (UI_IC[k] || MAT_IC[k]));
 function iconesClasses(){
   const m = USER_SETTINGS.clsIcones;
   return (m && typeof m === "object") ? m : {};
 }
-function iconeClasse(c){ return iconesClasses()[c.id] || CLS_ICONES[0]; }
+function iconeClasse(c){ const k = iconesClasses()[c.id]; return estCleIcone(k) ? k : CLS_ICONES[0]; }
 function donnerIconesClasses(){
   const m = Object.assign({}, iconesClasses());
   let change = false;
   MY_CLASSES.forEach(c=>{
-    if(m[c.id]) return;
-    const prises = new Set(MY_CLASSES.map(x=>m[x.id]).filter(Boolean));
+    if(estCleIcone(m[c.id])) return;
+    delete m[c.id];
+    const prises = new Set(MY_CLASSES.map(x=>m[x.id]).filter(estCleIcone));
     m[c.id] = CLS_ICONES.find(e=>!prises.has(e)) || CLS_ICONES[0];
     change = true;
   });
@@ -806,18 +839,17 @@ function donnerIconesClasses(){
 }
 function changerIconeClasse(c){
   openForm(c.name, [
-    { key:"emoji", label:"Emoji", value:iconeClasse(c), placeholder:"Touche ici, puis choisis sur le clavier emoji",
-      hint:"Seulement pour toi : les autres membres gardent la leur." }
+    { key:"couleur", label:"Couleur", type:"couleur", value:(USER_SETTINGS.clsCouleurs || {})[c.id] || "", defaut:"v" },
+    { key:"icone", label:"Icône", type:"icone", value:iconeClasse(c),
+      hint:"Seulement pour toi : les autres membres gardent les leurs." }
   ], "Enregistrer", v=>{
-    const tape = (v.emoji || "").trim();
-    if(!tape) return "Choisis un emoji.";
-    let e = "";
-    try{ e = [...new Intl.Segmenter("fr", { granularity:"grapheme" }).segment(tape)][0].segment; }
-    catch(err){ e = Array.from(tape).slice(0, 2).join(""); }
-    USER_SETTINGS.clsIcones = Object.assign({}, iconesClasses(), { [c.id]:e });
+    if(!v.icone) return "Choisis une icône.";
+    USER_SETTINGS.clsIcones = Object.assign({}, iconesClasses(), { [c.id]:v.icone });
+    const c2 = Object.assign({}, USER_SETTINGS.clsCouleurs); if(v.couleur) c2[c.id] = v.couleur; else delete c2[c.id];
+    USER_SETTINGS.clsCouleurs = c2;
     saveContent();
-    const r = document.querySelector('#classes-list .cls-row[data-cls="' + c.id + '"] .cls-ic');
-    if(r) r.textContent = e;
+    const row = document.querySelector('#classes-list .cls-row[data-cls="' + c.id + '"]');
+    if(row){ row.querySelector(".cls-ic").innerHTML = icone(v.icone); if(v.couleur) row.style.setProperty("--cc", HM_HEX[v.couleur]); else row.style.removeProperty("--cc"); }
   });
 }
 
@@ -1078,7 +1110,7 @@ async function openClass(c){
       const pid = projetDeItem(it), pj = PROJETS[pid];
       const dejaLa = mesProjets().includes(pid) || (pid === "psycho" && isCloseFriend());
       const card = el("button","ecue-card cls-mat cls-projet"); card.type = "button";
-      card.innerHTML = `<div class="ecue-top"><div class="cls-projet-ic">${pj.icone}</div><div class="ecue-info"><div class="ecue-name">${esc(pj.titre)}</div>
+      card.innerHTML = `<div class="ecue-top"><div class="cls-projet-ic">${icone(pj.icone)}</div><div class="ecue-info"><div class="ecue-name">${esc(pj.titre)}</div>
         <div class="ecue-meta">${dejaLa ? `<span class="ecue-status ajour">✓ Dans tes projets</span>` : `<span class="cls-mat-n">Partagé par ${esc(it.author)} · touche pour l'ajouter</span>`}</div></div><span class="ecue-arrow">${dejaLa ? "→" : "+"}</span></div>`;
       card.addEventListener("click",()=>{
         haptic();
@@ -1720,7 +1752,7 @@ function feuillePartage(titre, legende, groupes, nav){
       r.innerHTML = `<span class="rv-dot"></span><div class="cal-txt"><div class="cal-name">${esc(l.nom)}</div>${l.sous ? `<div class="cal-url">${esc(l.sous)}</div>` : ""}</div>` +
         (l.etat ? `<span class="fp-etat ${l.etat.cls || ""}">${esc(l.etat.txt)}</span>` : "") +
         (l.chev ? `<span class="fp-chev">${IC_CHEV_DROITE}</span>` : "");
-      if(l.ic){ r.classList.add("fp-avec-ic"); r.querySelector(".rv-dot").outerHTML = `<span class="fp-ic">${esc(l.ic)}</span>`; }
+      if(l.ic){ r.classList.add("fp-avec-ic"); r.querySelector(".rv-dot").outerHTML = `<span class="fp-ic">${icone(l.ic)}</span>`; }
       r.addEventListener("click",()=>{ haptic(); l.onTap(r); });
       box.appendChild(l.actions && l.actions.length ? swipeRow(r, l.actions) : r);
     });
@@ -1928,7 +1960,7 @@ async function publishFromClass(c){
       let g = groupes.find(x=>x.titre === nom); if(!g){ g = { titre:nom, lignes:[] }; groupes.push(g); }
       const ms = tri.filter(sj=>(SEMESTRES[sj.id] || 0) === sem);
       let n = 0, k = 0, m = 0; ms.forEach(sj=>{ const x = compte(sj); n += x.n; k += x.k; m += x.m; });
-      g.lignes.push({ nom:sem ? titreSemestre(sem) : "Autres matières", ic:sem ? (tuileDe("sem:" + sem).icone || (sem % 2 ? "📚" : "🧠")) : "📁",
+      g.lignes.push({ nom:sem ? titreSemestre(sem) : "Autres matières", ic:sem ? (tuileDe("sem:" + sem).icone || iconeSemestre(sem)) : "dossier",
         sous:ms.length + " matière" + (ms.length > 1 ? "s" : ""), cls:n && k === n ? "fait" : "", etat:etatDe(n, k, m), chev:true,
         onTap:()=>{ niv.sem = sem; rendre(true); } });
     });
@@ -3616,8 +3648,7 @@ Object.keys(FAB_ACTIONS).forEach(id=>{
   b.addEventListener("click",()=>{ haptic(); FAB_ACTIONS[id].fn(); });
   const zone = w.parentNode.querySelector(":scope > .hd-onglet .hd-act") || w;   // les pages à en-tête coloré : directement dedans
   const premier = zone.querySelector("[data-entete]");
-  const memo = zone.querySelector(":scope > .memo-fab");   // le Mémo reste le premier
-  if(zone !== w){ if(memo) memo.after(b); else zone.prepend(b); } else if(premier) premier.before(b); else w.appendChild(b);
+  if(zone !== w) zone.appendChild(b); else if(premier) premier.before(b); else w.appendChild(b);
 });
 document.querySelectorAll(".screen").forEach(poserEntete);
 // Les en-têtes colorés des pages (titre, retour, boutons) sont écrits directement dans le HTML.
@@ -3720,6 +3751,7 @@ function entreeDansEcran(cible){
 let ECRAN_AVANT = null;   // la page d'où l'on vient : visible derrière pendant le glisser
 function showScreen(id){
   lecteurStop();
+  setTimeout(()=>{ try{ memoriserPage(); }catch(e){} }, 0);
   // arrivée sur un autre écran : les animations d'entrée jouent, puis on se calme.
   // Le même écran redessiné (cocher une étape, filtrer) reste calme.
   if(document.documentElement.getAttribute("data-screen") !== id){
@@ -4392,7 +4424,7 @@ function ouvrirPdf(doc){
   const fermer = ()=>{ ferme = true; haptic();
     if(LEC.racine && v.contains(LEC.racine)) lecteurStop();
     document.body.classList.remove("pdf-ouvert");
-    v.classList.remove("on"); setTimeout(()=>v.remove(), 330); document.removeEventListener("keydown", echap); };
+    v.classList.remove("on"); setTimeout(()=>{ if(v._pdfFin) v._pdfFin(); v.remove(); }, 330); document.removeEventListener("keydown", echap); };
   const echap = e=>{ if(e.key === "Escape") fermer(); };
   document.addEventListener("keydown", echap);
   v.querySelector(".pdf-fermer").addEventListener("click", fermer);
@@ -4414,16 +4446,46 @@ function ouvrirPdf(doc){
       const pdf = await lib.getDocument({ data: new Uint8Array(await blob.arrayBuffer()) }).promise;
       if(ferme) return;
       zone.innerHTML = "";
-      const larg = Math.min(zone.clientWidth - 20, 820), dpr = Math.min(window.devicePixelRatio || 1, 3);
+      // Mémoire : dessiner toutes les pages d'un coup, en ×3, fait couper l'app par iOS sur les gros PDF.
+      // Chaque page est dessinée quand elle approche de l'écran, en ×2 au plus, puis gardée en image (légère, déchargeable).
+      const larg = Math.min(zone.clientWidth - 20, 820), dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const aDessiner = [];
+      let enCours = false;
+      const dessinerSuite = async ()=>{
+        if(enCours) return; enCours = true;
+        while(aDessiner.length && !ferme){
+          const { page, vp0, pg, n } = aDessiner.shift();
+          try{
+            const vp = page.getViewport({ scale: (larg / vp0.width) * dpr });
+            const c = document.createElement("canvas"); c.width = Math.floor(vp.width); c.height = Math.floor(vp.height);
+            await page.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise;
+            const b = await new Promise(ok=>c.toBlob(ok, "image/jpeg", .9));
+            c.width = c.height = 0;
+            if(ferme || !b) break;
+            const img = new Image(); img.alt = "Page " + n; img.className = "pdf-img"; img.src = URL.createObjectURL(b);
+            img.onload = ()=>pg.classList.add("pret");
+            pg.insertBefore(img, pg.firstChild);
+            page.cleanup();
+          }catch(e){}
+        }
+        enCours = false;
+      };
+      const io = "IntersectionObserver" in window ? new IntersectionObserver(es=>es.forEach(en=>{
+        if(!en.isIntersecting) return;
+        io.unobserve(en.target);
+        aDessiner.push(en.target._pdf); aDessiner.sort((a,b)=>a.n - b.n); dessinerSuite();
+      }), { root:zone, rootMargin:"1200px 0px" }) : null;
+      v._pdfFin = ()=>{ if(io) io.disconnect(); v.querySelectorAll("img.pdf-img").forEach(i=>URL.revokeObjectURL(i.src)); try{ pdf.destroy(); }catch(e){} };
       for(let n = 1; n <= pdf.numPages; n++){
         if(ferme) return;
         const page = await pdf.getPage(n);
-        const vp0 = page.getViewport({ scale:1 }), vp = page.getViewport({ scale: (larg / vp0.width) * dpr });
+        const vp0 = page.getViewport({ scale:1 });
         const pg = el("div","pdf-page");
-        const c = document.createElement("canvas"); c.width = Math.floor(vp.width); c.height = Math.floor(vp.height);
-        c.setAttribute("aria-label", "Page " + n);
-        pg.appendChild(c); zone.appendChild(pg);
-        await page.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise;
+        pg.style.aspectRatio = vp0.width + " / " + vp0.height;
+        pg.setAttribute("aria-label", "Page " + n);
+        zone.appendChild(pg);
+        pg._pdf = { page, vp0, pg, n };
+        if(io) io.observe(pg); else { aDessiner.push(pg._pdf); dessinerSuite(); }
         // le texte de la page, invisible, posé sur l'image : c'est lui qu'on lit et qu'on surligne
         try{
           const vpc = page.getViewport({ scale: pg.clientWidth / vp0.width });
@@ -5276,10 +5338,14 @@ function courseCard(e){
   const kind = n ? (n.type || ((n.note || n.subj) ? "note" : "") || (aut[0] ? aut[0].type || "note" : "")) : "";
   const maint = new Date(), enCours = !e.jour && e.start <= maint && (e.end || e.start) > maint;
   const c = el("div","edt-course" + (kind ? " flagged "+kind : "") + (n && n.done ? " done" : "") + (enCours ? " live" : ""));
+  // un cours marqué ressort à la couleur de son étiquette (contrôle rose, à rendre jaune, note bleue) :
+  // la barre, une teinte légère, l'heure ; un cours sans rien reste neutre
+  if(kind) c.classList.add("a-mat");
+  // fait : l'étiquette elle-même passe au vert, avec la coche (plus besoin d'une étiquette « Fait » à côté)
+  const fait = !!(n && n.done && kind);
   const badge = (kind
-    ? `<span class="ev-badge ${kind}">${kind==="controle"?"Contrôle":kind==="devoir"?"À rendre":"Note"}</span>` : "") +
+    ? `<span class="ev-badge ${kind}${fait ? " fait" : ""}">${fait ? "✓ " : ""}${kind==="controle"?"Contrôle":kind==="devoir"?"À rendre":"Note"}</span>` : "") +
     aut.filter(a=>(a.type || "note") !== kind).map(a=>`<span class="ev-badge ${a.type || "note"}">${TAG_DEVOIR[a.type || ""]}</span>`).join("") +
-    (n && n.done && kind ? `<span class="ev-badge fait">✓ Fait</span>` : "") +
     (n && (n.modifie || aut.some(a=>a.modifie)) ? `<span class="ev-badge modifie">Modifié</span>` : "");
   const texte = n && n.note ? (e.titreNote ? String(n.note).trim().split("\n").slice(1).join("\n").trim() : n.note) : "";
   const note = (texte ? `<div class="edt-note">${noteAvecLiens(texte)}</div>` : "") +
@@ -6049,10 +6115,89 @@ function makeEcueCard(s){
 // En-tête en couleur (date, bonjour, semaine), le bloc du jour (anneau, barres, série),
 // les cours du jour, ce qui arrive, et les matières du semestre en cours.
 const HM_COUL = ["v","b","g","y","r"];
-const HM_IC = ["cm","lexique","auteurs","examen","synthese","groupe","td","oq"];
+// ══════════ ICÔNES DES MATIÈRES ══════════
+// Une icône par grand thème, choisie d'après le titre : une même matière garde la même icône d'une année à l'autre.
+// Sans thème reconnu : une icône du lot, d'après le titre, en évitant celles déjà prises dans le semestre.
+const MAT_IC = {"socio": "<circle fill=\"currentColor\" stroke=\"none\" opacity=\".22\" cx=\"12\" cy=\"12\" r=\"9\"/><circle cx=\"12\" cy=\"6\" r=\"2.2\"/><circle cx=\"5.5\" cy=\"16.5\" r=\"2.2\"/><circle cx=\"18.5\" cy=\"16.5\" r=\"2.2\"/><path d=\"M10.6 7.9 7 14.6M13.4 7.9l3.6 6.7M7.8 16.5h8.4\"/>", "psy": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M5 11a7 7 0 1 1 11 5.7V21H9v-2.5H7a2 2 0 0 1-2-2v-2l-1.5-.6L5 11z\"/><path d=\"M5 11a7 7 0 1 1 11 5.7V21M9 21v-2.5H7a2 2 0 0 1-2-2v-2l-1.5-.6L5 11\"/><path d=\"M12.5 10.5a1.2 1.2 0 1 1 1.2 1.2 2.6 2.6 0 0 1-2.6-2.6 3.8 3.8 0 0 1 7.6 0\"/>", "edu": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M2.5 9 12 4.5 21.5 9 12 13.5z\"/><path d=\"M2.5 9 12 4.5 21.5 9 12 13.5z\"/><path d=\"M6.5 11v4.5c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3V11M21.5 9v5\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"21.5\" cy=\"15.5\" r=\"1.2\"/>", "droit": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M2.5 13.5h6a3 3 0 0 1-6 0zM15.5 13.5h6a3 3 0 0 1-6 0z\"/><path d=\"M12 3.5v17M7.5 20.5h9M5 6.5h14M5.5 6.5l-3 7h6zM18.5 6.5l-3 7h6z\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"12\" cy=\"4\" r=\"1.3\"/>", "num": "<rect fill=\"currentColor\" stroke=\"none\" opacity=\".22\" x=\"3\" y=\"3\" width=\"8\" height=\"8\" rx=\"2\"/><rect x=\"3\" y=\"3\" width=\"8\" height=\"8\" rx=\"2\"/><rect x=\"13\" y=\"3\" width=\"8\" height=\"8\" rx=\"2\"/><rect x=\"3\" y=\"13\" width=\"8\" height=\"8\" rx=\"2\"/><path fill=\"currentColor\" stroke=\"none\" d=\"M13.5 13.5l7.5 2.8-3.2 1.3-1.3 3.2z\"/>", "sante": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 20.5S3 15 3 9a4.5 4.5 0 0 1 9-1 4.5 4.5 0 0 1 9 1c0 6-9 11.5-9 11.5z\"/><path d=\"M12 20.5S3 15 3 9a4.5 4.5 0 0 1 9-1 4.5 4.5 0 0 1 9 1c0 6-9 11.5-9 11.5z\"/><path d=\"M6 12h3l1.5-3 2.5 6 1.5-3H18\"/>", "env": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M4 20c0-9 6-15 16-16-1 10-7 16-16 16z\"/><path d=\"M4 20c0-9 6-15 16-16-1 10-7 16-16 16zM4 20l9-9M9 15h4M12 12V8\"/>", "rech": "<circle fill=\"currentColor\" stroke=\"none\" opacity=\".22\" cx=\"10.5\" cy=\"10.5\" r=\"7\"/><circle cx=\"10.5\" cy=\"10.5\" r=\"7\"/><path d=\"M15.5 15.5 21 21M7 12.5l2-2.5 2 1.5 2.5-3.5\"/>", "hist": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M7 7h10v12H7z\"/><path d=\"M4 6.5h16L12 3zM6 21h12M5 21h14M7 7v12M10.3 7v12M13.7 7v12M17 7v12\"/>", "eco": "<circle fill=\"currentColor\" stroke=\"none\" opacity=\".22\" cx=\"12\" cy=\"7\" r=\"4\"/><circle cx=\"12\" cy=\"7\" r=\"4\"/><path d=\"M12 5.5v3M2.5 15.5l3.5-2.5h5l1.5 1.5H9M21.5 15.5 18 13h-3.5M2.5 19.5h6l5-2.5 8-1.5\"/>", "com": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M3 5.5a2.5 2.5 0 0 1 2.5-2.5h8A2.5 2.5 0 0 1 16 5.5v5a2.5 2.5 0 0 1-2.5 2.5H8l-3.5 3v-3A2.5 2.5 0 0 1 3 10.5z\"/><path d=\"M3 5.5a2.5 2.5 0 0 1 2.5-2.5h8A2.5 2.5 0 0 1 16 5.5v5a2.5 2.5 0 0 1-2.5 2.5H8l-3.5 3v-3A2.5 2.5 0 0 1 3 10.5zM18.5 9H19a2 2 0 0 1 2 2v4.5a2 2 0 0 1-2 2v3l-3.5-3H12a2 2 0 0 1-2-2\"/><path d=\"M7 7.5h5M7 10h3\"/>", "enf": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M14 2.5 20.5 9 14 15.5 7.5 9z\"/><path d=\"M14 2.5 20.5 9 14 15.5 7.5 9zM7.5 9h13M14 2.5v13M14 15.5c-2 1.5-1 3.5-3.5 4s-3-1.5-5-.5-1.5 2-2.5 2.5\"/>", "form": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M3 21v-4h5v-4h5V9h5v12z\"/><path d=\"M3 21v-4h5v-4h5V9h5v12H3M14 5.5 18.5 2 21 5\"/><path d=\"M18.5 2v4.5\"/>", "ins": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M5 3.5h10V21H5z\"/><path d=\"M5 21V3.5h10V21M3 21h18M15 4.5l4 1.8V19l-4 2\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"12.3\" cy=\"12.5\" r=\"1.1\"/>", "prev": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 2.5 20 5.5v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10v-6z\"/><path d=\"M12 2.5 20 5.5v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10v-6zM8.5 12l2.5 2.5 4.5-5\"/>", "grp": "<circle fill=\"currentColor\" stroke=\"none\" opacity=\".22\" cx=\"12\" cy=\"12\" r=\"5\"/><circle cx=\"12\" cy=\"12\" r=\"5\"/><circle cx=\"12\" cy=\"3.5\" r=\"1.8\"/><circle cx=\"20.5\" cy=\"12\" r=\"1.8\"/><circle cx=\"12\" cy=\"20.5\" r=\"1.8\"/><circle cx=\"3.5\" cy=\"12\" r=\"1.8\"/>", "anim": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"m15 3 1.8 3.8 4.2.5-3.1 2.9.8 4.1L15 12.3l-3.7 2 .8-4.1L9 7.3l4.2-.5z\"/><path d=\"m15 3 1.8 3.8 4.2.5-3.1 2.9.8 4.1L15 12.3l-3.7 2 .8-4.1L9 7.3l4.2-.5zM3 21l6-6M3 16l3.5-3.5M8 21l3.5-3.5\"/>", "dev": "<circle fill=\"currentColor\" stroke=\"none\" opacity=\".22\" cx=\"18\" cy=\"6\" r=\"3.5\"/><path d=\"M5 21V12c0-3 2-5 5-5h4.5M5 13c0-2-.5-4-2-5.5\"/><circle cx=\"18\" cy=\"6\" r=\"3.5\"/><path d=\"M16.5 6h3\"/>", "pol": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M5 10h14v9H5z\"/><path d=\"M3 10h18L12 4zM5 21h14M4 21h16M7 10v9M10.3 10v9M13.7 10v9M17 10v9M12 4V1.5l3 1-3 1\"/>", "globe": "<circle fill=\"currentColor\" stroke=\"none\" opacity=\".22\" cx=\"12\" cy=\"12\" r=\"9\"/><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M3 12h18M12 3c2.5 2.5 3.8 5.5 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.5-3.8-9S9.5 5.5 12 3\"/>", "pro": "<rect fill=\"currentColor\" stroke=\"none\" opacity=\".22\" x=\"3\" y=\"7\" width=\"18\" height=\"13\" rx=\"2.5\"/><rect x=\"3\" y=\"7\" width=\"18\" height=\"13\" rx=\"2.5\"/><path d=\"M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18\"/><rect fill=\"currentColor\" stroke=\"none\" x=\"10.5\" y=\"11.5\" width=\"3\" height=\"3\" rx=\".8\"/>", "plume": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M16 3.5 20.5 8 9 19.5 3.5 20.5 4.5 15z\"/><path d=\"M16 3.5 20.5 8 9 19.5 3.5 20.5 4.5 15zM13.5 6l4.5 4.5M4.5 15l4.5 4.5\"/>", "livre": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M4 4.5A1.5 1.5 0 0 1 5.5 3H12v16H5.5A1.5 1.5 0 0 0 4 20.5z\"/><path d=\"M4 20.5v-16A1.5 1.5 0 0 1 5.5 3H12v16M12 3h6.5A1.5 1.5 0 0 1 20 4.5V19M4 20.5A1.5 1.5 0 0 1 5.5 19H20v2.5H5.5A1.5 1.5 0 0 1 4 20.5zM14.5 7.5h3M14.5 10.5h3\"/>", "boussole": "<circle fill=\"currentColor\" stroke=\"none\" opacity=\".22\" cx=\"12\" cy=\"12\" r=\"9\"/><circle cx=\"12\" cy=\"12\" r=\"9\"/><path fill=\"currentColor\" stroke=\"none\" d=\"M15.8 8.2 13.6 13.6 8.2 15.8 10.4 10.4z\"/><path d=\"M12 3v2M12 19v2M3 12h2M19 12h2\"/>", "puzzle": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M5 5h4a2 2 0 1 1 4 0h4v4a2 2 0 1 1 0 4v4h-4a2 2 0 1 0-4 0H5v-4a2 2 0 1 0 0-4z\"/><path d=\"M5 5h4a2 2 0 1 1 4 0h4v4a2 2 0 1 1 0 4v4h-4a2 2 0 1 0-4 0H5v-4a2 2 0 1 0 0-4z\"/>", "famille": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M4.5 20v-3.5a4.5 4.5 0 0 1 9 0V20z\"/><circle cx=\"9\" cy=\"6.5\" r=\"2.7\"/><path d=\"M4.5 20v-3.5a4.5 4.5 0 0 1 9 0V20M14.5 20v-2a2.8 2.8 0 0 1 5.6 0v2\"/><circle cx=\"17.3\" cy=\"10.8\" r=\"1.9\"/>", "debat": "<circle fill=\"currentColor\" stroke=\"none\" opacity=\".22\" cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M4 8.5h12.5L13 5M20 15.5H7.5L11 19\"/><path fill=\"currentColor\" stroke=\"none\" d=\"M12.6 9.8 10.8 12.6h2.4l-1.8 2.8\"/>", "oeil": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z\"/><path d=\"M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z\"/><circle cx=\"12\" cy=\"12\" r=\"3.2\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"12\" cy=\"12\" r=\"1.2\"/>", "cycle": "<circle fill=\"currentColor\" stroke=\"none\" opacity=\".22\" cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M20 12a8 8 0 0 1-14 5.3M4 12a8 8 0 0 1 14-5.3M18 3v3.7h-3.7M6 21v-3.7h3.7M12 15v-3.2c0-1.4 1-2.4 2.4-2.4\"/>", "secours": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M9 3.5h6V9h5.5v6H15v5.5H9V15H3.5V9H9z\"/><path d=\"M9 3.5h6V9h5.5v6H15v5.5H9V15H3.5V9H9z\"/>", "langue": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H11l-4.5 4v-4A2.5 2.5 0 0 1 4 13.5z\"/><path d=\"M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H11l-4.5 4v-4A2.5 2.5 0 0 1 4 13.5zM9 13l3-7 3 7M10.1 10.6h3.8\"/>", "main": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 11.5S8.5 9.3 8.5 7A2 2 0 0 1 12 5.7 2 2 0 0 1 15.5 7c0 2.3-3.5 4.5-3.5 4.5z\"/><path d=\"M12 11.5S8.5 9.3 8.5 7A2 2 0 0 1 12 5.7 2 2 0 0 1 15.5 7c0 2.3-3.5 4.5-3.5 4.5zM3 15.5l3-2h4.5a1.5 1.5 0 0 1 0 3H8M13 16.5h3l4-3a1.5 1.5 0 0 1 2 2.2l-5.5 4.8H6l-3-1\"/>", "spi": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 3c2.5 3 4 5 4 7.5a4 4 0 0 1-8 0C8 8 9.5 6 12 3z\"/><path d=\"M12 3c2.5 3 4 5 4 7.5a4 4 0 0 1-8 0C8 8 9.5 6 12 3zM12 14.5v2M6 21h12M9 21v-4.5h6V21\"/>"};
+const MAT_REGLES = [[/croix-rouge|secours/,"secours"],[/religion/,"spi"],[/langue/,"langue"],[/orientation|projet|parcours/,"boussole"],[/stage|milieux pro|metiers|situation de travail/,"pro"],[/inclusi|handicap/,"puzzle"],[/droit|ethique|deontolog/,"droit"],[/parentalite|famille/,"famille"],[/controverse|debat/,"debat"],[/observation|enquete/,"oeil"],[/recherche|recueil|documentaire/,"rech"],[/methodo|universitaire/,"livre"],[/expression ecrite|ecrit/,"plume"],[/communication|oral/,"com"],[/groupe/,"grp"],[/numeri|tice/,"num"],[/sante|soin/,"sante"],[/environnement|durable|ecolog/,"env"],[/economie|solidaire/,"eco"],[/insertion/,"ins"],[/prevention|risque/,"prev"],[/deviance|norme/,"dev"],[/animation|education populaire/,"anim"],[/cycle de vie|developpement/,"cycle"],[/formation|apprendre/,"form"],[/intervention|action sociale|travail social/,"main"],[/politique|dispositif/,"pol"],[/histoire|valeur/,"hist"],[/enfan|jeunesse/,"enf"],[/psycho/,"psy"],[/sociolog|socialisation/,"socio"],[/education/,"edu"],[/connaissance|monde|geopol/,"globe"]];
+const titreNu = t=>String(t||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+function themeMatiere(s){ const t = titreNu(s.title); const r = MAT_REGLES.find(([re])=>re.test(t)); return r ? r[1] : null; }
+function cleMatiereAuto(s){
+  let k = themeMatiere(s);
+  if(!k){
+    const pris = new Set(SUBJECTS.filter(x=>x !== s && SEMESTRES[x.id] === SEMESTRES[s.id]).map(themeMatiere).filter(Boolean));
+    const cles = Object.keys(MAT_IC), libres = cles.filter(c=>!pris.has(c)), lot = libres.length ? libres : cles;
+    k = lot[hmHash(titreNu(s.title)) % lot.length];
+  }
+  return k;
+}
+// l'icône choisie à la main (réglages de chacun), sinon celle du thème
+function cleMatiere(s){
+  const m = USER_SETTINGS.matIcones, c = m && m[s.id];
+  return (c && (MAT_IC[c] || (typeof UI_IC === "object" && UI_IC[c]))) ? c : cleMatiereAuto(s);
+}
+function iconeMatiere(s){
+  const k = cleMatiere(s);
+  return `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${MAT_IC[k] || UI_IC[k]}</svg>`;
+}
+function changerIconeMatiere(m, apres){
+  const c = USER_SETTINGS.matIcones && USER_SETTINGS.matIcones[m.id];
+  openForm(m.title, [
+    { key:"couleur", label:"Couleur", type:"couleur", value:(USER_SETTINGS.matCouleurs || {})[m.id] || "", defaut:hmCouleurAuto(m) },
+    { key:"icone", label:"Icône", type:"icone", value:c && (MAT_IC[c] || UI_IC[c]) ? c : "", defaut:cleMatiereAuto(m),
+      hint:"Seulement pour toi. « Auto » garde celles de l'app." }
+  ], "Enregistrer", v=>{
+    const m2 = Object.assign({}, USER_SETTINGS.matIcones);
+    if(v.icone) m2[m.id] = v.icone; else delete m2[m.id];
+    const c2 = Object.assign({}, USER_SETTINGS.matCouleurs);
+    if(v.couleur) c2[m.id] = v.couleur; else delete c2[m.id];
+    USER_SETTINGS.matIcones = m2; USER_SETTINGS.matCouleurs = c2; saveContent();
+    if(apres) apres();
+  });
+}
+// ══════════ ICÔNES DE L'INTERFACE ══════════
+// Semestres, projets, archives et rubriques : des icônes dessinées, dans le même style que celles des matières.
+// Les emojis encore écrits dans les données passent par EMO_IC ; un emoji choisi à la main reste affiché tel quel.
+const UI_IC = {"graine": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M3.5 19.5h17v2h-17z\"/><ellipse fill=\"currentColor\" stroke=\"none\" opacity=\".22\" cx=\"12\" cy=\"16\" rx=\"3.2\" ry=\"2.3\"/><path d=\"M3.5 19.5h17\"/><ellipse cx=\"12\" cy=\"16\" rx=\"3.2\" ry=\"2.3\"/><path d=\"M12 13.7v-2.2c0-1.4 1-2.4 2.5-2.4\"/>", "pousse": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 14c-3.2 0-5.5-2.2-5.5-5.5 3.2 0 5.5 2.2 5.5 5.5zM12 11.5c0-3 2-5 5.2-5 0 3-2 5-5.2 5z\"/><path d=\"M3.5 20.5h17M12 20.5v-9M12 14c-3.2 0-5.5-2.2-5.5-5.5 3.2 0 5.5 2.2 5.5 5.5zM12 11.5c0-3 2-5 5.2-5 0 3-2 5-5.2 5z\"/>", "plante": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 16c-3.2 0-5.3-2-5.3-5 3.2 0 5.3 2 5.3 5zM12 12.5c0-3 2-5 5.2-5 0 3-2 5-5.2 5zM12 8.5c-2 0-3.3-1.3-3.3-3.3 2 0 3.3 1.3 3.3 3.3z\"/><path d=\"M3.5 20.5h17M12 20.5V5.5M12 16c-3.2 0-5.3-2-5.3-5 3.2 0 5.3 2 5.3 5zM12 12.5c0-3 2-5 5.2-5 0 3-2 5-5.2 5zM12 8.5c-2 0-3.3-1.3-3.3-3.3 2 0 3.3 1.3 3.3 3.3z\"/>", "arbuste": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M5.5 17.5a3 3 0 0 1 .8-5.9 4 4 0 0 1 7.5-1.6 3.3 3.3 0 0 1 5 2.9 2.4 2.4 0 0 1-.6 4.6z\"/><path d=\"M5.5 17.5a3 3 0 0 1 .8-5.9 4 4 0 0 1 7.5-1.6 3.3 3.3 0 0 1 5 2.9 2.4 2.4 0 0 1-.6 4.6zM3.5 21h17M9.5 17.5V21M14.5 17.5V21\"/>", "arbre": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 3a4.5 4.5 0 0 1 4.4 3.5 3.7 3.7 0 0 1 .6 7.3H7a3.7 3.7 0 0 1 .6-7.3A4.5 4.5 0 0 1 12 3z\"/><path d=\"M12 3a4.5 4.5 0 0 1 4.4 3.5 3.7 3.7 0 0 1 .6 7.3H7a3.7 3.7 0 0 1 .6-7.3A4.5 4.5 0 0 1 12 3zM12 21v-7.2M12 17.5l-2.5-2.2M12 16l2.3-2.2M8 21h8\"/>", "fleuri": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 3a4.5 4.5 0 0 1 4.4 3.5 3.7 3.7 0 0 1 .6 7.3H7a3.7 3.7 0 0 1 .6-7.3A4.5 4.5 0 0 1 12 3z\"/><path d=\"M12 3a4.5 4.5 0 0 1 4.4 3.5 3.7 3.7 0 0 1 .6 7.3H7a3.7 3.7 0 0 1 .6-7.3A4.5 4.5 0 0 1 12 3zM12 21v-7.2M8 21h8\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"9.6\" cy=\"9.2\" r=\"1.25\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"14.3\" cy=\"8.2\" r=\"1.25\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"12.6\" cy=\"11.6\" r=\"1.25\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"8.6\" cy=\"12\" r=\".9\"/>", "tetecoeur": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M5 11a7 7 0 1 1 11 5.7V21H9v-2.5H7a2 2 0 0 1-2-2v-2l-1.5-.6L5 11z\"/><path d=\"M5 11a7 7 0 1 1 11 5.7V21M9 21v-2.5H7a2 2 0 0 1-2-2v-2l-1.5-.6L5 11\"/><path fill=\"currentColor\" stroke=\"none\" d=\"M12.3 12.6s-3-1.9-3-3.8a1.6 1.6 0 0 1 3-.9 1.6 1.6 0 0 1 3 .9c0 1.9-3 3.8-3 3.8z\"/>", "ecole": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M4 10.5h16v10H4z\"/><path d=\"M2.5 11 12 4.5l9.5 6.5M4 10v10.5M20 10v10.5M3 20.5h18M10 20.5v-4.5h4v4.5\"/><circle cx=\"12\" cy=\"10.8\" r=\"1.8\"/><path d=\"M12 10v1l.7.5\"/>", "archives": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M4.5 8h15v11.5A1.5 1.5 0 0 1 18 21H6a1.5 1.5 0 0 1-1.5-1.5z\"/><rect x=\"3\" y=\"3.5\" width=\"18\" height=\"4.5\" rx=\"1.2\"/><path d=\"M4.5 8v11.5A1.5 1.5 0 0 0 6 21h12a1.5 1.5 0 0 0 1.5-1.5V8M9.5 12h5\"/>", "projet": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M5 4h12l-2.5 4L17 12H5z\"/><path d=\"M5 21V4h12l-2.5 4L17 12H5\"/>", "etapes": "<rect fill=\"currentColor\" stroke=\"none\" opacity=\".22\" x=\"4\" y=\"3.5\" width=\"16\" height=\"17.5\" rx=\"2.5\"/><rect x=\"4\" y=\"3.5\" width=\"16\" height=\"17.5\" rx=\"2.5\"/><path d=\"M7.5 8.5l1.3 1.3 2.2-2.4M13 9h3.5M7.5 14l1.3 1.3 2.2-2.4M13 14.5h3.5\"/>", "ampoule": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 3a6 6 0 0 1 3.5 10.9V16h-7v-2.1A6 6 0 0 1 12 3z\"/><path d=\"M12 3a6 6 0 0 1 3.5 10.9V16h-7v-2.1A6 6 0 0 1 12 3zM9 19h6M10 21.5h4M12 6.5a2.5 2.5 0 0 0-2.5 2.5\"/>", "dossier": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"/><path d=\"M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 11h18\"/>", "micro": "<rect fill=\"currentColor\" stroke=\"none\" opacity=\".22\" x=\"9\" y=\"2.5\" width=\"6\" height=\"11.5\" rx=\"3\"/><rect x=\"9\" y=\"2.5\" width=\"6\" height=\"11.5\" rx=\"3\"/><path d=\"M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5v4M8.5 21.5h7\"/>", "regle": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M3 15.5 15.5 3 21 8.5 8.5 21z\"/><path d=\"M3 15.5 15.5 3 21 8.5 8.5 21zM7 11.5l2 2M10 8.5l1.5 1.5M13 5.5l2 2M5.5 13l1.5 1.5M11.5 10l1.5 1.5\"/>", "calendrier": "<rect fill=\"currentColor\" stroke=\"none\" opacity=\".22\" x=\"3.5\" y=\"5\" width=\"17\" height=\"15.5\" rx=\"2.5\"/><rect x=\"3.5\" y=\"5\" width=\"17\" height=\"15.5\" rx=\"2.5\"/><path d=\"M3.5 10h17M8 3v4M16 3v4\"/><rect fill=\"currentColor\" stroke=\"none\" x=\"7\" y=\"13\" width=\"3\" height=\"3\" rx=\".7\"/>", "chiffres": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M5 13h3.5v7H5zM10.3 8h3.5v12h-3.5zM15.5 4H19v16h-3.5z\"/><path d=\"M5 13h3.5v7H5zM10.3 8h3.5v12h-3.5zM15.5 4H19v16h-3.5zM3 20.5h18\"/>", "lien": "<path d=\"M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1.2 1.2M14 10a4.5 4.5 0 0 0-6.4 0l-3 3A4.5 4.5 0 0 0 11 19.4l1.2-1.2\"/>", "canape": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M5.5 12V8.5A2.5 2.5 0 0 1 8 6h8a2.5 2.5 0 0 1 2.5 2.5V12z\"/><path d=\"M5.5 12V8.5A2.5 2.5 0 0 1 8 6h8a2.5 2.5 0 0 1 2.5 2.5V12M3 12.5a2 2 0 0 1 4 0V15h10v-2.5a2 2 0 0 1 4 0V18H3zM5 18v2M19 18v2\"/>", "cible": "<circle fill=\"currentColor\" stroke=\"none\" opacity=\".22\" cx=\"12\" cy=\"12\" r=\"9\"/><circle cx=\"12\" cy=\"12\" r=\"9\"/><circle cx=\"12\" cy=\"12\" r=\"5\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"12\" cy=\"12\" r=\"1.6\"/>", "adn": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M8 3c0 4.5 8 4.5 8 9s-8 4.5-8 9\"/><path d=\"M8 3c0 4.5 8 4.5 8 9s-8 4.5-8 9M16 3c0 4.5-8 4.5-8 9s8 4.5 8 9M9 6h6M9.5 9.5h5M9.5 14.5h5M9 18h6\"/>", "fleur": "<circle fill=\"currentColor\" stroke=\"none\" cx=\"12\" cy=\"10\" r=\"2\"/><path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 8a3 3 0 1 1 3-3 3 3 0 1 1 1 5.5 3 3 0 1 1-3 3.5 3 3 0 1 1-4-.5A3 3 0 1 1 8 7.5 3 3 0 0 1 12 8z\"/><path d=\"M12 7a2.7 2.7 0 1 1 2.6-3.3A2.7 2.7 0 1 1 16 9a2.7 2.7 0 1 1-2.2 4.4 2.7 2.7 0 1 1-4.5-.6A2.7 2.7 0 1 1 8.2 7 2.7 2.7 0 0 1 12 7zM12 14v7.5M12 18c-2 0-3.5-1.2-3.5-3\"/>", "reveil": "<circle fill=\"currentColor\" stroke=\"none\" opacity=\".22\" cx=\"12\" cy=\"13\" r=\"7.5\"/><circle cx=\"12\" cy=\"13\" r=\"7.5\"/><path d=\"M12 9.5V13l2.5 1.8M4 5.5 6.5 3M20 5.5 17.5 3\"/>", "page": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M6 3h8l4.5 4.5V21H6z\"/><path d=\"M6 3h8l4.5 4.5V21H6zM14 3v4.5h4.5M9 12h6M9 15.5h6\"/>", "semence": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 3.5c2.3 1.9 3.3 4 3.3 6a3.3 3.3 0 0 1-6.6 0c0-2 1-4.1 3.3-6z\"/><path d=\"M12 3.5c2.3 1.9 3.3 4 3.3 6a3.3 3.3 0 0 1-6.6 0c0-2 1-4.1 3.3-6zM12 7.2v4.6M3.5 20h17M12 15.8v.6M12 17.8v.4\"/>", "terreau": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M6.8 8.5C6 12 5.5 15.5 5.5 18.2A2.8 2.8 0 0 0 8.3 21h7.4a2.8 2.8 0 0 0 2.8-2.8c0-2.7-.5-6.2-1.3-9.7z\"/><path fill=\"currentColor\" stroke=\"none\" d=\"M7.5 8.5c.8-1.8 2.6-2.8 4.5-2.8s3.7 1 4.5 2.8z\" opacity=\".55\"/><path d=\"M6.8 8.5C6 12 5.5 15.5 5.5 18.2A2.8 2.8 0 0 0 8.3 21h7.4a2.8 2.8 0 0 0 2.8-2.8c0-2.7-.5-6.2-1.3-9.7zM5.8 8.5h12.4M12 18.6v-3M12 16.6c-1.8 0-2.9-1-2.9-2.8 1.8 0 2.9 1 2.9 2.8zM12 15.6c0-1.6 1-2.6 2.6-2.6 0 1.6-1 2.6-2.6 2.6z\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"9.5\" cy=\"4.6\" r=\".8\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"13\" cy=\"3.6\" r=\".8\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"15.2\" cy=\"5.2\" r=\".7\"/>"};
+const EMO_IC = {"📋": "etapes", "💡": "ampoule", "🔍": "rech", "🧭": "boussole", "✍": "plume", "📂": "dossier", "📁": "dossier", "🗂": "archives", "🗣": "micro", "🤝": "com", "💬": "com", "📏": "regle", "🎓": "edu", "📅": "calendrier", "📊": "chiffres", "🏫": "ecole", "📚": "livre", "📖": "livre", "🔗": "lien", "🛋": "canape", "👶": "enf", "👥": "grp", "🧩": "puzzle", "🌀": "psy", "🧠": "psy", "💜": "tetecoeur", "🎯": "cible", "💼": "pro", "🔀": "debat", "🔄": "cycle", "🗺": "globe", "🌍": "globe", "🧬": "adn", "🌸": "fleur", "🌱": "pousse", "⏰": "reveil", "⏳": "reveil", "📄": "page", "✏": "plume", "🔬": "rech", "📐": "regle", "📬": "page", "📝": "plume"};
+const SEM_IC = ["graine","graine","pousse","plante","arbuste","arbre","fleuri"];
+function cleIcone(x){ const k = String(x || "").replace(/\ufe0f/g, "").trim(); return (UI_IC[k] || MAT_IC[k]) ? k : EMO_IC[k] || null; }
+function icone(x){
+  const k = cleIcone(x);
+  if(!k) return esc(String(x || ""));
+  return `<svg class="ico ico-ui" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${UI_IC[k] || MAT_IC[k]}</svg>`;
+}
+// la couleur de chaque tuile de Cours : les semestres suivent la pousse (de l'ambre de la graine au rose de l'arbre en fleurs),
+// rose pour Psycho, jaune pour CPE, couleur terre pour les archives (le sac de terreau : les années passées nourrissent la plante)
+const TUILE_COUL = { v:"var(--accent)", b:"var(--c-b)", g:"var(--c-g)", y:"#e09a00", r:"var(--c-r)", t:"#a8703f" };
+const SEM_COUL = ["#d8a010","#d8a010","#8db31c","#2fae5a","#13a39b","#2f8ce0","#6f5ff0"];   // un tour de teinte régulier, jusqu'au violet de l'app
+// avant la L1 (semestre 1 seul, ex. ICP) : la semence pas encore plantée, d'une teinte plus terreuse
+function couleurSemestre(sem){ return sem < 1.5 ? "#c8742e" : SEM_COUL[Math.max(0, Math.min(6, Math.floor(sem)))]; }
+// l'ordre de la grille de choix : la plante qui pousse, les projets, les matières, puis le reste
+const ICONES_CHOIX = [...new Set(["semence","graine","pousse","plante","arbuste","arbre","fleuri","terreau","tetecoeur","ecole","projet",
+  ...Object.keys(MAT_IC), ...Object.keys(UI_IC)])].filter(k=>!["page","lien","reveil","calendrier","regle","chiffres","archives"].includes(k));
+function iconeSemestre(sem){ return sem < 1.5 ? "semence" : SEM_IC[Math.max(0, Math.min(6, Math.floor(sem)))]; }
+// « 🌱 Dès maintenant » → « Dès maintenant » : la frise a déjà ses repères
+const sansEmoji = t=>String(t || "").replace(/^(\p{Extended_Pictographic}\ufe0f?\s*)+/u, "");
 function hmHash(t){ let h = 0; String(t).split("").forEach(c=>{ h = (h * 31 + c.charCodeAt(0)) | 0; }); return Math.abs(h); }
-function hmCouleur(subj){ return HM_COUL[hmHash(subj.id) % HM_COUL.length]; }
-const HM_HEX = { v:"var(--accent)", b:"var(--c-b)", g:"var(--c-g)", y:"var(--c-y)", r:"var(--c-r)" };
+// sans choix à la main : chaque matière du semestre prend une des 8 couleurs à tour de rôle, sans doublon tant qu'il y en a assez
+// l'ordre alterne les teintes (deux voisines ne se ressemblent pas) ; chaque semestre commence ailleurs dans la palette
+const HM_COUL_AUTO = ["b","o","g","f","y","i","c","r","l","s","t","v"];
+function hmCouleurAuto(subj){
+  const sem = SEMESTRES[subj.id];
+  const freres = SUBJECTS.filter(x=>SEMESTRES[x.id] === sem).map(x=>x.id).sort();
+  const i = freres.indexOf(subj.id);
+  if(i < 0) return HM_COUL[hmHash(subj.id) % HM_COUL.length];
+  const decalage = Math.round((Number(sem) || 0) * 2) * 5;
+  return HM_COUL_AUTO[(i + decalage) % HM_COUL_AUTO.length];
+}
+function hmCouleur(subj){
+  const k = USER_SETTINGS.matCouleurs && USER_SETTINGS.matCouleurs[subj.id];   // la couleur choisie à la main
+  return k && HM_HEX[k] ? k : hmCouleurAuto(subj);
+}
+const HM_HEX = { v:"var(--accent)", b:"var(--c-b)", c:"#12a9a0", g:"var(--c-g)", y:"var(--c-y)", o:"#f26b3a", r:"var(--c-r)", t:"#a8703f",
+  i:"#5b5bd6", l:"#65a30d", f:"#c03fd0", s:"#0ea5e9" };
+const COULEURS_CHOIX = ["v","i","b","s","c","g","l","y","o","r","f","t"];
 // le semestre « en cours » : le plus avancé qui a déjà des chapitres
 function hmSemCourant(){
   let sem = 0;
@@ -6170,7 +6315,7 @@ function renderAccueil(anim){
       <div class="hm-ring"><svg viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="color-mix(in srgb,var(--accent) 13%,transparent)" stroke-width="14"/>
         <circle class="arc" cx="75" cy="75" r="62" fill="none" stroke="url(#hm-g)" stroke-width="14" stroke-linecap="round" stroke-dasharray="389.6" stroke-dashoffset="389.6" data-off="${389.6 * (1 - fait / HM_OBJECTIF)}"/>
         <defs><linearGradient id="hm-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="var(--c-r)"/></linearGradient></defs></svg>
-        <div class="hm-rc"><b data-n="${fait}">${fait}</b><span>sur ${HM_OBJECTIF}</span></div></div>
+        <div class="hm-rc"><b data-n="${fait}">${fait}</b><span>sur ${HM_OBJECTIF} <i class="hm-rc-reg">›</i></span></div></div>
       <div class="hm-side">
         ${chT ? `<div class="hm-sv"><div class="l">Chapitres lus<em>${chL}/${chT}</em></div><div class="hm-tr hm-doux-b"><i data-w="${pc(chL,chT)}" style="background:var(--c-b)"></i></div></div>` : ""}
         <div class="hm-sv"><div class="l">QCM validés<em>${pc(qO,qT)} %</em></div><div class="hm-tr hm-doux-v"><i data-w="${pc(qO,qT)}" style="background:var(--accent)"></i></div></div>
@@ -6178,13 +6323,13 @@ function renderAccueil(anim){
       </div></div>
     ${auj >= HM_OBJECTIF ? `<div class="hm-bravo">✓ Objectif atteint. Tout le reste, c'est du bonus.</div>` : ""}
     <button type="button" class="hm-cta hm-press" id="hm-go">${ctaTxt}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
-    <div class="hm-ligne">${serie.n ? `🔥 <b>${serie.n} jour${serie.n > 1 ? "s" : ""}</b> de suite` : "Une série par jour, à ton rythme"}<span class="pt"></span><button type="button" class="hm-objbtn" id="hm-obj">objectif <b>${HM_OBJECTIF}</b> par jour ›</button></div>`;
+    ${(()=>{ const a = apercuRevision(); return `<div class="hm-apercu${a.vide ? " vide" : ""}">${serie.n ? `🔥 <b>${serie.n} jour${serie.n > 1 ? "s" : ""}</b><span class="pt"></span>` : ""}${a.txt}</div>`; })()}`;
   const boxJ = document.getElementById("hm-jour");
   const neuf = jour !== HM_DERNIER;
   if(neuf){
     HM_DERNIER = jour; boxJ.innerHTML = jour;
-    document.getElementById("hm-go").addEventListener("click",()=>{ haptic(); startGlobalSession(); });
-    document.getElementById("hm-obj").addEventListener("click",()=>{ haptic(); choisirObjectif(); });
+    document.getElementById("hm-go").addEventListener("click",()=>{ haptic(); lancerRevisionJour(); });
+
     const ring = boxJ.querySelector(".hm-ring"); if(ring){ ring.style.cursor = "pointer"; ring.addEventListener("click",()=>{ haptic(); choisirObjectif(); }); }
   }
   if(neuf || anim){
@@ -6280,13 +6425,15 @@ function renderAccueil(anim){
     boxA.appendChild(hs);
   }
 
-  // ── mes matières : celles qui ont un contrôle d'abord ──
+  // ── mes matières : les dernières ouvertes, puis celles du semestre (contrôles d'abord) pour compléter ──
   const boxM = document.getElementById("hm-mats"); boxM.innerHTML = "";
-  if(mats.length){
+  const recentes = matieresRecentes().map(id=>SUBJECTS.find(x=>x.id === id)).filter(Boolean);
+  if(mats.length || recentes.length){
     const ctl = hmControles();
-    const tri = mats.slice().sort((a,b)=>{ const x = ctl[a.id], y = ctl[b.id]; if(x && y) return x.start - y.start; if(x) return -1; if(y) return 1; return 0; });
+    const parSem = mats.slice().sort((a,b)=>{ const x = ctl[a.id], y = ctl[b.id]; if(x && y) return x.start - y.start; if(x) return -1; if(y) return 1; return 0; });
+    const tri = [...new Set([...recentes, ...parSem])];
     const sem = hmSemCourant();
-    const secM = el("div","hm-sec"); secM.innerHTML = `<h3>Mes matières</h3><button type="button">${esc(titreSemestre(sem))}</button>`;
+    const secM = el("div","hm-sec"); secM.innerHTML = `<h3>${recentes.length ? "Ouvertes récemment" : "Mes matières"}</h3><button type="button">${esc(titreSemestre(sem))}</button>`;
     secM.querySelector("button").addEventListener("click",()=>{ haptic(); curSemestre = sem; renderSubjectCards(sem); showScreen("subjects"); });
     boxM.appendChild(secM);
     const card = el("div","hm-card hm-ml");
@@ -6298,7 +6445,7 @@ function renderAccueil(anim){
       if(e){ const j = hmJoursAvant(e.start); sous += " · contrôle " + (j <= 0 ? "aujourd'hui" : j === 1 ? "demain" : j < 7 ? e.start.toLocaleDateString("fr-FR",{weekday:"long"}) : "le " + e.start.getDate() + "/" + String(e.start.getMonth()+1).padStart(2,"0")); }
       else if(nouv.has(m.id)) sous += " · du nouveau";
       const b = el("button","hm-mi hm-press"); b.type = "button";
-      b.innerHTML = `<span class="hm-ic hm-doux-${c}">${ICO(HM_IC[hmHash(m.id + "i") % HM_IC.length])}</span><span class="t"><span class="t1">${esc(m.title)}</span><span class="t2">${esc(sous)}</span></span>
+      b.innerHTML = `<span class="hm-ic hm-doux-${c}">${iconeMatiere(m)}</span><span class="t"><span class="t1">${esc(m.title)}</span><span class="t2">${esc(sous)}</span></span>
         <span class="hm-pr"><svg viewBox="0 0 42 42"><circle cx="21" cy="21" r="17" fill="none" stroke="color-mix(in srgb,${HM_HEX[c]} 16%,transparent)" stroke-width="5"/><circle cx="21" cy="21" r="17" fill="none" stroke="${HM_HEX[c]}" stroke-width="5" stroke-linecap="round" stroke-dasharray="106.8" stroke-dashoffset="${106.8 * (1 - p / 100)}"/></svg><b>${q.tot ? p : "–"}</b></span>`;
       b.addEventListener("click",()=>{ haptic(); document.documentElement.dataset.mtDepuis = "semestres"; ouvrirMatiere(m.id, null, b); });
       card.appendChild(b);
@@ -6456,9 +6603,26 @@ function renderControle(){
 let MATIERE_OUVERTE = null, MT_ONGLET = "cm";
 const MT_GRAD = { v:"linear-gradient(160deg,color-mix(in srgb,var(--accent) 85%,#000),var(--accent) 50%,var(--accent-2))",
   b:"linear-gradient(160deg,#1f63d6,#3a86ff 50%,#7fb0ff)", g:"linear-gradient(160deg,#0b8a5d,#14b87e 50%,#5fd9a9)",
-  y:"linear-gradient(160deg,#e07b00,#f5a524 50%,#ffc766)", r:"linear-gradient(160deg,#d12a6b,#ff4d8d 50%,#ff8ab4)" };
+  y:"linear-gradient(160deg,#b85f00,#dc8a12 50%,#f0ad3c)", r:"linear-gradient(160deg,#d12a6b,#ff4d8d 50%,#ff8ab4)",
+  c:"linear-gradient(160deg,#08857e,#12a9a0 50%,#5fd3cb)", o:"linear-gradient(160deg,#d24a1c,#f26b3a 50%,#ff9e74)", t:"linear-gradient(160deg,#7d4f27,#a8703f 50%,#cf9d6c)",
+  i:"linear-gradient(160deg,#3a38a8,#5b5bd6 50%,#8f8ff0)", l:"linear-gradient(160deg,#3f6a05,#5a920c 50%,#86bf2a)", f:"linear-gradient(160deg,#8e2299,#c03fd0 50%,#de7fe9)", s:"linear-gradient(160deg,#0677a8,#0ea5e9 50%,#5cc8f5)" };
+// les matières ouvertes en dernier (sur ce téléphone), pour l'accueil
+const RECENTES_KEY = "revision_recentes_v1";
+// gardées dans le compte (tous les appareils), avec une copie sur le téléphone
+function matieresRecentes(){
+  if(Array.isArray(USER_SETTINGS.recentes)) return USER_SETTINGS.recentes;
+  try{ const a = JSON.parse(localStorage.getItem(RECENTES_KEY) || "[]"); return Array.isArray(a) ? a : []; }catch(e){ return []; }
+}
+function noterMatiereOuverte(id){
+  if(!id) return;
+  const l = [id, ...matieresRecentes().filter(x=>x !== id)].slice(0, 12);
+  if(String(l) === String(matieresRecentes())) return;
+  USER_SETTINGS.recentes = l; saveContent();
+  try{ localStorage.setItem(RECENTES_KEY, JSON.stringify(l)); }catch(e){}
+}
 function ouvrirMatiere(id, onglet, depuis){
   const m = SUBJECTS.find(x=>x.id === id); if(!m) return;
+  noterMatiereOuverte(id);
   const reduit = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   const r0 = depuis && !reduit ? depuis.getBoundingClientRect() : null;
   MATIERE_OUVERTE = id; curSubj = m; curSemestre = SEMESTRES[id]; CONTROLE_OUVERT = null;
@@ -6491,7 +6655,7 @@ function renderMatiere(){
   const sous = ch.tot + " chapitre" + (ch.tot > 1 ? "s" : "") + (ctl ? " · contrôle " + quandCtl : "");
   box.innerHTML = `<div class="mt-head" style="background:${MT_GRAD[c]}">
       <button type="button" class="mt-bk" id="mt-bk" aria-label="Retour"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
-      <div class="mt-top"><span class="mt-big">${ICO(HM_IC[hmHash(m.id + "i") % HM_IC.length])}</span><div><h1>${esc(m.title)}</h1><p>${esc(sous)}</p></div></div>
+      <div class="mt-top"><button type="button" class="mt-big" id="mt-big" aria-label="Changer l'icône">${iconeMatiere(m)}</button><div><h1>${esc(m.title)}</h1><p>${esc(sous)}</p></div></div>
     </div>
     <div class="mt-body">
       <div class="hm-card mt-kpi"><div><b>${ch.lus}/${ch.tot}</b><span>chapitres lus</span></div><div><b>${q.tot ? Math.round(q.ok / q.tot * 100) + " %" : "–"}</b><span>QCM validés</span></div><div><b>${ctl ? (jc <= 0 ? "Auj." : "J-" + jc) : (q.err || 0)}</b><span>${ctl ? "contrôle" : "erreurs"}</span></div></div>
@@ -6501,6 +6665,7 @@ function renderMatiere(){
       <div id="mt-liste"></div>
     </div>
     <div class="mt-sticky"><button type="button" class="hm-cta hm-press" id="mt-go">${ctl ? "Réviser pour " + quandCtl : "Réviser cette matière"}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></div>`;
+  document.getElementById("mt-big").addEventListener("click",()=>{ haptic(); changerIconeMatiere(m, ()=>{ SANS_ENTREE = true; ouvrirMatiere(m.id, MT_ONGLET); }); });
   document.getElementById("mt-bk").addEventListener("click",()=>{ haptic(); if(document.documentElement.dataset.mtDepuis === "subjects"){ renderSubjectCards(curSemestre); showScreen("subjects"); } else { renderSemestres(); showScreen("semestres"); } });
   document.getElementById("mt-go").addEventListener("click",()=>{
     haptic(); curSubj = m;
@@ -6603,10 +6768,10 @@ function renderSemestres(){
     const dues = list.filter(x=>["cm","td"].some(t=>(x[t]||[]).some(ch=>!estRevise(x, t, ch))));
     const nvSem = list.filter(x=>nouveauxDe(x).length).length;
     const t = tuileDe("sem:" + sem);
-    const card=el("button","sem-tile rise");
+    const card=el("button","sem-tile rise"); card.style.setProperty("--tc", couleurSemestre(sem));
     card.innerHTML=`
       <div class="sem-tile-top">
-        <div class="sem-badge">${esc(t.icone || (sem%2 ? "📚" : "🧠"))}</div>
+        <div class="sem-badge">${icone(t.icone || iconeSemestre(sem))}</div>
       </div>
       ${nvSem ? `<span class="nb" aria-label="${nvSem} matière${nvSem > 1 ? "s" : ""} avec du nouveau">${nvSem}</span>` : ``}
       <div class="sem-name">${esc(titreSemestre(sem))}</div>
@@ -6615,30 +6780,30 @@ function renderSemestres(){
       <div class="sem-bar"><div class="sem-bar-fill" style="width:${pct}%"></div></div>
       <div class="sem-pct">${tot ? pct+" %" : "vide"}</div>`;
     card.addEventListener("click",()=>{ curSemestre=sem; renderSubjectCards(sem); showScreen("subjects"); });
-    tuiles.push({ cle:"sem:" + sem, el:card, defaut:(typeof TUILES_DEFAUT === "object" && TUILES_DEFAUT["sem:" + sem] && TUILES_DEFAUT["sem:" + sem].titre) || "Semestre " + sem, icone:sem%2 ? "📚" : "🧠", sem,
+    tuiles.push({ cle:"sem:" + sem, el:card, defaut:(typeof TUILES_DEFAUT === "object" && TUILES_DEFAUT["sem:" + sem] && TUILES_DEFAUT["sem:" + sem].titre) || "Semestre " + sem, icone:iconeSemestre(sem), sem,
                   groupe:(t.sous || "").trim() });
   });
 
   // Projet Psycho : réservé à Civa et Nana, invisible pour les autres comptes
   if(isCloseFriend()){
     const t = tuileDe("psy");
-    const psy = el("button","sem-tile psy-tile rise");
+    const psy = el("button","sem-tile psy-tile rise"); psy.style.setProperty("--tc", TUILE_COUL.r);
     psy.innerHTML = `
-      <div class="sem-tile-top"><div class="sem-badge">${esc(t.icone || "💜")}</div></div>
+      <div class="sem-tile-top"><div class="sem-badge">${icone(t.icone || "tetecoeur")}</div></div>
       <div class="sem-name">${esc(t.titre || psyTitle())}</div>
       <div class="sem-meta">${esc(t.sous || "Passerelles · masters")}</div>
       <div class="sem-bar"><div class="sem-bar-fill" style="width:${psyProgress()}%"></div></div>
       <div class="sem-pct">${psyProgress()} %</div>`;
     psy.addEventListener("click",()=>{ haptic(); renderPsycho(); });
     const nu = urgences("psy").length; pastille(psy, nu, nu + " étape" + (nu > 1 ? "s" : "") + " à faire bientôt");
-    tuiles.push({ cle:"psy", el:psy, defaut:psyTitle(), icone:"💜", sousDefaut:"Passerelles · masters", groupe:"\u0000psy" });
+    tuiles.push({ cle:"psy", el:psy, defaut:psyTitle(), icone:"tetecoeur", sousDefaut:"Passerelles · masters", groupe:"\u0000psy" });
   }
   // les autres projets : reçus d'une classe (et Concours CPE chez Civa)
   mesProjets().forEach(pid=>{
     const pj = PROJETS[pid], t = tuileDe("projet:" + pid), pct = projetAvancement(pid);
-    const b = el("button","sem-tile psy-tile rise");
+    const b = el("button","sem-tile psy-tile rise"); b.style.setProperty("--tc", TUILE_COUL[pid === "cpe" ? "y" : "v"]);
     b.innerHTML = `
-      <div class="sem-tile-top"><div class="sem-badge">${esc(t.icone || pj.icone)}</div></div>
+      <div class="sem-tile-top"><div class="sem-badge">${icone(t.icone || pj.icone)}</div></div>
       <div class="sem-name">${esc(t.titre || pj.titre)}</div>
       <div class="sem-meta">${esc(t.sous || pj.sous)}</div>
       <div class="sem-bar"><div class="sem-bar-fill" style="width:${pct}%"></div></div>
@@ -6652,6 +6817,8 @@ function renderSemestres(){
   // les archives (L1 et L2) ne concernent que mes cours : un autre compte voit tous ses semestres
   const estArchive = t=>isCiva() && t.sem && t.sem < 5;
   const archives = tuiles.filter(estArchive);
+  // une couleur choisie dans « Personnaliser » passe devant celle de l'app
+  tuiles.forEach(t=>{ t.tcDefaut = t.el.style.getPropertyValue("--tc"); const d = tuileDe(t.cle); if(d.couleur && HM_HEX[d.couleur]) t.el.style.setProperty("--tc", HM_HEX[d.couleur]); });
   const triees = trierTuiles(tuiles.filter(t=>!estArchive(t)));
   // regroupement par sous-titre : chaque groupe à la place de sa première tuile,
   // les semestres sans sous-titre ensemble, le Projet Psycho toujours à part
@@ -6667,7 +6834,8 @@ function renderSemestres(){
   let si = 0;
   // chaque section se plie : on garde ouvertes celles en cours, on plie les années terminées
   let plies = {}; try{ plies = JSON.parse(localStorage.getItem("revision_sem_plies") || "{}") || {}; }catch(e){}
-  groupes.forEach(g=>{
+  // l'ordre de la page : les semestres, puis les archives, puis les projets tout en bas
+  const placerGroupe = g=>{
     const plie = avecTitres && !!plies[g.cle || "\u0000autres"];
     if(avecTitres){
       const h = el("button","sem-groupe rise" + (plie ? "" : " ouvert")); h.type = "button";
@@ -6685,8 +6853,10 @@ function renderSemestres(){
     }
     if(plie) return;
     g.tuiles.forEach(t=>placerTuile(t, si++));
-  });
+  };
+  groupes.filter(g=>g.cle !== "\u0000psy").forEach(placerGroupe);
   if(archives.length) ajouterArchives(wrap, archives, t=>placerTuile(t, si++));
+  groupes.filter(g=>g.cle === "\u0000psy").forEach(placerGroupe);
   function placerTuile(t, si){
     t.el.style.animationDelay = (0.14 + si*0.04) + "s";
     if(!canEdit()){ wrap.appendChild(t.el); return; }
@@ -7013,23 +7183,25 @@ function ajouterArchives(wrap, archives, placer){
     try{ localStorage.setItem("revision_sem_plies", JSON.stringify(plies)); }catch(e){}
     renderSemestres();
   });
-  wrap.appendChild(h);
-  if(plie) return;
+  if(plie){ wrap.appendChild(h); return; }
   const bascule = ()=>{
     haptic();
     try{ localStorage.setItem("revision_archives_ouvert", ouvert ? "0" : "1"); }catch(e){}
     renderSemestres();
   };
-  const tu = el("button","sem-tile arch-tuile rise" + (ouvert ? " ouvert" : "")); tu.type = "button";
+  const tu = el("button","sem-tile arch-tuile rise" + (ouvert ? " ouvert" : "")); tu.type = "button"; tu.style.setProperty("--tc", TUILE_COUL.t);
   tu.setAttribute("aria-expanded", ouvert ? "true" : "false");
-  tu.innerHTML = `<div class="sem-tile-top"><div class="sem-badge">🗂️</div></div>
+  tu.innerHTML = `<div class="sem-tile-top"><div class="sem-badge">${icone("terreau")}</div></div>
     <div class="sem-name">L1 et L2</div>
     <div class="sem-meta">${nMat} matières</div>
     <div class="sem-bar"></div>
     <div class="sem-pct">${archives.length} semestres</div>`;
   tu.addEventListener("click", bascule);
+  // la tuile s'ouvre vers le haut : les années archivées d'abord, puis le titre et la tuile, tout en bas
+  if(ouvert) annees();
+  wrap.appendChild(h);
   wrap.appendChild(tu);
-  if(!ouvert) return;
+  function annees(){
   let courant = "";
   archives.slice().sort((x,y)=>y.sem - x.sem).forEach(t=>{
     const an = nomAnneeSem(t.sem);
@@ -7040,13 +7212,18 @@ function ajouterArchives(wrap, archives, placer){
     }
     placer(t);
   });
+  }
 }
 // ── Personnaliser les tuiles de l'accueil : titre, sous-titre, icône, ordre ──
 // Enregistré dans les réglages du compte : suit sur tous les appareils.
 function tuileDe(cle){
   const t = USER_SETTINGS.tuiles && USER_SETTINGS.tuiles[cle];
   const d = (typeof TUILES_DEFAUT === "object" && TUILES_DEFAUT[cle]) || {};
-  return Object.assign({}, d, (t && typeof t === "object") ? t : {});
+  const r = Object.assign({}, d, (t && typeof t === "object") ? t : {});
+  // les anciens emojis par défaut des semestres laissent la place à la plante qui grandit
+  // (un emoji qui a son dessin : 📚, 🌍, 🧩… ; un emoji sans équivalent, choisi exprès, reste affiché)
+  if(cle.startsWith("sem:") && r.icone && typeof cleIcone === "function" && cleIcone(r.icone) && !(UI_IC[r.icone] || MAT_IC[r.icone])) delete r.icone;
+  return r;
 }
 function titreSemestre(sem){ return tuileDe("sem:" + sem).titre || ("Semestre " + sem); }
 // L'ordre rangé à la main d'abord. Une tuile pas encore rangée prend sa place chronologique :
@@ -7074,7 +7251,7 @@ function rangerTuiles(tuiles){
     liste.forEach((t,i)=>{
       const d = tuileDe(t.cle);
       const r = el("div","od-row" + (t.cle === actif ? " on" : ""));
-      r.innerHTML = `<span class="od-ic">${esc(d.icone || t.icone)}</span><span class="od-t"><b>${esc(d.titre || t.defaut)}</b><small>${esc(d.sous || t.sousDefaut || "")}</small></span>`;
+      r.innerHTML = `<span class="od-ic">${icone(d.icone || t.icone)}</span><span class="od-t"><b>${esc(d.titre || t.defaut)}</b><small>${esc(d.sous || t.sousDefaut || "")}</small></span>`;
       const bt = el("span","od-bt");
       [["↑",-1,"Monter"],["↓",1,"Descendre"]].forEach(([txt, sens, lab])=>{
         const b = el("button"); b.type = "button"; b.textContent = txt; b.setAttribute("aria-label", lab + " " + (d.titre || t.defaut));
@@ -7104,19 +7281,13 @@ function personnaliserTuile(t, tuiles){
   openForm("Personnaliser", [
     { key:"titre", label:"Titre", value:cur.titre || "", placeholder:t.defaut },
     { key:"sous",  label:"Sous-titre", value:cur.sous || "", placeholder:t.sousDefaut || "ex. L3 SESS (UPEC)" },
-    { key:"emoji", label:"Emoji", value:cur.icone || t.icone, placeholder:"Touche ici, puis choisis sur le clavier emoji" },
+    { key:"couleur", label:"Couleur", type:"couleur", value:cur.couleur && HM_HEX[cur.couleur] ? cur.couleur : "", defaut:t.tcDefaut || (t.el && t.el.style.getPropertyValue("--tc")) || "var(--accent)" },
+    { key:"icone", label:"Icône", type:"icone", value:(cur.icone && (UI_IC[cur.icone] || MAT_IC[cur.icone])) ? cur.icone : "", defaut:cleIcone(t.icone) || "projet" },
   ], "Enregistrer", v=>{
     USER_SETTINGS.tuiles = Object.assign({}, USER_SETTINGS.tuiles);
-    // un emoji tapé passe devant la rangée : on garde le premier (drapeaux et emojis composés compris)
-    const tape = (v.emoji || "").trim();
-    let perso = "";
-    if(tape){
-      try{ perso = [...new Intl.Segmenter("fr", { granularity:"grapheme" }).segment(tape)][0].segment; }
-      catch(e){ perso = Array.from(tape).slice(0, 2).join(""); }
-    }
-    const ic = perso || t.icone;
-    const n = { titre:v.titre, sous:v.sous, icone:ic === t.icone ? "" : ic };
-    if(!n.titre && !n.sous && !n.icone) delete USER_SETTINGS.tuiles[t.cle];
+    // l'icône choisie dans la grille ; « Auto » (vide) garde celle de l'app
+    const n = { titre:v.titre, sous:v.sous, icone:v.icone || "", couleur:v.couleur || "" };
+    if(!n.titre && !n.sous && !n.icone && !n.couleur) delete USER_SETTINGS.tuiles[t.cle];
     else USER_SETTINGS.tuiles[t.cle] = n;
     saveContent();
     renderSemestres();
@@ -7156,8 +7327,21 @@ function setUEOpen(ue, v){
   try{ localStorage.setItem(UEOPEN_KEY, JSON.stringify(m)); }catch(e){}
 }
 
+// la page d'un semestre prend la couleur de sa tuile (la plante qui pousse, ou celle choisie) :
+// l'en-tête et les petits éléments de la page suivent
+function couleurPageSemestre(sem){
+  const scr = document.getElementById("screen-subjects"); if(!scr) return;
+  const d = sem ? tuileDe("sem:" + sem) : {};
+  let c = sem ? ((d.couleur && HM_HEX[d.couleur]) || couleurSemestre(sem)) : null;
+  // une couleur claire sous un texte blanc : on l'assombrit un peu pour que le titre reste lisible
+  if(c && ["#d8a010","#8db31c","#c8742e","#e09a00","var(--c-y)"].includes(c)) c = `color-mix(in srgb,${c} 80%,#000)`;
+  const props = { "--accent":c, "--accent-2":c && `color-mix(in srgb,${c} 62%,#fff)`, "--accent-soft":c && `color-mix(in srgb,${c} 14%,transparent)`,
+    "--accent-glow":c && `color-mix(in srgb,${c} 32%,transparent)` };
+  Object.entries(props).forEach(([k,v])=>v ? scr.style.setProperty(k, v) : scr.style.removeProperty(k));
+}
 function renderSubjectCards(sem){
   resolveAllLangs();
+  couleurPageSemestre(sem);
   const list=SUBJECTS.filter(s=>(SEMESTRES[s.id]||5)===sem);
   const wrap=document.getElementById("subj-cards"); wrap.innerHTML="";
   // le cercle suit les matières « À jour » : tous leurs CM et TD marqués révisés
@@ -7246,6 +7430,7 @@ function resolveAllLangs(){
   SUBJECTS.forEach(s=>{ if(s.bilingue) resolveLang(s); });
 }
 function openSubject(id){
+  noterMatiereOuverte(id);
   markSubjectSeen(id);   // le cours n'est plus « nouveau »
   curSubj=SUBJECTS.find(s=>s.id===id);
   resolveLang(curSubj);
@@ -9210,15 +9395,28 @@ function startGlobalSession(){
   flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv=""; oqEcrit="";
   globalSession = true;
   sessionScope = "all";
-  const all = [], prio = [];
+  const { prio, all, neuf } = choixRevision();
+  if(!all.length && !prio.length && !neuf.length) return false;
+  queue = shuffle(prio).concat(shuffle(all), shuffle(neuf)).slice(0, SERIE_MAX);
+  sessionDueOnly = true;
+  clearInterval(timerInt);
+  showScreen("session");
+  renderSess();
+  return true;
+}
+// Ce que la révision du jour va proposer : les chapitres des contrôles proches d'abord, puis ce qui est à revoir.
+function choixRevision(){
+  const all = [], prio = [], neuf = [];
+  const semIds = new Set(hmMatieresSem().map(x=>x.id));
   // un contrôle dans les 14 jours : ses chapitres passent en premier (même pas encore « dus »)
-  const cibles = {};
+  const cibles = {}, quand = {};
   try{
     pendingAlerts(true, false).forEach(e=>{
       const N = evNote(e) || {}; if(typeDevoir(N) !== "controle" || N.done) return;
       const j = hmJoursAvant(e.start); if(j < 0 || j > 14) return;
       const sj = matiereDeNote(e, N); if(!sj) return;
       const chs = Array.isArray(N.chs) && N.chs.length ? N.chs : null;
+      if(!(sj.id in quand) || e.start < quand[sj.id]) quand[sj.id] = e.start;
       if(!(sj.id in cibles)) cibles[sj.id] = chs;
       else if(cibles[sj.id] === null || !chs) cibles[sj.id] = null;   // une fois « toute la matière », ça le reste
       else cibles[sj.id] = cibles[sj.id].concat(chs);
@@ -9231,16 +9429,59 @@ function startGlobalSession(){
         const visee = m !== "oq" && (s.id in cibles) && (!cibles[s.id] || cibles[s.id].includes(item && item.ch));
         const entree = ()=>({ item: (m === "qcm" || m === "tr") ? melangerQCM(item) : item, mode:m, subj:s, key });
         if(visee && (srsIsDue(key) || !estAcquise(key))) prio.push(entree());
-        else if(srsIsDue(key)) all.push(entree());
+        else if(aRevoir(key)) all.push(entree());                                   // déjà fait, et son tour est revenu
+        else if(!SRS[key] && semIds.has(s.id) && m !== "oq") neuf.push(entree());   // jamais fait : seulement le semestre en cours
       });
     });
   });
-  if(!all.length && !prio.length) return;
-  queue = shuffle(prio).concat(shuffle(all)).slice(0, SERIE_MAX);
-  sessionDueOnly = true;
+  return { prio, all, neuf, cibles, quand };
+}
+// « Prévention des conduites à risques » → « Prévention »
+const nomBref = t=>String(t || "").split(/ (?:des|de|du|d'|et|à|aux|en|:) /)[0].replace(/^(Introduction à la|Introduction aux|Introduction à) /i, "");
+// la phrase sous le bouton : ce que la série va contenir
+function apercuRevision(){
+  const { prio, all, neuf, quand } = choixRevision();
+  const n = Math.min(SERIE_MAX, prio.length + all.length + neuf.length);
+  if(!n) return { vide:true, txt:"Tout est à jour" };
+  const mats = [...new Set(prio.map(x=>x.subj.id))].sort((a,b)=>quand[a] - quand[b]).map(id=>SUBJECTS.find(x=>x.id === id)).filter(Boolean);
+  if(mats.length){
+    const noms = mats.slice(0, 2).map(m=>"<b>" + esc(nomBref(m.title)) + "</b>").join(", ") + (mats.length > 2 ? " +" + (mats.length - 2) : "");
+    return { txt:`Priorité : ${noms}` };
+  }
+  const a = Math.min(all.length, n), b = n - a;
+  return { txt:[a ? `<b>${a}</b> à revoir` : "", b ? `<b>${b}</b> nouveau${b > 1 ? "x" : ""}` : ""].filter(Boolean).join(" · ") };
+}
+// Rien à revoir : une série libre, faite de ce qui n'est pas encore acquis (semestre en cours d'abord)
+function startSerieLibre(){
+  const sem = hmMatieresSem(), base = sem.length ? sem : SUBJECTS, pris = [];
+  base.forEach(s=>["qcm","fc","tr"].forEach(m=>exos(s, m).forEach((item,i)=>{
+    const key = cardKey(s.id,m,item,i);
+    if(!estAcquise(key)) pris.push({ item:(m === "qcm" || m === "tr") ? melangerQCM(item) : item, mode:m, subj:s, key });
+  })));
+  if(!pris.length){ toast("Tout est acquis. Bravo !"); return; }
+  sessionMix = null; exam = null; document.getElementById("sess-score").className = "nav-score";
+  idx=0; score=0; answers=[]; rateesSession = new Set(); sessionFil = null;
+  flipped=false; selOpt=null; confirmed=false; showAns=false; showHint=false; lastMotiv=""; oqEcrit="";
+  globalSession = true; sessionScope = "all";
+  queue = shuffle(pris).slice(0, SERIE_MAX);
+  sessionDueOnly = false;
   clearInterval(timerInt);
   showScreen("session");
   renderSess();
+}
+// le bouton de l'accueil : la révision du jour, ou, s'il n'y a rien à revoir, deux propositions
+function lancerRevisionJour(){
+  if(startGlobalSession() !== false) return;
+  const prochain = pendingAlerts(true, false).map(e=>({ e, N:evNote(e) || {} }))
+    .filter(x=>typeDevoir(x.N) === "controle" && !x.N.done && hmJoursAvant(x.e.start) >= 0)
+    .sort((a,b)=>a.e.start - b.e.start).map(x=>({ ...x, sj:matiereDeNote(x.e, x.N) })).find(x=>x.sj);
+  openForm("Rien à revoir aujourd'hui", [], "Faire une série libre", ()=>{ setTimeout(startSerieLibre, 320); },
+    null, prochain ? { label:"Réviser " + nomBref(prochain.sj.title) + " (contrôle " + (hmJoursAvant(prochain.e.start) <= 1 ? "demain" : "dans " + hmJoursAvant(prochain.e.start) + " jours") + ")",
+      fn:()=>startRevisionMatiere(prochain.sj, Array.isArray(prochain.N.chs) && prochain.N.chs.length ? prochain.N.chs : null) } : null);
+  const p = el("div","fs-hint");
+  p.textContent = "Tout ce que tu as déjà travaillé est à jour. Tu peux quand même t'entraîner : une série libre reprend ce que tu ne maîtrises pas encore.";
+  p.style.cssText = "margin:2px 4px 6px;font-size:14px;line-height:1.55;text-align:center";
+  document.getElementById("fs-body").appendChild(p);
 }
 // le titre court d'une session : « CM 3 », « Grand QCM », « Mes erreurs »…
 function titreSession(mode){
@@ -9692,7 +9933,7 @@ function renderPsycho(){
   const inner=document.getElementById("psycho-inner"); inner.innerHTML="";
   inner.innerHTML=`
     <button class="psy-back" id="psy-back-home">${chevronL}Retour</button>
-    <div class="psy-hero rise"><div class="psy-hero-mark">🧠💜</div>
+    <div class="psy-hero rise"><div class="psy-hero-mark">${icone("tetecoeur")}</div>
       <div class="psy-hero-title">${psyTitle()}</div>
       <div class="psy-hero-sub">On est en L3. Objectif : intégrer la Licence de Psychologie à la rentrée 2027.${isNana()?" 🌸":""}</div></div>
     <div class="psy-message rise" style="animation-delay:.06s"><div class="psy-message-name">💌 Un message pour toi, Nana</div>
@@ -9706,7 +9947,7 @@ function renderPsycho(){
   ];
   cards.forEach((c,i)=>{
     const b=el("button","psy-nav-card rise"); b.style.animationDelay=(0.12+i*0.03)+"s";
-    b.innerHTML=`<div class="psy-nav-icon">${c.icon}</div><div class="psy-nav-info"><div class="psy-nav-title">${c.title}</div><div class="psy-nav-sub">${c.sub.replace(/\n/g, " ")}</div></div><span class="psy-nav-arrow">${IC_CHEV_DROITE}</span>`;
+    b.innerHTML=`<div class="psy-nav-icon">${icone(c.icon)}</div><div class="psy-nav-info"><div class="psy-nav-title">${c.title}</div><div class="psy-nav-sub">${c.sub.replace(/\n/g, " ")}</div></div><span class="psy-nav-arrow">${IC_CHEV_DROITE}</span>`;
     b.addEventListener("click",c.fn);
     if(c.fn === renderPsychoEtapes) pastille(b, urgences("psy").length, "étapes à faire bientôt");
     inner.appendChild(b);
@@ -9787,7 +10028,7 @@ function renderFil(themes, o, retour){
   const hero = el("div","psy-hero rise");
   const ansFil = ["L1","L2","L3"].filter(a=>fil.some(f=>f.chaps.some(c=>anneeMatiere(c.s.subj).cle === a)));
   const ou = isCiva() && ansFil.length ? "de ta " + ansFil.join(", ").replace(/, ([^,]*)$/, " et $1") : "de tes cours";
-  hero.innerHTML = `<div class="psy-hero-mark">${o.mark}</div><div class="psy-hero-title">${esc(o.titre)}</div><div class="psy-hero-sub">${total
+  hero.innerHTML = `<div class="psy-hero-mark">${icone(o.mark)}</div><div class="psy-hero-title">${esc(o.titre)}</div><div class="psy-hero-sub">${total
     ? total + " chapitre" + (total > 1 ? "s " : " ") + ou + (total > 1 ? " parlent" : " parle") + " déjà " + o.quoi + ". Les voici, rangés par thème."
     : "Aucun de tes chapitres n'en parle encore. Ils apparaîtront ici dès que tes cours en parleront."}</div>`;
   inner.appendChild(hero);
@@ -9795,7 +10036,7 @@ function renderFil(themes, o, retour){
     if(!chaps.length) return;
     const c = el("div","fil-theme rise"); c.style.animationDelay = (0.06 + i*0.03) + "s";
     const ans = ["L1","L2","L3"].filter(a=>chaps.some(x=>anneeMatiere(x.s.subj).cle === a));
-    c.innerHTML = `<div class="fil-tete"><span class="fil-ic">${th.ic}</span><span class="fil-txt"><b>${esc(th.nom)}</b><small>${chaps.length} chapitre${chaps.length > 1 ? "s" : ""}</small></span>${isCiva() ? `<span class="idx-ans">${ans.map(a=>`<span class="idx-an">${a}</span>`).join("")}</span>` : ""}</div>`;
+    c.innerHTML = `<div class="fil-tete"><span class="fil-ic">${icone(th.ic)}</span><span class="fil-txt"><b>${esc(th.nom)}</b><small>${chaps.length} chapitre${chaps.length > 1 ? "s" : ""}</small></span>${isCiva() ? `<span class="idx-ans">${ans.map(a=>`<span class="idx-an">${a}</span>`).join("")}</span>` : ""}</div>`;
     const qb = carteQcmTheme(th); if(qb) c.appendChild(qb);
     const liste = el("div","fil-liste");
     const MAX = 4;
@@ -10023,11 +10264,11 @@ function urgences(pid){
   const E = echeancesDe(pid);
   return etapesProjet(pid).filter(s=>!s.fait && E[s.id]).map(s=>({ id:s.id, j:joursAvant(E[s.id].fin) })).filter(u=>u.j <= 7);
 }
-function libelleUrgence(j){ return j < 0 ? "⏰ En retard" : j === 0 ? "⏰ Aujourd'hui" : j === 1 ? "⏰ Demain" : "⏰ Plus que " + j + " jours"; }
+function libelleUrgence(j){ return j < 0 ? "En retard" : j === 0 ? "Aujourd'hui" : j === 1 ? "Demain" : "Plus que " + j + " jours"; }
 function marquerUrgence(step, pid, id){
   const u = urgences(pid).find(x=>x.id === id); if(!u) return;
   step.classList.add("urgent");
-  const t = el("span","psy-step-urgent"); t.textContent = libelleUrgence(u.j);
+  const t = el("span","psy-step-urgent"); t.innerHTML = icone("reveil") + esc(libelleUrgence(u.j));
   step.querySelector(".psy-step-content").appendChild(t);
 }
 function majBadgeProjets(){
@@ -10060,16 +10301,16 @@ function renderProjet(pid){
   back.addEventListener("click",()=>{ renderSemestres(); showScreen("semchoice"); });
   inner.appendChild(back);
   const hero = el("div","psy-hero rise");
-  hero.innerHTML = `<div class="psy-hero-mark">${p.mark}</div><div class="psy-hero-title">${esc(p.titre)}</div><div class="psy-hero-sub">${esc(p.accroche)}</div>`;
+  hero.innerHTML = `<div class="psy-hero-mark">${icone(p.mark)}</div><div class="psy-hero-title">${esc(p.titre)}</div><div class="psy-hero-sub">${esc(p.accroche)}</div>`;
   inner.appendChild(hero);
   const al = p.alerte ? p.alerte() : "";
-  if(al){ const a = el("div","projet-alerte rise"); a.innerHTML = `<span>⏰</span><span>${esc(al)}</span>`; inner.appendChild(a); }
+  if(al){ const a = el("div","projet-alerte rise"); a.innerHTML = `<span>${icone("reveil")}</span><span>${esc(al)}</span>`; inner.appendChild(a); }
   const lab = el("div","psy-section-label rise"); lab.textContent = "Par où tu veux commencer ?"; inner.appendChild(lab);
   p.rubriques.forEach((r,i)=>{
     const b = el("button","psy-nav-card rise"); b.style.animationDelay = (0.08 + i*0.03) + "s";
     let sous = r.sous;
     if(r.type === "etapes"){ const et = p.etapes(), e = projetEtat(pid), n = et.filter(s=>e[s.id]).length; sous = n ? n + " étape" + (n > 1 ? "s" : "") + " sur " + et.length + " · " + projetAvancement(pid) + " %" : r.sous; }
-    b.innerHTML = `<div class="psy-nav-icon">${r.icon}</div><div class="psy-nav-info"><div class="psy-nav-title">${esc(r.titre)}</div><div class="psy-nav-sub">${esc(sous)}</div></div><span class="psy-nav-arrow">${IC_CHEV_DROITE}</span>`;
+    b.innerHTML = `<div class="psy-nav-icon">${icone(r.icon)}</div><div class="psy-nav-info"><div class="psy-nav-title">${esc(r.titre)}</div><div class="psy-nav-sub">${esc(sous)}</div></div><span class="psy-nav-arrow">${IC_CHEV_DROITE}</span>`;
     b.addEventListener("click",()=>{ haptic(); ouvrirRubrique(pid, i); });
     if(r.type === "etapes") pastille(b, urgences(pid).length, "étapes à faire bientôt");
     inner.appendChild(b);
@@ -10094,7 +10335,7 @@ function ouvrirRubrique(pid, i){
   back.addEventListener("click",()=>{ haptic(); renderProjet(pid); });
   inner.appendChild(back);
   const hero = el("div","psy-hero rise");
-  hero.innerHTML = `<div class="psy-hero-mark">${r.icon}</div><div class="psy-hero-title">${esc(r.titre)}</div><div class="psy-hero-sub">${esc(r.type === "etapes" ? "Coche au fur et à mesure. Tes étapes suivent sur tous tes appareils." : (r.intro || r.sous))}</div>`;
+  hero.innerHTML = `<div class="psy-hero-mark">${icone(r.icon)}</div><div class="psy-hero-title">${esc(r.titre)}</div><div class="psy-hero-sub">${esc(r.type === "etapes" ? "Coche au fur et à mesure. Tes étapes suivent sur tous tes appareils." : (r.intro || r.sous))}</div>`;
   inner.appendChild(hero);
   if(r.type === "etapes"){
     const et = p.etapes(), e = projetEtat(pid);
@@ -10106,12 +10347,12 @@ function ouvrirRubrique(pid, i){
     inner.appendChild(ph);
     p.phases.forEach(phase=>{
       const st = et.filter(s=>phase.ids.includes(s.id)); if(!st.length) return;
-      const box = el("div","psy-phase"); box.innerHTML = `<div class="psy-phase-label">${esc(phase.label)}</div>`;
+      const box = el("div","psy-phase"); box.innerHTML = `<div class="psy-phase-label">${esc(sansEmoji(phase.label))}</div>`;
       const sw = el("div","psy-steps");
       st.forEach(s=>{
         const fait = !!e[s.id];
         const step = el("button","psy-step" + (fait ? " done" : ""));
-        step.innerHTML = `<span class="psy-check">${checkSvg}</span><span class="psy-step-content"><span class="psy-step-title">${esc(s.titre)}</span><span class="psy-step-desc">${s.desc.split("\n").map(l=>"<p>" + escFr(l) + "</p>").join("")}</span><span class="psy-step-date">📅 ${esc(s.date)}</span></span>`;
+        step.innerHTML = `<span class="psy-check">${checkSvg}</span><span class="psy-step-content"><span class="psy-step-title">${esc(s.titre)}</span><span class="psy-step-desc">${s.desc.split("\n").map(l=>"<p>" + escFr(l) + "</p>").join("")}</span><span class="psy-step-date">${icone("calendrier")}${esc(s.date)}</span></span>`;
         if(!fait) marquerUrgence(step, pid, s.id);
         step.addEventListener("click",()=>{ haptic(); if(fait) delete e[s.id]; else e[s.id] = true; scheduleSync(); majBadgeProjets(); const y = window.scrollY; SANS_ENTREE = true; ouvrirRubrique(pid, i); window.scrollTo(0, y); });
         sw.appendChild(step);
@@ -10123,7 +10364,7 @@ function ouvrirRubrique(pid, i){
       const box = el("div","psy-info-card");
       const tags = c.tags ? '<div class="psy-info-tags">' + c.tags.map(t=>'<span class="psy-info-tag">' + esc(t) + '</span>').join("") + '</div>' : "";
       const liens = c.liens ? '<div class="projet-liens">' + c.liens.map(l=>`<a href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.t)}</a>`).join("") + '</div>' : "";
-      box.innerHTML = `<div class="psy-info-header"><span class="psy-info-icon">${c.icon}</span><span class="psy-info-title">${esc(c.titre)}</span></div>${tags}<div class="psy-info-lines">${c.lignes.map(l=>'<div class="psy-info-line">' + escFr(l) + '</div>').join("")}</div>${liens}`;
+      box.innerHTML = `<div class="psy-info-header"><span class="psy-info-icon">${icone(c.icon)}</span><span class="psy-info-title">${esc(c.titre)}</span></div>${tags}<div class="psy-info-lines">${c.lignes.map(l=>'<div class="psy-info-line">' + escFr(l) + '</div>').join("")}</div>${liens}`;
       inner.appendChild(box);
     });
   }
@@ -10140,7 +10381,7 @@ function renderPsychoEtapes(){
   loadPsychoSteps();
   const inner=document.getElementById("psycho-inner"); inner.innerHTML="";
   psyBack(inner,renderPsycho);
-  const hero=el("div","psy-hero rise"); hero.innerHTML=`<div class="psy-hero-mark">📋</div><div class="psy-hero-title">Les étapes</div><div class="psy-hero-sub">Coche au fur et à mesure. Pas de pression, tu reviens quand tu veux. 💜</div>`; inner.appendChild(hero);
+  const hero=el("div","psy-hero rise"); hero.innerHTML=`<div class="psy-hero-mark">${icone("etapes")}</div><div class="psy-hero-title">Les étapes</div><div class="psy-hero-sub">Coche au fur et à mesure. Pas de pression, tu reviens quand tu veux. 💜</div>`; inner.appendChild(hero);
   const done=PSYCHO_STEPS.filter(s=>s.done).length, total=PSYCHO_STEPS.length, pct=Math.round(done/total*100);
   const circ=2*Math.PI*24, offset=circ-(pct/100)*circ;
   const pt=done===0?"C'est parti : première étape !":done===total?"Tout est fait 🎉 Bravo Nana !":done+" / "+total+" étapes complétées";
@@ -10158,13 +10399,13 @@ function renderPsychoEtapes(){
   phases.forEach(phase=>{
     const st=PSYCHO_STEPS.filter(s=>phase.ids.includes(s.id)); if(!st.length)return;
     const ph2=el("div","psy-phase");
-    ph2.innerHTML=`<div class="psy-phase-label">${phase.label}</div>`;
+    ph2.innerHTML=`<div class="psy-phase-label">${esc(sansEmoji(phase.label))}</div>`;
     ph2.appendChild(psyMini(phase.motiv));
     const sw=el("div","psy-steps");
     st.forEach(s=>{
       const descLines=s.desc.split("\n").map(l=>"<p>"+esc(l)+"</p>").join("");
       const step=el("button","psy-step"+(s.done?" done":""));
-      step.innerHTML=`<span class="psy-check">${checkSvg}</span><span class="psy-step-content"><span class="psy-step-title">${esc(s.title)}</span><span class="psy-step-desc">${descLines}</span><span class="psy-step-date">📅 ${esc(s.date)}</span></span>`;
+      step.innerHTML=`<span class="psy-check">${checkSvg}</span><span class="psy-step-content"><span class="psy-step-title">${esc(s.title)}</span><span class="psy-step-desc">${descLines}</span><span class="psy-step-date">${icone("calendrier")}${esc(s.date)}</span></span>`;
       if(!s.done) marquerUrgence(step, "psy", s.id);
       step.addEventListener("click",()=>{ haptic(); s.done=!s.done; savePsychoSteps(); majBadgeProjets(); const y = window.scrollY; SANS_ENTREE = true; renderPsychoEtapes(); window.scrollTo(0, y); });
       sw.appendChild(step);
@@ -10191,13 +10432,13 @@ function renderPsychoInfos(){
   entreeDansEcran(document.getElementById("psycho-inner"));
   const inner=document.getElementById("psycho-inner"); inner.innerHTML="";
   psyBack(inner,renderPsycho);
-  const hero=el("div","psy-hero rise"); hero.innerHTML=`<div class="psy-hero-mark">💡</div><div class="psy-hero-title">Infos utiles</div><div class="psy-hero-sub">Tout ce qu'il faut savoir, expliqué clairement. Pas de jargon, pas de pression. 🌸</div>`; inner.appendChild(hero);
+  const hero=el("div","psy-hero rise"); hero.innerHTML=`<div class="psy-hero-mark">${icone("ampoule")}</div><div class="psy-hero-title">Infos utiles</div><div class="psy-hero-sub">Tout ce qu'il faut savoir, expliqué clairement. Pas de jargon, pas de pression. 🌸</div>`; inner.appendChild(hero);
   inner.appendChild(psyMini(motivDoux()));
   PSYCHO_INFOS.forEach(info=>{
     const box=el("div","psy-info-card");
     const tags=info.tags?'<div class="psy-info-tags">'+info.tags.map(t=>'<span class="psy-info-tag">'+esc(t)+'</span>').join("")+'</div>':"";
     const lines=info.lines.map(l=>'<div class="psy-info-line">'+esc(l)+'</div>').join("");
-    box.innerHTML=`<div class="psy-info-header"><span class="psy-info-icon">${info.icon}</span><span class="psy-info-title">${esc(info.title)}</span></div><div class="psy-info-lines">${lines}</div>${tags}`;
+    box.innerHTML=`<div class="psy-info-header"><span class="psy-info-icon">${icone(info.icon)}</span><span class="psy-info-title">${esc(info.title)}</span></div><div class="psy-info-lines">${lines}</div>${tags}`;
     inner.appendChild(box);
   });
   inner.appendChild(psyMini(motivDoux()));
@@ -10208,20 +10449,20 @@ function renderPsychoSpecialite(){
   entreeDansEcran(document.getElementById("psycho-inner"));
   const inner=document.getElementById("psycho-inner"); inner.innerHTML="";
   psyBack(inner,renderPsycho);
-  const hero=el("div","psy-hero rise"); hero.innerHTML=`<div class="psy-hero-mark">🔍</div><div class="psy-hero-title">Quelle spécialité ?</div><div class="psy-hero-sub">Pas besoin de tout décider maintenant. Lis tranquillement, quelque chose va résonner en toi. 💜</div>`; inner.appendChild(hero);
+  const hero=el("div","psy-hero rise"); hero.innerHTML=`<div class="psy-hero-mark">${icone("rech")}</div><div class="psy-hero-title">Quelle spécialité ?</div><div class="psy-hero-sub">Pas besoin de tout décider maintenant. Lis tranquillement, quelque chose va résonner en toi. 💜</div>`; inner.appendChild(hero);
   inner.appendChild(psyMini(motivDoux()));
   const intro=el("div","psy-info-card");
-  intro.innerHTML=`<div class="psy-info-header"><span class="psy-info-icon">💬</span><span class="psy-info-title">Comment ça fonctionne ?</span></div><div class="psy-info-lines"><div class="psy-info-line">En psychologie, on choisit sa spécialité au moment du Master, pas de la licence.</div><div class="psy-info-line">La licence donne les bases communes à toutes les branches.</div><div class="psy-info-line">Mais connaître les spécialités maintenant, c'est savoir vers où on marche. 🌸</div></div>`;
+  intro.innerHTML=`<div class="psy-info-header"><span class="psy-info-icon">${icone("com")}</span><span class="psy-info-title">Comment ça fonctionne ?</span></div><div class="psy-info-lines"><div class="psy-info-line">En psychologie, on choisit sa spécialité au moment du Master, pas de la licence.</div><div class="psy-info-line">La licence donne les bases communes à toutes les branches.</div><div class="psy-info-line">Mais connaître les spécialités maintenant, c'est savoir vers où on marche. 🌸</div></div>`;
   inner.appendChild(intro);
   const st=el("div","psy-section-label"); st.textContent="Les grandes spécialités"; inner.appendChild(st);
   PSYCHO_SPES.forEach(s=>{
     const card=el("div","psy-spe-card");
-    card.innerHTML=`<div class="psy-spe-header"><span class="psy-spe-icon">${s.icon}</span><div class="psy-spe-nom">${esc(s.nom)}</div></div><div class="psy-spe-desc">${esc(s.desc)}</div><div class="psy-spe-lien">💜 ${esc(s.lien)}</div><div class="psy-spe-master">→ ${esc(s.master)}</div>`;
+    card.innerHTML=`<div class="psy-spe-header"><span class="psy-spe-icon">${icone(s.icon)}</span><div class="psy-spe-nom">${esc(s.nom)}</div></div><div class="psy-spe-desc">${esc(s.desc)}</div><div class="psy-spe-lien">💜 ${esc(s.lien)}</div><div class="psy-spe-master">→ ${esc(s.master)}</div>`;
     inner.appendChild(card);
   });
   inner.appendChild(psyMini("Tu n'as pas à choisir tout de suite. Laisse juste l'idée germer. 🌱"));
   const conclu=el("div","psy-info-card");
-  conclu.innerHTML=`<div class="psy-info-header"><span class="psy-info-icon">🌸</span><span class="psy-info-title">Et si tu n'es pas encore sûre ?</span></div><div class="psy-info-lines"><div class="psy-info-line">C'est tout à fait normal à ce stade. La licence sert justement à découvrir chaque branche avant de choisir.</div><div class="psy-info-line">Ce qui compte maintenant c'est d'entrer en psycho. La spécialité, tu la choisiras quand tu la sentiras vraiment. 💜</div></div>`;
+  conclu.innerHTML=`<div class="psy-info-header"><span class="psy-info-icon">${icone("fleur")}</span><span class="psy-info-title">Et si tu n'es pas encore sûre ?</span></div><div class="psy-info-lines"><div class="psy-info-line">C'est tout à fait normal à ce stade. La licence sert justement à découvrir chaque branche avant de choisir.</div><div class="psy-info-line">Ce qui compte maintenant c'est d'entrer en psycho. La spécialité, tu la choisiras quand tu la sentiras vraiment. 💜</div></div>`;
   inner.appendChild(conclu);
   showScreen("psycho");
 }
