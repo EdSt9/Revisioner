@@ -2512,7 +2512,8 @@ html[data-mode="sombre"] :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal
 .pdf-page .pdf-img{display:block;width:100%;height:100%;opacity:0;transition:opacity .2s;}
 .pdf-page.pret .pdf-img{opacity:1;}
 
-/* Agenda : chaque cours à la couleur de sa matière (barre, teinte légère, heure) ; Contrôle et À rendre gardent leur étiquette */
-.edt-course.a-mat{background:color-mix(in srgb,var(--mc) 9%,var(--surface-solid)) !important;}
-.edt-course.a-mat::before,.edt-course.flagged.a-mat::before{background:var(--mc);}
+/* Agenda : un cours marqué ressort à la couleur de son étiquette (barre, teinte légère, heure) */
+.edt-course.flagged.controle{--mc:var(--ko);} .edt-course.flagged.devoir{--mc:var(--warn);} .edt-course.flagged.note{--mc:var(--info);}
+.edt-course.a-mat{background:color-mix(in srgb,var(--mc) 10%,var(--surface-solid)) !important;}
+.edt-course.flagged.a-mat::before{background:var(--mc);}
 .edt-course.a-mat .edt-time>span:first-child{color:var(--mc);}
