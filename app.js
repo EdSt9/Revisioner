@@ -7307,8 +7307,19 @@ function setUEOpen(ue, v){
   try{ localStorage.setItem(UEOPEN_KEY, JSON.stringify(m)); }catch(e){}
 }
 
+// la page d'un semestre prend la couleur de sa tuile (la plante qui pousse, ou celle choisie) :
+// l'en-tête et les petits éléments de la page suivent
+function couleurPageSemestre(sem){
+  const scr = document.getElementById("screen-subjects"); if(!scr) return;
+  const d = sem ? tuileDe("sem:" + sem) : {};
+  const c = sem ? ((d.couleur && HM_HEX[d.couleur]) || couleurSemestre(sem)) : null;
+  const props = { "--accent":c, "--accent-2":c && `color-mix(in srgb,${c} 62%,#fff)`, "--accent-soft":c && `color-mix(in srgb,${c} 14%,transparent)`,
+    "--accent-glow":c && `color-mix(in srgb,${c} 32%,transparent)` };
+  Object.entries(props).forEach(([k,v])=>v ? scr.style.setProperty(k, v) : scr.style.removeProperty(k));
+}
 function renderSubjectCards(sem){
   resolveAllLangs();
+  couleurPageSemestre(sem);
   const list=SUBJECTS.filter(s=>(SEMESTRES[s.id]||5)===sem);
   const wrap=document.getElementById("subj-cards"); wrap.innerHTML="";
   // le cercle suit les matières « À jour » : tous leurs CM et TD marqués révisés
