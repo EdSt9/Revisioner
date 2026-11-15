@@ -6143,7 +6143,7 @@ function iconeMatiere(s){
 function changerIconeMatiere(m, apres){
   const c = USER_SETTINGS.matIcones && USER_SETTINGS.matIcones[m.id];
   openForm(m.title, [
-    { key:"couleur", label:"Couleur", type:"couleur", value:(USER_SETTINGS.matCouleurs || {})[m.id] || "", defaut:HM_COUL[hmHash(m.id) % HM_COUL.length] },
+    { key:"couleur", label:"Couleur", type:"couleur", value:(USER_SETTINGS.matCouleurs || {})[m.id] || "", defaut:hmCouleurAuto(m) },
     { key:"icone", label:"Icône", type:"icone", value:c && (MAT_IC[c] || UI_IC[c]) ? c : "", defaut:cleMatiereAuto(m),
       hint:"Seulement pour toi. « Auto » garde celles de l'app." }
   ], "Enregistrer", v=>{
@@ -6180,9 +6180,17 @@ function iconeSemestre(sem){ return sem < 1.5 ? "semence" : SEM_IC[Math.max(0, M
 // « 🌱 Dès maintenant » → « Dès maintenant » : la frise a déjà ses repères
 const sansEmoji = t=>String(t || "").replace(/^(\p{Extended_Pictographic}\ufe0f?\s*)+/u, "");
 function hmHash(t){ let h = 0; String(t).split("").forEach(c=>{ h = (h * 31 + c.charCodeAt(0)) | 0; }); return Math.abs(h); }
+// sans choix à la main : chaque matière du semestre prend une des 8 couleurs à tour de rôle, sans doublon tant qu'il y en a assez
+const HM_COUL_AUTO = ["b","g","y","r","v","c","o","t"];
+function hmCouleurAuto(subj){
+  const sem = SEMESTRES[subj.id];
+  const freres = SUBJECTS.filter(x=>SEMESTRES[x.id] === sem).map(x=>x.id).sort();
+  const i = freres.indexOf(subj.id);
+  return i < 0 ? HM_COUL[hmHash(subj.id) % HM_COUL.length] : HM_COUL_AUTO[i % HM_COUL_AUTO.length];
+}
 function hmCouleur(subj){
   const k = USER_SETTINGS.matCouleurs && USER_SETTINGS.matCouleurs[subj.id];   // la couleur choisie à la main
-  return k && HM_HEX[k] ? k : HM_COUL[hmHash(subj.id) % HM_COUL.length];
+  return k && HM_HEX[k] ? k : hmCouleurAuto(subj);
 }
 const HM_HEX = { v:"var(--accent)", b:"var(--c-b)", c:"#12a9a0", g:"var(--c-g)", y:"var(--c-y)", o:"#f26b3a", r:"var(--c-r)", t:"#a8703f" };
 const COULEURS_CHOIX = ["v","b","c","g","y","o","r","t"];
@@ -6303,7 +6311,7 @@ function renderAccueil(anim){
       <div class="hm-ring"><svg viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="color-mix(in srgb,var(--accent) 13%,transparent)" stroke-width="14"/>
         <circle class="arc" cx="75" cy="75" r="62" fill="none" stroke="url(#hm-g)" stroke-width="14" stroke-linecap="round" stroke-dasharray="389.6" stroke-dashoffset="389.6" data-off="${389.6 * (1 - fait / HM_OBJECTIF)}"/>
         <defs><linearGradient id="hm-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="var(--c-r)"/></linearGradient></defs></svg>
-        <div class="hm-rc"><b data-n="${fait}">${fait}</b><span>sur ${HM_OBJECTIF}</span></div></div>
+        <div class="hm-rc"><b data-n="${fait}">${fait}</b><span>sur ${HM_OBJECTIF} <i class="hm-rc-reg">›</i></span></div></div>
       <div class="hm-side">
         ${chT ? `<div class="hm-sv"><div class="l">Chapitres lus<em>${chL}/${chT}</em></div><div class="hm-tr hm-doux-b"><i data-w="${pc(chL,chT)}" style="background:var(--c-b)"></i></div></div>` : ""}
         <div class="hm-sv"><div class="l">QCM validés<em>${pc(qO,qT)} %</em></div><div class="hm-tr hm-doux-v"><i data-w="${pc(qO,qT)}" style="background:var(--accent)"></i></div></div>
@@ -6591,14 +6599,21 @@ function renderControle(){
 let MATIERE_OUVERTE = null, MT_ONGLET = "cm";
 const MT_GRAD = { v:"linear-gradient(160deg,color-mix(in srgb,var(--accent) 85%,#000),var(--accent) 50%,var(--accent-2))",
   b:"linear-gradient(160deg,#1f63d6,#3a86ff 50%,#7fb0ff)", g:"linear-gradient(160deg,#0b8a5d,#14b87e 50%,#5fd9a9)",
-  y:"linear-gradient(160deg,#e07b00,#f5a524 50%,#ffc766)", r:"linear-gradient(160deg,#d12a6b,#ff4d8d 50%,#ff8ab4)",
+  y:"linear-gradient(160deg,#b85f00,#dc8a12 50%,#f0ad3c)", r:"linear-gradient(160deg,#d12a6b,#ff4d8d 50%,#ff8ab4)",
   c:"linear-gradient(160deg,#08857e,#12a9a0 50%,#5fd3cb)", o:"linear-gradient(160deg,#d24a1c,#f26b3a 50%,#ff9e74)", t:"linear-gradient(160deg,#7d4f27,#a8703f 50%,#cf9d6c)" };
 // les matières ouvertes en dernier (sur ce téléphone), pour l'accueil
 const RECENTES_KEY = "revision_recentes_v1";
-function matieresRecentes(){ try{ const a = JSON.parse(localStorage.getItem(RECENTES_KEY) || "[]"); return Array.isArray(a) ? a : []; }catch(e){ return []; } }
+// gardées dans le compte (tous les appareils), avec une copie sur le téléphone
+function matieresRecentes(){
+  if(Array.isArray(USER_SETTINGS.recentes)) return USER_SETTINGS.recentes;
+  try{ const a = JSON.parse(localStorage.getItem(RECENTES_KEY) || "[]"); return Array.isArray(a) ? a : []; }catch(e){ return []; }
+}
 function noterMatiereOuverte(id){
   if(!id) return;
-  try{ localStorage.setItem(RECENTES_KEY, JSON.stringify([id, ...matieresRecentes().filter(x=>x !== id)].slice(0, 12))); }catch(e){}
+  const l = [id, ...matieresRecentes().filter(x=>x !== id)].slice(0, 12);
+  if(String(l) === String(matieresRecentes())) return;
+  USER_SETTINGS.recentes = l; saveContent();
+  try{ localStorage.setItem(RECENTES_KEY, JSON.stringify(l)); }catch(e){}
 }
 function ouvrirMatiere(id, onglet, depuis){
   const m = SUBJECTS.find(x=>x.id === id); if(!m) return;
@@ -6798,7 +6813,7 @@ function renderSemestres(){
   const estArchive = t=>isCiva() && t.sem && t.sem < 5;
   const archives = tuiles.filter(estArchive);
   // une couleur choisie dans « Personnaliser » passe devant celle de l'app
-  tuiles.forEach(t=>{ const d = tuileDe(t.cle); if(d.couleur && HM_HEX[d.couleur]) t.el.style.setProperty("--tc", HM_HEX[d.couleur]); });
+  tuiles.forEach(t=>{ t.tcDefaut = t.el.style.getPropertyValue("--tc"); const d = tuileDe(t.cle); if(d.couleur && HM_HEX[d.couleur]) t.el.style.setProperty("--tc", HM_HEX[d.couleur]); });
   const triees = trierTuiles(tuiles.filter(t=>!estArchive(t)));
   // regroupement par sous-titre : chaque groupe à la place de sa première tuile,
   // les semestres sans sous-titre ensemble, le Projet Psycho toujours à part
@@ -7261,7 +7276,7 @@ function personnaliserTuile(t, tuiles){
   openForm("Personnaliser", [
     { key:"titre", label:"Titre", value:cur.titre || "", placeholder:t.defaut },
     { key:"sous",  label:"Sous-titre", value:cur.sous || "", placeholder:t.sousDefaut || "ex. L3 SESS (UPEC)" },
-    { key:"couleur", label:"Couleur", type:"couleur", value:cur.couleur && HM_HEX[cur.couleur] ? cur.couleur : "", defaut:t.el ? (t.el.style.getPropertyValue("--tc") || "var(--accent)") : "var(--accent)" },
+    { key:"couleur", label:"Couleur", type:"couleur", value:cur.couleur && HM_HEX[cur.couleur] ? cur.couleur : "", defaut:t.tcDefaut || (t.el && t.el.style.getPropertyValue("--tc")) || "var(--accent)" },
     { key:"icone", label:"Icône", type:"icone", value:(cur.icone && (UI_IC[cur.icone] || MAT_IC[cur.icone])) ? cur.icone : "", defaut:cleIcone(t.icone) || "projet" },
   ], "Enregistrer", v=>{
     USER_SETTINGS.tuiles = Object.assign({}, USER_SETTINGS.tuiles);
@@ -7312,7 +7327,9 @@ function setUEOpen(ue, v){
 function couleurPageSemestre(sem){
   const scr = document.getElementById("screen-subjects"); if(!scr) return;
   const d = sem ? tuileDe("sem:" + sem) : {};
-  const c = sem ? ((d.couleur && HM_HEX[d.couleur]) || couleurSemestre(sem)) : null;
+  let c = sem ? ((d.couleur && HM_HEX[d.couleur]) || couleurSemestre(sem)) : null;
+  // une couleur claire sous un texte blanc : on l'assombrit un peu pour que le titre reste lisible
+  if(c && ["#d8a010","#8db31c","#c8742e","#e09a00","var(--c-y)"].includes(c)) c = `color-mix(in srgb,${c} 80%,#000)`;
   const props = { "--accent":c, "--accent-2":c && `color-mix(in srgb,${c} 62%,#fff)`, "--accent-soft":c && `color-mix(in srgb,${c} 14%,transparent)`,
     "--accent-glow":c && `color-mix(in srgb,${c} 32%,transparent)` };
   Object.entries(props).forEach(([k,v])=>v ? scr.style.setProperty(k, v) : scr.style.removeProperty(k));

@@ -2548,3 +2548,5 @@ button.mt-big{border:0;color:inherit;cursor:pointer;font:inherit;padding:0;}
 .hm-apercu.vide{color:var(--text-mute);}
 .hm-apercu + .hm-ligne{margin-top:6px;}
 .hm-apercu .pt{display:inline-block;width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.5;margin:0 8px;vertical-align:middle;}
+/* l'anneau du jour se touche pour régler l'objectif */
+.hm-rc .hm-rc-reg{font-style:normal;color:var(--accent);font-weight:800;}
