@@ -6077,8 +6077,11 @@ function icone(x){
   if(!k) return esc(String(x || ""));
   return `<svg class="ico ico-ui" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${UI_IC[k] || MAT_IC[k]}</svg>`;
 }
-// la couleur de chaque tuile de Cours : vert pour les semestres (des plantes), rose pour Psycho, jaune pour CPE, bleu pour les archives
+// la couleur de chaque tuile de Cours : les semestres suivent la pousse (de l'ambre de la graine au rose de l'arbre en fleurs),
+// rose pour Psycho, jaune pour CPE, bleu pour les archives
 const TUILE_COUL = { v:"var(--accent)", b:"var(--c-b)", g:"var(--c-g)", y:"#e09a00", r:"var(--c-r)" };
+const SEM_COUL = ["#e09a00","#e09a00","#7cb518","var(--c-g)","#0fa3a3","var(--c-b)","var(--c-r)"];
+function couleurSemestre(sem){ return SEM_COUL[Math.max(0, Math.min(6, Math.floor(sem)))]; }
 function iconeSemestre(sem){ return SEM_IC[Math.max(0, Math.min(6, Math.floor(sem)))]; }
 // « 🌱 Dès maintenant » → « Dès maintenant » : la frise a déjà ses repères
 const sansEmoji = t=>String(t || "").replace(/^(\p{Extended_Pictographic}\ufe0f?\s*)+/u, "");
@@ -6635,7 +6638,7 @@ function renderSemestres(){
     const dues = list.filter(x=>["cm","td"].some(t=>(x[t]||[]).some(ch=>!estRevise(x, t, ch))));
     const nvSem = list.filter(x=>nouveauxDe(x).length).length;
     const t = tuileDe("sem:" + sem);
-    const card=el("button","sem-tile rise"); card.style.setProperty("--tc", TUILE_COUL.g);
+    const card=el("button","sem-tile rise"); card.style.setProperty("--tc", couleurSemestre(sem));
     card.innerHTML=`
       <div class="sem-tile-top">
         <div class="sem-badge">${icone(t.icone || iconeSemestre(sem))}</div>
@@ -7080,7 +7083,8 @@ function tuileDe(cle){
   const d = (typeof TUILES_DEFAUT === "object" && TUILES_DEFAUT[cle]) || {};
   const r = Object.assign({}, d, (t && typeof t === "object") ? t : {});
   // les anciens emojis par défaut des semestres laissent la place à la plante qui grandit
-  if(cle.startsWith("sem:") && ["📚","🧠","🌱","✏"].includes(String(r.icone || "").replace(/\ufe0f/g, ""))) delete r.icone;
+  // (un emoji qui a son dessin : 📚, 🌍, 🧩… ; un emoji sans équivalent, choisi exprès, reste affiché)
+  if(cle.startsWith("sem:") && r.icone && typeof cleIcone === "function" && cleIcone(r.icone)) delete r.icone;
   return r;
 }
 function titreSemestre(sem){ return tuileDe("sem:" + sem).titre || ("Semestre " + sem); }
