@@ -2558,3 +2558,6 @@ button.mt-big{border:0;color:inherit;cursor:pointer;font:inherit;padding:0;}
 @media(prefers-color-scheme:dark){html:not([data-mode="clair"]) .hm-doux-i{color:#8f8ff0;} html:not([data-mode="clair"]) .hm-doux-l{color:#86bf2a;}}
 html[data-mode="sombre"] .hm-doux-i{color:#8f8ff0;} html[data-mode="sombre"] .hm-doux-l{color:#86bf2a;}
 .cls-l-ic .ico{width:22px;height:22px;}
+/* la couleur d'origine de l'app, gardée pour la barre du bas quand une page est teintée */
+html{--accent-app:var(--accent);--accent-2-app:var(--accent-2);--accent-soft-app:var(--accent-soft);--accent-glow-app:var(--accent-glow);}
+.tabbar{--accent:var(--accent-app);--accent-2:var(--accent-2-app);--accent-soft:var(--accent-soft-app);--accent-glow:var(--accent-glow-app);}

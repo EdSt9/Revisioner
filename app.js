@@ -3755,7 +3755,7 @@ function entreeDansEcran(cible){
 let ECRAN_AVANT = null;   // la page d'où l'on vient : visible derrière pendant le glisser
 function showScreen(id){
   lecteurStop();
-  try{ couleurPagesMatiere(id); }catch(e){}
+  try{ couleurPagesMatiere(id); const sc = document.getElementById("screen-" + id); teinteGlobale(sc && sc._teinte); }catch(e){}
   setTimeout(()=>{ try{ memoriserPage(); }catch(e){} }, 0);
   // arrivée sur un autre écran : les animations d'entrée jouent, puis on se calme.
   // Le même écran redessiné (cocher une étape, filtrer) reste calme.
@@ -7342,6 +7342,13 @@ function teinterEcran(scr, c){
   const props = { "--accent":c, "--accent-2":c && `color-mix(in srgb,${c} 62%,#fff)`, "--accent-soft":c && `color-mix(in srgb,${c} 14%,transparent)`,
     "--accent-glow":c && `color-mix(in srgb,${c} 32%,transparent)` };
   Object.entries(props).forEach(([k,v])=>v ? scr.style.setProperty(k, v) : scr.style.removeProperty(k));
+  scr._teinte = props;
+  if(scr.classList.contains("active") || document.documentElement.getAttribute("data-screen") === scr.id.replace(/^screen-/, "")) teinteGlobale(props);
+}
+// ce qui flotte au-dessus des pages (barre de lecture, languette du sommaire, feuilles, explications) suit la page ouverte
+function teinteGlobale(props){
+  const b = document.body;
+  ["--accent","--accent-2","--accent-soft","--accent-glow"].forEach(k=>{ const v = props && props[k]; v ? b.style.setProperty(k, v) : b.style.removeProperty(k); });
 }
 function couleurPageSemestre(sem){
   const d = sem ? tuileDe("sem:" + sem) : {};
