@@ -7076,7 +7076,10 @@ function ajouterArchives(wrap, archives, placer){
 function tuileDe(cle){
   const t = USER_SETTINGS.tuiles && USER_SETTINGS.tuiles[cle];
   const d = (typeof TUILES_DEFAUT === "object" && TUILES_DEFAUT[cle]) || {};
-  return Object.assign({}, d, (t && typeof t === "object") ? t : {});
+  const r = Object.assign({}, d, (t && typeof t === "object") ? t : {});
+  // les anciens emojis par défaut des semestres laissent la place à la plante qui grandit
+  if(cle.startsWith("sem:") && ["📚","🧠","🌱","✏"].includes(String(r.icone || "").replace(/\ufe0f/g, ""))) delete r.icone;
+  return r;
 }
 function titreSemestre(sem){ return tuileDe("sem:" + sem).titre || ("Semestre " + sem); }
 // L'ordre rangé à la main d'abord. Une tuile pas encore rangée prend sa place chronologique :
