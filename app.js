@@ -5307,6 +5307,9 @@ function courseCard(e){
   const kind = n ? (n.type || ((n.note || n.subj) ? "note" : "") || (aut[0] ? aut[0].type || "note" : "")) : "";
   const maint = new Date(), enCours = !e.jour && e.start <= maint && (e.end || e.start) > maint;
   const c = el("div","edt-course" + (kind ? " flagged "+kind : "") + (n && n.done ? " done" : "") + (enCours ? " live" : ""));
+  // la couleur de la matière, la même que sur l'accueil et sur sa page : la barre, une teinte légère, l'heure
+  const sjC = matiereDeNote(e, n);
+  if(sjC){ c.classList.add("a-mat"); c.style.setProperty("--mc", HM_HEX[hmCouleur(sjC)]); }
   const badge = (kind
     ? `<span class="ev-badge ${kind}">${kind==="controle"?"Contrôle":kind==="devoir"?"À rendre":"Note"}</span>` : "") +
     aut.filter(a=>(a.type || "note") !== kind).map(a=>`<span class="ev-badge ${a.type || "note"}">${TAG_DEVOIR[a.type || ""]}</span>`).join("") +
