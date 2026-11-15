@@ -2503,3 +2503,7 @@ html[data-mode="sombre"] :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal
 .sem-tile .sem-bar-fill{background:var(--tc,var(--accent));}
 .sem-tile .sem-pct{color:var(--tc,var(--text-mute));font-weight:700;}
 
+/* « À venir » : les tuiles se calent à 16 pt du bord comme le reste ; contenu en haut, sous-titre sur deux lignes au plus */
+.hm-hs{scroll-padding-inline:16px;}
+.hm-up{display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-start;}
+.hm-up .s{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
