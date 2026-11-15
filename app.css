@@ -1868,7 +1868,7 @@ html[data-mode="sombre"] .hm-cta{background:var(--accent);color:#fff;}
 .hm-pr b{position:absolute;inset:0;display:grid;place-items:center;font-size:11px;font-weight:800;}
 /* barre du bas */
 .tabbar{position:fixed;z-index:45;left:0;right:0;bottom:0;display:none;justify-content:space-around;align-items:flex-start;
-  padding:9px 8px calc(env(safe-area-inset-bottom) + 6px);background:color-mix(in srgb,var(--surface-solid) 92%,transparent);
+  padding:9px 8px max(6px, calc(env(safe-area-inset-bottom) - 14px));background:color-mix(in srgb,var(--surface-solid) 92%,transparent);
   backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 -6px 24px var(--shadow);border-top:1px solid var(--hm-trait);}
 html.tabbar-on .tabbar{display:flex;}
 .tb{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;background:none;border:none;font:inherit;font-size:10.5px;font-weight:800;color:var(--text-mute);cursor:pointer;padding:0;}
@@ -1893,7 +1893,7 @@ html.tabbar-on[data-screen="classes"] .page-head .back-btn,
 html.tabbar-on[data-screen="sites"] .page-head .back-btn{visibility:hidden;}
 
 /* ══════════ PAGE MATIÈRE ══════════ */
-#screen-matiere>.mt-wrap{padding:0;max-width:none;width:100%;}
+#screen-matiere>.mt-wrap,#screen-controle>.mt-wrap{padding:0;max-width:none;width:100%;}
 .mt-head{position:relative;overflow:hidden;color:#fff;padding:calc(env(safe-area-inset-top) + 14px) 18px 92px;border-radius:0 0 34px 34px;}
 .mt-head:before{content:"";position:absolute;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.1);right:-80px;top:-70px;pointer-events:none;}
 .mt-bk{position:relative;z-index:1;width:42px;height:42px;border-radius:14px;border:none;background:rgba(255,255,255,.22);color:#fff;display:grid;place-items:center;cursor:pointer;}
