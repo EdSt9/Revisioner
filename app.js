@@ -1248,6 +1248,12 @@ function ouvrirMatiereClasse(c, mat, tous, monRole){
 }
 
 // Les membres : la liste, les demandes à valider, les adjoints.
+// la pastille d'un membre : l'initiale, à une couleur qui lui reste
+function pastilleMembre(pseudo){
+  const k = HM_COUL_AUTO[hmHash(String(pseudo)) % HM_COUL_AUTO.length];
+  return `<span class="mem-ic hm-doux-${k}">${esc(String(pseudo || "?").charAt(0).toUpperCase())}</span>`;
+}
+function titreMembres(txt, n){ const t = el("div","hm-sec cls-sec mem-sec"); t.innerHTML = `<h3>${esc(txt)}</h3><span>${n}</span>`; return t; }
 function ouvrirMembres(c, membres, monRole){
   document.querySelectorAll("#pick-sheet .pick-actions").forEach(n=>n.remove());
   document.getElementById("pick-title").textContent = "Membres";
@@ -1257,9 +1263,10 @@ function ouvrirMembres(c, membres, monRole){
   const role = (cible, r)=>{ closePicker(); setTimeout(()=>setRole(c, cible, r), 250); };
   const attente = gere ? membres.filter(m=>m.role === "pending") : [];
   if(attente.length){
-    const t = el("div","cls-kind"); t.textContent = "Demandes en attente"; box.appendChild(t);
+    box.appendChild(titreMembres("Demandes en attente", attente.length));
     attente.forEach(m=>{
       const row = el("div","mem-row nouveau");
+      row.insertAdjacentHTML("beforeend", pastilleMembre(m.pseudo));
       const nm = el("div","mem-name"); nm.textContent = m.pseudo;
       const ok = el("button","mem-act go"); ok.type = "button"; ok.textContent = "Accepter";
       ok.addEventListener("click",()=>role(m.pseudo, "membre"));
@@ -1271,11 +1278,12 @@ function ouvrirMembres(c, membres, monRole){
   }
   const dedans = membres.filter(m=>m.role !== "pending" && m.role !== "retire");
   if(dedans.length){
-    const t = el("div","cls-kind"); t.textContent = "Dans la classe"; box.appendChild(t);
+    box.appendChild(titreMembres("Dans la classe", dedans.length));
     const ordre = { owner:0, adjoint:1, membre:2 };
     dedans.slice().sort((a,b)=>(ordre[a.role] ?? 3) - (ordre[b.role] ?? 3) || String(a.pseudo).localeCompare(String(b.pseudo), "fr"))
       .forEach(m=>{
         const row = el("div","mem-row");
+        row.insertAdjacentHTML("beforeend", pastilleMembre(m.pseudo));
         const nm = el("div","mem-name");
         nm.innerHTML = esc(m.pseudo) + (m.pseudo === whoAmI() ? " <small>(toi)</small>" : "") +
           (m.role === "owner" ? '<small class="mem-role">créateur</small>' : m.role === "adjoint" ? '<small class="mem-role">adjoint</small>' : "");
@@ -1301,6 +1309,7 @@ function ouvrirMembres(c, membres, monRole){
       try{ await navigator.clipboard.writeText(c.code); toast("Code copié. Donne-le à ta classe."); }
       catch(e){ toast("Code de la classe : " + c.code); }
     });
+    row.insertAdjacentHTML("beforeend", `<span class="mem-ic hm-doux-v">${icone("lien")}</span>`);
     row.appendChild(nm); row.appendChild(cp);
     box.prepend(row);
   }

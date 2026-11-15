@@ -2577,3 +2577,11 @@ html,body,*{scrollbar-width:none;}
 .cls-sec-dev .cls-nb{font-size:14px;font-weight:700;color:var(--text-mute);}
 #screen-class .av-semaine{margin:14px 4px 10px;}
 #screen-class .cls-sec+.av-semaine{margin-top:4px;}
+/* les membres d'une classe : mêmes cartes, même pastille de 52 et mêmes titres que Cours et Devoirs */
+#pick-list .mem-row{border-radius:20px;padding:12px 14px;gap:14px;margin-bottom:10px;}
+.mem-ic{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;flex-shrink:0;font-weight:800;font-size:20px;}
+.mem-ic .ico-ui{width:24px;height:24px;}
+.mem-name{font-size:15px;font-weight:700;}
+#pick-list .mem-sec{margin:22px 4px 12px;}
+#pick-list .mem-sec h3{font-size:19px;font-weight:800;letter-spacing:-.02em;margin:0;}
+#pick-list .mem-act.go{background:var(--accent);color:#fff;}
