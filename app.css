@@ -2517,3 +2517,5 @@ html[data-mode="sombre"] :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal
 .edt-course.a-mat{background:color-mix(in srgb,var(--mc) 10%,var(--surface-solid)) !important;}
 .edt-course.flagged.a-mat::before{background:var(--mc);}
 .edt-course.a-mat .edt-time>span:first-child{color:var(--mc);}
+/* un devoir fait passe au vert, comme dans Devoirs */
+.edt-course.flagged.done{--mc:var(--ok);opacity:.85;}
