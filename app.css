@@ -2479,3 +2479,16 @@ html[data-mode="sombre"] :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal
 .sheet :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal-row,.card,.chap-share,.cls-row,.cls-suivre,.colle-carte,.colle-sec,.cours-pdf,.deja-vu,.dev-card,.ecue-card,.edt-course,.ev-autre,.ev-share,.ex-err,.ex-row,.exam-card,.exam-done,.fil-theme,.fin-chap,.hint-box,.home-tuile,.idx-entree,.lex-item,.mem-row,.memo2-carte,.mn-carte,.mode-card,.mt-groupe,.od-row,.overview,.plan-row,.prof-row,.qc-card,.recap,.results-detail,.sem-entry,.sem-tile,.sess-subj,.sr-carte,.today-card){background-color:color-mix(in srgb,var(--text) 5%,transparent) !important;box-shadow:none !important;}
 /* les pastilles et petits boutons : fond doux, sans contour */
 :is(.auteur-tag,.auteur-retenir,.chap-pick,.colle-pas-titre,.dev-doc,.dev-lien,.dev-pts,.ev-autre-x,.ex-chip,.fs-opt,.grade-btn,.mem-act,.mt-rond,.od-bt button,.pick-actions button,.pomo-bt,.sr-num,.sr-plus,.search-box,.sheet-home,.lec-start,.mt-curseur,.sheet .ev-types,.sheet .fs-choice,.wrap .icon-btn){border-color:transparent;background-color:color-mix(in srgb,var(--text) 6%,transparent);box-shadow:none;}
+/* icônes dessinées à la place des emojis (semestres, projets, archives, rubriques) */
+.ico-ui{display:block;flex-shrink:0;}
+.sem-badge .ico-ui,.psy-nav-icon .ico-ui{width:25px;height:25px;color:var(--accent);}
+.sem-grid.liste .sem-badge .ico-ui{width:22px;height:22px;}
+.od-ic .ico-ui{width:21px;height:21px;margin:0 auto;color:var(--accent);}
+.fp-ic .ico-ui,.cls-projet-ic .ico-ui,.fil-ic .ico-ui{width:21px;height:21px;color:var(--accent);}
+.cls-ic .ico-ui{width:26px;height:26px;color:var(--accent);}
+.psy-info-icon .ico-ui{width:22px;height:22px;color:var(--accent);}
+.psy-spe-icon .ico-ui{width:26px;height:26px;color:var(--accent);}
+.psy-hero-mark .ico-ui{width:26px;height:26px;color:var(--accent);}
+.hd-psy-mark .ico-ui{width:30px;height:30px;color:#fff;}
+.projet-alerte .ico-ui{width:20px;height:20px;}
+.psy-step-urgent .ico-ui,.psy-step-tag .ico-ui,.psy-step-date .ico-ui{display:inline-block;width:13px;height:13px;vertical-align:-2px;margin-right:4px;}
