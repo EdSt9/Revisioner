@@ -2557,3 +2557,31 @@ button.mt-big{border:0;color:inherit;cursor:pointer;font:inherit;padding:0;}
 .hm-doux-s{background:color-mix(in srgb,#0ea5e9 14%,transparent);color:#0b95d4;}
 @media(prefers-color-scheme:dark){html:not([data-mode="clair"]) .hm-doux-i{color:#8f8ff0;} html:not([data-mode="clair"]) .hm-doux-l{color:#86bf2a;}}
 html[data-mode="sombre"] .hm-doux-i{color:#8f8ff0;} html[data-mode="sombre"] .hm-doux-l{color:#86bf2a;}
+.cls-l-ic .ico{width:22px;height:22px;}
+/* la couleur d'origine de l'app, gardée pour la barre du bas quand une page est teintée */
+html{--accent-app:var(--accent);--accent-2-app:var(--accent-2);--accent-soft-app:var(--accent-soft);--accent-glow-app:var(--accent-glow);}
+.tabbar{--accent:var(--accent-app);--accent-2:var(--accent-2-app);--accent-soft:var(--accent-soft-app);--accent-glow:var(--accent-glow-app);}
+/* pas de barre de défilement visible, nulle part : on fait défiler au doigt */
+html,body,*{scrollbar-width:none;}
+::-webkit-scrollbar{display:none;width:0;height:0;}
+/* Page d'une classe : Cours et Devoirs à la même taille — une carte par ligne, même largeur, même pastille de 52, mêmes titres */
+#screen-class .cls-liste{background:none;box-shadow:none;padding:0;display:flex;flex-direction:column;gap:10px;}
+#screen-class .cls-ligne{background:var(--surface-solid);border-radius:20px;padding:12px 14px;gap:14px;box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 9%,transparent),0 1px 3px rgba(0,0,0,.04);}
+#screen-class .cls-ligne+.cls-ligne{border-top:none;}
+#screen-class .cls-l-ic{width:52px;height:52px;border-radius:16px;}
+#screen-class .cls-l-ic .ico{width:24px;height:24px;}
+#screen-class .av-carte{display:flex;flex-direction:column;gap:10px;}
+#screen-class .av-row.dv-carte{margin:0;gap:14px;}
+.cls-sec-dev{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;padding:0;margin:26px 4px 12px;color:var(--text);font:inherit;cursor:pointer;text-align:left;}
+.cls-sec-dev h3{flex:1;font-size:19px;font-weight:800;letter-spacing:-.02em;margin:0;}
+.cls-sec-dev .cls-nb{font-size:14px;font-weight:700;color:var(--text-mute);}
+#screen-class .av-semaine{margin:14px 4px 10px;}
+#screen-class .cls-sec+.av-semaine{margin-top:4px;}
+/* les membres d'une classe : mêmes cartes, même pastille de 52 et mêmes titres que Cours et Devoirs */
+#pick-list .mem-row{border-radius:20px;padding:12px 14px;gap:14px;margin-bottom:10px;}
+.mem-ic{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;flex-shrink:0;font-weight:800;font-size:20px;}
+.mem-ic .ico-ui{width:24px;height:24px;}
+.mem-name{font-size:15px;font-weight:700;}
+#pick-list .mem-sec{margin:22px 4px 12px;}
+#pick-list .mem-sec h3{font-size:19px;font-weight:800;letter-spacing:-.02em;margin:0;}
+#pick-list .mem-act.go{background:var(--accent);color:#fff;}

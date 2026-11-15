@@ -1003,6 +1003,8 @@ const IC_MEMBRES = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 async function openClass(c){
   curClass = c; CLS_GERE = c.role === "owner" || c.role === "adjoint";
   showScreen("class");
+  const ccl = (USER_SETTINGS.clsCouleurs || {})[c.id];   // l'en-tête à la couleur choisie pour la classe
+  teinterEcran(document.getElementById("screen-class"), ccl && HM_HEX[ccl] ? HM_HEX[ccl] : null);
   document.getElementById("class-title").textContent = c.name;
   const box = document.getElementById("class-inner");
   box.innerHTML = `<div class="empty-note">Chargement…</div>`;
@@ -1144,9 +1146,11 @@ async function openClass(c){
         const aRev = tous.some(it=>it.kind === "revision");
         const detail = [nCh ? nCh + " chapitre" + (nCh > 1 ? "s" : "") : "", aRev ? "révisions" : ""].filter(Boolean).join(" · ");
         const ligne = el("button","cls-ligne"); ligne.type = "button";
-        const cc = COUL[hmHash(mat) % COUL.length], ini = mat.replace(/[^A-Za-zÀ-ÿ]/g, "").slice(0, 2);
+        const sjm = SUBJECTS.find(x=>titreNu(x.title) === titreNu(mat));
+        const cc = sjm ? hmCouleur(sjm) : COUL[hmHash(mat) % COUL.length];
+        const icm = sjm ? iconeMatiere(sjm) : icone(themeMatiere({ title:mat }) || Object.keys(MAT_IC)[hmHash(titreNu(mat)) % Object.keys(MAT_IC).length]);
         const sous = nv.length ? `<em class="cls-nv">✦ ${nv.length === 1 ? "1 nouveau" : nv.length + " nouveaux"}</em>` : tout ? `<i>✓ dans tes cours</i>` : "";
-        ligne.innerHTML = `<span class="cls-l-ic hm-doux-${cc}">${esc(ini.charAt(0).toUpperCase() + ini.slice(1).toLowerCase())}</span><span class="cls-l-t"><b>${esc(mat)}</b><small>${esc(detail)}${detail && sous ? " · " : ""}${sous}${isSubFollowed(c.id, mat) && !suitC && !tout ? " · suivie" : ""}</small></span><span class="cls-l-ch">›</span>`;
+        ligne.innerHTML = `<span class="cls-l-ic hm-doux-${cc}">${icm}</span><span class="cls-l-t"><b>${esc(mat)}</b><small>${esc(detail)}${detail && sous ? " · " : ""}${sous}${isSubFollowed(c.id, mat) && !suitC && !tout ? " · suivie" : ""}</small></span><span class="cls-l-ch">›</span>`;
         ligne.addEventListener("click",()=>{ haptic(); ouvrirMatiereClasse(c, mat, tous, monRole); });
         liste.appendChild(ligne);
       });
@@ -1244,6 +1248,12 @@ function ouvrirMatiereClasse(c, mat, tous, monRole){
 }
 
 // Les membres : la liste, les demandes à valider, les adjoints.
+// la pastille d'un membre : l'initiale, à une couleur qui lui reste
+function pastilleMembre(pseudo){
+  const k = HM_COUL_AUTO[hmHash(String(pseudo)) % HM_COUL_AUTO.length];
+  return `<span class="mem-ic hm-doux-${k}">${esc(String(pseudo || "?").charAt(0).toUpperCase())}</span>`;
+}
+function titreMembres(txt, n){ const t = el("div","hm-sec cls-sec mem-sec"); t.innerHTML = `<h3>${esc(txt)}</h3><span>${n}</span>`; return t; }
 function ouvrirMembres(c, membres, monRole){
   document.querySelectorAll("#pick-sheet .pick-actions").forEach(n=>n.remove());
   document.getElementById("pick-title").textContent = "Membres";
@@ -1253,9 +1263,10 @@ function ouvrirMembres(c, membres, monRole){
   const role = (cible, r)=>{ closePicker(); setTimeout(()=>setRole(c, cible, r), 250); };
   const attente = gere ? membres.filter(m=>m.role === "pending") : [];
   if(attente.length){
-    const t = el("div","cls-kind"); t.textContent = "Demandes en attente"; box.appendChild(t);
+    box.appendChild(titreMembres("Demandes en attente", attente.length));
     attente.forEach(m=>{
       const row = el("div","mem-row nouveau");
+      row.insertAdjacentHTML("beforeend", pastilleMembre(m.pseudo));
       const nm = el("div","mem-name"); nm.textContent = m.pseudo;
       const ok = el("button","mem-act go"); ok.type = "button"; ok.textContent = "Accepter";
       ok.addEventListener("click",()=>role(m.pseudo, "membre"));
@@ -1267,11 +1278,12 @@ function ouvrirMembres(c, membres, monRole){
   }
   const dedans = membres.filter(m=>m.role !== "pending" && m.role !== "retire");
   if(dedans.length){
-    const t = el("div","cls-kind"); t.textContent = "Dans la classe"; box.appendChild(t);
+    box.appendChild(titreMembres("Dans la classe", dedans.length));
     const ordre = { owner:0, adjoint:1, membre:2 };
     dedans.slice().sort((a,b)=>(ordre[a.role] ?? 3) - (ordre[b.role] ?? 3) || String(a.pseudo).localeCompare(String(b.pseudo), "fr"))
       .forEach(m=>{
         const row = el("div","mem-row");
+        row.insertAdjacentHTML("beforeend", pastilleMembre(m.pseudo));
         const nm = el("div","mem-name");
         nm.innerHTML = esc(m.pseudo) + (m.pseudo === whoAmI() ? " <small>(toi)</small>" : "") +
           (m.role === "owner" ? '<small class="mem-role">créateur</small>' : m.role === "adjoint" ? '<small class="mem-role">adjoint</small>' : "");
@@ -1297,6 +1309,7 @@ function ouvrirMembres(c, membres, monRole){
       try{ await navigator.clipboard.writeText(c.code); toast("Code copié. Donne-le à ta classe."); }
       catch(e){ toast("Code de la classe : " + c.code); }
     });
+    row.insertAdjacentHTML("beforeend", `<span class="mem-ic hm-doux-v">${icone("lien")}</span>`);
     row.appendChild(nm); row.appendChild(cp);
     box.prepend(row);
   }
@@ -1641,7 +1654,8 @@ function renderDevoirsClasse(c, box, gere, devs){
     let ouvert = false; try{ ouvert = localStorage.getItem("revision_devoirs_passes") === "1"; }catch(e){}
     const tete = el("button","av-tete av-tete-passes"); tete.type = "button";
     tete.setAttribute("aria-expanded", ouvert ? "true" : "false");
-    tete.innerHTML = `<span class="av-lbl">Passés</span><span class="av-plier${ouvert ? " ouvert" : ""}">${IC_CHEV_BAS}</span>`;
+    tete.classList.add("cls-sec-dev");
+    tete.innerHTML = `<h3>Passés</h3><span class="cls-nb">${passes.length}</span><span class="av-plier${ouvert ? " ouvert" : ""}">${IC_CHEV_BAS}</span>`;
     tete.addEventListener("click",()=>{
       haptic();
       try{ localStorage.setItem("revision_devoirs_passes", ouvert ? "0" : "1"); }catch(e){}
@@ -1651,7 +1665,7 @@ function renderDevoirsClasse(c, box, gere, devs){
     if(ouvert) lister(passes, zonePasses, true);
   }
 
-  if(avenir.length){ const t = el("div","av-tete"); t.innerHTML = `<span class="av-lbl">À venir</span>`; box.appendChild(t); }
+  if(avenir.length){ const t = el("div","hm-sec cls-sec"); t.innerHTML = `<h3>À venir</h3><span>${avenir.length}</span>`; box.appendChild(t); }
   lister(avenir, box, false);
   // vus : la pastille s'éteint, l'étiquette « Nouveau » reste jusqu'à la prochaine visite
   let marque = false;
@@ -3751,6 +3765,7 @@ function entreeDansEcran(cible){
 let ECRAN_AVANT = null;   // la page d'où l'on vient : visible derrière pendant le glisser
 function showScreen(id){
   lecteurStop();
+  try{ couleurPagesMatiere(id); const sc = document.getElementById("screen-" + id); teinteGlobale(sc && sc._teinte); }catch(e){}
   setTimeout(()=>{ try{ memoriserPage(); }catch(e){} }, 0);
   // arrivée sur un autre écran : les animations d'entrée jouent, puis on se calme.
   // Le même écran redessiné (cocher une étape, filtrer) reste calme.
@@ -6520,6 +6535,7 @@ function openControle(e){
 function renderControle(){
   const e = CONTROLE_OUVERT, box = document.getElementById("ct-inner"); if(!e || !box) return;
   const N = evNote(e) || {}, sj = matiereDeNote(e, N);
+  teinterEcran(document.getElementById("screen-controle"), sj ? HM_HEX[hmCouleur(sj)] : null);
   const ty = typeDevoir(N), chs = chapitresDeNote(sj, N);
   const j = hmJoursAvant(e.start);
   const c = sj ? hmCouleur(sj) : "v";
@@ -6623,6 +6639,7 @@ function noterMatiereOuverte(id){
 function ouvrirMatiere(id, onglet, depuis){
   const m = SUBJECTS.find(x=>x.id === id); if(!m) return;
   noterMatiereOuverte(id);
+  teinterEcran(document.getElementById("screen-matiere"), HM_HEX[hmCouleur(m)]);   // boutons et repères à la couleur de la matière
   const reduit = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   const r0 = depuis && !reduit ? depuis.getBoundingClientRect() : null;
   MATIERE_OUVERTE = id; curSubj = m; curSemestre = SEMESTRES[id]; CONTROLE_OUVERT = null;
@@ -7329,15 +7346,37 @@ function setUEOpen(ue, v){
 
 // la page d'un semestre prend la couleur de sa tuile (la plante qui pousse, ou celle choisie) :
 // l'en-tête et les petits éléments de la page suivent
-function couleurPageSemestre(sem){
-  const scr = document.getElementById("screen-subjects"); if(!scr) return;
-  const d = sem ? tuileDe("sem:" + sem) : {};
-  let c = sem ? ((d.couleur && HM_HEX[d.couleur]) || couleurSemestre(sem)) : null;
+// teinter un écran à une couleur : son en-tête et ses petits éléments (anneaux, badges) la prennent ; null = la couleur de l'app
+function teinterEcran(scr, c){
+  if(!scr) return;
   // une couleur claire sous un texte blanc : on l'assombrit un peu pour que le titre reste lisible
-  if(c && ["#d8a010","#8db31c","#c8742e","#e09a00","var(--c-y)"].includes(c)) c = `color-mix(in srgb,${c} 80%,#000)`;
+  if(c && ["#d8a010","#8db31c","#c8742e","#e09a00","#e09a00","var(--c-y)","#65a30d"].includes(c)) c = `color-mix(in srgb,${c} 80%,#000)`;
   const props = { "--accent":c, "--accent-2":c && `color-mix(in srgb,${c} 62%,#fff)`, "--accent-soft":c && `color-mix(in srgb,${c} 14%,transparent)`,
     "--accent-glow":c && `color-mix(in srgb,${c} 32%,transparent)` };
   Object.entries(props).forEach(([k,v])=>v ? scr.style.setProperty(k, v) : scr.style.removeProperty(k));
+  scr._teinte = props;
+  if(scr.classList.contains("active") || document.documentElement.getAttribute("data-screen") === scr.id.replace(/^screen-/, "")) teinteGlobale(props);
+}
+// ce qui flotte au-dessus des pages (barre de lecture, languette du sommaire, feuilles, explications) suit la page ouverte
+function teinteGlobale(props){
+  const b = document.body;
+  ["--accent","--accent-2","--accent-soft","--accent-glow"].forEach(k=>{ const v = props && props[k]; v ? b.style.setProperty(k, v) : b.style.removeProperty(k); });
+}
+function couleurPageSemestre(sem){
+  const d = sem ? tuileDe("sem:" + sem) : {};
+  teinterEcran(document.getElementById("screen-subjects"), sem ? ((d.couleur && HM_HEX[d.couleur]) || couleurSemestre(sem)) : null);
+}
+// les pages d'une matière (chapitre, QCM, auteurs, lexique, examen, série) restent à sa couleur
+const ECRANS_MATIERE = ["split","qcmchoix","auteurs","lexique","devoirs","synthese","session"];
+function couleurPagesMatiere(id){
+  if(!ECRANS_MATIERE.includes(id)) return;
+  const m = (id === "session" && typeof globalSession !== "undefined" && globalSession) ? null : curSubj;
+  teinterEcran(document.getElementById("screen-" + id), m ? HM_HEX[hmCouleur(m)] : null);
+}
+// les pages d'un projet : la couleur de sa tuile dans Cours (ou celle choisie)
+function couleurProjet(cle, defaut){
+  const d = tuileDe(cle);
+  teinterEcran(document.getElementById("screen-psycho"), (d.couleur && HM_HEX[d.couleur]) || defaut);
 }
 function renderSubjectCards(sem){
   resolveAllLangs();
@@ -9929,6 +9968,7 @@ function savePsychoSteps(){
 }
 
 function renderPsycho(){
+  couleurProjet("psy", TUILE_COUL.r);
   entreeDansEcran(document.getElementById("psycho-inner"));
   const inner=document.getElementById("psycho-inner"); inner.innerHTML="";
   inner.innerHTML=`
@@ -10294,6 +10334,7 @@ function retirerProjet(pid){
   saveContent();
 }
 function renderProjet(pid){
+  couleurProjet("projet:" + pid, TUILE_COUL[pid === "cpe" ? "y" : "v"]);
   const p = PROJETS[pid]; if(!p) return;
   entreeDansEcran(document.getElementById("psycho-inner"));
   const inner = document.getElementById("psycho-inner"); inner.innerHTML = "";
