@@ -1645,7 +1645,8 @@ function renderDevoirsClasse(c, box, gere, devs){
     let ouvert = false; try{ ouvert = localStorage.getItem("revision_devoirs_passes") === "1"; }catch(e){}
     const tete = el("button","av-tete av-tete-passes"); tete.type = "button";
     tete.setAttribute("aria-expanded", ouvert ? "true" : "false");
-    tete.innerHTML = `<span class="av-lbl">Passés</span><span class="av-plier${ouvert ? " ouvert" : ""}">${IC_CHEV_BAS}</span>`;
+    tete.classList.add("cls-sec-dev");
+    tete.innerHTML = `<h3>Passés</h3><span class="cls-nb">${passes.length}</span><span class="av-plier${ouvert ? " ouvert" : ""}">${IC_CHEV_BAS}</span>`;
     tete.addEventListener("click",()=>{
       haptic();
       try{ localStorage.setItem("revision_devoirs_passes", ouvert ? "0" : "1"); }catch(e){}
@@ -1655,7 +1656,7 @@ function renderDevoirsClasse(c, box, gere, devs){
     if(ouvert) lister(passes, zonePasses, true);
   }
 
-  if(avenir.length){ const t = el("div","av-tete"); t.innerHTML = `<span class="av-lbl">À venir</span>`; box.appendChild(t); }
+  if(avenir.length){ const t = el("div","hm-sec cls-sec"); t.innerHTML = `<h3>À venir</h3><span>${avenir.length}</span>`; box.appendChild(t); }
   lister(avenir, box, false);
   // vus : la pastille s'éteint, l'étiquette « Nouveau » reste jusqu'à la prochaine visite
   let marque = false;
