@@ -2519,3 +2519,12 @@ html[data-mode="sombre"] :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal
 .edt-course.a-mat .edt-time>span:first-child{color:var(--mc);}
 /* un devoir fait passe au vert, comme dans Devoirs */
 .edt-course.flagged.done{--mc:var(--ok);opacity:.85;}
+/* choisir une icône : la grille des icônes dessinées, dans les formulaires */
+.fs-icones{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;max-height:262px;overflow-y:auto;padding:2px 2px 6px;-webkit-overflow-scrolling:touch;}
+.fs-ic{position:relative;aspect-ratio:1;border:0;border-radius:14px;background:var(--surface-2,rgba(127,127,127,.08));display:grid;place-items:center;color:var(--accent);cursor:pointer;font:inherit;}
+.fs-ic .ico-ui{width:24px;height:24px;}
+.fs-ic.auto .ico-ui{width:20px;height:20px;margin-bottom:9px;}
+.fs-ic small{position:absolute;bottom:4px;left:0;right:0;text-align:center;font-size:9px;font-weight:800;color:var(--text-mute);}
+.fs-ic.on{background:var(--accent-soft);box-shadow:inset 0 0 0 2px var(--accent);}
+button.mt-big{border:0;color:inherit;cursor:pointer;font:inherit;padding:0;}
+.cls-ic{cursor:pointer;}

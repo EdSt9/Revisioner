@@ -444,6 +444,19 @@ function openForm(title, fields, okLabel, onSubmit, onDelete, extra){
       });
       w.appendChild(row);
       w.appendChild(inp);   // le champ caché doit être dans la page, sinon la valeur est perdue
+    }else if(f.type === "icone"){
+      // toutes les icônes dessinées, au choix ; « Auto » garde celle que l'app donne d'elle-même
+      inp = el("input","fs-input"); inp.type = "hidden"; inp.value = f.value || "";
+      const g = el("div","fs-icones");
+      const cases = (f.defaut ? [""] : []).concat(ICONES_CHOIX);
+      cases.forEach(k=>{
+        const b = el("button","fs-ic" + (k === inp.value ? " on" : "") + (k ? "" : " auto")); b.type = "button";
+        b.setAttribute("aria-label", k || "Icône automatique");
+        b.innerHTML = k ? icone(k) : icone(f.defaut) + "<small>Auto</small>";
+        b.addEventListener("click",()=>{ haptic(); inp.value = k; g.querySelectorAll(".fs-ic").forEach(x=>x.classList.remove("on")); b.classList.add("on"); });
+        g.appendChild(b);
+      });
+      w.appendChild(g); w.appendChild(inp);
     }else{
       inp = f.type === "area" ? el("textarea","fs-area") : el("input","fs-input");
       if(f.type !== "area") inp.type = f.type || "text";
@@ -777,8 +790,9 @@ async function openClasses(){
       }
       openClass(c);
     });
-    // appui long : changer l'icône, comme pour les tuiles des semestres
+    // toucher l'icône, ou appui long sur la ligne : changer l'icône
     onLongPress(row, ()=>changerIconeClasse(c));
+    row.querySelector(".cls-ic").addEventListener("click", ev=>{ ev.stopPropagation(); haptic(); changerIconeClasse(c); });
     box.appendChild(row);
   });
   majPastillesClasses();
@@ -787,18 +801,20 @@ async function openClasses(){
 
 // ── Icône d'une classe : chacun choisit la sienne, gardée dans ses réglages ──
 // Une nouvelle classe reçoit la première icône pas encore prise par une autre.
-const CLS_ICONES = ["📚","🎓","🧠","✏️","💡","🧭","🌱","🎯","🔬","🗂️","📐","🌍"];
+const CLS_ICONES = ["grp","edu","livre","boussole","ecole","cible","ampoule","com","globe","plume","rech","pousse"];
+const estCleIcone = k=>!!(k && (UI_IC[k] || MAT_IC[k]));
 function iconesClasses(){
   const m = USER_SETTINGS.clsIcones;
   return (m && typeof m === "object") ? m : {};
 }
-function iconeClasse(c){ return iconesClasses()[c.id] || CLS_ICONES[0]; }
+function iconeClasse(c){ const k = iconesClasses()[c.id]; return estCleIcone(k) ? k : CLS_ICONES[0]; }
 function donnerIconesClasses(){
   const m = Object.assign({}, iconesClasses());
   let change = false;
   MY_CLASSES.forEach(c=>{
-    if(m[c.id]) return;
-    const prises = new Set(MY_CLASSES.map(x=>m[x.id]).filter(Boolean));
+    if(estCleIcone(m[c.id])) return;
+    delete m[c.id];
+    const prises = new Set(MY_CLASSES.map(x=>m[x.id]).filter(estCleIcone));
     m[c.id] = CLS_ICONES.find(e=>!prises.has(e)) || CLS_ICONES[0];
     change = true;
   });
@@ -806,18 +822,14 @@ function donnerIconesClasses(){
 }
 function changerIconeClasse(c){
   openForm(c.name, [
-    { key:"emoji", label:"Emoji", value:iconeClasse(c), placeholder:"Touche ici, puis choisis sur le clavier emoji",
+    { key:"icone", label:"Icône", type:"icone", value:iconeClasse(c),
       hint:"Seulement pour toi : les autres membres gardent la leur." }
   ], "Enregistrer", v=>{
-    const tape = (v.emoji || "").trim();
-    if(!tape) return "Choisis un emoji.";
-    let e = "";
-    try{ e = [...new Intl.Segmenter("fr", { granularity:"grapheme" }).segment(tape)][0].segment; }
-    catch(err){ e = Array.from(tape).slice(0, 2).join(""); }
-    USER_SETTINGS.clsIcones = Object.assign({}, iconesClasses(), { [c.id]:e });
+    if(!v.icone) return "Choisis une icône.";
+    USER_SETTINGS.clsIcones = Object.assign({}, iconesClasses(), { [c.id]:v.icone });
     saveContent();
     const r = document.querySelector('#classes-list .cls-row[data-cls="' + c.id + '"] .cls-ic');
-    if(r) r.textContent = e;
+    if(r) r.innerHTML = icone(v.icone);
   });
 }
 
@@ -6091,14 +6103,35 @@ const MAT_IC = {"socio": "<circle fill=\"currentColor\" stroke=\"none\" opacity=
 const MAT_REGLES = [[/croix-rouge|secours/,"secours"],[/religion/,"spi"],[/langue/,"langue"],[/orientation|projet|parcours/,"boussole"],[/stage|milieux pro|metiers|situation de travail/,"pro"],[/inclusi|handicap/,"puzzle"],[/droit|ethique|deontolog/,"droit"],[/parentalite|famille/,"famille"],[/controverse|debat/,"debat"],[/observation|enquete/,"oeil"],[/recherche|recueil|documentaire/,"rech"],[/methodo|universitaire/,"livre"],[/expression ecrite|ecrit/,"plume"],[/communication|oral/,"com"],[/groupe/,"grp"],[/numeri|tice/,"num"],[/sante|soin/,"sante"],[/environnement|durable|ecolog/,"env"],[/economie|solidaire/,"eco"],[/insertion/,"ins"],[/prevention|risque/,"prev"],[/deviance|norme/,"dev"],[/animation|education populaire/,"anim"],[/cycle de vie|developpement/,"cycle"],[/formation|apprendre/,"form"],[/intervention|action sociale|travail social/,"main"],[/politique|dispositif/,"pol"],[/histoire|valeur/,"hist"],[/enfan|jeunesse/,"enf"],[/psycho/,"psy"],[/sociolog|socialisation/,"socio"],[/education/,"edu"],[/connaissance|monde|geopol/,"globe"]];
 const titreNu = t=>String(t||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
 function themeMatiere(s){ const t = titreNu(s.title); const r = MAT_REGLES.find(([re])=>re.test(t)); return r ? r[1] : null; }
-function iconeMatiere(s){
+function cleMatiereAuto(s){
   let k = themeMatiere(s);
   if(!k){
     const pris = new Set(SUBJECTS.filter(x=>x !== s && SEMESTRES[x.id] === SEMESTRES[s.id]).map(themeMatiere).filter(Boolean));
     const cles = Object.keys(MAT_IC), libres = cles.filter(c=>!pris.has(c)), lot = libres.length ? libres : cles;
     k = lot[hmHash(titreNu(s.title)) % lot.length];
   }
-  return `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${MAT_IC[k]}</svg>`;
+  return k;
+}
+// l'icône choisie à la main (réglages de chacun), sinon celle du thème
+function cleMatiere(s){
+  const m = USER_SETTINGS.matIcones, c = m && m[s.id];
+  return (c && (MAT_IC[c] || (typeof UI_IC === "object" && UI_IC[c]))) ? c : cleMatiereAuto(s);
+}
+function iconeMatiere(s){
+  const k = cleMatiere(s);
+  return `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${MAT_IC[k] || UI_IC[k]}</svg>`;
+}
+function changerIconeMatiere(m, apres){
+  const c = USER_SETTINGS.matIcones && USER_SETTINGS.matIcones[m.id];
+  openForm(m.title, [
+    { key:"icone", label:"Icône", type:"icone", value:c && (MAT_IC[c] || UI_IC[c]) ? c : "", defaut:cleMatiereAuto(m),
+      hint:"Seulement pour toi. « Auto » garde celle de son thème." }
+  ], "Enregistrer", v=>{
+    const m2 = Object.assign({}, USER_SETTINGS.matIcones);
+    if(v.icone) m2[m.id] = v.icone; else delete m2[m.id];
+    USER_SETTINGS.matIcones = m2; saveContent();
+    if(apres) apres();
+  });
 }
 // ══════════ ICÔNES DE L'INTERFACE ══════════
 // Semestres, projets, archives et rubriques : des icônes dessinées, dans le même style que celles des matières.
@@ -6118,6 +6151,9 @@ const TUILE_COUL = { v:"var(--accent)", b:"var(--c-b)", g:"var(--c-g)", y:"#e09a
 const SEM_COUL = ["#d8a010","#d8a010","#8db31c","#2fae5a","#13a39b","#2f8ce0","#6f5ff0"];   // un tour de teinte régulier, jusqu'au violet de l'app
 // avant la L1 (semestre 1 seul, ex. ICP) : la semence pas encore plantée, d'une teinte plus terreuse
 function couleurSemestre(sem){ return sem < 1.5 ? "#c8742e" : SEM_COUL[Math.max(0, Math.min(6, Math.floor(sem)))]; }
+// l'ordre de la grille de choix : la plante qui pousse, les projets, les matières, puis le reste
+const ICONES_CHOIX = [...new Set(["semence","graine","pousse","plante","arbuste","arbre","fleuri","terreau","tetecoeur","ecole","projet",
+  ...Object.keys(MAT_IC), ...Object.keys(UI_IC)])].filter(k=>!["page","lien","reveil","calendrier","regle","chiffres","archives"].includes(k));
 function iconeSemestre(sem){ return sem < 1.5 ? "semence" : SEM_IC[Math.max(0, Math.min(6, Math.floor(sem)))]; }
 // « 🌱 Dès maintenant » → « Dès maintenant » : la frise a déjà ses repères
 const sansEmoji = t=>String(t || "").replace(/^(\p{Extended_Pictographic}\ufe0f?\s*)+/u, "");
@@ -6562,7 +6598,7 @@ function renderMatiere(){
   const sous = ch.tot + " chapitre" + (ch.tot > 1 ? "s" : "") + (ctl ? " · contrôle " + quandCtl : "");
   box.innerHTML = `<div class="mt-head" style="background:${MT_GRAD[c]}">
       <button type="button" class="mt-bk" id="mt-bk" aria-label="Retour"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
-      <div class="mt-top"><span class="mt-big">${iconeMatiere(m)}</span><div><h1>${esc(m.title)}</h1><p>${esc(sous)}</p></div></div>
+      <div class="mt-top"><button type="button" class="mt-big" id="mt-big" aria-label="Changer l'icône">${iconeMatiere(m)}</button><div><h1>${esc(m.title)}</h1><p>${esc(sous)}</p></div></div>
     </div>
     <div class="mt-body">
       <div class="hm-card mt-kpi"><div><b>${ch.lus}/${ch.tot}</b><span>chapitres lus</span></div><div><b>${q.tot ? Math.round(q.ok / q.tot * 100) + " %" : "–"}</b><span>QCM validés</span></div><div><b>${ctl ? (jc <= 0 ? "Auj." : "J-" + jc) : (q.err || 0)}</b><span>${ctl ? "contrôle" : "erreurs"}</span></div></div>
@@ -6572,6 +6608,7 @@ function renderMatiere(){
       <div id="mt-liste"></div>
     </div>
     <div class="mt-sticky"><button type="button" class="hm-cta hm-press" id="mt-go">${ctl ? "Réviser pour " + quandCtl : "Réviser cette matière"}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></div>`;
+  document.getElementById("mt-big").addEventListener("click",()=>{ haptic(); changerIconeMatiere(m, ()=>{ const g = document.getElementById("mt-big"); if(g) g.innerHTML = iconeMatiere(m); }); });
   document.getElementById("mt-bk").addEventListener("click",()=>{ haptic(); if(document.documentElement.dataset.mtDepuis === "subjects"){ renderSubjectCards(curSemestre); showScreen("subjects"); } else { renderSemestres(); showScreen("semestres"); } });
   document.getElementById("mt-go").addEventListener("click",()=>{
     haptic(); curSubj = m;
@@ -7120,7 +7157,7 @@ function tuileDe(cle){
   const r = Object.assign({}, d, (t && typeof t === "object") ? t : {});
   // les anciens emojis par défaut des semestres laissent la place à la plante qui grandit
   // (un emoji qui a son dessin : 📚, 🌍, 🧩… ; un emoji sans équivalent, choisi exprès, reste affiché)
-  if(cle.startsWith("sem:") && r.icone && typeof cleIcone === "function" && cleIcone(r.icone)) delete r.icone;
+  if(cle.startsWith("sem:") && r.icone && typeof cleIcone === "function" && cleIcone(r.icone) && !(UI_IC[r.icone] || MAT_IC[r.icone])) delete r.icone;
   return r;
 }
 function titreSemestre(sem){ return tuileDe("sem:" + sem).titre || ("Semestre " + sem); }
@@ -7179,18 +7216,11 @@ function personnaliserTuile(t, tuiles){
   openForm("Personnaliser", [
     { key:"titre", label:"Titre", value:cur.titre || "", placeholder:t.defaut },
     { key:"sous",  label:"Sous-titre", value:cur.sous || "", placeholder:t.sousDefaut || "ex. L3 SESS (UPEC)" },
-    { key:"emoji", label:"Emoji", value:cleIcone(cur.icone) ? "" : (cur.icone || ""), placeholder:"Icône dessinée. Touche ici pour mettre un emoji à la place" },
+    { key:"icone", label:"Icône", type:"icone", value:(cur.icone && (UI_IC[cur.icone] || MAT_IC[cur.icone])) ? cur.icone : "", defaut:cleIcone(t.icone) || "projet" },
   ], "Enregistrer", v=>{
     USER_SETTINGS.tuiles = Object.assign({}, USER_SETTINGS.tuiles);
-    // un emoji tapé passe devant la rangée : on garde le premier (drapeaux et emojis composés compris)
-    const tape = (v.emoji || "").trim();
-    let perso = "";
-    if(tape){
-      try{ perso = [...new Intl.Segmenter("fr", { granularity:"grapheme" }).segment(tape)][0].segment; }
-      catch(e){ perso = Array.from(tape).slice(0, 2).join(""); }
-    }
-    const ic = perso || t.icone;
-    const n = { titre:v.titre, sous:v.sous, icone:ic === t.icone ? "" : ic };
+    // l'icône choisie dans la grille ; « Auto » (vide) garde celle de l'app
+    const n = { titre:v.titre, sous:v.sous, icone:v.icone || "" };
     if(!n.titre && !n.sous && !n.icone) delete USER_SETTINGS.tuiles[t.cle];
     else USER_SETTINGS.tuiles[t.cle] = n;
     saveContent();
