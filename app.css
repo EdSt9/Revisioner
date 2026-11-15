@@ -2585,3 +2585,6 @@ html,body,*{scrollbar-width:none;}
 #pick-list .mem-sec{margin:22px 4px 12px;}
 #pick-list .mem-sec h3{font-size:19px;font-weight:800;letter-spacing:-.02em;margin:0;}
 #pick-list .mem-act.go{background:var(--accent);color:#fff;}
+/* retirer un membre : un petit bouton rond, discret, à droite */
+#pick-list .mem-retirer{width:36px;height:36px;padding:0;display:grid;place-items:center;border-radius:50%;color:var(--danger);background:var(--danger-soft);}
+#pick-list .mem-retirer svg{width:16px;height:16px;}

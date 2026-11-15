@@ -1294,6 +1294,20 @@ function ouvrirMembres(c, membres, monRole){
           b.addEventListener("click",()=>role(m.pseudo, m.role === "adjoint" ? "membre" : "adjoint"));
           row.appendChild(b);
         }
+        // retirer quelqu'un : le créateur, n'importe qui sauf lui-même ; un adjoint, les simples membres
+        const peutRetirer = m.pseudo !== whoAmI() && m.role !== "owner" && (monRole === "owner" || (monRole === "adjoint" && m.role === "membre"));
+        if(peutRetirer){
+          const x = el("button","mem-act mem-retirer"); x.type = "button";
+          x.setAttribute("aria-label", "Retirer " + m.pseudo + " de la classe");
+          x.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+          x.addEventListener("click",()=>{
+            haptic(); closePicker();
+            setTimeout(()=>confirmer("Retirer " + m.pseudo + " ?",
+              m.pseudo + " ne verra plus les cours ni les devoirs de « " + c.name + " ». Pour revenir, il lui faudra redemander avec le code.",
+              "Retirer", ()=>{ setRole(c, m.pseudo, "retire"); toast(m.pseudo + " a été retiré de la classe."); }), 260);
+          });
+          row.appendChild(x);
+        }
         box.appendChild(row);
       });
   }
