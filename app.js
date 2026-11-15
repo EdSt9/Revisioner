@@ -6525,6 +6525,7 @@ function openControle(e){
 function renderControle(){
   const e = CONTROLE_OUVERT, box = document.getElementById("ct-inner"); if(!e || !box) return;
   const N = evNote(e) || {}, sj = matiereDeNote(e, N);
+  teinterEcran(document.getElementById("screen-controle"), sj ? HM_HEX[hmCouleur(sj)] : null);
   const ty = typeDevoir(N), chs = chapitresDeNote(sj, N);
   const j = hmJoursAvant(e.start);
   const c = sj ? hmCouleur(sj) : "v";
@@ -6628,6 +6629,7 @@ function noterMatiereOuverte(id){
 function ouvrirMatiere(id, onglet, depuis){
   const m = SUBJECTS.find(x=>x.id === id); if(!m) return;
   noterMatiereOuverte(id);
+  teinterEcran(document.getElementById("screen-matiere"), HM_HEX[hmCouleur(m)]);   // boutons et repères à la couleur de la matière
   const reduit = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   const r0 = depuis && !reduit ? depuis.getBoundingClientRect() : null;
   MATIERE_OUVERTE = id; curSubj = m; curSemestre = SEMESTRES[id]; CONTROLE_OUVERT = null;

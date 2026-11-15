@@ -2561,3 +2561,6 @@ html[data-mode="sombre"] .hm-doux-i{color:#8f8ff0;} html[data-mode="sombre"] .hm
 /* la couleur d'origine de l'app, gardée pour la barre du bas quand une page est teintée */
 html{--accent-app:var(--accent);--accent-2-app:var(--accent-2);--accent-soft-app:var(--accent-soft);--accent-glow-app:var(--accent-glow);}
 .tabbar{--accent:var(--accent-app);--accent-2:var(--accent-2-app);--accent-soft:var(--accent-soft-app);--accent-glow:var(--accent-glow-app);}
+/* pas de barre de défilement visible, nulle part : on fait défiler au doigt */
+html,body,*{scrollbar-width:none;}
+::-webkit-scrollbar{display:none;width:0;height:0;}
