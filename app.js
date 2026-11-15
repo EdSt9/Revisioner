@@ -6814,7 +6814,8 @@ function renderSemestres(){
   let si = 0;
   // chaque section se plie : on garde ouvertes celles en cours, on plie les années terminées
   let plies = {}; try{ plies = JSON.parse(localStorage.getItem("revision_sem_plies") || "{}") || {}; }catch(e){}
-  groupes.forEach(g=>{
+  // l'ordre de la page : les semestres, puis les archives, puis les projets tout en bas
+  const placerGroupe = g=>{
     const plie = avecTitres && !!plies[g.cle || "\u0000autres"];
     if(avecTitres){
       const h = el("button","sem-groupe rise" + (plie ? "" : " ouvert")); h.type = "button";
@@ -6832,8 +6833,10 @@ function renderSemestres(){
     }
     if(plie) return;
     g.tuiles.forEach(t=>placerTuile(t, si++));
-  });
+  };
+  groupes.filter(g=>g.cle !== "\u0000psy").forEach(placerGroupe);
   if(archives.length) ajouterArchives(wrap, archives, t=>placerTuile(t, si++));
+  groupes.filter(g=>g.cle === "\u0000psy").forEach(placerGroupe);
   function placerTuile(t, si){
     t.el.style.animationDelay = (0.14 + si*0.04) + "s";
     if(!canEdit()){ wrap.appendChild(t.el); return; }
