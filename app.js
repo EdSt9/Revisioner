@@ -986,6 +986,14 @@ async function rafraichirNouveautesClasses(){
     }
     // les devoirs, en une fois pour toutes les classes, puis posés dans l'agenda
     const ids = MY_CLASSES.filter(c=>c.role !== "pending").map(c=>c.id);
+    // une classe quittée (ou dont on a été retiré) : ses devoirs reçus partent de l'agenda,
+    // sauf ceux qu'on avait retouchés, qui restent comme les siens, sans lien
+    const garde = new Set(MY_CLASSES.map(c=>c.id));
+    let quitte = false;
+    Object.keys(DEVCLS).forEach(cid=>{ if(!garde.has(cid) && (DEVCLS[cid] || []).length){ DEVCLS[cid] = []; quitte = true; } });
+    Object.keys(agendaSuivi()).forEach(cid=>{ if(!garde.has(cid)){ delete agendaSuivi()[cid]; quitte = true; } });
+    Object.keys(coursSuivis()).forEach(cid=>{ if(!garde.has(cid)){ delete coursSuivis()[cid]; quitte = true; } });
+    if(quitte){ devclsSave(); saveContent(); }
     try{
       await chargerDevoirs(ids);
       appliquerDevoirsSuivis();
