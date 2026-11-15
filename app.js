@@ -3648,8 +3648,7 @@ Object.keys(FAB_ACTIONS).forEach(id=>{
   b.addEventListener("click",()=>{ haptic(); FAB_ACTIONS[id].fn(); });
   const zone = w.parentNode.querySelector(":scope > .hd-onglet .hd-act") || w;   // les pages à en-tête coloré : directement dedans
   const premier = zone.querySelector("[data-entete]");
-  const memo = zone.querySelector(":scope > .memo-fab");   // le Mémo reste le premier
-  if(zone !== w){ if(memo) memo.after(b); else zone.prepend(b); } else if(premier) premier.before(b); else w.appendChild(b);
+  if(zone !== w) zone.appendChild(b); else if(premier) premier.before(b); else w.appendChild(b);
 });
 document.querySelectorAll(".screen").forEach(poserEntete);
 // Les en-têtes colorés des pages (titre, retour, boutons) sont écrits directement dans le HTML.
@@ -7161,8 +7160,7 @@ function ajouterArchives(wrap, archives, placer){
     try{ localStorage.setItem("revision_sem_plies", JSON.stringify(plies)); }catch(e){}
     renderSemestres();
   });
-  wrap.appendChild(h);
-  if(plie) return;
+  if(plie){ wrap.appendChild(h); return; }
   const bascule = ()=>{
     haptic();
     try{ localStorage.setItem("revision_archives_ouvert", ouvert ? "0" : "1"); }catch(e){}
@@ -7176,8 +7174,11 @@ function ajouterArchives(wrap, archives, placer){
     <div class="sem-bar"></div>
     <div class="sem-pct">${archives.length} semestres</div>`;
   tu.addEventListener("click", bascule);
+  // la tuile s'ouvre vers le haut : les années archivées d'abord, puis le titre et la tuile, tout en bas
+  if(ouvert) annees();
+  wrap.appendChild(h);
   wrap.appendChild(tu);
-  if(!ouvert) return;
+  function annees(){
   let courant = "";
   archives.slice().sort((x,y)=>y.sem - x.sem).forEach(t=>{
     const an = nomAnneeSem(t.sem);
@@ -7188,6 +7189,7 @@ function ajouterArchives(wrap, archives, placer){
     }
     placer(t);
   });
+  }
 }
 // ── Personnaliser les tuiles de l'accueil : titre, sous-titre, icône, ordre ──
 // Enregistré dans les réglages du compte : suit sur tous les appareils.
