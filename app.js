@@ -6411,13 +6411,15 @@ function renderAccueil(anim){
     boxA.appendChild(hs);
   }
 
-  // ── mes matières : celles qui ont un contrôle d'abord ──
+  // ── mes matières : les dernières ouvertes, puis celles du semestre (contrôles d'abord) pour compléter ──
   const boxM = document.getElementById("hm-mats"); boxM.innerHTML = "";
-  if(mats.length){
+  const recentes = matieresRecentes().map(id=>SUBJECTS.find(x=>x.id === id)).filter(Boolean);
+  if(mats.length || recentes.length){
     const ctl = hmControles();
-    const tri = mats.slice().sort((a,b)=>{ const x = ctl[a.id], y = ctl[b.id]; if(x && y) return x.start - y.start; if(x) return -1; if(y) return 1; return 0; });
+    const parSem = mats.slice().sort((a,b)=>{ const x = ctl[a.id], y = ctl[b.id]; if(x && y) return x.start - y.start; if(x) return -1; if(y) return 1; return 0; });
+    const tri = [...new Set([...recentes, ...parSem])];
     const sem = hmSemCourant();
-    const secM = el("div","hm-sec"); secM.innerHTML = `<h3>Mes matières</h3><button type="button">${esc(titreSemestre(sem))}</button>`;
+    const secM = el("div","hm-sec"); secM.innerHTML = `<h3>${recentes.length ? "Ouvertes récemment" : "Mes matières"}</h3><button type="button">${esc(titreSemestre(sem))}</button>`;
     secM.querySelector("button").addEventListener("click",()=>{ haptic(); curSemestre = sem; renderSubjectCards(sem); showScreen("subjects"); });
     boxM.appendChild(secM);
     const card = el("div","hm-card hm-ml");
@@ -6589,8 +6591,16 @@ const MT_GRAD = { v:"linear-gradient(160deg,color-mix(in srgb,var(--accent) 85%,
   b:"linear-gradient(160deg,#1f63d6,#3a86ff 50%,#7fb0ff)", g:"linear-gradient(160deg,#0b8a5d,#14b87e 50%,#5fd9a9)",
   y:"linear-gradient(160deg,#e07b00,#f5a524 50%,#ffc766)", r:"linear-gradient(160deg,#d12a6b,#ff4d8d 50%,#ff8ab4)",
   c:"linear-gradient(160deg,#08857e,#12a9a0 50%,#5fd3cb)", o:"linear-gradient(160deg,#d24a1c,#f26b3a 50%,#ff9e74)", t:"linear-gradient(160deg,#7d4f27,#a8703f 50%,#cf9d6c)" };
+// les matières ouvertes en dernier (sur ce téléphone), pour l'accueil
+const RECENTES_KEY = "revision_recentes_v1";
+function matieresRecentes(){ try{ const a = JSON.parse(localStorage.getItem(RECENTES_KEY) || "[]"); return Array.isArray(a) ? a : []; }catch(e){ return []; } }
+function noterMatiereOuverte(id){
+  if(!id) return;
+  try{ localStorage.setItem(RECENTES_KEY, JSON.stringify([id, ...matieresRecentes().filter(x=>x !== id)].slice(0, 12))); }catch(e){}
+}
 function ouvrirMatiere(id, onglet, depuis){
   const m = SUBJECTS.find(x=>x.id === id); if(!m) return;
+  noterMatiereOuverte(id);
   const reduit = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   const r0 = depuis && !reduit ? depuis.getBoundingClientRect() : null;
   MATIERE_OUVERTE = id; curSubj = m; curSemestre = SEMESTRES[id]; CONTROLE_OUVERT = null;
@@ -7379,6 +7389,7 @@ function resolveAllLangs(){
   SUBJECTS.forEach(s=>{ if(s.bilingue) resolveLang(s); });
 }
 function openSubject(id){
+  noterMatiereOuverte(id);
   markSubjectSeen(id);   // le cours n'est plus « nouveau »
   curSubj=SUBJECTS.find(s=>s.id===id);
   resolveLang(curSubj);
