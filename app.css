@@ -2539,3 +2539,6 @@ button.mt-big{border:0;color:inherit;cursor:pointer;font:inherit;padding:0;}
 /* la couleur d'une classe */
 .cls-row .cls-ic{background:color-mix(in srgb,var(--cc,var(--accent)) 12%,transparent);}
 .cls-row .cls-ic .ico-ui{color:var(--cc,var(--accent));}
+/* la grille d'icônes montre la couleur choisie juste au-dessus */
+.fs-ic{color:var(--pc,var(--accent));background:color-mix(in srgb,var(--pc,var(--accent)) 9%,var(--surface-2,rgba(127,127,127,.08)));}
+.fs-ic.on{background:color-mix(in srgb,var(--pc,var(--accent)) 22%,transparent);box-shadow:inset 0 0 0 2px var(--pc,var(--accent));}

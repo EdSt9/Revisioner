@@ -421,7 +421,7 @@ function openForm(title, fields, okLabel, onSubmit, onDelete, extra){
     onDelete();
     closeForm();
   } : null;
-  body.innerHTML = "";
+  body.innerHTML = ""; body.style.removeProperty("--pc");
   fields.forEach(f=>{
     const w = el("div","fs-field");
     const l = el("div","fs-label"); l.textContent = f.label; w.appendChild(l);
@@ -452,9 +452,12 @@ function openForm(title, fields, okLabel, onSubmit, onDelete, extra){
         b.style.setProperty("--fc", HM_HEX[k || f.defaut] || f.defaut);
         b.setAttribute("aria-label", k ? "Couleur " + k : "Couleur automatique");
         if(!k) b.textContent = "A";
-        b.addEventListener("click",()=>{ haptic(); inp.value = k; row.querySelectorAll(".fs-coul").forEach(x=>x.classList.remove("on")); b.classList.add("on"); });
+        b.addEventListener("click",()=>{ haptic(); inp.value = k; row.querySelectorAll(".fs-coul").forEach(x=>x.classList.remove("on")); b.classList.add("on"); apercu(); });
         row.appendChild(b);
       });
+      // les icônes en dessous prennent la couleur choisie : on voit le résultat avant d'enregistrer
+      const apercu = ()=>body.style.setProperty("--pc", HM_HEX[inp.value || f.defaut] || f.defaut || "var(--accent)");
+      apercu();
       w.appendChild(row); w.appendChild(inp);
     }else if(f.type === "icone"){
       // toutes les icônes dessinées, au choix ; « Auto » garde celle que l'app donne d'elle-même
