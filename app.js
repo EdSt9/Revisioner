@@ -6080,7 +6080,7 @@ function icone(x){
 // la couleur de chaque tuile de Cours : les semestres suivent la pousse (de l'ambre de la graine au rose de l'arbre en fleurs),
 // rose pour Psycho, jaune pour CPE, bleu pour les archives
 const TUILE_COUL = { v:"var(--accent)", b:"var(--c-b)", g:"var(--c-g)", y:"#e09a00", r:"var(--c-r)" };
-const SEM_COUL = ["#e09a00","#e09a00","#7cb518","var(--c-g)","#0fa3a3","var(--c-b)","var(--c-r)"];
+const SEM_COUL = ["#d8a010","#d8a010","#8db31c","#2fae5a","#13a39b","#2f8ce0","#6f5ff0"];   // un tour de teinte régulier, jusqu'au violet de l'app
 // avant la L1 (semestre 1 seul, ex. ICP) : la semence pas encore plantée, d'une teinte plus terreuse
 function couleurSemestre(sem){ return sem < 1.5 ? "#c8742e" : SEM_COUL[Math.max(0, Math.min(6, Math.floor(sem)))]; }
 function iconeSemestre(sem){ return sem < 1.5 ? "semence" : SEM_IC[Math.max(0, Math.min(6, Math.floor(sem)))]; }
