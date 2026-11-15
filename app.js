@@ -6312,14 +6312,13 @@ function renderAccueil(anim){
       </div></div>
     ${auj >= HM_OBJECTIF ? `<div class="hm-bravo">✓ Objectif atteint. Tout le reste, c'est du bonus.</div>` : ""}
     <button type="button" class="hm-cta hm-press" id="hm-go">${ctaTxt}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
-    ${(()=>{ const a = apercuRevision(); return `<div class="hm-apercu${a.vide ? " vide" : ""}">${a.txt}</div>`; })()}
-    <div class="hm-ligne">${serie.n ? `🔥 <b>${serie.n} jour${serie.n > 1 ? "s" : ""}</b> de suite` : "Une série par jour, à ton rythme"}<span class="pt"></span><button type="button" class="hm-objbtn" id="hm-obj">objectif <b>${HM_OBJECTIF}</b> par jour ›</button></div>`;
+    ${(()=>{ const a = apercuRevision(); return `<div class="hm-apercu${a.vide ? " vide" : ""}">${serie.n ? `🔥 <b>${serie.n} jour${serie.n > 1 ? "s" : ""}</b><span class="pt"></span>` : ""}${a.txt}</div>`; })()}`;
   const boxJ = document.getElementById("hm-jour");
   const neuf = jour !== HM_DERNIER;
   if(neuf){
     HM_DERNIER = jour; boxJ.innerHTML = jour;
     document.getElementById("hm-go").addEventListener("click",()=>{ haptic(); lancerRevisionJour(); });
-    document.getElementById("hm-obj").addEventListener("click",()=>{ haptic(); choisirObjectif(); });
+
     const ring = boxJ.querySelector(".hm-ring"); if(ring){ ring.style.cursor = "pointer"; ring.addEventListener("click",()=>{ haptic(); choisirObjectif(); }); }
   }
   if(neuf || anim){
@@ -9405,16 +9404,14 @@ const nomBref = t=>String(t || "").split(/ (?:des|de|du|d'|et|à|aux|en|:) /)[0]
 function apercuRevision(){
   const { prio, all, neuf, quand } = choixRevision();
   const n = Math.min(SERIE_MAX, prio.length + all.length + neuf.length);
-  if(!n) return { vide:true, txt:"Rien à revoir aujourd'hui : tout ce que tu as travaillé est à jour." };
+  if(!n) return { vide:true, txt:"Tout est à jour" };
   const mats = [...new Set(prio.map(x=>x.subj.id))].sort((a,b)=>quand[a] - quand[b]).map(id=>SUBJECTS.find(x=>x.id === id)).filter(Boolean);
-  const ex = n + " exercice" + (n > 1 ? "s" : "");
   if(mats.length){
-    const noms = mats.slice(0, 2).map(m=>"<b>" + esc(nomBref(m.title)) + "</b>").join(" et ") + (mats.length > 2 ? " (+" + (mats.length - 2) + ")" : "");
-    return { txt:`${ex}, ${noms} en priorité (contrôle${mats.length > 1 ? "s" : ""} bientôt)` };
+    const noms = mats.slice(0, 2).map(m=>"<b>" + esc(nomBref(m.title)) + "</b>").join(", ") + (mats.length > 2 ? " +" + (mats.length - 2) : "");
+    return { txt:`Priorité : ${noms}` };
   }
   const a = Math.min(all.length, n), b = n - a;
-  const bouts = [a ? `<b>${a}</b> à revoir` : "", b ? `<b>${b}</b> nouveau${b > 1 ? "x" : ""} du semestre` : ""].filter(Boolean);
-  return { txt:`${ex} : ${bouts.join(" et ")}` };
+  return { txt:[a ? `<b>${a}</b> à revoir` : "", b ? `<b>${b}</b> nouveau${b > 1 ? "x" : ""}` : ""].filter(Boolean).join(" · ") };
 }
 // Rien à revoir : une série libre, faite de ce qui n'est pas encore acquis (semestre en cours d'abord)
 function startSerieLibre(){
