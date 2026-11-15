@@ -5310,10 +5310,11 @@ function courseCard(e){
   // un cours marqué ressort à la couleur de son étiquette (contrôle rose, à rendre jaune, note bleue) :
   // la barre, une teinte légère, l'heure ; un cours sans rien reste neutre
   if(kind) c.classList.add("a-mat");
+  // fait : l'étiquette elle-même passe au vert, avec la coche (plus besoin d'une étiquette « Fait » à côté)
+  const fait = !!(n && n.done && kind);
   const badge = (kind
-    ? `<span class="ev-badge ${kind}">${kind==="controle"?"Contrôle":kind==="devoir"?"À rendre":"Note"}</span>` : "") +
+    ? `<span class="ev-badge ${kind}${fait ? " fait" : ""}">${fait ? "✓ " : ""}${kind==="controle"?"Contrôle":kind==="devoir"?"À rendre":"Note"}</span>` : "") +
     aut.filter(a=>(a.type || "note") !== kind).map(a=>`<span class="ev-badge ${a.type || "note"}">${TAG_DEVOIR[a.type || ""]}</span>`).join("") +
-    (n && n.done && kind ? `<span class="ev-badge fait">✓ Fait</span>` : "") +
     (n && (n.modifie || aut.some(a=>a.modifie)) ? `<span class="ev-badge modifie">Modifié</span>` : "");
   const texte = n && n.note ? (e.titreNote ? String(n.note).trim().split("\n").slice(1).join("\n").trim() : n.note) : "";
   const note = (texte ? `<div class="edt-note">${noteAvecLiens(texte)}</div>` : "") +
