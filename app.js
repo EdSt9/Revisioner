@@ -444,6 +444,18 @@ function openForm(title, fields, okLabel, onSubmit, onDelete, extra){
       });
       w.appendChild(row);
       w.appendChild(inp);   // le champ caché doit être dans la page, sinon la valeur est perdue
+    }else if(f.type === "couleur"){
+      inp = el("input","fs-input"); inp.type = "hidden"; inp.value = f.value || "";
+      const row = el("div","fs-couleurs");
+      ((f.defaut ? [""] : []).concat(COULEURS_CHOIX)).forEach(k=>{
+        const b = el("button","fs-coul" + (k === inp.value ? " on" : "") + (k ? "" : " auto")); b.type = "button";
+        b.style.setProperty("--fc", HM_HEX[k || f.defaut] || f.defaut);
+        b.setAttribute("aria-label", k ? "Couleur " + k : "Couleur automatique");
+        if(!k) b.textContent = "A";
+        b.addEventListener("click",()=>{ haptic(); inp.value = k; row.querySelectorAll(".fs-coul").forEach(x=>x.classList.remove("on")); b.classList.add("on"); });
+        row.appendChild(b);
+      });
+      w.appendChild(row); w.appendChild(inp);
     }else if(f.type === "icone"){
       // toutes les icônes dessinées, au choix ; « Auto » garde celle que l'app donne d'elle-même
       inp = el("input","fs-input"); inp.type = "hidden"; inp.value = f.value || "";
@@ -778,6 +790,8 @@ async function openClasses(){
     row.type = "button"; row.dataset.cls = c.id;
     const tag = c.role === "owner" ? "CRÉATEUR" : c.role === "adjoint" ? "ADJOINT"
               : c.role === "pending" ? "EN ATTENTE" : "MEMBRE";
+    const cc = (USER_SETTINGS.clsCouleurs || {})[c.id];
+    if(cc && HM_HEX[cc]) row.style.setProperty("--cc", HM_HEX[cc]);
     row.innerHTML = `<div class="cls-ic">${icone(iconeClasse(c))}</div>
       <div class="cls-txt"><div class="cls-name">${esc(c.name)}</div>
       ${(()=>{ const o = c.role === "owner" ? "toi" : (c.owner || c.owner_pseudo || c.owner_name || c.created_by || ""); return o ? `<div class="cls-sub">créée par ${esc(o)}</div>` : ""; })()}</div>
@@ -822,14 +836,17 @@ function donnerIconesClasses(){
 }
 function changerIconeClasse(c){
   openForm(c.name, [
+    { key:"couleur", label:"Couleur", type:"couleur", value:(USER_SETTINGS.clsCouleurs || {})[c.id] || "", defaut:"v" },
     { key:"icone", label:"Icône", type:"icone", value:iconeClasse(c),
-      hint:"Seulement pour toi : les autres membres gardent la leur." }
+      hint:"Seulement pour toi : les autres membres gardent les leurs." }
   ], "Enregistrer", v=>{
     if(!v.icone) return "Choisis une icône.";
     USER_SETTINGS.clsIcones = Object.assign({}, iconesClasses(), { [c.id]:v.icone });
+    const c2 = Object.assign({}, USER_SETTINGS.clsCouleurs); if(v.couleur) c2[c.id] = v.couleur; else delete c2[c.id];
+    USER_SETTINGS.clsCouleurs = c2;
     saveContent();
-    const r = document.querySelector('#classes-list .cls-row[data-cls="' + c.id + '"] .cls-ic');
-    if(r) r.innerHTML = icone(v.icone);
+    const row = document.querySelector('#classes-list .cls-row[data-cls="' + c.id + '"]');
+    if(row){ row.querySelector(".cls-ic").innerHTML = icone(v.icone); if(v.couleur) row.style.setProperty("--cc", HM_HEX[v.couleur]); else row.style.removeProperty("--cc"); }
   });
 }
 
@@ -6124,12 +6141,15 @@ function iconeMatiere(s){
 function changerIconeMatiere(m, apres){
   const c = USER_SETTINGS.matIcones && USER_SETTINGS.matIcones[m.id];
   openForm(m.title, [
+    { key:"couleur", label:"Couleur", type:"couleur", value:(USER_SETTINGS.matCouleurs || {})[m.id] || "", defaut:HM_COUL[hmHash(m.id) % HM_COUL.length] },
     { key:"icone", label:"Icône", type:"icone", value:c && (MAT_IC[c] || UI_IC[c]) ? c : "", defaut:cleMatiereAuto(m),
-      hint:"Seulement pour toi. « Auto » garde celle de son thème." }
+      hint:"Seulement pour toi. « Auto » garde celles de l'app." }
   ], "Enregistrer", v=>{
     const m2 = Object.assign({}, USER_SETTINGS.matIcones);
     if(v.icone) m2[m.id] = v.icone; else delete m2[m.id];
-    USER_SETTINGS.matIcones = m2; saveContent();
+    const c2 = Object.assign({}, USER_SETTINGS.matCouleurs);
+    if(v.couleur) c2[m.id] = v.couleur; else delete c2[m.id];
+    USER_SETTINGS.matIcones = m2; USER_SETTINGS.matCouleurs = c2; saveContent();
     if(apres) apres();
   });
 }
@@ -6158,8 +6178,12 @@ function iconeSemestre(sem){ return sem < 1.5 ? "semence" : SEM_IC[Math.max(0, M
 // « 🌱 Dès maintenant » → « Dès maintenant » : la frise a déjà ses repères
 const sansEmoji = t=>String(t || "").replace(/^(\p{Extended_Pictographic}\ufe0f?\s*)+/u, "");
 function hmHash(t){ let h = 0; String(t).split("").forEach(c=>{ h = (h * 31 + c.charCodeAt(0)) | 0; }); return Math.abs(h); }
-function hmCouleur(subj){ return HM_COUL[hmHash(subj.id) % HM_COUL.length]; }
-const HM_HEX = { v:"var(--accent)", b:"var(--c-b)", g:"var(--c-g)", y:"var(--c-y)", r:"var(--c-r)" };
+function hmCouleur(subj){
+  const k = USER_SETTINGS.matCouleurs && USER_SETTINGS.matCouleurs[subj.id];   // la couleur choisie à la main
+  return k && HM_HEX[k] ? k : HM_COUL[hmHash(subj.id) % HM_COUL.length];
+}
+const HM_HEX = { v:"var(--accent)", b:"var(--c-b)", c:"#12a9a0", g:"var(--c-g)", y:"var(--c-y)", o:"#f26b3a", r:"var(--c-r)", t:"#a8703f" };
+const COULEURS_CHOIX = ["v","b","c","g","y","o","r","t"];
 // le semestre « en cours » : le plus avancé qui a déjà des chapitres
 function hmSemCourant(){
   let sem = 0;
@@ -6563,7 +6587,8 @@ function renderControle(){
 let MATIERE_OUVERTE = null, MT_ONGLET = "cm";
 const MT_GRAD = { v:"linear-gradient(160deg,color-mix(in srgb,var(--accent) 85%,#000),var(--accent) 50%,var(--accent-2))",
   b:"linear-gradient(160deg,#1f63d6,#3a86ff 50%,#7fb0ff)", g:"linear-gradient(160deg,#0b8a5d,#14b87e 50%,#5fd9a9)",
-  y:"linear-gradient(160deg,#e07b00,#f5a524 50%,#ffc766)", r:"linear-gradient(160deg,#d12a6b,#ff4d8d 50%,#ff8ab4)" };
+  y:"linear-gradient(160deg,#e07b00,#f5a524 50%,#ffc766)", r:"linear-gradient(160deg,#d12a6b,#ff4d8d 50%,#ff8ab4)",
+  c:"linear-gradient(160deg,#08857e,#12a9a0 50%,#5fd3cb)", o:"linear-gradient(160deg,#d24a1c,#f26b3a 50%,#ff9e74)", t:"linear-gradient(160deg,#7d4f27,#a8703f 50%,#cf9d6c)" };
 function ouvrirMatiere(id, onglet, depuis){
   const m = SUBJECTS.find(x=>x.id === id); if(!m) return;
   const reduit = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -6608,7 +6633,7 @@ function renderMatiere(){
       <div id="mt-liste"></div>
     </div>
     <div class="mt-sticky"><button type="button" class="hm-cta hm-press" id="mt-go">${ctl ? "Réviser pour " + quandCtl : "Réviser cette matière"}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></div>`;
-  document.getElementById("mt-big").addEventListener("click",()=>{ haptic(); changerIconeMatiere(m, ()=>{ const g = document.getElementById("mt-big"); if(g) g.innerHTML = iconeMatiere(m); }); });
+  document.getElementById("mt-big").addEventListener("click",()=>{ haptic(); changerIconeMatiere(m, ()=>{ SANS_ENTREE = true; ouvrirMatiere(m.id, MT_ONGLET); }); });
   document.getElementById("mt-bk").addEventListener("click",()=>{ haptic(); if(document.documentElement.dataset.mtDepuis === "subjects"){ renderSubjectCards(curSemestre); showScreen("subjects"); } else { renderSemestres(); showScreen("semestres"); } });
   document.getElementById("mt-go").addEventListener("click",()=>{
     haptic(); curSubj = m;
@@ -6760,6 +6785,8 @@ function renderSemestres(){
   // les archives (L1 et L2) ne concernent que mes cours : un autre compte voit tous ses semestres
   const estArchive = t=>isCiva() && t.sem && t.sem < 5;
   const archives = tuiles.filter(estArchive);
+  // une couleur choisie dans « Personnaliser » passe devant celle de l'app
+  tuiles.forEach(t=>{ const d = tuileDe(t.cle); if(d.couleur && HM_HEX[d.couleur]) t.el.style.setProperty("--tc", HM_HEX[d.couleur]); });
   const triees = trierTuiles(tuiles.filter(t=>!estArchive(t)));
   // regroupement par sous-titre : chaque groupe à la place de sa première tuile,
   // les semestres sans sous-titre ensemble, le Projet Psycho toujours à part
@@ -7216,12 +7243,13 @@ function personnaliserTuile(t, tuiles){
   openForm("Personnaliser", [
     { key:"titre", label:"Titre", value:cur.titre || "", placeholder:t.defaut },
     { key:"sous",  label:"Sous-titre", value:cur.sous || "", placeholder:t.sousDefaut || "ex. L3 SESS (UPEC)" },
+    { key:"couleur", label:"Couleur", type:"couleur", value:cur.couleur && HM_HEX[cur.couleur] ? cur.couleur : "", defaut:t.el ? (t.el.style.getPropertyValue("--tc") || "var(--accent)") : "var(--accent)" },
     { key:"icone", label:"Icône", type:"icone", value:(cur.icone && (UI_IC[cur.icone] || MAT_IC[cur.icone])) ? cur.icone : "", defaut:cleIcone(t.icone) || "projet" },
   ], "Enregistrer", v=>{
     USER_SETTINGS.tuiles = Object.assign({}, USER_SETTINGS.tuiles);
     // l'icône choisie dans la grille ; « Auto » (vide) garde celle de l'app
-    const n = { titre:v.titre, sous:v.sous, icone:v.icone || "" };
-    if(!n.titre && !n.sous && !n.icone) delete USER_SETTINGS.tuiles[t.cle];
+    const n = { titre:v.titre, sous:v.sous, icone:v.icone || "", couleur:v.couleur || "" };
+    if(!n.titre && !n.sous && !n.icone && !n.couleur) delete USER_SETTINGS.tuiles[t.cle];
     else USER_SETTINGS.tuiles[t.cle] = n;
     saveContent();
     renderSemestres();

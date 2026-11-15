@@ -2528,3 +2528,14 @@ html[data-mode="sombre"] :is(.aide-acc,.ans-box,.auteur,.auteur-list,.bilan,.cal
 .fs-ic.on{background:var(--accent-soft);box-shadow:inset 0 0 0 2px var(--accent);}
 button.mt-big{border:0;color:inherit;cursor:pointer;font:inherit;padding:0;}
 .cls-ic{cursor:pointer;}
+/* les trois couleurs en plus (turquoise, orange, terre), comme les cinq d'origine */
+.hm-doux-c{background:color-mix(in srgb,#12a9a0 14%,transparent);color:#12a9a0;}
+.hm-doux-o{background:color-mix(in srgb,#f26b3a 14%,transparent);color:#f26b3a;}
+.hm-doux-t{background:color-mix(in srgb,#a8703f 16%,transparent);color:#a8703f;}
+/* choisir une couleur : une rangée de pastilles */
+.fs-couleurs{display:flex;flex-wrap:wrap;gap:10px;padding:2px 2px 4px;}
+.fs-coul{width:34px;height:34px;border-radius:50%;border:0;background:var(--fc);cursor:pointer;font:800 13px var(--font-text,inherit);color:#fff;position:relative;}
+.fs-coul.on{box-shadow:0 0 0 3px var(--surface-solid),0 0 0 5px var(--fc);}
+/* la couleur d'une classe */
+.cls-row .cls-ic{background:color-mix(in srgb,var(--cc,var(--accent)) 12%,transparent);}
+.cls-row .cls-ic .ico-ui{color:var(--cc,var(--accent));}
