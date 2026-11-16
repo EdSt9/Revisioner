@@ -5304,7 +5304,7 @@ function matiereDuCours(e){
   if(choisie){ const s = SUBJECTS.find(x=>x.id === choisie); if(s) return s; }
   if(e && e.jour) return null;
   const m = String(e.title||"").match(/\b(?:ECUE|UE)\s*([0-9]+(?:\.[0-9]+)*)/i);
-  if(!m) return null;
+  if(!m) return matiereLangue(e);
   const cands = SUBJECTS.filter(x=>String(x.ecue||"").split(/\s/)[0] === m[1]);
   if(cands.length < 2) return cands[0] || null;
   // même code pour plusieurs matières : on garde celle dont le nom colle le mieux
@@ -5313,6 +5313,17 @@ function matiereDuCours(e){
   const score = x=>mots(x.title).filter(w=>titre.has(w)).length;
   const best = cands.slice().sort((a,b)=>score(b) - score(a));
   return score(best[0]) > score(best[1]) ? best[0] : null;
+}
+// « Anglais C », « Espagnol B1 »… : l'emploi du temps n'a pas le code de la matière.
+// On le relie à la matière de langue du semestre de ce cours (septembre à janvier : semestre impair, sinon pair).
+const LANGUE_RE = /\b(anglais|espagnol|allemand|italien|portugais|arabe|chinois|english|spanish|langues?|lv ?\d?)\b/;
+function matiereLangue(e){
+  if(!LANGUE_RE.test(plat(e.title || ""))) return null;
+  const cands = SUBJECTS.filter(x=>x.bilingue || /^langue/.test(plat(x.title || "")));
+  if(!cands.length) return null;
+  const an = Math.max(1, Math.ceil((hmSemCourant() || 1) / 2)), mo = (e.start || new Date()).getMonth();
+  const vise = mo >= 7 || mo === 0 ? an * 2 - 1 : an * 2;
+  return cands.slice().sort((a,b)=>Math.abs((SEMESTRES[a.id]||0) - vise) - Math.abs((SEMESTRES[b.id]||0) - vise))[0] || null;
 }
 function typeDuCours(e, sj){
   const t = String(e.title||"");
@@ -5427,7 +5438,9 @@ function openEvSheet(e, opts){
   const sel = document.getElementById("ev-subj");
   sel.innerHTML = `<option value="">Aucune</option>` +
     SUBJECTS.map(x=>`<option value="${x.id}">${esc(x.ecue)} · ${esc(x.title)}</option>`).join("");
-  sel.value = n.subj || "";
+  // la matière du cours, devinée d'après l'emploi du temps (code ECUE, ou « Anglais C » → Langue vivante)
+  const devinee = !e.jour && !n.subj ? matiereDuCours(e) : null;
+  sel.value = n.subj || (devinee ? devinee.id : "");
   document.getElementById("ev-note").value = n.note || "";
   renderEvProf(e, false);
   renderEvPartage(e, evNote(e), opts);
@@ -5569,8 +5582,10 @@ function saveEvSheet(){
   }
   const k = evKey(evEditing);
   const type = (document.querySelector("#ev-types .ev-type.active")||{}).dataset?.type || "";
-  const subj = document.getElementById("ev-subj").value;
+  let subj = document.getElementById("ev-subj").value;
+  // la matière devinée n'est pas enregistrée en plus : elle se retrouve toute seule (un cours sans rien reste neutre)
   const note = document.getElementById("ev-note").value.trim();
+  if(subj && !evEditing.jour && !type && !note){ const dv = matiereDuCours(Object.assign({}, evEditing)); if(dv && dv.id === subj && !(evNote(evEditing) || {}).subj) subj = ""; }
   // le prof : enregistré pour tous les créneaux de ce cours, seulement s'il a changé
   const champNom = document.getElementById("ev-prof-nom");
   if(champNom){
