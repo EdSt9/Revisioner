@@ -4999,8 +4999,20 @@ function echeancesDu(date){
 }
 // un jour de l'agenda : ses dates limites d'abord, puis ses cours
 function joursOn(date){ return echeancesDu(date).concat(eventsOn(date)).sort((a,b)=>a.start - b.start); }
+// le jour que l'agenda montre : en vue Jour, ce jour-là ; en vue Semaine, le lundi de la semaine affichée.
+// Sur la semaine (ou le jour) en cours : rien de particulier (null).
+function jourVuAgenda(){
+  if(!edtWeekOffset) return null;
+  const t0 = new Date(); t0.setHours(12,0,0,0);
+  const d = new Date(t0);
+  if(edtMode === "day"){ d.setDate(d.getDate() + edtWeekOffset); return d; }
+  d.setDate(d.getDate() + 7 * edtWeekOffset);
+  const l = mondayOf(d); l.setHours(12,0,0,0); return l;
+}
 function nouvelleEcheance(opts){
-  const d = new Date(); d.setDate(d.getDate() + 1);
+  const vu = opts && opts.depuisEdt ? jourVuAgenda() : null;
+  const d = vu || new Date(); if(!vu) d.setDate(d.getDate() + 1);
+  if(opts) delete opts.depuisEdt;
   const k = "jour|" + jourIso(d) + "|" + Math.random().toString(36).slice(2, 9);
   openEvSheet(echeanceEv(k), Object.assign({ type:"devoir" }, opts || {}));
 }
@@ -8855,7 +8867,11 @@ function editCoursPlanning(id, opts){
   const c = id ? p.cours.find(x=>x.id === id) : null;
   const champs = [
     { key:"titre", label:"Matière", value:c ? c.titre : "", placeholder:"Sociologie de l'éducation" },
-    { key:"jour", label:"Jour", type:"choice", value:c ? String(c.jour) : "1",
+    { key:"jour", label:"Jour", type:"choice", value:c ? String(c.jour) : (()=>{
+        // ajouté depuis la vue Jour de l'agenda : le jour de la semaine affiché (1 = lundi … 7 = dimanche)
+        if(!(opts && opts.depuisEdt) || edtMode !== "day") return "1";
+        const d = new Date(); d.setDate(d.getDate() + edtWeekOffset); return String(d.getDay() || 7);
+      })(),
       options:[1,2,3,4,5,6,7].map(j=>({ v:String(j), label:JOURS_COURTS[j].slice(0,3) })) },
     { key:"debut", label:"Début", type:"time", value:c ? c.debut : "08:30" },
     { key:"fin",   label:"Fin",   type:"time", value:c ? c.fin   : "10:30" },
@@ -10562,7 +10578,7 @@ document.getElementById("edt-add").addEventListener("click",()=>{
   openPicker("Ajouter", [
     { label:"Un devoir", sub:"Pour un jour précis, même sans cours ce jour-là", value:"devoir" },
     { label:"Un cours", sub:"Un créneau qui revient chaque semaine", value:"cours" }
-  ], v=>setTimeout(()=>{ if(v === "devoir") nouvelleEcheance(); else editCoursPlanning(null, { depuisEdt:true }); }, 320));
+  ], v=>setTimeout(()=>{ if(v === "devoir") nouvelleEcheance({ depuisEdt:true }); else editCoursPlanning(null, { depuisEdt:true }); }, 320));
 });
 document.getElementById("cal-close").addEventListener("click",()=>{ haptic(); closeCalSheet(); });
 document.getElementById("cal-add").addEventListener("click",()=>{ haptic(); editCalendar(null); });
