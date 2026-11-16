@@ -4999,8 +4999,20 @@ function echeancesDu(date){
 }
 // un jour de l'agenda : ses dates limites d'abord, puis ses cours
 function joursOn(date){ return echeancesDu(date).concat(eventsOn(date)).sort((a,b)=>a.start - b.start); }
+// le jour que l'agenda montre : en vue Jour, ce jour-là ; en vue Semaine, le lundi de la semaine affichée.
+// Sur la semaine (ou le jour) en cours : rien de particulier (null).
+function jourVuAgenda(){
+  if(!edtWeekOffset) return null;
+  const t0 = new Date(); t0.setHours(12,0,0,0);
+  const d = new Date(t0);
+  if(edtMode === "day"){ d.setDate(d.getDate() + edtWeekOffset); return d; }
+  d.setDate(d.getDate() + 7 * edtWeekOffset);
+  const l = mondayOf(d); l.setHours(12,0,0,0); return l;
+}
 function nouvelleEcheance(opts){
-  const d = new Date(); d.setDate(d.getDate() + 1);
+  const vu = opts && opts.depuisEdt ? jourVuAgenda() : null;
+  const d = vu || new Date(); if(!vu) d.setDate(d.getDate() + 1);
+  if(opts) delete opts.depuisEdt;
   const k = "jour|" + jourIso(d) + "|" + Math.random().toString(36).slice(2, 9);
   openEvSheet(echeanceEv(k), Object.assign({ type:"devoir" }, opts || {}));
 }
@@ -5304,7 +5316,7 @@ function matiereDuCours(e){
   if(choisie){ const s = SUBJECTS.find(x=>x.id === choisie); if(s) return s; }
   if(e && e.jour) return null;
   const m = String(e.title||"").match(/\b(?:ECUE|UE)\s*([0-9]+(?:\.[0-9]+)*)/i);
-  if(!m) return null;
+  if(!m) return matiereLangue(e);
   const cands = SUBJECTS.filter(x=>String(x.ecue||"").split(/\s/)[0] === m[1]);
   if(cands.length < 2) return cands[0] || null;
   // même code pour plusieurs matières : on garde celle dont le nom colle le mieux
@@ -5313,6 +5325,17 @@ function matiereDuCours(e){
   const score = x=>mots(x.title).filter(w=>titre.has(w)).length;
   const best = cands.slice().sort((a,b)=>score(b) - score(a));
   return score(best[0]) > score(best[1]) ? best[0] : null;
+}
+// « Anglais C », « Espagnol B1 »… : l'emploi du temps n'a pas le code de la matière.
+// On le relie à la matière de langue du semestre de ce cours (septembre à janvier : semestre impair, sinon pair).
+const LANGUE_RE = /\b(anglais|espagnol|allemand|italien|portugais|arabe|chinois|english|spanish|langues?|lv ?\d?)\b/;
+function matiereLangue(e){
+  if(!LANGUE_RE.test(plat(e.title || ""))) return null;
+  const cands = SUBJECTS.filter(x=>x.bilingue || /^langue/.test(plat(x.title || "")));
+  if(!cands.length) return null;
+  const an = Math.max(1, Math.ceil((hmSemCourant() || 1) / 2)), mo = (e.start || new Date()).getMonth();
+  const vise = mo >= 7 || mo === 0 ? an * 2 - 1 : an * 2;
+  return cands.slice().sort((a,b)=>Math.abs((SEMESTRES[a.id]||0) - vise) - Math.abs((SEMESTRES[b.id]||0) - vise))[0] || null;
 }
 function typeDuCours(e, sj){
   const t = String(e.title||"");
@@ -5427,7 +5450,9 @@ function openEvSheet(e, opts){
   const sel = document.getElementById("ev-subj");
   sel.innerHTML = `<option value="">Aucune</option>` +
     SUBJECTS.map(x=>`<option value="${x.id}">${esc(x.ecue)} · ${esc(x.title)}</option>`).join("");
-  sel.value = n.subj || "";
+  // la matière du cours, devinée d'après l'emploi du temps (code ECUE, ou « Anglais C » → Langue vivante)
+  const devinee = !e.jour && !n.subj ? matiereDuCours(e) : null;
+  sel.value = n.subj || (devinee ? devinee.id : "");
   document.getElementById("ev-note").value = n.note || "";
   renderEvProf(e, false);
   renderEvPartage(e, evNote(e), opts);
@@ -5569,8 +5594,10 @@ function saveEvSheet(){
   }
   const k = evKey(evEditing);
   const type = (document.querySelector("#ev-types .ev-type.active")||{}).dataset?.type || "";
-  const subj = document.getElementById("ev-subj").value;
+  let subj = document.getElementById("ev-subj").value;
+  // la matière devinée n'est pas enregistrée en plus : elle se retrouve toute seule (un cours sans rien reste neutre)
   const note = document.getElementById("ev-note").value.trim();
+  if(subj && !evEditing.jour && !type && !note){ const dv = matiereDuCours(Object.assign({}, evEditing)); if(dv && dv.id === subj && !(evNote(evEditing) || {}).subj) subj = ""; }
   // le prof : enregistré pour tous les créneaux de ce cours, seulement s'il a changé
   const champNom = document.getElementById("ev-prof-nom");
   if(champNom){
@@ -8840,7 +8867,11 @@ function editCoursPlanning(id, opts){
   const c = id ? p.cours.find(x=>x.id === id) : null;
   const champs = [
     { key:"titre", label:"Matière", value:c ? c.titre : "", placeholder:"Sociologie de l'éducation" },
-    { key:"jour", label:"Jour", type:"choice", value:c ? String(c.jour) : "1",
+    { key:"jour", label:"Jour", type:"choice", value:c ? String(c.jour) : (()=>{
+        // ajouté depuis la vue Jour de l'agenda : le jour de la semaine affiché (1 = lundi … 7 = dimanche)
+        if(!(opts && opts.depuisEdt) || edtMode !== "day") return "1";
+        const d = new Date(); d.setDate(d.getDate() + edtWeekOffset); return String(d.getDay() || 7);
+      })(),
       options:[1,2,3,4,5,6,7].map(j=>({ v:String(j), label:JOURS_COURTS[j].slice(0,3) })) },
     { key:"debut", label:"Début", type:"time", value:c ? c.debut : "08:30" },
     { key:"fin",   label:"Fin",   type:"time", value:c ? c.fin   : "10:30" },
@@ -10547,7 +10578,7 @@ document.getElementById("edt-add").addEventListener("click",()=>{
   openPicker("Ajouter", [
     { label:"Un devoir", sub:"Pour un jour précis, même sans cours ce jour-là", value:"devoir" },
     { label:"Un cours", sub:"Un créneau qui revient chaque semaine", value:"cours" }
-  ], v=>setTimeout(()=>{ if(v === "devoir") nouvelleEcheance(); else editCoursPlanning(null, { depuisEdt:true }); }, 320));
+  ], v=>setTimeout(()=>{ if(v === "devoir") nouvelleEcheance({ depuisEdt:true }); else editCoursPlanning(null, { depuisEdt:true }); }, 320));
 });
 document.getElementById("cal-close").addEventListener("click",()=>{ haptic(); closeCalSheet(); });
 document.getElementById("cal-add").addEventListener("click",()=>{ haptic(); editCalendar(null); });
