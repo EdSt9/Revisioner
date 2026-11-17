@@ -2608,7 +2608,6 @@ body.lec-on .audio-pill{display:none;}
 .nf-cat em{position:absolute;top:4px;right:6px;font-style:normal;min-width:17px;height:17px;padding:0 5px;border-radius:9px;background:var(--accent);color:#fff;font-size:10.5px;font-weight:800;display:grid;place-items:center;}
 .nf-cat.on{border-color:var(--accent);color:var(--text);}
 .nf-jour{font-size:13.5px;font-weight:800;color:var(--text-mute);margin:18px 4px 8px;}
-.nf-sep{font-size:12px;font-weight:700;color:var(--text-mute);text-align:center;margin:22px 0 0;}
 .nf-fin{font-size:13px;color:var(--text-mute);text-align:center;margin:18px 0 6px;font-weight:600;}
 .nf-fin button{border:0;background:none;color:var(--accent);font:inherit;font-weight:800;padding:4px;cursor:pointer;}
 .nf-groupe{background:var(--surface-solid);border-radius:20px;padding:0 14px;box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 8%,transparent),0 1px 3px rgba(0,0,0,.04);}
