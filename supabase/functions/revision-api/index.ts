@@ -184,9 +184,20 @@ type Notif = { title: string; body: string; tag?: string; data?: Record<string, 
 const FAMILLES_DE_JOUR = ["cours", "devoirs", "classe"];
 const laNuit = () => { const h = aParis().heure; return h >= 22 || h < 8; };
 
+// L'historique : chaque notification est aussi écrite, pour la retrouver dans l'app
+// (même balayée, même coupée dans les réglages, même reçue la nuit). Pas l'essai.
+async function noterHistorique(cibles: string[], famille: string, n: Notif) {
+  if (famille === "test" || !cibles.length) return;
+  const rows = cibles.map((p) => ({ pseudo: p, famille, title: n.title, body: n.body, data: n.data ?? {} }));
+  const r = await db("notif_log", { method: "POST", body: JSON.stringify(rows) });
+  if (!r.ok) console.error("notif_log", await r.text());
+}
+
 async function notifier(pseudos: string[], famille: string, n: Notif, surDemande = false, maintenant = false) {
   const cibles = [...new Set(pseudos.filter(Boolean))];
   if (!cibles.length) return;
+  // « maintenant » : un envoi qui avait attendu la nuit, déjà noté à son arrivée
+  if (!maintenant) await noterHistorique(cibles, famille, n);
   if (!maintenant && FAMILLES_DE_JOUR.includes(famille) && laNuit()) {
     const r = await db("push_attente", { method: "POST", body: JSON.stringify({ pseudos: cibles, famille, notif: n }) });
     if (r.ok) return;
@@ -380,6 +391,8 @@ async function envoyerRappels(force: boolean, aBlanc: boolean) {
       body: JSON.stringify({ key: "rappels_dernier", value: ici.iso }),
     });
   }
+  // l'historique garde 60 jours
+  await db(`notif_log?created_at=lt.${encodeURIComponent(new Date(Date.now() - 60 * 86400000).toISOString())}`, { method: "DELETE" });
   const r1 = await db("push_subs?select=pseudo");
   const pseudos = [...new Set((r1.ok ? await r1.json() : []).map((s: { pseudo: string }) => s.pseudo))];
   if (!pseudos.length) return { ok: true, envoyes: 0 };
@@ -596,6 +609,20 @@ Deno.serve(async (req) => {
         method: "PATCH",
         body: JSON.stringify({ prefs, updated_at: new Date().toISOString() }),
       });
+      return json({ ok: true });
+    }
+
+    // L'historique de mes notifications (les 200 dernières), et les marquer comme lues.
+    if (action === "notif_list") {
+      const r = await db(`notif_log?pseudo=eq.${encodeURIComponent(pseudo)}&select=id,famille,title,body,data,lu,created_at&order=created_at.desc&limit=200`);
+      return json({ ok: true, items: r.ok ? await r.json() : [] });
+    }
+    if (action === "notif_lu") {
+      const ids = Array.isArray(body.ids) ? (body.ids as unknown[]).map(Number).filter((x) => Number.isFinite(x)).slice(0, 500) : [];
+      const lu = body.lu !== false;
+      const filtre = body.tout === true ? "" : ids.length ? `&id=in.(${ids.join(",")})` : null;
+      if (filtre === null) return json({ ok: true });
+      await db(`notif_log?pseudo=eq.${encodeURIComponent(pseudo)}${filtre}`, { method: "PATCH", body: JSON.stringify({ lu }) });
       return json({ ok: true });
     }
 

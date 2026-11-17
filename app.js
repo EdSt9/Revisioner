@@ -3855,7 +3855,7 @@ function poserHdPsycho(){
   if(pi && window.MutationObserver) new MutationObserver(()=>{ poserEntete(document.getElementById("screen-psycho")); poserHdPsycho(); }).observe(pi, { childList:true });
 })();
 // à quelle profondeur est chaque écran : sert à savoir si on avance ou si on revient
-const PROFONDEUR = { login:0, pick:0, welcome:0, semestres:0, semchoice:1, edt:1, classes:1, search:1, mesdevoirs:1, sites:1, index:2, planning:1, psycho:1,
+const PROFONDEUR = { login:0, pick:0, welcome:0, semestres:0, semchoice:1, notifs:1, edt:1, classes:1, search:1, mesdevoirs:1, sites:1, index:2, planning:1, psycho:1,
   class:2, shared:3, subjects:2, matiere:2.5, controle:2.6, split:3, qcmchoix:4, lexique:4, synthese:4, auteurs:4, devoirs:4, session:5 };
 function profondeurEcran(id){ return PROFONDEUR[id] ?? 2; }
 let CALME_T = null, SANS_ENTREE = false;
@@ -4916,6 +4916,7 @@ function parseICS(txt){
     else if(key === "SUMMARY") cur.title = icsText(val);
     else if(key === "LOCATION")cur.place = icsText(val);
     else if(key === "DESCRIPTION") cur.desc = icsText(val);
+    else if(key === "UID")     cur.uid = val.trim();
   });
   return out.filter(e=>e.start).sort((a,b)=>a.start-b.start);
 }
@@ -5001,6 +5002,7 @@ async function loadEDT(force){
     }).sort((a,b)=>a.start - b.start);
     edtDiag += " | total lus:" + EDT.length;
     edtState = "ok";
+    try{ comparerEDT(theme); }catch(e){}
     try{
       if(EDT.length) localStorage.setItem(EDT_CACHE_KEY, JSON.stringify({
         theme, at: Date.now(),
@@ -5021,6 +5023,146 @@ async function loadEDT(force){
   }
 }
 
+// ── Les changements de l'emploi du temps : cours annulés, déplacés, salle changée ──
+// On compare la version gardée et celle qui arrive, sur les trois semaines à venir.
+// Ce qui change est écrit dans l'historique des notifications (sur ce téléphone).
+function comparerEDT(theme){
+  let avant = null;
+  try{ const c = JSON.parse(localStorage.getItem(EDT_CACHE_KEY) || "null"); if(c && c.theme === theme) avant = c.events || null; }catch(e){}
+  if(!avant || !avant.length || !EDT.length) return;
+  const maint = Date.now(), fin = maint + 21 * 86400000;
+  const dansFenetre = t => t > maint && t < fin;
+  // la nouvelle version doit couvrir la période, sinon un calendrier en panne ferait « annuler » tout
+  const finNouveau = EDT[EDT.length - 1].start.getTime();
+  const cle = e => e.uid || (e.title + "@" + new Date(e.start).toISOString());
+  const nouveaux = new Map(EDT.map(e=>[cle(e), e]));
+  const anciens = new Map(avant.map(e=>[cle(e), e]));
+  const quand = d => { d = new Date(d); return JOURS[d.getDay()].toLowerCase() + " " + d.getDate() + " " + MOIS[d.getMonth()] + " à " + hhmm(d); };
+  const ajouts = [];
+  avant.forEach(a=>{
+    const t = new Date(a.start).getTime();
+    if(!dansFenetre(t) || t > finNouveau) return;
+    const n = nouveaux.get(cle(a)), nom = nomCourt(a.title || "Cours");
+    if(!n){
+      // le même cours ailleurs dans la semaine : déplacé, sinon annulé
+      const ailleurs = EDT.find(x=>x.title === a.title && !anciens.has(cle(x)) && Math.abs(x.start - t) < 7 * 86400000);
+      if(ailleurs) ajouts.push({ titre:"Cours déplacé · " + nom, texte:"Prévu " + quand(t) + ", maintenant " + quand(ailleurs.start) + ".", date:ailleurs.start });
+      else ajouts.push({ titre:"Cours annulé · " + nom, texte:"Il était prévu " + quand(t) + (a.place ? ", " + a.place : "") + ".", date:t });
+      return;
+    }
+    if(n.start.getTime() !== t) ajouts.push({ titre:"Cours déplacé · " + nom, texte:"Prévu " + quand(t) + ", maintenant " + quand(n.start) + ".", date:n.start });
+    else if((a.place || "") !== (n.place || "") && n.place) ajouts.push({ titre:"Salle changée · " + nom, texte:quand(t) + " : " + n.place + (a.place ? " (au lieu de " + a.place + ")" : "") + ".", date:t });
+  });
+  // un cours ajouté dans les deux semaines (rattrapage…)
+  EDT.forEach(n=>{
+    const t = n.start.getTime();
+    if(t > maint && t < maint + 14 * 86400000 && !anciens.has(cle(n)) && !avant.some(a=>a.title === n.title && Math.abs(new Date(a.start) - t) < 7 * 86400000))
+      ajouts.push({ titre:"Nouveau cours · " + nomCourt(n.title || "Cours"), texte:quand(t) + (n.place ? ", " + n.place : "") + ".", date:t });
+  });
+  ajouts.forEach(x=>notifLocale("edt", x.titre, x.texte, { type:"edt", date:new Date(x.date).toISOString() }));
+}
+// ── L'historique des notifications ──
+// Celles envoyées par le serveur (cours, devoirs, classes, rappels, projets) + celles vues sur ce téléphone (emploi du temps).
+const NOTIFS_LOCALES_CLE = "revision_notifs_locales_v1";
+function notifsLocales(){ try{ const a = JSON.parse(localStorage.getItem(NOTIFS_LOCALES_CLE) || "[]"); return Array.isArray(a) ? a : []; }catch(e){ return []; } }
+function notifsLocalesSauver(a){ try{ localStorage.setItem(NOTIFS_LOCALES_CLE, JSON.stringify(a.slice(0, 200))); }catch(e){} }
+function notifLocale(famille, title, body, data){
+  const a = notifsLocales();
+  // pas deux fois le même changement
+  if(a.some(x=>x.title === title && x.body === body)) return;
+  a.unshift({ id:"l" + Date.now() + Math.random().toString(36).slice(2, 6), famille, title, body, data:data || {}, lu:false, created_at:new Date().toISOString(), local:true });
+  notifsLocalesSauver(a.filter(x=>Date.now() - new Date(x.created_at) < 60 * 86400000));
+  majPastilleNotifs();
+}
+let NOTIFS_SERVEUR = null;   // dernière liste reçue du serveur
+async function chargerNotifs(){
+  if(!syncOn || !PSEUDO) return NOTIFS_SERVEUR || [];
+  try{ NOTIFS_SERVEUR = (await api("notif_list")).items || []; }catch(e){}
+  return NOTIFS_SERVEUR || [];
+}
+function toutesNotifs(){
+  return [...(NOTIFS_SERVEUR || []), ...notifsLocales()].sort((a,b)=>new Date(b.created_at) - new Date(a.created_at));
+}
+const NOTIF_CAT = [
+  { k:"tout",    nom:"Tout" },
+  { k:"edt",     nom:"Emploi du temps", fam:["edt"], ic:"calendrier" },
+  { k:"devoirs", nom:"Devoirs",  fam:["devoirs","rappels","semaine"], ic:"etapes" },
+  { k:"cours",   nom:"Cours",    fam:["cours"], ic:"livre" },
+  { k:"classe",  nom:"Classes",  fam:["classe"], ic:"grp" },
+  { k:"projets", nom:"Projets",  fam:["projets"], ic:"projet" }
+];
+function catDe(n){ return (NOTIF_CAT.find(c=>c.fam && c.fam.includes(n.famille)) || { k:"autre", ic:"reveil" }); }
+let NOTIF_FILTRE = { cat:"tout", lu:"tout" };
+function majPastilleNotifs(){
+  const b = document.getElementById("btn-notifs"); if(!b) return;
+  const n = toutesNotifs().filter(x=>!x.lu).length;
+  let p = b.querySelector(".nb");
+  if(!n){ if(p) p.remove(); return; }
+  if(!p){ p = el("span","nb"); b.appendChild(p); }
+  p.textContent = n > 99 ? "99+" : n;
+}
+async function marquerNotifs(liste, lu){
+  const serveur = liste.filter(x=>!x.local).map(x=>x.id), loc = new Set(liste.filter(x=>x.local).map(x=>x.id));
+  liste.forEach(x=>{ x.lu = lu; });
+  if(loc.size){ const a = notifsLocales(); a.forEach(x=>{ if(loc.has(x.id)) x.lu = lu; }); notifsLocalesSauver(a); }
+  majPastilleNotifs();
+  if(serveur.length && syncOn) try{ await api("notif_lu", { ids:serveur, lu }); }catch(e){}
+}
+async function openNotifs(){
+  showScreen("notifs"); window.scrollTo(0, 0);
+  renderNotifs();
+  await chargerNotifs();
+  renderNotifs();
+}
+function renderNotifs(){
+  const box = document.getElementById("notifs-liste"); if(!box) return;
+  const tout = toutesNotifs();
+  const ici = tout.filter(n=>(NOTIF_FILTRE.cat === "tout" || catDe(n).k === NOTIF_FILTRE.cat) && (NOTIF_FILTRE.lu === "tout" || (NOTIF_FILTRE.lu === "nonlu") === !n.lu));
+  const nonLus = tout.filter(n=>!n.lu);
+  // les filtres : catégorie, puis lu / non lu
+  const f = document.getElementById("notifs-filtres");
+  f.innerHTML = `<div class="nf-cats">${NOTIF_CAT.map(c=>{
+      const nb = (c.k === "tout" ? nonLus : nonLus.filter(n=>catDe(n).k === c.k)).length;
+      return `<button type="button" class="nf-cat${NOTIF_FILTRE.cat === c.k ? " on" : ""}" data-cat="${c.k}">${esc(c.nom)}${nb ? `<span>${nb}</span>` : ""}</button>`; }).join("")}</div>
+    <div class="seg nf-lu">${[["tout","Toutes"],["nonlu","Non lues"],["lu","Lues"]].map(([k,t])=>`<button type="button" class="seg-opt${NOTIF_FILTRE.lu === k ? " active" : ""}" data-lu="${k}">${t}</button>`).join("")}</div>`;
+  f.querySelectorAll(".nf-cat").forEach(b=>b.addEventListener("click",()=>{ haptic(); NOTIF_FILTRE.cat = b.dataset.cat; renderNotifs(); }));
+  f.querySelectorAll(".nf-lu .seg-opt").forEach(b=>b.addEventListener("click",()=>{ haptic(); NOTIF_FILTRE.lu = b.dataset.lu; renderNotifs(); }));
+  const tl = document.getElementById("notifs-tout-lu");
+  const aLire = ici.filter(n=>!n.lu);
+  tl.hidden = !aLire.length;
+  tl.onclick = ()=>{ haptic(); marquerNotifs(aLire, true); renderNotifs(); };
+  box.innerHTML = "";
+  if(!ici.length){
+    box.innerHTML = vide("cloche", tout.length ? "Rien ici" : "Aucune notification pour l'instant",
+      tout.length ? "Change de filtre pour voir les autres." : "Les cours publiés, les devoirs, les rappels et les changements de l'emploi du temps s'afficheront ici, même si tu as balayé la notification.");
+    return;
+  }
+  // groupées par jour
+  let jour = "", carte = null;
+  ici.forEach(n=>{
+    const d = new Date(n.created_at), j = d.toDateString();
+    if(j !== jour){
+      jour = j;
+      const auj = new Date().toDateString(), hier = new Date(Date.now() - 86400000).toDateString();
+      const t = el("div","av-semaine"); t.textContent = j === auj ? "Aujourd'hui" : j === hier ? "Hier" : JOURS[d.getDay()] + " " + d.getDate() + " " + MOIS[d.getMonth()];
+      box.appendChild(t);
+      carte = el("div","nf-groupe"); box.appendChild(carte);
+    }
+    const c = catDe(n);
+    const r = el("button","nf-row" + (n.lu ? " lu" : "")); r.type = "button";
+    r.innerHTML = `<span class="nf-ic nf-${c.k}">${icone(c.ic)}</span><span class="nf-t"><b>${esc(n.title || "Révisioner")}</b><small>${esc(n.body || "")}</small><em>${hhmm(d)}</em></span>${n.lu ? "" : '<i class="nf-pt" aria-label="non lue"></i>'}`;
+    r.addEventListener("click",()=>{
+      haptic();
+      if(!n.lu) marquerNotifs([n], true);
+      const data = n.data || {};
+      if(data.type === "edt"){ openEDTAt(new Date(data.date || n.created_at)); return; }
+      if(data.type) ouvrirDepuisNotif(data); else renderNotifs();
+    });
+    // appui long : remettre en non lue
+    onLongPress(r, ()=>{ marquerNotifs([n], !n.lu); renderNotifs(); toast(n.lu ? "Marquée comme lue." : "Marquée comme non lue."); });
+    carte.appendChild(r);
+  });
+}
 // ── Helpers de dates ──
 function sameDay(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
 // ══════════════════════════════════════════════════
@@ -7209,6 +7351,7 @@ if("serviceWorker" in navigator){
 // Appelé une fois connecté au serveur : remet l'abonnement à jour, ouvre la page d'une notification touchée
 function apresConnexionServeur(){
   notifResync();
+  chargerNotifs().then(majPastilleNotifs);
   if(NOTIF_A_OUVRIR){ const d = NOTIF_A_OUVRIR; NOTIF_A_OUVRIR = null; ouvrirDepuisNotif(d); }
 }
 
@@ -7878,6 +8021,7 @@ const P = {
   accueil:'<path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-5h4v5"/>',
   semestres:'<path d="M12 3l9 4.5-9 4.5-9-4.5z"/><path d="M3 12l9 4.5 9-4.5"/><path d="M3 16.5L12 21l9-4.5"/>',
   reprendre:'<path d="M7 3h10v18l-5-4-5 4z"/>',
+  cloche:'<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
   lien:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.2 1.2"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.2-1.2"/>',
   presse:'<rect x="6" y="4" width="12" height="17" rx="2.5"/><path d="M9 4.5V3h6v1.5"/><path d="M9.5 11h5M9.5 15h5"/>',
   examen:'<path d="M2.5 9L12 4.5 21.5 9 12 13.5z"/><path d="M6.5 11v5c2.5 2.5 8.5 2.5 11 0v-5"/><path d="M21.5 9v5"/>',
@@ -10925,7 +11069,7 @@ async function refreshPartage(){
   if(scr === "class" && curClass) openClass(curClass);
   else if(scr === "classes") openClasses();
 }
-document.addEventListener("visibilitychange",()=>{ if(!document.hidden) refreshPartage(); });
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ refreshPartage(); chargerNotifs().then(()=>{ majPastilleNotifs(); if(document.documentElement.getAttribute("data-screen") === "notifs") renderNotifs(); }); } });
 window.addEventListener("focus", refreshPartage);
 
 function ouvrirMesDevoirs(){
@@ -11080,6 +11224,8 @@ onSwipe(document.getElementById("screen-edt"), {
   onRight: ()=>{ haptic(); edtWeekOffset--; renderEDT(); },
 });
 // en vue Jour, openEDT doit viser le bon jour
+document.getElementById("btn-notifs").addEventListener("click",()=>{ haptic(); openNotifs(); });
+document.getElementById("btn-notifs-back").addEventListener("click",()=>{ haptic(); renderSemestres(); showScreen("semestres"); });
 document.getElementById("btn-search-back").addEventListener("click",()=>{
   if(rechercheDepuis === "split" && curSubj){ showScreen("split"); setTab(curTab); }
   else { renderSemestres(); showScreen("semestres"); }
@@ -11731,4 +11877,22 @@ function restaurerPage(o){
   loadEDT().then(()=>renderTodayCourses());
   // l'index des auteurs et des notions se prépare tranquillement, pour être prêt quand on ouvre un cours
   setTimeout(()=>{ if(SUBJECTS.length) indexEnFond(); }, 2500);
+})();
+
+// ── iPhone : après la fermeture du clavier, Safari laisse parfois la barre du bas
+// à mi-hauteur (là où était le clavier), jusqu'au prochain défilement. On la remet en place.
+(function(){
+  const recaler = ()=>{
+    const tb = document.getElementById("tabbar"); if(!tb) return;
+    window.scrollTo(window.scrollX, window.scrollY);          // Safari recalcule la zone visible
+    tb.style.transform = "translateZ(0)"; void tb.offsetHeight; tb.style.transform = "";
+  };
+  document.addEventListener("focusout", e=>{
+    if(e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) [60, 300, 700].forEach(ms=>setTimeout(recaler, ms));
+  });
+  if(window.visualViewport){
+    let h = visualViewport.height;
+    visualViewport.addEventListener("resize", ()=>{ if(visualViewport.height > h + 80) setTimeout(recaler, 50); h = visualViewport.height; });
+  }
+  document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) setTimeout(recaler, 120); });
 })();

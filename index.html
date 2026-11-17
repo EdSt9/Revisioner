@@ -96,6 +96,9 @@
       <div class="hm-row">
         <div class="hm-qui"><div class="hm-date" id="hm-date"></div><div class="hm-hello" id="hm-hello"></div></div>
         <div class="hm-btns" id="hm-btns">
+    <button class="icon-btn" id="btn-notifs" aria-label="Mes notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>
+      </button>
     <button class="icon-btn" id="btn-search" aria-label="Rechercher">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
       </button>
@@ -375,6 +378,13 @@
       <button class="search-clear" id="search-clear" aria-label="Effacer">✕</button>
     </div>
     <div id="search-results"></div>
+  </div>
+</div>
+
+<div id="screen-notifs" class="screen a-entete hd-on"><div class="split-head page-head"><div class="head-row"></div></div>
+  <div class="hd-onglet hd-page"><div class="hd-row"><button class="back-btn" id="btn-notifs-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>Retour</button><div class="hd-titres"><h1 class="page-title hd-t">Notifications</h1></div><div class="hd-act"><button class="icon-btn" id="notifs-tout-lu" aria-label="Tout marquer comme lu" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l4 4 7-8"/><path d="M11 16l1.5 1.5L21 9"/></svg></button></div></div><div class="hd-plus"><p class="page-sub hd-sous">Tout ce qui t'a été envoyé, même balayé.</p></div></div><div class="wrap">
+    <div id="notifs-filtres"></div>
+    <div id="notifs-liste"></div>
   </div>
 </div>
 
