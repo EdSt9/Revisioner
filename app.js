@@ -5081,18 +5081,18 @@ async function chargerNotifs(){
   return NOTIFS_SERVEUR || [];
 }
 function toutesNotifs(){
-  return [...(NOTIFS_SERVEUR || []), ...notifsLocales()].sort((a,b)=>new Date(b.created_at) - new Date(a.created_at));
+  return [...(NOTIFS_SERVEUR || []), ...notifsLocales()].sort((a,b)=>(!!a.ancien - !!b.ancien) || (new Date(b.created_at) - new Date(a.created_at)));
 }
 const NOTIF_CAT = [
-  { k:"tout",    nom:"Tout" },
-  { k:"edt",     nom:"Emploi du temps", fam:["edt"], ic:"calendrier" },
+  { k:"tout",    nom:"Tout", ic:"cloche" },
+  { k:"edt",     nom:"Horaires", fam:["edt"], ic:"calendrier" },
   { k:"devoirs", nom:"Devoirs",  fam:["devoirs","rappels","semaine"], ic:"etapes" },
   { k:"cours",   nom:"Cours",    fam:["cours"], ic:"livre" },
-  { k:"classe",  nom:"Classes",  fam:["classe"], ic:"grp" },
+  { k:"classe",  nom:"Classe",   fam:["classe"], ic:"membres" },
   { k:"projets", nom:"Projets",  fam:["projets"], ic:"projet" }
 ];
 function catDe(n){ return (NOTIF_CAT.find(c=>c.fam && c.fam.includes(n.famille)) || { k:"autre", ic:"reveil" }); }
-let NOTIF_FILTRE = { cat:"tout", lu:"tout" };
+let NOTIF_FILTRE = { cat:"tout", lu:null };   // lu : "nonlu" | "tout" ; null = choisi à l'ouverture
 function majPastilleNotifs(){
   const b = document.getElementById("btn-notifs"); if(!b) return;
   const n = toutesNotifs().filter(x=>!x.lu).length;
@@ -5102,6 +5102,7 @@ function majPastilleNotifs(){
   p.textContent = n > 99 ? "99+" : n;
 }
 async function marquerNotifs(liste, lu){
+  liste = liste.filter(x=>!x.ancien);
   const serveur = liste.filter(x=>!x.local).map(x=>x.id), loc = new Set(liste.filter(x=>x.local).map(x=>x.id));
   liste.forEach(x=>{ x.lu = lu; });
   if(loc.size){ const a = notifsLocales(); a.forEach(x=>{ if(loc.has(x.id)) x.lu = lu; }); notifsLocalesSauver(a); }
@@ -5109,6 +5110,8 @@ async function marquerNotifs(liste, lu){
   if(serveur.length && syncOn) try{ await api("notif_lu", { ids:serveur, lu }); }catch(e){}
 }
 async function openNotifs(){
+  // à l'ouverture : les non lues s'il y en a, sinon tout
+  NOTIF_FILTRE = { cat:"tout", lu:null };
   showScreen("notifs"); window.scrollTo(0, 0);
   renderNotifs();
   await chargerNotifs();
@@ -5117,40 +5120,58 @@ async function openNotifs(){
 function renderNotifs(){
   const box = document.getElementById("notifs-liste"); if(!box) return;
   const tout = toutesNotifs();
-  const ici = tout.filter(n=>(NOTIF_FILTRE.cat === "tout" || catDe(n).k === NOTIF_FILTRE.cat) && (NOTIF_FILTRE.lu === "tout" || (NOTIF_FILTRE.lu === "nonlu") === !n.lu));
   const nonLus = tout.filter(n=>!n.lu);
-  // les filtres : catégorie, puis lu / non lu
+  if(!NOTIF_FILTRE.lu) NOTIF_FILTRE.lu = nonLus.length ? "nonlu" : "tout";
+  const ici = tout.filter(n=>(NOTIF_FILTRE.cat === "tout" || catDe(n).k === NOTIF_FILTRE.cat) && (NOTIF_FILTRE.lu === "tout" || !n.lu));
+  // en haut : non lues ou toutes
+  const seg = document.getElementById("notifs-seg");
+  seg.innerHTML = [["nonlu","Non lues"],["tout","Toutes"]].map(([k,t])=>`<button type="button" class="${NOTIF_FILTRE.lu === k ? "on" : ""}" data-lu="${k}">${t}</button>`).join("");
+  seg.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{ haptic(); NOTIF_FILTRE.lu = b.dataset.lu; renderNotifs(); }));
+  // dessous : une tuile par catégorie, avec ses non lues (Projets seulement s'il y en a)
   const f = document.getElementById("notifs-filtres");
-  f.innerHTML = `<div class="nf-cats">${NOTIF_CAT.map(c=>{
+  const cats = NOTIF_CAT.filter(c=>c.k !== "projets" || tout.some(n=>catDe(n).k === "projets"));
+  f.innerHTML = `<div class="nf-cats">${cats.map(c=>{
       const nb = (c.k === "tout" ? nonLus : nonLus.filter(n=>catDe(n).k === c.k)).length;
-      return `<button type="button" class="nf-cat${NOTIF_FILTRE.cat === c.k ? " on" : ""}" data-cat="${c.k}">${esc(c.nom)}${nb ? `<span>${nb}</span>` : ""}</button>`; }).join("")}</div>
-    <div class="seg nf-lu">${[["tout","Toutes"],["nonlu","Non lues"],["lu","Lues"]].map(([k,t])=>`<button type="button" class="seg-opt${NOTIF_FILTRE.lu === k ? " active" : ""}" data-lu="${k}">${t}</button>`).join("")}</div>`;
+      return `<button type="button" class="nf-cat${NOTIF_FILTRE.cat === c.k ? " on" : ""}" data-cat="${c.k}"><span class="nf-ic nf-${c.k}">${icone(c.ic)}</span><span class="nf-cat-n">${esc(c.nom)}</span>${nb ? `<em>${nb > 99 ? "99+" : nb}</em>` : ""}</button>`; }).join("")}</div>`;
   f.querySelectorAll(".nf-cat").forEach(b=>b.addEventListener("click",()=>{ haptic(); NOTIF_FILTRE.cat = b.dataset.cat; renderNotifs(); }));
-  f.querySelectorAll(".nf-lu .seg-opt").forEach(b=>b.addEventListener("click",()=>{ haptic(); NOTIF_FILTRE.lu = b.dataset.lu; renderNotifs(); }));
   const tl = document.getElementById("notifs-tout-lu");
   const aLire = ici.filter(n=>!n.lu);
   tl.hidden = !aLire.length;
   tl.onclick = ()=>{ haptic(); marquerNotifs(aLire, true); renderNotifs(); };
   box.innerHTML = "";
+  const voirToutes = ()=>{
+    const p = el("p","nf-fin");
+    p.innerHTML = `Tout le reste est lu · <button type="button">Voir toutes</button>`;
+    p.querySelector("button").addEventListener("click",()=>{ haptic(); NOTIF_FILTRE.lu = "tout"; renderNotifs(); });
+    box.appendChild(p);
+  };
   if(!ici.length){
+    if(NOTIF_FILTRE.lu === "nonlu" && tout.length){
+      box.innerHTML = vide("cloche", "Tout est lu", "Rien de nouveau ici.");
+      voirToutes(); return;
+    }
     box.innerHTML = vide("cloche", tout.length ? "Rien ici" : "Aucune notification pour l'instant",
-      tout.length ? "Change de filtre pour voir les autres." : "Les cours publiés, les devoirs, les rappels et les changements de l'emploi du temps s'afficheront ici, même si tu as balayé la notification.");
+      tout.length ? "Choisis une autre catégorie pour voir les autres." : "Les cours publiés, les devoirs, les rappels et les changements de l'emploi du temps s'afficheront ici, même si tu as balayé la notification.");
     return;
   }
-  // groupées par jour
-  let jour = "", carte = null;
+  // groupées par jour ; les anciennes (retrouvées dans les classes) à part, à la fin
+  let jour = "", carte = null, separe = false;
   ici.forEach(n=>{
     const d = new Date(n.created_at), j = d.toDateString();
+    if(n.ancien && !separe){
+      separe = true; jour = "";
+      const s = el("p","nf-sep"); s.textContent = "Avant : retrouvé dans tes classes"; box.appendChild(s);
+    }
     if(j !== jour){
       jour = j;
       const auj = new Date().toDateString(), hier = new Date(Date.now() - 86400000).toDateString();
-      const t = el("div","av-semaine"); t.textContent = j === auj ? "Aujourd'hui" : j === hier ? "Hier" : JOURS[d.getDay()] + " " + d.getDate() + " " + MOIS[d.getMonth()];
+      const t = el("div","nf-jour"); t.textContent = j === auj ? "Aujourd'hui" : j === hier ? "Hier" : JOURS[d.getDay()] + " " + d.getDate() + " " + MOIS[d.getMonth()];
       box.appendChild(t);
       carte = el("div","nf-groupe"); box.appendChild(carte);
     }
     const c = catDe(n);
     const r = el("button","nf-row" + (n.lu ? " lu" : "")); r.type = "button";
-    r.innerHTML = `<span class="nf-ic nf-${c.k}">${icone(c.ic)}</span><span class="nf-t"><b>${esc(n.title || "Révisioner")}</b><small>${esc(n.body || "")}</small><em>${hhmm(d)}</em></span>${n.lu ? "" : '<i class="nf-pt" aria-label="non lue"></i>'}`;
+    r.innerHTML = `<span class="nf-ic nf-${c.k}">${icone(c.ic)}</span><span class="nf-t"><b>${esc(n.title || "Révisioner")}</b><small>${esc(n.body || "")}</small></span><span class="nf-h">${hhmm(d)}</span>${n.lu ? "" : '<i class="nf-pt" aria-label="non lue"></i>'}`;
     r.addEventListener("click",()=>{
       haptic();
       if(!n.lu) marquerNotifs([n], true);
@@ -5158,10 +5179,11 @@ function renderNotifs(){
       if(data.type === "edt"){ openEDTAt(new Date(data.date || n.created_at)); return; }
       if(data.type) ouvrirDepuisNotif(data); else renderNotifs();
     });
-    // appui long : remettre en non lue
-    onLongPress(r, ()=>{ marquerNotifs([n], !n.lu); renderNotifs(); toast(n.lu ? "Marquée comme lue." : "Marquée comme non lue."); });
+    // appui long : lue / non lue
+    if(!n.ancien) onLongPress(r, ()=>{ marquerNotifs([n], !n.lu); renderNotifs(); toast(n.lu ? "Marquée comme lue." : "Marquée comme non lue."); });
     carte.appendChild(r);
   });
+  if(NOTIF_FILTRE.lu === "nonlu" && tout.some(n=>n.lu)) voirToutes();
 }
 // ── Helpers de dates ──
 function sameDay(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
@@ -6452,6 +6474,9 @@ function changerIconeMatiere(m, apres){
 // Les emojis encore écrits dans les données passent par EMO_IC ; un emoji choisi à la main reste affiché tel quel.
 const UI_IC = {"graine": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M3.5 19.5h17v2h-17z\"/><ellipse fill=\"currentColor\" stroke=\"none\" opacity=\".22\" cx=\"12\" cy=\"16\" rx=\"3.2\" ry=\"2.3\"/><path d=\"M3.5 19.5h17\"/><ellipse cx=\"12\" cy=\"16\" rx=\"3.2\" ry=\"2.3\"/><path d=\"M12 13.7v-2.2c0-1.4 1-2.4 2.5-2.4\"/>", "pousse": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 14c-3.2 0-5.5-2.2-5.5-5.5 3.2 0 5.5 2.2 5.5 5.5zM12 11.5c0-3 2-5 5.2-5 0 3-2 5-5.2 5z\"/><path d=\"M3.5 20.5h17M12 20.5v-9M12 14c-3.2 0-5.5-2.2-5.5-5.5 3.2 0 5.5 2.2 5.5 5.5zM12 11.5c0-3 2-5 5.2-5 0 3-2 5-5.2 5z\"/>", "plante": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 16c-3.2 0-5.3-2-5.3-5 3.2 0 5.3 2 5.3 5zM12 12.5c0-3 2-5 5.2-5 0 3-2 5-5.2 5zM12 8.5c-2 0-3.3-1.3-3.3-3.3 2 0 3.3 1.3 3.3 3.3z\"/><path d=\"M3.5 20.5h17M12 20.5V5.5M12 16c-3.2 0-5.3-2-5.3-5 3.2 0 5.3 2 5.3 5zM12 12.5c0-3 2-5 5.2-5 0 3-2 5-5.2 5zM12 8.5c-2 0-3.3-1.3-3.3-3.3 2 0 3.3 1.3 3.3 3.3z\"/>", "arbuste": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M5.5 17.5a3 3 0 0 1 .8-5.9 4 4 0 0 1 7.5-1.6 3.3 3.3 0 0 1 5 2.9 2.4 2.4 0 0 1-.6 4.6z\"/><path d=\"M5.5 17.5a3 3 0 0 1 .8-5.9 4 4 0 0 1 7.5-1.6 3.3 3.3 0 0 1 5 2.9 2.4 2.4 0 0 1-.6 4.6zM3.5 21h17M9.5 17.5V21M14.5 17.5V21\"/>", "arbre": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 3a4.5 4.5 0 0 1 4.4 3.5 3.7 3.7 0 0 1 .6 7.3H7a3.7 3.7 0 0 1 .6-7.3A4.5 4.5 0 0 1 12 3z\"/><path d=\"M12 3a4.5 4.5 0 0 1 4.4 3.5 3.7 3.7 0 0 1 .6 7.3H7a3.7 3.7 0 0 1 .6-7.3A4.5 4.5 0 0 1 12 3zM12 21v-7.2M12 17.5l-2.5-2.2M12 16l2.3-2.2M8 21h8\"/>", "fleuri": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 3a4.5 4.5 0 0 1 4.4 3.5 3.7 3.7 0 0 1 .6 7.3H7a3.7 3.7 0 0 1 .6-7.3A4.5 4.5 0 0 1 12 3z\"/><path d=\"M12 3a4.5 4.5 0 0 1 4.4 3.5 3.7 3.7 0 0 1 .6 7.3H7a3.7 3.7 0 0 1 .6-7.3A4.5 4.5 0 0 1 12 3zM12 21v-7.2M8 21h8\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"9.6\" cy=\"9.2\" r=\"1.25\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"14.3\" cy=\"8.2\" r=\"1.25\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"12.6\" cy=\"11.6\" r=\"1.25\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"8.6\" cy=\"12\" r=\".9\"/>", "tetecoeur": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M5 11a7 7 0 1 1 11 5.7V21H9v-2.5H7a2 2 0 0 1-2-2v-2l-1.5-.6L5 11z\"/><path d=\"M5 11a7 7 0 1 1 11 5.7V21M9 21v-2.5H7a2 2 0 0 1-2-2v-2l-1.5-.6L5 11\"/><path fill=\"currentColor\" stroke=\"none\" d=\"M12.3 12.6s-3-1.9-3-3.8a1.6 1.6 0 0 1 3-.9 1.6 1.6 0 0 1 3 .9c0 1.9-3 3.8-3 3.8z\"/>", "ecole": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M4 10.5h16v10H4z\"/><path d=\"M2.5 11 12 4.5l9.5 6.5M4 10v10.5M20 10v10.5M3 20.5h18M10 20.5v-4.5h4v4.5\"/><circle cx=\"12\" cy=\"10.8\" r=\"1.8\"/><path d=\"M12 10v1l.7.5\"/>", "archives": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M4.5 8h15v11.5A1.5 1.5 0 0 1 18 21H6a1.5 1.5 0 0 1-1.5-1.5z\"/><rect x=\"3\" y=\"3.5\" width=\"18\" height=\"4.5\" rx=\"1.2\"/><path d=\"M4.5 8v11.5A1.5 1.5 0 0 0 6 21h12a1.5 1.5 0 0 0 1.5-1.5V8M9.5 12h5\"/>", "projet": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M5 4h12l-2.5 4L17 12H5z\"/><path d=\"M5 21V4h12l-2.5 4L17 12H5\"/>", "etapes": "<rect fill=\"currentColor\" stroke=\"none\" opacity=\".22\" x=\"4\" y=\"3.5\" width=\"16\" height=\"17.5\" rx=\"2.5\"/><rect x=\"4\" y=\"3.5\" width=\"16\" height=\"17.5\" rx=\"2.5\"/><path d=\"M7.5 8.5l1.3 1.3 2.2-2.4M13 9h3.5M7.5 14l1.3 1.3 2.2-2.4M13 14.5h3.5\"/>", "ampoule": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 3a6 6 0 0 1 3.5 10.9V16h-7v-2.1A6 6 0 0 1 12 3z\"/><path d=\"M12 3a6 6 0 0 1 3.5 10.9V16h-7v-2.1A6 6 0 0 1 12 3zM9 19h6M10 21.5h4M12 6.5a2.5 2.5 0 0 0-2.5 2.5\"/>", "dossier": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"/><path d=\"M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 11h18\"/>", "micro": "<rect fill=\"currentColor\" stroke=\"none\" opacity=\".22\" x=\"9\" y=\"2.5\" width=\"6\" height=\"11.5\" rx=\"3\"/><rect x=\"9\" y=\"2.5\" width=\"6\" height=\"11.5\" rx=\"3\"/><path d=\"M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5v4M8.5 21.5h7\"/>", "regle": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M3 15.5 15.5 3 21 8.5 8.5 21z\"/><path d=\"M3 15.5 15.5 3 21 8.5 8.5 21zM7 11.5l2 2M10 8.5l1.5 1.5M13 5.5l2 2M5.5 13l1.5 1.5M11.5 10l1.5 1.5\"/>", "calendrier": "<rect fill=\"currentColor\" stroke=\"none\" opacity=\".22\" x=\"3.5\" y=\"5\" width=\"17\" height=\"15.5\" rx=\"2.5\"/><rect x=\"3.5\" y=\"5\" width=\"17\" height=\"15.5\" rx=\"2.5\"/><path d=\"M3.5 10h17M8 3v4M16 3v4\"/><rect fill=\"currentColor\" stroke=\"none\" x=\"7\" y=\"13\" width=\"3\" height=\"3\" rx=\".7\"/>", "chiffres": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M5 13h3.5v7H5zM10.3 8h3.5v12h-3.5zM15.5 4H19v16h-3.5z\"/><path d=\"M5 13h3.5v7H5zM10.3 8h3.5v12h-3.5zM15.5 4H19v16h-3.5zM3 20.5h18\"/>", "lien": "<path d=\"M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1.2 1.2M14 10a4.5 4.5 0 0 0-6.4 0l-3 3A4.5 4.5 0 0 0 11 19.4l1.2-1.2\"/>", "canape": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M5.5 12V8.5A2.5 2.5 0 0 1 8 6h8a2.5 2.5 0 0 1 2.5 2.5V12z\"/><path d=\"M5.5 12V8.5A2.5 2.5 0 0 1 8 6h8a2.5 2.5 0 0 1 2.5 2.5V12M3 12.5a2 2 0 0 1 4 0V15h10v-2.5a2 2 0 0 1 4 0V18H3zM5 18v2M19 18v2\"/>", "cible": "<circle fill=\"currentColor\" stroke=\"none\" opacity=\".22\" cx=\"12\" cy=\"12\" r=\"9\"/><circle cx=\"12\" cy=\"12\" r=\"9\"/><circle cx=\"12\" cy=\"12\" r=\"5\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"12\" cy=\"12\" r=\"1.6\"/>", "adn": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M8 3c0 4.5 8 4.5 8 9s-8 4.5-8 9\"/><path d=\"M8 3c0 4.5 8 4.5 8 9s-8 4.5-8 9M16 3c0 4.5-8 4.5-8 9s8 4.5 8 9M9 6h6M9.5 9.5h5M9.5 14.5h5M9 18h6\"/>", "fleur": "<circle fill=\"currentColor\" stroke=\"none\" cx=\"12\" cy=\"10\" r=\"2\"/><path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 8a3 3 0 1 1 3-3 3 3 0 1 1 1 5.5 3 3 0 1 1-3 3.5 3 3 0 1 1-4-.5A3 3 0 1 1 8 7.5 3 3 0 0 1 12 8z\"/><path d=\"M12 7a2.7 2.7 0 1 1 2.6-3.3A2.7 2.7 0 1 1 16 9a2.7 2.7 0 1 1-2.2 4.4 2.7 2.7 0 1 1-4.5-.6A2.7 2.7 0 1 1 8.2 7 2.7 2.7 0 0 1 12 7zM12 14v7.5M12 18c-2 0-3.5-1.2-3.5-3\"/>", "reveil": "<circle fill=\"currentColor\" stroke=\"none\" opacity=\".22\" cx=\"12\" cy=\"13\" r=\"7.5\"/><circle cx=\"12\" cy=\"13\" r=\"7.5\"/><path d=\"M12 9.5V13l2.5 1.8M4 5.5 6.5 3M20 5.5 17.5 3\"/>", "page": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M6 3h8l4.5 4.5V21H6z\"/><path d=\"M6 3h8l4.5 4.5V21H6zM14 3v4.5h4.5M9 12h6M9 15.5h6\"/>", "semence": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 3.5c2.3 1.9 3.3 4 3.3 6a3.3 3.3 0 0 1-6.6 0c0-2 1-4.1 3.3-6z\"/><path d=\"M12 3.5c2.3 1.9 3.3 4 3.3 6a3.3 3.3 0 0 1-6.6 0c0-2 1-4.1 3.3-6zM12 7.2v4.6M3.5 20h17M12 15.8v.6M12 17.8v.4\"/>", "terreau": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M6.8 8.5C6 12 5.5 15.5 5.5 18.2A2.8 2.8 0 0 0 8.3 21h7.4a2.8 2.8 0 0 0 2.8-2.8c0-2.7-.5-6.2-1.3-9.7z\"/><path fill=\"currentColor\" stroke=\"none\" d=\"M7.5 8.5c.8-1.8 2.6-2.8 4.5-2.8s3.7 1 4.5 2.8z\" opacity=\".55\"/><path d=\"M6.8 8.5C6 12 5.5 15.5 5.5 18.2A2.8 2.8 0 0 0 8.3 21h7.4a2.8 2.8 0 0 0 2.8-2.8c0-2.7-.5-6.2-1.3-9.7zM5.8 8.5h12.4M12 18.6v-3M12 16.6c-1.8 0-2.9-1-2.9-2.8 1.8 0 2.9 1 2.9 2.8zM12 15.6c0-1.6 1-2.6 2.6-2.6 0 1.6-1 2.6-2.6 2.6z\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"9.5\" cy=\"4.6\" r=\".8\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"13\" cy=\"3.6\" r=\".8\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"15.2\" cy=\"5.2\" r=\".7\"/>"};
 const EMO_IC = {"📋": "etapes", "💡": "ampoule", "🔍": "rech", "🧭": "boussole", "✍": "plume", "📂": "dossier", "📁": "dossier", "🗂": "archives", "🗣": "micro", "🤝": "com", "💬": "com", "📏": "regle", "🎓": "edu", "📅": "calendrier", "📊": "chiffres", "🏫": "ecole", "📚": "livre", "📖": "livre", "🔗": "lien", "🛋": "canape", "👶": "enf", "👥": "grp", "🧩": "puzzle", "🌀": "psy", "🧠": "psy", "💜": "tetecoeur", "🎯": "cible", "💼": "pro", "🔀": "debat", "🔄": "cycle", "🗺": "globe", "🌍": "globe", "🧬": "adn", "🌸": "fleur", "🌱": "pousse", "⏰": "reveil", "⏳": "reveil", "📄": "page", "✏": "plume", "🔬": "rech", "📐": "regle", "📬": "page", "📝": "plume"};
+// la cloche et les membres (page Notifications)
+UI_IC.cloche = '<path fill="currentColor" stroke="none" opacity=".22" d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0"/>';
+UI_IC.membres = '<circle fill="currentColor" stroke="none" opacity=".22" cx="9" cy="8" r="3.2"/><circle cx="9" cy="8" r="3.2"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0M16 5a3.2 3.2 0 0 1 0 6M17.5 14.5a5 5 0 0 1 3 5.5"/>';
 const SEM_IC = ["graine","graine","pousse","plante","arbuste","arbre","fleuri"];
 function cleIcone(x){ const k = String(x || "").replace(/\ufe0f/g, "").trim(); return (UI_IC[k] || MAT_IC[k]) ? k : EMO_IC[k] || null; }
 function icone(x){

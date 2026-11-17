@@ -615,7 +615,49 @@ Deno.serve(async (req) => {
     // L'historique de mes notifications (les 200 dernières), et les marquer comme lues.
     if (action === "notif_list") {
       const r = await db(`notif_log?pseudo=eq.${encodeURIComponent(pseudo)}&select=id,famille,title,body,data,lu,created_at&order=created_at.desc&limit=200`);
-      return json({ ok: true, items: r.ok ? await r.json() : [] });
+      const items = r.ok ? await r.json() : [];
+      // Avant le début de l'historique : on retrouve ce qui a été publié dans mes classes (déjà lu).
+      const anciens: Record<string, unknown>[] = [];
+      try {
+        const debut = items.length ? items[items.length - 1].created_at : new Date().toISOString();
+        const depuis = new Date(Date.now() - 60 * 86400000).toISOString();
+        const rm = await db(`class_members?pseudo=eq.${encodeURIComponent(pseudo)}&select=class_id,role`);
+        const mes = (rm.ok ? await rm.json() : []).filter((m: { role: string }) => isMember(m.role));
+        if (mes.length) {
+          const ids = mes.map((m: { class_id: string }) => `"${m.class_id}"`).join(",");
+          const [rc, ri, rj] = await Promise.all([
+            db(`classes?id=in.(${ids})&select=id,name`),
+            db(`shared_items?class_id=in.(${ids})&author=neq.${encodeURIComponent(pseudo)}&updated_at=lt.${encodeURIComponent(debut)}` +
+               `&updated_at=gte.${encodeURIComponent(depuis)}&select=id,class_id,author,kind,subject_title,label,payload,updated_at&order=updated_at.desc&limit=150`),
+            db(`class_members?class_id=in.(${ids})&pseudo=neq.${encodeURIComponent(pseudo)}&created_at=lt.${encodeURIComponent(debut)}` +
+               `&created_at=gte.${encodeURIComponent(depuis)}&select=class_id,pseudo,role,created_at`),
+          ]);
+          const noms: Record<string, string> = {};
+          for (const c of rc.ok ? await rc.json() : []) noms[c.id] = c.name;
+          for (const it of ri.ok ? await ri.json() : []) {
+            const matiere = String(it.subject_title ?? "");
+            const agenda = it.kind === "agenda";
+            anciens.push({
+              id: `r${it.id}`, ancien: true, lu: true, created_at: it.updated_at,
+              famille: agenda ? "devoirs" : "cours",
+              title: noms[it.class_id] ?? "Ta classe",
+              body: agenda ? `${phraseDevoir(it.payload ?? {}, matiere)} · ajouté par ${it.author}`
+                : it.kind === "revision" ? `${it.author} a ajouté des révisions en ${matiere}`
+                : `${it.author} a ajouté ${it.label} en ${matiere}`,
+              data: { type: agenda ? "devoir" : "cours", class_id: it.class_id, item_id: it.id, subject: matiere, n: 1 },
+            });
+          }
+          for (const m of rj.ok ? await rj.json() : []) {
+            if (!isMember(m.role)) continue;
+            anciens.push({
+              id: `m${m.class_id}:${m.pseudo}`, ancien: true, lu: true, created_at: m.created_at, famille: "classe",
+              title: noms[m.class_id] ?? "Ta classe", body: `${m.pseudo} a rejoint la classe`,
+              data: { type: "classe", class_id: m.class_id },
+            });
+          }
+        }
+      } catch (_) { /* l'historique reste lisible sans les anciens */ }
+      return json({ ok: true, items: [...items, ...anciens] });
     }
     if (action === "notif_lu") {
       const ids = Array.isArray(body.ids) ? (body.ids as unknown[]).map(Number).filter((x) => Number.isFinite(x)).slice(0, 500) : [];
