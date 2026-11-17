@@ -2588,3 +2588,8 @@ html,body,*{scrollbar-width:none;}
 /* retirer un membre : un petit bouton rond, discret, à droite */
 #pick-list .mem-retirer{width:36px;height:36px;padding:0;display:grid;place-items:center;border-radius:50%;color:var(--danger);background:var(--danger-soft);}
 #pick-list .mem-retirer svg{width:16px;height:16px;}
+/* la pastille « Écouter » : comme celle du pomodoro, en bas à droite ; les deux se déplacent au doigt */
+.audio-pill{left:auto;right:calc(env(safe-area-inset-right) + 16px);border-color:var(--accent);}
+.audio-pill svg{width:18px;height:18px;color:var(--accent);}
+.pomo-pill.glisse{transition:none;transform:scale(1.06);box-shadow:0 12px 32px rgba(0,0,0,.35);}
+body.lec-on .audio-pill{display:none;}

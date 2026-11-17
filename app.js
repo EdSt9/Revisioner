@@ -2166,7 +2166,7 @@ async function openSharedItem(it){
 var TTS_OK = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
 var LEC = { phrases:[], i:0, depuis:0, blocs:[], racine:null, actif:false, pause:false, jeton:0,
             voix:null, bar:null, blocCourant:-1, motsSignales:false, minuteur:null, toucheA:0 };
-const LEC_VITESSES = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+const LEC_VITESSES = [0.75, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2];
 function lecLire(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
 function lecEcrire(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
 LEC.vitesse = parseFloat(lecLire("lec-vitesse")) || 1;
@@ -2380,8 +2380,9 @@ function lecMot(p, k){
 function lecArreterMinuteur(){ if(LEC.minuteur){ clearTimeout(LEC.minuteur); LEC.minuteur = null; } }
 
 function lecDire(){
+  lecNoterPosition();
   if(!LEC.actif || LEC.pause) return;
-  if(LEC.i >= LEC.phrases.length){ lecteurStop(); toast("Lecture terminée."); return; }
+  if(LEC.i >= LEC.phrases.length){ const cle = lecCle(LEC.racine); if(cle){ const t = lecPositions(); delete t[cle]; lecEcrire(LEC_POS_CLE, JSON.stringify(t)); } lecteurStop(); toast("Lecture terminée."); return; }
   const p = LEC.phrases[LEC.i];
   const depuis = Math.min(LEC.depuis || 0, p.toks.length - 1);
   LEC.depuis = 0;
@@ -2457,32 +2458,30 @@ const LEC_CAL_CLE = "lec-calibrage-v1";
 const LEC_CPS_DEFAUT = 14;      // vitesse normale d'une voix française, en caractères/seconde
 let LEC_CAL = {};
 try{ LEC_CAL = JSON.parse(lecLire(LEC_CAL_CLE) || "{}") || {}; }catch(e){ LEC_CAL = {}; }
+// les anciens réglages appris pouvaient dériver (trop lent, trop rapide) : on les oublie
+Object.values(LEC_CAL).forEach(c=>{ if(c) c.envoi = {}; });
 function lecCal(){
   const v = LEC.voix;
   const k = v ? (v.voiceURI || v.name) : "defaut";
   return LEC_CAL[k] || (LEC_CAL[k] = { base:0, envoi:{} });
 }
-function lecVitesseCible(){ return (lecCal().base || LEC_CPS_DEFAUT) * LEC.vitesse; }
+function lecVitesseCible(){ return (lecCal().base || LEC_CPS_DEFAUT) * LEC.vitesse; }   // pour suivre les mots à l'estimation
+// L'iPhone (Safari) n'accélère pas en proportion : au-dessus de 1, un petit écart suffit à aller beaucoup plus vite,
+// et au-dessous il ralentit peu. Cette table donne, pour chaque vitesse affichée, la valeur à envoyer pour l'obtenir.
+// Ailleurs (Chrome, Android, ordinateur), la vitesse demandée est respectée telle quelle.
+const LEC_IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+const LEC_TABLE_IOS = { 0.75:0.8, 0.9:0.93, 1:1, 1.1:1.05, 1.25:1.11, 1.5:1.21, 1.75:1.3, 2:1.38 };
 function lecTauxEnvoye(){
   const m = LEC.vitesse;
-  // pour une voix jamais mesurée, la toute première phrase sert d'étalon, à vitesse normale
-  if(m === 1 || !lecCal().base) return 1;
-  const appris = lecCal().envoi[m];
-  if(appris) return appris;
-  // premier essai prudent, affiné dès la première phrase
-  return m > 1 ? 1 + (m - 1) * 0.5 : m;
+  if(m === 1) return 1;
+  return LEC_IOS ? (LEC_TABLE_IOS[m] || m) : m;
 }
 function lecMesurer(taux, nbCar, ms){
   if(ms < 600 || nbCar < 25) return;          // trop court pour être fiable
   const cps = nbCar / (ms / 1000);
   const c = lecCal();
-  if(taux === 1 && (LEC.vitesse === 1 || !c.base)){
-    c.base = c.base ? c.base * 0.7 + cps * 0.3 : cps;   // la vitesse normale de cette voix
-  }else{
-    const cible = (c.base || LEC_CPS_DEFAUT) * LEC.vitesse;
-    const t = taux * Math.pow(cible / cps, 0.7);        // correction amortie
-    c.envoi[LEC.vitesse] = Math.round(Math.max(0.1, Math.min(4, t)) * 1000) / 1000;
-  }
+  // on ne mesure plus que la vitesse normale de la voix : elle sert à suivre les mots quand la voix ne les signale pas
+  if(taux === 1) c.base = c.base ? c.base * 0.7 + cps * 0.3 : cps;
   lecEcrire(LEC_CAL_CLE, JSON.stringify(LEC_CAL));
 }
 // Couper la phrase en cours sans déclencher la suivante.
@@ -2507,7 +2506,7 @@ function lecPositionTouchee(x, y){
 }
 function lecToucher(e){
   if(!LEC.actif) return;
-  if(e.target.closest("a, button, input, textarea")) return;
+  if(e.target.closest("a, button, input, textarea, img, figure, .cours-pdf")) return;   // une image, un lien, un document : ils s'ouvrent
   const bloc = e.target.closest(".section, .recap, .pdf-page");
   if(!bloc || !LEC.racine || !LEC.racine.contains(bloc)) return;
   const pos = lecPositionTouchee(e.clientX, e.clientY);
@@ -2554,12 +2553,38 @@ function lecLibererEcran(){
   lecVerrou = null;
 }
 
+// où on en était dans chaque chapitre ou document (gardé sur le téléphone, même si l'app est fermée)
+const LEC_POS_CLE = "lec-positions-v1";
+function lecPositions(){ try{ return JSON.parse(lecLire(LEC_POS_CLE) || "{}") || {}; }catch(e){ return {}; } }
+function lecCle(root){ return root ? (root.dataset.lecCle || root.dataset.cle || "") : ""; }
+function lecNoterPosition(){
+  const cle = lecCle(LEC.racine); if(!cle || !LEC.phrases.length) return;
+  const t = lecPositions(); t[cle] = { i:LEC.i, n:LEC.phrases.length, t:Date.now() };
+  const k = Object.keys(t).sort((a,b)=>t[b].t - t[a].t).slice(0, 40), garde = {};
+  k.forEach(x=>garde[x] = t[x]);
+  lecEcrire(LEC_POS_CLE, JSON.stringify(garde));
+}
+// la section affichée à l'écran : la première dont le bas dépasse l'en-tête
+function lecBlocVisible(blocs){
+  const haut = blocs[0] && blocs[0].classList.contains("pdf-page") ? 60 : 130;
+  const i = blocs.findIndex(b=>{ const r = b.getBoundingClientRect(); return r.bottom > haut + 40 && r.height > 0; });
+  return i < 0 ? 0 : i;
+}
 function lecteurStart(root){
   if(!TTS_OK){ toast("La lecture à voix haute n'est pas disponible sur cet appareil."); return; }
   lecteurStop();
   const f = construireFile(root);
   if(!f.phrases.length){ toast(root.classList.contains("pdf-pages") ? "Pas de texte à lire dans ce document." : "Rien à lire dans ce chapitre."); return; }
-  Object.assign(LEC, { phrases:f.phrases, blocs:f.blocs, racine:root, i:0, depuis:0,
+  // on commence au début de la section affichée ; si on s'était arrêté dans cette section, on reprend à la phrase exacte
+  const bv = lecBlocVisible(f.blocs);
+  let i0 = Math.max(0, f.phrases.findIndex(p=>p.b === bv));
+  const sv = lecPositions()[lecCle(root)];
+  if(sv && sv.n === f.phrases.length && f.phrases[sv.i]){
+    // l'endroit où on s'était arrêté est encore à l'écran : on y reprend
+    const r = f.blocs[f.phrases[sv.i].b].getBoundingClientRect();
+    if(r.bottom > 100 && r.top < innerHeight - 80) i0 = sv.i;
+  }
+  Object.assign(LEC, { phrases:f.phrases, blocs:f.blocs, racine:root, i:i0, depuis:0,
                        actif:true, pause:false, blocCourant:-1, toucheA:0 });
   root.addEventListener("click", lecToucher, true);
   window.addEventListener("touchmove", lecDefilementManuel, { passive:true });
@@ -2568,6 +2593,66 @@ function lecteurStart(root){
   document.body.classList.add("lec-on");
   lecDire();                                  // dans le geste : iOS l'exige pour le premier son
   lecGarderEcran();
+}
+// La pastille « Écouter » : sur un chapitre qui a du texte, quand la lecture n'est pas lancée
+function majPastilleAudio(){
+  let p = document.getElementById("audio-pill");
+  const ecran = document.documentElement.getAttribute("data-screen");
+  const pane = document.querySelector("#screen-split .pane.active");
+  const ok = TTS_OK && ecran === "split" && pane && pane.querySelector(".section") && !LEC.bar
+    && !document.querySelector(".pdf-voile, .img-voile, .sheet-overlay.open, #pick-sheet.open, #form-sheet.open");
+  if(!ok){ if(p) p.hidden = true; return; }
+  if(!p){
+    p = el("button","pomo-pill audio-pill"); p.id = "audio-pill"; p.type = "button";
+    p.setAttribute("aria-label", "Écouter ce chapitre");
+    p.innerHTML = LEC_ICO.voix + "<span>Écouter</span>";
+    p.addEventListener("click", ()=>{ if(p._glisse) return; const pn = document.querySelector("#screen-split .pane.active"); if(pn){ haptic(); lecteurStart(pn); } });
+    document.body.appendChild(p);
+    rendreDeplacable(p, "audio", "droite");
+  }
+  p.hidden = false;
+}
+setInterval(()=>{ try{ majPastilleAudio(); }catch(e){} }, 700);
+// Une pastille qu'on déplace au doigt : elle se cale sur le bord le plus proche, et garde sa place
+function rendreDeplacable(p, nom, coteDefaut){
+  const CLE = "pastille-" + nom;
+  const poser = ()=>{
+    let pos = null; try{ pos = JSON.parse(localStorage.getItem(CLE) || "null"); }catch(e){}
+    if(!pos) return;
+    const h = window.innerHeight, w = p.offsetWidth || 120;
+    const y = Math.max(70, Math.min(h - (p.offsetHeight || 44) - 20, pos.y * h));
+    p.style.top = y + "px"; p.style.bottom = "auto";
+    if(pos.cote === "gauche"){ p.style.left = "16px"; p.style.right = "auto"; }
+    else { p.style.right = "16px"; p.style.left = "auto"; }
+  };
+  if(coteDefaut === "droite" && !localStorage.getItem(CLE)){ p.style.right = "calc(env(safe-area-inset-right) + 16px)"; p.style.left = "auto"; }
+  poser();
+  addEventListener("resize", poser);
+  let x0 = 0, y0 = 0, bx = 0, by = 0, actif = false, bouge = false;
+  p.style.touchAction = "none";
+  p.addEventListener("pointerdown", e=>{
+    const r = p.getBoundingClientRect();
+    x0 = e.clientX; y0 = e.clientY; bx = r.left; by = r.top; actif = true; bouge = false; p._glisse = false;
+  });
+  addEventListener("pointermove", e=>{
+    if(!actif) return;
+    const dx = e.clientX - x0, dy = e.clientY - y0;
+    if(!bouge && Math.hypot(dx, dy) < 8) return;
+    bouge = true; p._glisse = true; p.classList.add("glisse");
+    p.style.left = Math.max(4, Math.min(innerWidth - p.offsetWidth - 4, bx + dx)) + "px"; p.style.right = "auto";
+    p.style.top = Math.max(50, Math.min(innerHeight - p.offsetHeight - 10, by + dy)) + "px"; p.style.bottom = "auto";
+  });
+  const fin = ()=>{
+    if(!actif) return; actif = false;
+    p.classList.remove("glisse");
+    if(!bouge) return;
+    const r = p.getBoundingClientRect();
+    const cote = r.left + r.width / 2 < innerWidth / 2 ? "gauche" : "droite";
+    try{ localStorage.setItem(CLE, JSON.stringify({ cote, y:r.top / innerHeight })); }catch(e){}
+    haptic(); poser();
+    setTimeout(()=>{ p._glisse = false; }, 60);   // le geste ne compte pas comme un appui
+  };
+  addEventListener("pointerup", fin); addEventListener("pointercancel", fin);
 }
 function lecteurStop(){
   if(!LEC || (!LEC.actif && !LEC.bar)) return;
@@ -2587,7 +2672,7 @@ function lecteurStop(){
 }
 function lecPlayPause(){
   if(LEC.pause){ LEC.pause = false; LEC.toucheA = 0; lecMajBarre(); lecDire(); lecGarderEcran(); }
-  else{ LEC.pause = true; lecCouper(); lecMajBarre(); lecLibererEcran(); }
+  else{ LEC.pause = true; lecCouper(); lecMajBarre(); lecLibererEcran(); lecNoterPosition(); }
 }
 function lecAller(sens){
   const bi = LEC.phrases[LEC.i] ? LEC.phrases[LEC.i].b : 0;
@@ -2690,7 +2775,7 @@ function lecteurBouton(root, icone){
 }
 // Écran verrouillé ou app en arrière-plan : iOS coupe la voix, on se met en pause.
 document.addEventListener("visibilitychange",()=>{
-  if(document.hidden && LEC.actif && !LEC.pause){ LEC.pause = true; lecCouper(); lecMajBarre(); lecLibererEcran(); }
+  if(document.hidden && LEC.actif){ if(!LEC.pause){ LEC.pause = true; lecCouper(); lecMajBarre(); lecLibererEcran(); } lecNoterPosition(); }
 });
 
 // ══ PARTAGER UN CHAPITRE ══
@@ -4469,6 +4554,7 @@ function ouvrirPdf(doc){
   document.body.appendChild(v); requestAnimationFrame(()=>v.classList.add("on"));
   document.body.classList.add("pdf-ouvert");
   const zone = v.querySelector(".pdf-pages");
+  zone.dataset.lecCle = "pdf|" + (doc.src || doc.nom || "");
   // Écouter : le même lecteur que pour les cours, qui suit le texte du PDF mot à mot.
   const btEcoute = v.querySelector(".pdf-ecouter");
   if(btEcoute) btEcoute.addEventListener("click", ()=>{
@@ -7948,7 +8034,7 @@ function renderCoursePane(type){
   const row = el("div","chap-row");
   row.appendChild(sel);
   // écouter, puis partager : deux carrés à droite du sélecteur
-  if((chapters[chIdx].sections||[]).length && TTS_OK) row.appendChild(lecteurBouton(pane, true));
+  // écouter : la pastille flottante, comme celle du pomodoro (voir majPastilleAudio)
   // seul l'auteur partage son cours : un chapitre reçu d'une classe reste dans l'app
   if(!chapters[chIdx]._shared) row.appendChild(boutonPartager(type, chapters[chIdx], true));
   pane.appendChild(row);
@@ -10744,7 +10830,9 @@ function pomoFeuille(maj){
 (function(){
   const ov = document.getElementById("pomo-overlay");
   ov.addEventListener("click", e=>{ if(e.target === ov) pomoFermer(); });
-  document.getElementById("pomo-pill").addEventListener("click",()=>{ haptic(); pomoOuvrir(); });
+  const pp = document.getElementById("pomo-pill");
+  pp.addEventListener("click",()=>{ if(pp._glisse) return; haptic(); pomoOuvrir(); });
+  rendreDeplacable(pp, "pomodoro", "gauche");
   document.addEventListener("visibilitychange",()=>{ if(!document.hidden && POMO.phase) pomoTic(); });
   if(POMO.phase && POMO.arret == null && !POMO.finie) pomoBoucle();
   pomoMaj();
