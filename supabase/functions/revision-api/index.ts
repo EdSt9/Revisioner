@@ -462,6 +462,116 @@ async function envoyerRappels(force: boolean, aBlanc: boolean) {
   return { ok: true, jour: ici.iso, personnes: users.length, envoyes, ...(aBlanc ? { apercu } : {}) };
 }
 
+// ══════════════════════════════════════════════════
+// EMPLOI DU TEMPS : le serveur le relit chaque heure (de jour),
+// et prévient d'un cours annulé, déplacé, d'une salle changée ou d'un cours ajouté,
+// même si l'app reste fermée. Les liens viennent de l'app (users.srs.__edturls).
+// ══════════════════════════════════════════════════
+type Cours = { uid: string; titre: string; debut: number; lieu: string };
+
+// Une heure « locale » de Paris (sans fuseau dans le fichier) → l'instant exact
+function parisVersUtc(Y: number, M: number, D: number, h: number, mi: number): number {
+  const brut = Date.UTC(Y, M - 1, D, h, mi);
+  const f = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+  const p = Object.fromEntries(f.formatToParts(new Date(brut)).map((x) => [x.type, x.value]));
+  const vu = Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute);
+  return brut - (vu - brut);
+}
+function lireIcs(txt: string): Cours[] {
+  const lignes = txt.replace(/\r\n[ \t]/g, "").replace(/\n[ \t]/g, "").split(/\r\n|\n|\r/);
+  const out: Cours[] = [];
+  let cur: Partial<Cours> | null = null;
+  const texte = (v: string) => v.replace(/\\n/g, " ").replace(/\\,/g, ",").replace(/\\;/g, ";").replace(/\\\\/g, "\\").trim();
+  for (const brut of lignes) {
+    const l = brut.trim(), up = l.toUpperCase();
+    if (up.startsWith("BEGIN:VEVENT")) { cur = {}; continue; }
+    if (up.startsWith("END:VEVENT")) { if (cur && cur.debut) out.push({ uid: cur.uid ?? "", titre: cur.titre ?? "Cours", debut: cur.debut, lieu: cur.lieu ?? "" }); cur = null; continue; }
+    if (!cur) continue;
+    const i = l.indexOf(":"); if (i < 0) continue;
+    const cle = l.slice(0, i).split(";")[0].toUpperCase(), val = l.slice(i + 1);
+    if (cle === "DTSTART") {
+      const m = val.match(/(\d{4})(\d{2})(\d{2})T?(\d{2})?(\d{2})?(\d{2})?(Z)?/);
+      if (m) cur.debut = m[7] ? Date.UTC(+m[1], +m[2] - 1, +m[3], +(m[4] ?? 0), +(m[5] ?? 0)) : parisVersUtc(+m[1], +m[2], +m[3], +(m[4] ?? 0), +(m[5] ?? 0));
+    } else if (cle === "SUMMARY") cur.titre = texte(val);
+    else if (cle === "LOCATION") cur.lieu = texte(val);
+    else if (cle === "UID") cur.uid = val.trim();
+  }
+  return out;
+}
+const MOIS_FR = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+function quandParis(t: number): string {
+  const f = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+  const p = Object.fromEntries(f.formatToParts(new Date(t)).map((x) => [x.type, x.value]));
+  return `${JOURS[jourDe(`${p.year}-${p.month}-${p.day}`)]} ${+p.day} ${MOIS_FR[+p.month - 1]} à ${p.hour}:${p.minute}`;
+}
+// « Prévention des conduites à risques TD PYR 12 » → « Prévention des conduites à risques »
+const nomCours = (t: string) => sansCode(t).replace(/\s+[A-Z]{3,6}\s*\d{1,2}$/, "").trim() || t;
+
+async function verifierEDT(aBlanc = false) {
+  if (!aBlanc && laNuit()) return { edt: "nuit" };
+  const r = await db("users?select=pseudo,urls:srs->__edturls&srs->__edturls=not.is.null");
+  const users = r.ok ? await r.json() : [];
+  const maint = Date.now(), fen = maint + 21 * 86400000, alerte = maint + 14 * 86400000;
+  const apercu: unknown[] = [];
+  let changes = 0;
+  for (const u of users) {
+    const urls = (Array.isArray(u.urls) ? u.urls : []).filter((x: unknown) => typeof x === "string" && /^https:\/\//.test(x)).slice(0, 5);
+    if (!urls.length) continue;
+    let tous: Cours[] = [], ok = true;
+    for (const url of urls) {
+      try {
+        const rep = await fetch(url, { signal: AbortSignal.timeout(15000) });
+        if (!rep.ok) { ok = false; break; }
+        tous = tous.concat(lireIcs(await rep.text()));
+      } catch (_) { ok = false; break; }
+    }
+    // un calendrier en panne ne doit pas faire croire que tout est annulé
+    if (!ok || !tous.length) continue;
+    const vus = new Set<string>();
+    const neufs = tous.filter((c) => c.debut > maint - 3600000 && c.debut < fen)
+      .filter((c) => { const k = c.debut + "|" + c.titre; if (vus.has(k)) return false; vus.add(k); return true; })
+      .sort((a, b) => a.debut - b.debut);
+    const rs = await db(`edt_snap?pseudo=eq.${encodeURIComponent(u.pseudo)}&select=events`);
+    const avant: Cours[] | null = rs.ok ? ((await rs.json())[0]?.events ?? null) : null;
+    const cle = (c: Cours) => c.uid || (c.titre + "@" + c.debut);
+    const notifs: Notif[] = [];
+    if (avant && avant.length) {
+      const finNeuf = Math.max(...tous.map((c) => c.debut));
+      const nMap = new Map(neufs.map((c) => [cle(c), c])), aMap = new Map(avant.map((c) => [cle(c), c]));
+      const edt = (titre: string, body: string, t: number) => notifs.push({ title: titre, body, tag: `edt:${titre}:${t}`, data: { type: "edt", date: new Date(t).toISOString() } });
+      for (const a of avant) {
+        if (a.debut <= maint || a.debut > alerte || a.debut > finNeuf) continue;
+        const n = nMap.get(cle(a)), nom = nomCours(a.titre);
+        if (!n) {
+          const ailleurs = neufs.find((x) => x.titre === a.titre && !aMap.has(cle(x)) && Math.abs(x.debut - a.debut) < 7 * 86400000);
+          if (ailleurs) edt(`Cours déplacé · ${nom}`, `Prévu ${quandParis(a.debut)}, maintenant ${quandParis(ailleurs.debut)}.`, ailleurs.debut);
+          else edt(`Cours annulé · ${nom}`, `Il était prévu ${quandParis(a.debut)}${a.lieu ? ", " + a.lieu : ""}.`, a.debut);
+          continue;
+        }
+        if (n.debut !== a.debut) edt(`Cours déplacé · ${nom}`, `Prévu ${quandParis(a.debut)}, maintenant ${quandParis(n.debut)}.`, n.debut);
+        else if (n.lieu && n.lieu !== a.lieu) edt(`Salle changée · ${nom}`, `${quandParis(a.debut)} : ${n.lieu}${a.lieu ? " (au lieu de " + a.lieu + ")" : ""}.`, a.debut);
+      }
+      for (const n of neufs) {
+        if (n.debut <= maint || n.debut > alerte || aMap.has(cle(n))) continue;
+        if (avant.some((a) => a.titre === n.titre && Math.abs(a.debut - n.debut) < 7 * 86400000)) continue;   // déjà compté comme déplacé
+        edt(`Nouveau cours · ${nomCours(n.titre)}`, `${quandParis(n.debut)}${n.lieu ? ", " + n.lieu : ""}.`, n.debut);
+      }
+    }
+    // trop de changements d'un coup (changement de semestre, autre lien) : on ne noie pas le téléphone
+    const aEnvoyer = notifs.length > 6 ? [{ title: "Emploi du temps modifié", body: `${notifs.length} changements dans les deux semaines qui viennent.`, tag: "edt:lot", data: { type: "edt" } }] : notifs;
+    for (const n of aEnvoyer) {
+      if (aBlanc) apercu.push({ pseudo: u.pseudo, ...n });
+      else await notifier([u.pseudo], "edt", n);
+      changes++;
+    }
+    if (!aBlanc) await db("edt_snap", {
+      method: "POST", headers: { Prefer: "resolution=merge-duplicates" },
+      body: JSON.stringify({ pseudo: u.pseudo, events: neufs, updated_at: new Date().toISOString() }),
+    });
+  }
+  return { edt: users.length, edt_changes: changes, ...(aBlanc ? { edt_apercu: apercu } : {}) };
+}
+
 // Au premier réveil de jour, on envoie ce qui a attendu la nuit, dans l'ordre d'arrivée.
 // On supprime chaque ligne avant d'envoyer : un réveil en double n'envoie rien deux fois.
 async function envoyerLaNuit(): Promise<number> {
@@ -503,7 +613,9 @@ Deno.serve(async (req) => {
       const secret = r.ok ? (await r.json())[0]?.value : null;
       if (!secret || String(body.secret ?? "") !== String(secret)) return json({ error: "interdit" }, 403);
       const nuit = body.a_blanc === true ? 0 : await envoyerLaNuit();
-      return json({ ...(await envoyerRappels(body.force === true, body.a_blanc === true)), nuit });
+      let edt: Record<string, unknown> = {};
+      try { edt = await verifierEDT(body.a_blanc === true); } catch (e) { edt = { edt_erreur: String(e) }; }
+      return json({ ...(await envoyerRappels(body.force === true, body.a_blanc === true)), nuit, ...edt });
     } catch (e) {
       return json({ error: "serveur", detail: String(e) }, 500);
     }
@@ -547,9 +659,20 @@ Deno.serve(async (req) => {
       row.code_hash = hash;
     }
 
-    // ── Vérification
+    // ── Vérification. Après 5 codes faux, le compte est bloqué 15 minutes :
+    //    impossible d'essayer les 10 000 codes à 4 chiffres un par un.
+    const bloque = row.bloque_jusqua ? new Date(row.bloque_jusqua).getTime() - Date.now() : 0;
+    if (bloque > 0) return json({ error: "bloque", attente: Math.ceil(bloque / 60000) }, 429);
+    const moi = `users?pseudo=eq.${encodeURIComponent(pseudo)}`;
     if (!sameHash(String(row.code_hash), hash)) {
-      return json({ error: "code_faux" }, 401);
+      const rates = (Number(row.essais_rates) || 0) + 1;
+      await db(moi, { method: "PATCH", body: JSON.stringify(rates >= 5
+        ? { essais_rates: 0, bloque_jusqua: new Date(Date.now() + 15 * 60000).toISOString() }
+        : { essais_rates: rates }) });
+      return json({ error: rates >= 5 ? "bloque" : "code_faux", ...(rates >= 5 ? { attente: 15 } : { restants: 5 - rates }) }, rates >= 5 ? 429 : 401);
+    }
+    if (row.essais_rates || row.bloque_jusqua) {
+      await db(moi, { method: "PATCH", body: JSON.stringify({ essais_rates: 0, bloque_jusqua: null }) });
     }
 
     if (action === "login") {

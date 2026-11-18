@@ -5155,6 +5155,8 @@ function comparerEDT(theme){
     if(t > maint && t < maint + 14 * 86400000 && !anciens.has(cle(n)) && !avant.some(a=>a.title === n.title && Math.abs(new Date(a.start) - t) < 7 * 86400000))
       ajouts.push({ titre:"Nouveau cours · " + nomCourt(n.title || "Cours"), texte:quand(t) + (n.place ? ", " + n.place : "") + ".", date:t });
   });
+  // connecté : c'est le serveur qui surveille l'emploi du temps (et prévient même app fermée)
+  if(syncOn && PSEUDO) return;
   ajouts.forEach(x=>notifLocale("edt", x.titre, x.texte, { type:"edt", date:new Date(x.date).toISOString() }));
 }
 // ── L'historique des notifications ──
@@ -7331,6 +7333,7 @@ const NOTIF_TYPES = [
   ["classe",  "Ma classe",            "Demandes pour entrer, demande acceptée",         true],
   ["rappels", "Rappels de devoirs",   "La veille à 18 h, et 3 jours avant un contrôle", true],
   ["semaine", "Ma semaine",           "Le dimanche à 18 h : ce qui t'attend",           false],
+  ["edt",     "Emploi du temps",      "Un cours annulé, déplacé, une salle changée",    true],
   ["projets", "CPE et psycho",        "Les étapes de tes projets, 7 jours avant et la veille", true]
 ];
 function notifOn(p, k, parDefaut){ return typeof p[k] === "boolean" ? p[k] : parDefaut; }
@@ -11491,7 +11494,7 @@ async function api(action, extra, enPartant){
     out.projets = out.items.filter(estProjetItem);
     out.items = out.items.filter(it=>!estProjetItem(it));
   }
-  if(!r.ok) throw Object.assign(new Error(out.error||("http "+r.status)), { code: out.error });
+  if(!r.ok) throw Object.assign(new Error(out.error||("http "+r.status)), { code: out.error, attente: out.attente, restants: out.restants });
   return out;
 }
 
@@ -11665,7 +11668,7 @@ async function pushState(enPartant){
     PSYCHO_STEPS.forEach(s=>{ psy[s.id] = !!s.done; });
     const patch = {
       theme: document.documentElement.getAttribute("data-theme") || "girly",
-      srs: Object.assign({}, SRS, { __matieres: nomsMatieres(), __bilan: bilanMatieres(), __projets: projetsPourServeur(), __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP, __revises: REVISES, __vus: vusCharger(), __clsvus: clsVus(), __profs: PROFS, __notes: CHNOTES, __errexam: ERREXAM, __jours: joursCharger() }),
+      srs: Object.assign({}, SRS, { __matieres: nomsMatieres(), __bilan: bilanMatieres(), __projets: projetsPourServeur(), __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP, __edturls: edtCalendars().map(c=>c.url).filter(Boolean), __revises: REVISES, __vus: vusCharger(), __clsvus: clsVus(), __profs: PROFS, __notes: CHNOTES, __errexam: ERREXAM, __jours: joursCharger() }),
       psycho: psy,
       settings: USER_SETTINGS
     };
@@ -11754,7 +11757,7 @@ function applyRemote(row){
     }
     if(Array.isArray(incoming.__jours)){ try{ const l = new Set(joursCharger()); incoming.__jours.forEach(j=>{ if(/^\d{4}-\d{2}-\d{2}$/.test(j)) l.add(j); }); joursSave([...l].sort()); }catch(e){} }
     delete incoming.__jours;
-    delete incoming.__matieres; delete incoming.__bilan; delete incoming.__projets; delete incoming.__edtnotes; delete incoming.__memo; delete incoming.__devrep; delete incoming.__revises; delete incoming.__vus; delete incoming.__profs; delete incoming.__notes; delete incoming.__errexam;
+    delete incoming.__matieres; delete incoming.__bilan; delete incoming.__projets; delete incoming.__edtnotes; delete incoming.__memo; delete incoming.__devrep; delete incoming.__edturls; delete incoming.__revises; delete incoming.__vus; delete incoming.__profs; delete incoming.__notes; delete incoming.__errexam;
     SRS = incoming;
     try{ localStorage.setItem(SRS_KEY, JSON.stringify(SRS)); }catch(e){}
   }
@@ -11811,7 +11814,9 @@ async function doLogin(){
   }catch(e){
     PSEUDO = null; CODE = null;
     if(e.code === "code_faux"){
-      msg.textContent = "Ce pseudo est déjà pris, et le code ne correspond pas.";
+      msg.textContent = "Ce pseudo est déjà pris, et le code ne correspond pas." + (e.restants ? " Encore " + e.restants + " essai" + (e.restants > 1 ? "s" : "") + " avant un blocage de 15 minutes." : "");
+    }else if(e.code === "bloque"){
+      msg.textContent = "Trop de codes faux : ce compte est bloqué " + (e.attente || 15) + " minute" + ((e.attente || 15) > 1 ? "s" : "") + ", par sécurité.";
     }else if(e.code === "code_court"){
       msg.textContent = "Choisis un code d'au moins 4 caractères.";
     }else{
