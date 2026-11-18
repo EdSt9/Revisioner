@@ -8016,12 +8016,15 @@ addEventListener("scroll", ()=>{
   f.classList.add("range");
   clearTimeout(RANGE_T); RANGE_T = setTimeout(()=>f.classList.remove("range"), 900);
 }, { passive:true });
-// barre fine en haut d'un chapitre : où on en est dans la lecture
+// barre fine en bas de l'en-tête d'un chapitre : où on en est dans la lecture
 function majLecture(){
   let b = document.getElementById("lecture-barre");
   if(!b){ b = el("div","lecture-barre"); b.id = "lecture-barre"; b.innerHTML = "<i></i>"; document.body.appendChild(b); }
   const on = document.documentElement.getAttribute("data-screen") === "split" && curTab !== 2;
   b.classList.toggle("on", on); if(!on) return;
+  // posée en bas du bandeau coloré de l'en-tête
+  const tete = document.querySelector("#screen-split .split-head");
+  if(tete){ const r = tete.getBoundingClientRect(); b.style.top = Math.max(0, r.bottom - 12) + "px"; }
   const h = document.documentElement.scrollHeight - innerHeight;
   b.firstChild.style.transform = "scaleX(" + (h > 40 ? Math.min(1, Math.max(0, scrollY / h)) : 0) + ")";
 }
