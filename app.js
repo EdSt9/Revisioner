@@ -8016,17 +8016,29 @@ addEventListener("scroll", ()=>{
   f.classList.add("range");
   clearTimeout(RANGE_T); RANGE_T = setTimeout(()=>f.classList.remove("range"), 900);
 }, { passive:true });
-// barre fine en bas de l'en-tête d'un chapitre : où on en est dans la lecture
+// l'avancement dans le chapitre : un trait qui suit le bord arrondi du bas de l'en-tête
 function majLecture(){
   let b = document.getElementById("lecture-barre");
-  if(!b){ b = el("div","lecture-barre"); b.id = "lecture-barre"; b.innerHTML = "<i></i>"; document.body.appendChild(b); }
+  if(!b){
+    b = document.createElementNS("http://www.w3.org/2000/svg", "svg"); b.id = "lecture-barre"; b.setAttribute("class", "lecture-barre");
+    b.innerHTML = '<path class="lb-fond" pathLength="1"/><path class="lb-val" pathLength="1"/>';
+    document.body.appendChild(b);
+  }
   const on = document.documentElement.getAttribute("data-screen") === "split" && curTab !== 2;
   b.classList.toggle("on", on); if(!on) return;
-  // posée en bas du bandeau coloré de l'en-tête
-  const tete = document.querySelector("#screen-split .split-head");
-  if(tete){ const r = tete.getBoundingClientRect(); b.style.top = Math.max(0, r.bottom - 12) + "px"; }
+  const tete = document.querySelector("#screen-split .split-head"); if(!tete) return;
+  const r = tete.getBoundingClientRect(), w = Math.round(r.width), hh = Math.round(r.bottom);
+  const R = parseFloat(getComputedStyle(tete).borderBottomLeftRadius) || 22, e = 1.5, H = 2 * R + 4;
+  if(b._cle !== w + "|" + hh + "|" + R){
+    b._cle = w + "|" + hh + "|" + R;
+    b.setAttribute("width", w); b.setAttribute("height", H); b.setAttribute("viewBox", `0 0 ${w} ${H}`);
+    b.style.left = r.left + "px"; b.style.top = (hh - H) + "px";
+    const y = H - e, d = `M ${e} ${H - R - 2} A ${R - e} ${R - e} 0 0 0 ${R} ${y} L ${w - R} ${y} A ${R - e} ${R - e} 0 0 0 ${w - e} ${H - R - 2}`;
+    b.querySelectorAll("path").forEach(p=>p.setAttribute("d", d));
+  }
   const h = document.documentElement.scrollHeight - innerHeight;
-  b.firstChild.style.transform = "scaleX(" + (h > 40 ? Math.min(1, Math.max(0, scrollY / h)) : 0) + ")";
+  const v = h > 40 ? Math.min(1, Math.max(0, scrollY / h)) : 0;
+  b.querySelector(".lb-val").style.strokeDashoffset = String(1 - v);
 }
 addEventListener("scroll", ()=>requestAnimationFrame(majLecture), { passive:true });
 function majProgression(){
