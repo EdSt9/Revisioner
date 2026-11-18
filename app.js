@@ -940,9 +940,10 @@ function pastille(parent, n, label){
 }
 // La pastille de l'icône de l'app : les mêmes nouveautés que sur l'accueil (classes + devoirs).
 // Le chiffre est aussi rangé pour sw.js, qui l'augmente quand une notification arrive app fermée.
-var BADGE_APP = { cls:0, dev:0, proj:0 };
+var BADGE_APP = { cls:0, dev:0, proj:0, notifs:0 };
 function poserBadgeApp(){
-  const n = BADGE_APP.cls + BADGE_APP.dev + BADGE_APP.proj;
+  // la pastille de l'icône dit la même chose que la cloche : les notifications pas encore lues
+  const n = BADGE_APP.notifs || 0;
   try{
     if(navigator.setAppBadge) (n ? navigator.setAppBadge(n) : navigator.clearAppBadge()).catch(()=>{});
     if(window.caches) caches.open("revision-badge").then(c=>c.put("/__badge", new Response(String(n)))).catch(()=>{});
@@ -5198,6 +5199,7 @@ function notifFiltreSauver(){ try{ localStorage.setItem(NOTIF_FILTRE_CLE, JSON.s
 function majPastilleNotifs(){
   const b = document.getElementById("btn-notifs"); if(!b) return;
   const n = toutesNotifs().filter(x=>!x.lu).length;
+  if(BADGE_APP.notifs !== n){ BADGE_APP.notifs = n; poserBadgeApp(); }
   let p = b.querySelector(".nb");
   if(!n){ if(p) p.remove(); return; }
   if(!p){ p = el("span","nb"); b.appendChild(p); }
@@ -7485,7 +7487,7 @@ if("serviceWorker" in navigator){
 // Appelé une fois connecté au serveur : remet l'abonnement à jour, ouvre la page d'une notification touchée
 function apresConnexionServeur(){
   notifResync();
-  chargerNotifs().then(majPastilleNotifs);
+  chargerNotifs().then(()=>{ majPastilleNotifs(); if(document.documentElement.getAttribute("data-screen") === "notifs") renderNotifs(); });
   if(NOTIF_A_OUVRIR){ const d = NOTIF_A_OUVRIR; NOTIF_A_OUVRIR = null; ouvrirDepuisNotif(d); }
 }
 
@@ -11913,7 +11915,7 @@ document.getElementById("login-code").addEventListener("keydown",e=>{ if(e.key==
 // La page ouverte est notée pour cet onglet (sessionStorage) : une actualisation y ramène,
 // au même chapitre et au même endroit. Une app rouverte de zéro repart de l'accueil.
 const OU_KEY = "revision_ou_v1";
-const PAGES_GARDEES = ["semestres","semchoice","subjects","split","edt","planning","classes","class","shared",
+const PAGES_GARDEES = ["notifs","semestres","semchoice","subjects","split","edt","planning","classes","class","shared",
   "devoirs","mesdevoirs","sites","search","index","auteurs","lexique","synthese","qcmchoix","session","psycho"];
 function memoriserPage(){
   try{
@@ -11965,6 +11967,7 @@ function restaurerPage(o){
       case "sites": openSitesSheet(); break;
       case "search": case "index": openSearch(); break;
       case "psycho": renderPsycho(); break;
+      case "notifs": renderSemestres(); showScreen("semestres"); openNotifs(); break;
       default: ok = false;
     }
     if(!ok) return false;
