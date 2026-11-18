@@ -454,11 +454,14 @@ async function envoyerRappels(force: boolean, aBlanc: boolean) {
     if (dimanche) {
       const semaine = tout.filter((e) => e.date >= demain && e.date <= finSemaine);
       if (semaine.length) {
-        const nc = semaine.filter((e) => e.type === "controle").length, nd = semaine.length - nc;
-        const compte = [nc ? `${nc} contrôle${nc > 1 ? "s" : ""}` : "", nd ? `${nd} à rendre` : ""].filter(Boolean).join(", ");
+        // une ligne par jour, puis par quoi commencer : le plus proche
+        const jour = (iso: string) => JOURS[jourDe(iso)].replace(/^./, (c) => c.toUpperCase());
+        const lignes = semaine.slice(0, 6).map((e) => `${jour(e.date)} : ${e.nom} (${e.type === "controle" ? "contrôle" : "à rendre"})`);
+        if (semaine.length > 6) lignes.push(`Et ${semaine.length - 6} autre${semaine.length > 7 ? "s" : ""} dans l'app.`);
+        const premier = semaine[0];
         await envoyer(u.pseudo, "semaine", {
           title: "Ta semaine",
-          body: compte + "\n" + semaine.map((e) => `${JOURS_COURTS[jourDe(e.date)]} ${e.nom}`).join(" · "),
+          body: [...lignes, `Commence par ${premier.nom} : c'est le plus proche.`].join("\n"),
           tag: `rappel:semaine:${ici.iso}`, data,
         }, true);
         envoyes++;
