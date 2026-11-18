@@ -1123,6 +1123,7 @@ a.lien:active{background:var(--accent-soft);border-radius:4px;}
 .compte-lab{margin:6px 4px 6px;}
 .compte-hint{margin:8px 6px 4px;}
 .compte-seg{margin:0 0 14px;}
+.notif-zone{margin-bottom:22px;}
 .compte-quitter .cal-name{color:var(--danger,#d33);}
 .vide-actions{display:flex;flex-direction:column;gap:8px;margin-top:16px;width:100%;max-width:280px;}
 /* projets */.projet-alerte{display:flex;gap:10px;align-items:flex-start;margin:0 0 16px;padding:12px 14px;border-radius:14px;background:var(--warn-soft,rgba(255,170,0,.12));color:var(--text);font-size:14px;line-height:1.45;font-weight:600;}
