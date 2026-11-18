@@ -322,18 +322,18 @@ type Bilan = Record<string, { q?: number; e?: number }>;
 // Une étape de projet : p = projet, t = titre, d = début (AAAA-MM-JJ ou vide), f = fin, ok = cochée.
 type Etape = { id?: string; p: string; t: string; d: string; f: string; ok: boolean };
 
-// « 42 QCM à valider et 5 erreurs à revoir en Socialisations. » ; rien si tout est fait ou inconnu
-function resteAReviser(es: Echeance[], bilan: Bilan | null): string {
-  const morceaux: string[] = [];
-  for (const e of es.filter((x) => x.type === "controle")) {
-    const b = bilan?.[e.subj];
-    if (!b) continue;
-    const q = Number(b.q) || 0, er = Number(b.e) || 0;
-    const t = [q ? `${q} QCM à valider` : "", er ? `${er} erreur${er > 1 ? "s" : ""} à revoir` : ""].filter(Boolean).join(" et ");
-    if (t) morceaux.push(es.length > 1 ? `${t} en ${e.nom}` : t);
-  }
-  return morceaux.length ? "Il te reste " + morceaux.join(", ") + "." : "";
+// Une seule petite action faisable, jamais un gros chiffre qui fait peur.
+// Les erreurs à revoir d'abord (c'est court), sinon une série de QCM.
+function petiteAction(es: Echeance[], bilan: Bilan | null, veille: boolean): string {
+  const ctrl = es.filter((x) => x.type === "controle");
+  if (!ctrl.length) return "";
+  const err = ctrl.reduce((s, e) => s + (Number(bilan?.[e.subj]?.e) || 0), 0);
+  if (veille) return err ? `Commence par ${err > 1 ? `tes ${err} erreurs` : "ton erreur"} à revoir : 10 minutes suffisent.` : "Une série de QCM ce soir, et c'est un bon échauffement.";
+  return "Une série par jour d'ici là, et tu seras au point.";
 }
+// « vendredi 20 novembre »
+const MOIS_LONGS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+const dateLongue = (iso: string) => `${JOURS[jourDe(iso)]} ${+iso.slice(8, 10)} ${MOIS_LONGS[+iso.slice(5, 7) - 1]}`;
 
 // « ECUE 23.1 ter Droits de l'enfant et de l » → « Droits de l'enfant et de l »
 const sansCode = (t: string) => t.replace(/^ECUE\s+[\d.]+\s*(bis|ter|quater)?\s*/i, "").replace(/\s+(CM|TD)(\s*\d+)?$/i, "").trim();
@@ -408,13 +408,16 @@ async function envoyerRappels(force: boolean, aBlanc: boolean) {
     const tout = echeances(u.notes, u.matieres);
     const data = { type: "rappel" };
 
+    // Le titre dit de quoi il s'agit, la ligne dessous ce qui se passe, puis une petite action.
     const veille = tout.filter((e) => e.date === demain);
     if (veille.length) {
-      const titre = veille.length > 1 ? `Demain : ${veille.length} devoirs`
-        : veille[0].type === "controle" ? "Demain : contrôle" : "Demain : devoir à rendre";
+      const seul = veille.length === 1 ? veille[0] : null;
+      const lignes = seul
+        ? [`${quoi(seul)} demain${seul.note ? " (" + seul.note + ")" : ""}.`, seul.chs.length ? "À réviser : " + enListe(seul.chs) + "." : ""]
+        : veille.map((e) => `${quoi(e)} · ${e.nom}${e.note ? " (" + e.note + ")" : ""}`);
       await envoyer(u.pseudo, "rappels", {
-        title: titre,
-        body: [veille.map((e) => `${quoi(e)} · ${e.nom}${e.note ? " — " + e.note : ""}${e.chs.length ? "\nÀ réviser : " + enListe(e.chs) : ""}`).join("\n"), resteAReviser(veille, u.bilan)].filter(Boolean).join("\n"),
+        title: seul ? seul.nom : `Demain : ${veille.length} devoirs`,
+        body: [...lignes, petiteAction(veille, u.bilan, true)].filter(Boolean).join("\n"),
         tag: `rappel:veille:${demain}`, data: dataDe(veille),
       });
       envoyes++;
@@ -422,10 +425,13 @@ async function envoyerRappels(force: boolean, aBlanc: boolean) {
 
     const controles = tout.filter((e) => e.date === dansTrois && e.type === "controle");
     if (controles.length) {
-      const jour = JOURS[jourDe(dansTrois)];
+      const seul = controles.length === 1 ? controles[0] : null;
+      const lignes = seul
+        ? [`Contrôle ${dateLongue(dansTrois)}${seul.note ? " (" + seul.note + ")" : ""}.`, seul.chs.length ? "À réviser : " + enListe(seul.chs) + "." : ""]
+        : [`${controles.map((e) => e.nom).join(", ")} : ${dateLongue(dansTrois)}.`];
       await envoyer(u.pseudo, "rappels", {
-        title: controles.length > 1 ? `${controles.length} contrôles ${jour}` : `Contrôle ${jour}`,
-        body: `${controles.map((e) => e.nom + (e.chs.length ? " (" + enListe(e.chs) + ")" : "")).join(", ")}, ${jour} ${jourCourt(dansTrois)}. ` + (resteAReviser(controles, u.bilan) || "Pense à réviser."),
+        title: seul ? seul.nom : `${controles.length} contrôles ${JOURS[jourDe(dansTrois)]}`,
+        body: [...lignes, petiteAction(controles, u.bilan, false)].filter(Boolean).join("\n"),
         tag: `rappel:j3:${dansTrois}`, data: dataDe(controles),
       });
       envoyes++;
@@ -437,9 +443,9 @@ async function envoyerRappels(force: boolean, aBlanc: boolean) {
     for (const st of projets) {
       if (!st || st.ok || !st.f) continue;
       let n: Notif | null = null;
-      if (st.f === dansSept) n = { title: `${st.p} · plus que 7 jours`, body: `${st.t} : avant le ${jourCourt(st.f)}.`, tag: `projet:j7:${st.p}:${st.f}` };
-      else if (st.f === demain) n = { title: `${st.p} · demain, dernier jour`, body: `${st.t} : avant demain, ${jourCourt(st.f)}.`, tag: `projet:veille:${st.p}:${st.f}` };
-      else if (st.d && st.d === ici.iso) n = { title: `${st.p} · c'est le moment`, body: `${st.t}, d'ici le ${jourCourt(st.f)}.`, tag: `projet:debut:${st.p}:${st.t}` };
+      if (st.f === dansSept) n = { title: st.p, body: `${st.t} : plus que 7 jours, jusqu'au ${dateLongue(st.f)}.`, tag: `projet:j7:${st.p}:${st.f}` };
+      else if (st.f === demain) n = { title: st.p, body: `${st.t} : dernier jour demain, ${dateLongue(st.f)}.`, tag: `projet:veille:${st.p}:${st.f}` };
+      else if (st.d && st.d === ici.iso) n = { title: st.p, body: `${st.t} : c'est le moment, d'ici le ${dateLongue(st.f)}.`, tag: `projet:debut:${st.p}:${st.t}` };
       if (!n) continue;
       await envoyer(u.pseudo, "projets", { ...n, data: { type: "projet", pid: st.id ?? "" } });
       envoyes++;
