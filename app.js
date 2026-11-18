@@ -8021,20 +8021,25 @@ function majLecture(){
   let b = document.getElementById("lecture-barre");
   if(!b){
     b = document.createElementNS("http://www.w3.org/2000/svg", "svg"); b.id = "lecture-barre"; b.setAttribute("class", "lecture-barre");
-    b.innerHTML = '<path class="lb-fond" pathLength="1"/><path class="lb-val" pathLength="1"/>';
+    // les deux bouts se fondent dans les coins
+    b.innerHTML = '<defs><linearGradient id="lb-fondu" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="100" y2="0">'
+      + '<stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".16" stop-color="#fff" stop-opacity=".85"/>'
+      + '<stop offset=".84" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>'
+      + '<path class="lb-fond" pathLength="1"/><path class="lb-val" pathLength="1" stroke="url(#lb-fondu)"/>';
     document.body.appendChild(b);
   }
   const on = document.documentElement.getAttribute("data-screen") === "split" && curTab !== 2;
   b.classList.toggle("on", on); if(!on) return;
   const tete = document.querySelector("#screen-split .split-head"); if(!tete) return;
   const r = tete.getBoundingClientRect(), w = Math.round(r.width), hh = Math.round(r.bottom);
-  const R = parseFloat(getComputedStyle(tete).borderBottomLeftRadius) || 22, e = 1.5, H = 2 * R + 4;
+  const R = parseFloat(getComputedStyle(tete).borderBottomLeftRadius) || 22, e = 3, H = 2 * R + 4;
   if(b._cle !== w + "|" + hh + "|" + R){
     b._cle = w + "|" + hh + "|" + R;
     b.setAttribute("width", w); b.setAttribute("height", H); b.setAttribute("viewBox", `0 0 ${w} ${H}`);
     b.style.left = r.left + "px"; b.style.top = (hh - H) + "px";
     const y = H - e, d = `M ${e} ${H - R - 2} A ${R - e} ${R - e} 0 0 0 ${R} ${y} L ${w - R} ${y} A ${R - e} ${R - e} 0 0 0 ${w - e} ${H - R - 2}`;
     b.querySelectorAll("path").forEach(p=>p.setAttribute("d", d));
+    b.querySelector("#lb-fondu").setAttribute("x2", w);
   }
   const h = document.documentElement.scrollHeight - innerHeight;
   const v = h > 40 ? Math.min(1, Math.max(0, scrollY / h)) : 0;

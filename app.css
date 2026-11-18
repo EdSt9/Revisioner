@@ -2067,9 +2067,9 @@ html:not(.calme) .cas{animation:casUp .5s cubic-bezier(.2,.9,.25,1) both;animati
 /* 7. la barre de lecture d'un chapitre */
 .lecture-barre{position:fixed;z-index:21;pointer-events:none;opacity:0;transition:opacity .25s;overflow:visible;}
 .lecture-barre.on{opacity:1;}
-.lecture-barre path{fill:none;stroke-width:3;stroke-linecap:round;}
-.lecture-barre .lb-fond{stroke:rgba(255,255,255,.16);}
-.lecture-barre .lb-val{stroke:rgba(255,255,255,.85);stroke-dasharray:1 1;stroke-dashoffset:1;transition:stroke-dashoffset .15s linear;}
+.lecture-barre path{fill:none;stroke-width:2.5;stroke-linecap:round;}
+.lecture-barre .lb-fond{stroke:url(#lb-fondu);opacity:.18;}
+.lecture-barre .lb-val{stroke-dasharray:1 1;stroke-dashoffset:1;transition:stroke-dashoffset .15s linear;}
 /* « Chapitre lu » s'allume en arrivant en bas */
 .fin-chap.vu .fin-rv.fait .fin-num{animation:qzPop .55s cubic-bezier(.3,1.6,.5,1);}
 .fin-chap.vu{animation:casUp .5s cubic-bezier(.2,.9,.25,1);}
