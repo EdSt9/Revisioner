@@ -5133,7 +5133,8 @@ function comparerEDT(theme){
   const cle = e => e.uid || (e.title + "@" + new Date(e.start).toISOString());
   const nouveaux = new Map(EDT.map(e=>[cle(e), e]));
   const anciens = new Map(avant.map(e=>[cle(e), e]));
-  const quand = d => { d = new Date(d); return JOURS[d.getDay()].toLowerCase() + " " + d.getDate() + " " + MOIS[d.getMonth()] + " à " + hhmm(d); };
+  // « vendredi 20 novembre, 13h30 » ; court : « mardi 24, 13h30 »
+  const quand = (d, court) => { d = new Date(d); return JOURS[d.getDay()].toLowerCase() + " " + d.getDate() + (court ? "" : " " + MOIS[d.getMonth()]) + ", " + hhmm(d).replace(":", "h"); };
   const ajouts = [];
   avant.forEach(a=>{
     const t = new Date(a.start).getTime();
@@ -5142,18 +5143,18 @@ function comparerEDT(theme){
     if(!n){
       // le même cours ailleurs dans la semaine : déplacé, sinon annulé
       const ailleurs = EDT.find(x=>x.title === a.title && !anciens.has(cle(x)) && Math.abs(x.start - t) < 7 * 86400000);
-      if(ailleurs) ajouts.push({ titre:"Cours déplacé · " + nom, texte:"Prévu " + quand(t) + ", maintenant " + quand(ailleurs.start) + ".", date:ailleurs.start });
-      else ajouts.push({ titre:"Cours annulé · " + nom, texte:"Il était prévu " + quand(t) + (a.place ? ", " + a.place : "") + ".", date:t });
+      if(ailleurs) ajouts.push({ titre:nom, texte:"Déplacé : " + quand(t, 1) + " → " + quand(ailleurs.start, 1) + ".", date:ailleurs.start });
+      else ajouts.push({ titre:nom, texte:"Annulé : " + quand(t) + (a.place ? " (" + a.place + ")" : "") + ".", date:t });
       return;
     }
-    if(n.start.getTime() !== t) ajouts.push({ titre:"Cours déplacé · " + nom, texte:"Prévu " + quand(t) + ", maintenant " + quand(n.start) + ".", date:n.start });
-    else if((a.place || "") !== (n.place || "") && n.place) ajouts.push({ titre:"Salle changée · " + nom, texte:quand(t) + " : " + n.place + (a.place ? " (au lieu de " + a.place + ")" : "") + ".", date:t });
+    if(n.start.getTime() !== t) ajouts.push({ titre:nom, texte:"Déplacé : " + quand(t, 1) + " → " + quand(n.start, 1) + ".", date:n.start });
+    else if((a.place || "") !== (n.place || "") && n.place) ajouts.push({ titre:nom, texte:"Nouvelle salle : " + n.place + (a.place ? " au lieu de " + a.place : "") + ", " + quand(t) + ".", date:t });
   });
   // un cours ajouté dans les deux semaines (rattrapage…)
   EDT.forEach(n=>{
     const t = n.start.getTime();
     if(t > maint && t < maint + 14 * 86400000 && !anciens.has(cle(n)) && !avant.some(a=>a.title === n.title && Math.abs(new Date(a.start) - t) < 7 * 86400000))
-      ajouts.push({ titre:"Nouveau cours · " + nomCourt(n.title || "Cours"), texte:quand(t) + (n.place ? ", " + n.place : "") + ".", date:t });
+      ajouts.push({ titre:nomCourt(n.title || "Cours"), texte:"Cours ajouté : " + quand(t) + (n.place ? " (" + n.place + ")" : "") + ".", date:t });
   });
   // connecté : c'est le serveur qui surveille l'emploi du temps (et prévient même app fermée)
   if(syncOn && PSEUDO) return;

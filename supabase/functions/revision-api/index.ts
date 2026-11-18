@@ -499,10 +499,11 @@ function lireIcs(txt: string): Cours[] {
   return out;
 }
 const MOIS_FR = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
-function quandParis(t: number): string {
+function quandParis(t: number, court = false): string {
   const f = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
   const p = Object.fromEntries(f.formatToParts(new Date(t)).map((x) => [x.type, x.value]));
-  return `${JOURS[jourDe(`${p.year}-${p.month}-${p.day}`)]} ${+p.day} ${MOIS_FR[+p.month - 1]} à ${p.hour}:${p.minute}`;
+  // « vendredi 20 novembre, 13h30 » ; court : « mardi 24, 13h30 »
+  return `${JOURS[jourDe(`${p.year}-${p.month}-${p.day}`)]} ${+p.day}${court ? "" : " " + MOIS_FR[+p.month - 1]}, ${p.hour}h${p.minute}`;
 }
 // « Prévention des conduites à risques TD PYR 12 » → « Prévention des conduites à risques »
 const nomCours = (t: string) => sansCode(t).replace(/\s+[A-Z]{3,6}\s*\d{1,2}$/, "").trim() || t;
@@ -538,23 +539,24 @@ async function verifierEDT(aBlanc = false) {
     if (avant && avant.length) {
       const finNeuf = Math.max(...tous.map((c) => c.debut));
       const nMap = new Map(neufs.map((c) => [cle(c), c])), aMap = new Map(avant.map((c) => [cle(c), c]));
-      const edt = (titre: string, body: string, t: number) => notifs.push({ title: titre, body, tag: `edt:${titre}:${t}`, data: { type: "edt", date: new Date(t).toISOString() } });
+      // le nom du cours en titre, ce qui change dessous
+      const edt = (titre: string, body: string, t: number) => notifs.push({ title: titre, body, tag: `edt:${titre}:${body.split(" :")[0]}:${t}`, data: { type: "edt", date: new Date(t).toISOString() } });
       for (const a of avant) {
         if (a.debut <= maint || a.debut > alerte || a.debut > finNeuf) continue;
         const n = nMap.get(cle(a)), nom = nomCours(a.titre);
         if (!n) {
           const ailleurs = neufs.find((x) => x.titre === a.titre && !aMap.has(cle(x)) && Math.abs(x.debut - a.debut) < 7 * 86400000);
-          if (ailleurs) edt(`Cours déplacé · ${nom}`, `Prévu ${quandParis(a.debut)}, maintenant ${quandParis(ailleurs.debut)}.`, ailleurs.debut);
-          else edt(`Cours annulé · ${nom}`, `Il était prévu ${quandParis(a.debut)}${a.lieu ? ", " + a.lieu : ""}.`, a.debut);
+          if (ailleurs) edt(nom, `Déplacé : ${quandParis(a.debut, true)} → ${quandParis(ailleurs.debut, true)}.`, ailleurs.debut);
+          else edt(nom, `Annulé : ${quandParis(a.debut)}${a.lieu ? " (" + a.lieu + ")" : ""}.`, a.debut);
           continue;
         }
-        if (n.debut !== a.debut) edt(`Cours déplacé · ${nom}`, `Prévu ${quandParis(a.debut)}, maintenant ${quandParis(n.debut)}.`, n.debut);
-        else if (n.lieu && n.lieu !== a.lieu) edt(`Salle changée · ${nom}`, `${quandParis(a.debut)} : ${n.lieu}${a.lieu ? " (au lieu de " + a.lieu + ")" : ""}.`, a.debut);
+        if (n.debut !== a.debut) edt(nom, `Déplacé : ${quandParis(a.debut, true)} → ${quandParis(n.debut, true)}.`, n.debut);
+        else if (n.lieu && n.lieu !== a.lieu) edt(nom, `Nouvelle salle : ${n.lieu}${a.lieu ? " au lieu de " + a.lieu : ""}, ${quandParis(a.debut)}.`, a.debut);
       }
       for (const n of neufs) {
         if (n.debut <= maint || n.debut > alerte || aMap.has(cle(n))) continue;
         if (avant.some((a) => a.titre === n.titre && Math.abs(a.debut - n.debut) < 7 * 86400000)) continue;   // déjà compté comme déplacé
-        edt(`Nouveau cours · ${nomCours(n.titre)}`, `${quandParis(n.debut)}${n.lieu ? ", " + n.lieu : ""}.`, n.debut);
+        edt(nomCours(n.titre), `Cours ajouté : ${quandParis(n.debut)}${n.lieu ? " (" + n.lieu + ")" : ""}.`, n.debut);
       }
     }
     // trop de changements d'un coup (changement de semestre, autre lien) : on ne noie pas le téléphone

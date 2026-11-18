@@ -1917,7 +1917,7 @@ html.tabbar-on .tabbar{display:flex;}
 .tb-mid:active .tb-rond{transform:scale(.92);}
 .tb-rond svg{width:26px;height:26px;}
 .tb-mid.on{color:var(--accent);}
-.tb-nb{position:absolute;top:-6px;right:12px;min-width:18px;height:18px;border-radius:9px;background:var(--new);color:#fff;font-size:10.5px;font-weight:800;display:grid;place-items:center;padding:0 5px;border:2px solid var(--surface-solid);}
+.tb-nb{position:absolute;top:-6px;right:12px;min-width:18px;height:18px;border-radius:9px;background:var(--accent);color:#fff;font-size:10.5px;font-weight:800;display:grid;place-items:center;padding:0 5px;border:2px solid var(--surface-solid);}
 .tb-rond .tb-nb{top:-6px;right:-6px;}
 .hm-btns>.memo-fab{display:grid !important;}
 .tb-nb[hidden],.hm-btns [hidden]{display:none;}
@@ -2051,7 +2051,7 @@ html.tabbar-on .cal-row,#pick-list .cal-row{border-radius:18px;}
 #pick-title{font-family:var(--font-text);font-weight:800;letter-spacing:-.02em;}
 .compte-av{background:linear-gradient(140deg,var(--accent),var(--accent-2));color:#fff;}
 /* pastille des cours : un point, pas un chiffre */
-.tb-nb.tb-point{min-width:12px;width:12px;height:12px;padding:0;font-size:0;top:-2px;right:-2px;}
+.tb-nb.tb-point{min-width:9px;width:9px;height:9px;padding:0;font-size:0;top:-1px;right:-3px;border-width:3px;box-sizing:content-box;}
 
 /* titres de l'interface : police nette ; le serif reste pour le contenu des cours */.page-title,.lex-lettre,.lex-terme,.auteur-nom,.auteur-avatar,.psy-hero-title,.psy-nav-title,#screen-synthese .recap-num,.sem-name,.sem-tile .sem-name,.project-title,.ecue-name,.vide-t,.aide-acc-t,.sheet-title,.sheet .sheet-title,.dev-name,.dv-nom,.edt-week,.edt-day-name,.plan-day,.ht-t,.mode-name,.qc-name,.colle-carte-t,.fin-titre,.sr-title,.bilan-score{font-family:var(--font-text);font-weight:800;letter-spacing:-.015em;}
 
@@ -2634,7 +2634,7 @@ html,body,*{scrollbar-width:none;}
 body.lec-on .audio-pill{display:none;}
 /* ── Notifications : la cloche de l'accueil et sa page ── */
 #btn-notifs{position:relative;}
-#btn-notifs .nb{position:absolute;top:-5px;right:-5px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--new,var(--c-r));color:#fff;font-size:10.5px;font-weight:800;display:grid;place-items:center;border:2px solid color-mix(in srgb,var(--accent) 80%,#000);}
+#btn-notifs .nb{position:absolute;top:-6px;right:-6px;min-width:19px;height:19px;padding:0 5px;border-radius:10px;background:#fff;color:var(--accent);font-size:11px;font-weight:800;display:grid;place-items:center;border:0;box-shadow:0 2px 6px rgba(0,0,0,.18);}
 #notifs-filtres{margin:2px 0 6px;}
 .nf-seg{display:flex;background:rgba(255,255,255,.18);border-radius:13px;padding:3px;margin-top:4px;}
 .nf-seg button{flex:1;border:0;background:none;color:#fff;font:inherit;font-size:14px;font-weight:700;padding:8px 0;border-radius:10px;cursor:pointer;}
