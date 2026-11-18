@@ -8032,7 +8032,7 @@ function majLecture(){
   b.classList.toggle("on", on); if(!on) return;
   const tete = document.querySelector("#screen-split .split-head"); if(!tete) return;
   const r = tete.getBoundingClientRect(), w = Math.round(r.width), hh = Math.round(r.bottom);
-  const R = parseFloat(getComputedStyle(tete).borderBottomLeftRadius) || 22, e = 3, H = 2 * R + 4;
+  const R = parseFloat(getComputedStyle(tete).borderBottomLeftRadius) || 22, e = 1.25, H = 2 * R + 4;
   if(b._cle !== w + "|" + hh + "|" + R){
     b._cle = w + "|" + hh + "|" + R;
     b.setAttribute("width", w); b.setAttribute("height", H); b.setAttribute("viewBox", `0 0 ${w} ${H}`);
