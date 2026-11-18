@@ -2605,7 +2605,7 @@ function majPastilleAudio(){
   if(!p){
     p = el("button","pomo-pill audio-pill"); p.id = "audio-pill"; p.type = "button";
     p.setAttribute("aria-label", "Écouter ce chapitre");
-    p.innerHTML = LEC_ICO.voix + "<span>Écouter</span>";
+    p.innerHTML = LEC_ICO.voix;
     p.addEventListener("click", ()=>{ if(p._glisse) return; const pn = document.querySelector("#screen-split .pane.active"); if(pn){ haptic(); lecteurStart(pn); } });
     document.body.appendChild(p);
     rendreDeplacable(p, "audio", "droite");
@@ -2668,6 +2668,7 @@ function lecteurStop(){
   LEC.blocs.forEach(b=>b.classList.remove("tts-on"));
   LEC.blocs = []; LEC.phrases = []; LEC.blocCourant = -1; LEC.racine = null;
   if(LEC.bar){ LEC.bar.remove(); LEC.bar = null; }
+  lecPleinFermer();
   document.body.classList.remove("lec-on");
 }
 function lecPlayPause(){
@@ -2736,25 +2737,31 @@ const LEC_ICO = {
   close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
   voix:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>'
 };
+// Le lecteur : une pilule (section précédente, pause entourée de la progression, suivante, vitesse, fermer).
+// Un appui sur la vitesse ou sur le fond de la pilule ouvre le lecteur complet.
 function lecBarre(){
   if(LEC.bar) LEC.bar.remove();
   const bar = el("div","lec-bar");
-  const b = (cls, html, label, fn)=>{
+  const b = (cls, html, label, fn, dans)=>{
     const x = el("button","lec-btn " + cls);
     x.type = "button"; x.innerHTML = html; x.setAttribute("aria-label", label);
     x.addEventListener("click", e=>{ e.stopPropagation(); haptic(); fn(); });
-    bar.appendChild(x); return x;
+    (dans || bar).appendChild(x); return x;
   };
-  b("lec-voix", LEC_ICO.voix, "Choisir la voix", lecChoixVoix);
   const unite = lecEstPdf() ? "Page" : "Section";
   b("lec-prev", LEC_ICO.prev, unite + " précédente", ()=>lecAller(-1));
-  b("lec-play", LEC_ICO.pause, "Pause", lecPlayPause);
+  const anneau = el("span","lec-anneau");
+  anneau.innerHTML = `<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" class="lec-anneau-fond"/><circle cx="24" cy="24" r="22" class="lec-anneau-val"/></svg>`;
+  bar.appendChild(anneau);
+  b("lec-play", LEC_ICO.pause, "Pause", lecPlayPause, anneau);
   b("lec-next", LEC_ICO.next, unite + " suivante", ()=>lecAller(1));
-  b("lec-speed", "", "Vitesse", lecVitesse);
+  b("lec-speed", "", "Vitesse et lecteur complet", lecPleinOuvrir);
   b("lec-close", LEC_ICO.close, "Arrêter la lecture", lecteurStop);
+  bar.addEventListener("click", ()=>{ haptic(); lecPleinOuvrir(); });
   document.body.appendChild(bar);
   LEC.bar = bar;
   lecMajBarre();
+  clearInterval(LEC.suivi); LEC.suivi = setInterval(()=>{ if(!LEC.bar){ clearInterval(LEC.suivi); return; } lecMajProgression(); }, 400);
   requestAnimationFrame(()=>bar.classList.add("show"));
 }
 function lecMajBarre(){
@@ -2763,7 +2770,96 @@ function lecMajBarre(){
   p.innerHTML = LEC.pause ? LEC_ICO.play : LEC_ICO.pause;
   p.setAttribute("aria-label", LEC.pause ? "Reprendre" : "Pause");
   LEC.bar.querySelector(".lec-speed").textContent = String(LEC.vitesse).replace(".", ",") + "×";
+  lecMajProgression();
 }
+// Où on en est : l'anneau de la pilule, et le lecteur complet s'il est ouvert
+function lecSecondes(n){ return n / (LEC_CPS_DEFAUT * (LEC.vitesse || 1)); }
+function lecDuree(sec){ const m = Math.round(sec / 60); return m < 1 ? "moins d'une minute" : m === 1 ? "1 min" : m + " min"; }
+function lecNomBloc(bi){
+  const b = LEC.blocs[bi]; if(!b) return "";
+  if(lecEstPdf()) return "Page " + (bi + 1);
+  const t = b.querySelector(".section-title, .recap-label");
+  return t ? t.textContent.replace(/\s+/g, " ").trim() : "Section " + (bi + 1);
+}
+function lecMajProgression(){
+  if(!LEC.bar || !LEC.phrases.length) return;
+  const n = LEC.phrases.length, i = Math.max(0, Math.min(n - 1, LEC.i || 0));
+  const v = LEC.bar.querySelector(".lec-anneau-val");
+  if(v) v.style.strokeDashoffset = String(138.2 * (1 - i / n));
+  const pl = document.getElementById("lec-plein");
+  if(!pl || !pl.classList.contains("open")) return;
+  const bi = LEC.phrases[i].b, nb = LEC.blocs.length;
+  const longueur = p => (p.toks || []).reduce((x, m)=>x + (m.dit || "").length + 1, 0);
+  let avant = 0, reste = 0;
+  LEC.phrases.forEach((p, k)=>{ if(k < i) avant += longueur(p); else reste += longueur(p); });
+  pl.querySelector(".lp-k").textContent = (lecEstPdf() ? "PAGE " : "SECTION ") + (bi + 1) + " SUR " + nb;
+  pl.querySelector(".lp-titre").textContent = lecNomBloc(bi);
+  const prog = pl.querySelector(".lp-prog");
+  if(prog.children.length !== nb) prog.innerHTML = "<i></i>".repeat(nb);
+  const debut = LEC.phrases.findIndex(p=>p.b === bi), fin = LEC.phrases.filter(p=>p.b === bi).length;
+  [...prog.children].forEach((x, k)=>{
+    x.style.setProperty("--p", k < bi ? "100%" : k > bi ? "0%" : Math.round(100 * (i - debut) / Math.max(1, fin)) + "%");
+  });
+  pl.querySelector(".lp-ecoule").textContent = lecDuree(lecSecondes(avant)).replace("moins d'une minute", "0 min") + " écoutées";
+  pl.querySelector(".lp-reste").textContent = "encore " + lecDuree(lecSecondes(reste));
+  pl.querySelector(".lp-play").innerHTML = LEC.pause ? LEC_ICO.play : LEC_ICO.pause;
+  pl.querySelectorAll(".lp-vit button").forEach(x=>x.classList.toggle("on", parseFloat(x.dataset.v) === LEC.vitesse));
+  const voix = lecVoixActuelle();
+  pl.querySelector(".lp-voix em").textContent = LEC.voixId === VOIX_SYSTEME || !voix ? "Voix de l'iPhone" : voix.name;
+}
+// Une phrase avant ou après
+function lecPhrase(sens){
+  if(!LEC.phrases.length) return;
+  LEC.i = Math.max(0, Math.min(LEC.phrases.length - 1, (LEC.i || 0) + sens));
+  LEC.depuis = 0; LEC.pause = false; LEC.toucheA = 0;
+  lecMajBarre(); lecRelancer();
+}
+// Le lecteur complet : la section lue, la progression section par section, les phrases, toutes les vitesses, la voix
+function lecPleinOuvrir(){
+  let pl = document.getElementById("lec-plein");
+  if(!pl){
+    pl = el("div","lec-plein"); pl.id = "lec-plein";
+    pl.innerHTML = `<div class="lp-voile"></div><div class="lp-feuille" role="dialog" aria-label="Lecteur">
+      <div class="lp-poignee"></div>
+      <div class="lp-k"></div><div class="lp-titre"></div>
+      <div class="lp-prog"></div><div class="lp-temps"><span class="lp-ecoule"></span><span class="lp-reste"></span></div>
+      <div class="lp-ctl">
+        <button type="button" class="lp-b" data-a="sec-">${LEC_ICO.prev}</button>
+        <button type="button" class="lp-b lp-ph" data-a="ph-">‹ phrase</button>
+        <button type="button" class="lp-b lp-play" data-a="play"></button>
+        <button type="button" class="lp-b lp-ph" data-a="ph+">phrase ›</button>
+        <button type="button" class="lp-b" data-a="sec+">${LEC_ICO.next}</button>
+      </div>
+      <div class="lp-k">VITESSE</div>
+      <div class="lp-vit">${LEC_VITESSES.map(v=>`<button type="button" data-v="${v}">${String(v).replace(".", ",")}×</button>`).join("")}</div>
+      <button type="button" class="lp-voix">${LEC_ICO.voix}<span>Voix</span><em></em><b>›</b></button>
+      <button type="button" class="lp-stop">Arrêter la lecture</button>
+    </div>`;
+    document.body.appendChild(pl);
+    pl.querySelector(".lp-voile").addEventListener("click", lecPleinFermer);
+    pl.querySelectorAll(".lp-ctl button").forEach(x=>x.addEventListener("click", ()=>{
+      haptic(); const a = x.dataset.a;
+      if(a === "play") lecPlayPause(); else if(a === "sec-") lecAller(-1); else if(a === "sec+") lecAller(1);
+      else lecPhrase(a === "ph+" ? 1 : -1);
+      lecMajProgression();
+    }));
+    pl.querySelectorAll(".lp-vit button").forEach(x=>x.addEventListener("click", ()=>{
+      haptic(); LEC.vitesse = parseFloat(x.dataset.v); lecEcrire("lec-vitesse", String(LEC.vitesse));
+      if(LEC.actif && !LEC.pause) lecRelancer();
+      lecMajBarre();
+    }));
+    pl.querySelector(".lp-voix").addEventListener("click", ()=>{ haptic(); lecPleinFermer(); lecChoixVoix(); });
+    pl.querySelector(".lp-stop").addEventListener("click", ()=>{ haptic(); lecPleinFermer(); lecteurStop(); });
+    // glisser vers le bas pour fermer
+    const f = pl.querySelector(".lp-feuille"); let y0 = null;
+    f.addEventListener("touchstart", e=>{ y0 = e.touches[0].clientY; }, { passive:true });
+    f.addEventListener("touchmove", e=>{ if(y0 === null) return; const d = e.touches[0].clientY - y0; if(d > 0) f.style.transform = `translateY(${d}px)`; }, { passive:true });
+    f.addEventListener("touchend", e=>{ const d = (e.changedTouches[0].clientY - (y0 ?? 0)); f.style.transform = ""; y0 = null; if(d > 80) lecPleinFermer(); });
+  }
+  pl.classList.add("open");
+  lecMajProgression();
+}
+function lecPleinFermer(){ const pl = document.getElementById("lec-plein"); if(pl) pl.classList.remove("open"); }
 // Le bouton posé en haut d'un chapitre.
 function lecteurBouton(root, icone){
   const x = el("button", icone ? "chap-share chap-ecoute" : "lec-start");
@@ -3855,7 +3951,7 @@ function poserHdPsycho(){
   if(pi && window.MutationObserver) new MutationObserver(()=>{ poserEntete(document.getElementById("screen-psycho")); poserHdPsycho(); }).observe(pi, { childList:true });
 })();
 // à quelle profondeur est chaque écran : sert à savoir si on avance ou si on revient
-const PROFONDEUR = { login:0, pick:0, welcome:0, semestres:0, semchoice:1, edt:1, classes:1, search:1, mesdevoirs:1, sites:1, index:2, planning:1, psycho:1,
+const PROFONDEUR = { login:0, pick:0, welcome:0, semestres:0, semchoice:1, notifs:1, edt:1, classes:1, search:1, mesdevoirs:1, sites:1, index:2, planning:1, psycho:1,
   class:2, shared:3, subjects:2, matiere:2.5, controle:2.6, split:3, qcmchoix:4, lexique:4, synthese:4, auteurs:4, devoirs:4, session:5 };
 function profondeurEcran(id){ return PROFONDEUR[id] ?? 2; }
 let CALME_T = null, SANS_ENTREE = false;
@@ -4916,6 +5012,7 @@ function parseICS(txt){
     else if(key === "SUMMARY") cur.title = icsText(val);
     else if(key === "LOCATION")cur.place = icsText(val);
     else if(key === "DESCRIPTION") cur.desc = icsText(val);
+    else if(key === "UID")     cur.uid = val.trim();
   });
   return out.filter(e=>e.start).sort((a,b)=>a.start-b.start);
 }
@@ -5001,6 +5098,7 @@ async function loadEDT(force){
     }).sort((a,b)=>a.start - b.start);
     edtDiag += " | total lus:" + EDT.length;
     edtState = "ok";
+    try{ comparerEDT(theme); }catch(e){}
     try{
       if(EDT.length) localStorage.setItem(EDT_CACHE_KEY, JSON.stringify({
         theme, at: Date.now(),
@@ -5021,6 +5119,168 @@ async function loadEDT(force){
   }
 }
 
+// ── Les changements de l'emploi du temps : cours annulés, déplacés, salle changée ──
+// On compare la version gardée et celle qui arrive, sur les trois semaines à venir.
+// Ce qui change est écrit dans l'historique des notifications (sur ce téléphone).
+function comparerEDT(theme){
+  let avant = null;
+  try{ const c = JSON.parse(localStorage.getItem(EDT_CACHE_KEY) || "null"); if(c && c.theme === theme) avant = c.events || null; }catch(e){}
+  if(!avant || !avant.length || !EDT.length) return;
+  const maint = Date.now(), fin = maint + 21 * 86400000;
+  const dansFenetre = t => t > maint && t < fin;
+  // la nouvelle version doit couvrir la période, sinon un calendrier en panne ferait « annuler » tout
+  const finNouveau = EDT[EDT.length - 1].start.getTime();
+  const cle = e => e.uid || (e.title + "@" + new Date(e.start).toISOString());
+  const nouveaux = new Map(EDT.map(e=>[cle(e), e]));
+  const anciens = new Map(avant.map(e=>[cle(e), e]));
+  // « vendredi 20 novembre, 13h30 » ; court : « mardi 24, 13h30 »
+  const quand = (d, court) => { d = new Date(d); return JOURS[d.getDay()].toLowerCase() + " " + d.getDate() + (court ? "" : " " + MOIS[d.getMonth()]) + ", " + hhmm(d).replace(":", "h"); };
+  const ajouts = [];
+  avant.forEach(a=>{
+    const t = new Date(a.start).getTime();
+    if(!dansFenetre(t) || t > finNouveau) return;
+    const n = nouveaux.get(cle(a)), nom = nomCourt(a.title || "Cours");
+    if(!n){
+      // le même cours ailleurs dans la semaine : déplacé, sinon annulé
+      const ailleurs = EDT.find(x=>x.title === a.title && !anciens.has(cle(x)) && Math.abs(x.start - t) < 7 * 86400000);
+      if(ailleurs) ajouts.push({ titre:nom, texte:"Déplacé : " + quand(t, 1) + " → " + quand(ailleurs.start, 1) + ".", date:ailleurs.start });
+      else ajouts.push({ titre:nom, texte:"Annulé : " + quand(t) + (a.place ? " (" + a.place + ")" : "") + ".", date:t });
+      return;
+    }
+    if(n.start.getTime() !== t) ajouts.push({ titre:nom, texte:"Déplacé : " + quand(t, 1) + " → " + quand(n.start, 1) + ".", date:n.start });
+    else if((a.place || "") !== (n.place || "") && n.place) ajouts.push({ titre:nom, texte:"Nouvelle salle : " + n.place + (a.place ? " au lieu de " + a.place : "") + ", " + quand(t) + ".", date:t });
+  });
+  // un cours ajouté dans les deux semaines (rattrapage…)
+  EDT.forEach(n=>{
+    const t = n.start.getTime();
+    if(t > maint && t < maint + 14 * 86400000 && !anciens.has(cle(n)) && !avant.some(a=>a.title === n.title && Math.abs(new Date(a.start) - t) < 7 * 86400000))
+      ajouts.push({ titre:nomCourt(n.title || "Cours"), texte:"Cours ajouté : " + quand(t) + (n.place ? " (" + n.place + ")" : "") + ".", date:t });
+  });
+  // connecté : c'est le serveur qui surveille l'emploi du temps (et prévient même app fermée)
+  if(syncOn && PSEUDO) return;
+  ajouts.forEach(x=>notifLocale("edt", x.titre, x.texte, { type:"edt", date:new Date(x.date).toISOString() }));
+}
+// ── L'historique des notifications ──
+// Celles envoyées par le serveur (cours, devoirs, classes, rappels, projets) + celles vues sur ce téléphone (emploi du temps).
+const NOTIFS_LOCALES_CLE = "revision_notifs_locales_v1";
+function notifsLocales(){ try{ const a = JSON.parse(localStorage.getItem(NOTIFS_LOCALES_CLE) || "[]"); return Array.isArray(a) ? a : []; }catch(e){ return []; } }
+function notifsLocalesSauver(a){ try{ localStorage.setItem(NOTIFS_LOCALES_CLE, JSON.stringify(a.slice(0, 200))); }catch(e){} }
+function notifLocale(famille, title, body, data){
+  const a = notifsLocales();
+  // pas deux fois le même changement
+  if(a.some(x=>x.title === title && x.body === body)) return;
+  a.unshift({ id:"l" + Date.now() + Math.random().toString(36).slice(2, 6), famille, title, body, data:data || {}, lu:false, created_at:new Date().toISOString(), local:true });
+  notifsLocalesSauver(a.filter(x=>Date.now() - new Date(x.created_at) < 60 * 86400000));
+  majPastilleNotifs();
+}
+let NOTIFS_SERVEUR = null;   // dernière liste reçue du serveur
+async function chargerNotifs(){
+  if(!syncOn || !PSEUDO) return NOTIFS_SERVEUR || [];
+  try{ NOTIFS_SERVEUR = (await api("notif_list")).items || []; }catch(e){}
+  return NOTIFS_SERVEUR || [];
+}
+function toutesNotifs(){
+  return [...(NOTIFS_SERVEUR || []), ...notifsLocales()].sort((a,b)=>(!!a.ancien - !!b.ancien) || (new Date(b.created_at) - new Date(a.created_at)));
+}
+const NOTIF_CAT = [
+  { k:"tout",    nom:"Tout", ic:"cloche" },
+  { k:"edt",     nom:"Horaires", fam:["edt"], ic:"calendrier" },
+  { k:"devoirs", nom:"Devoirs",  fam:["devoirs","rappels","semaine"], ic:"etapes" },
+  { k:"cours",   nom:"Cours",    fam:["cours"], ic:"livre" },
+  { k:"classe",  nom:"Classe",   fam:["classe"], ic:"membres" },
+  { k:"projets", nom:"Projets",  fam:["projets"], ic:"projet" }
+];
+function catDe(n){ return (NOTIF_CAT.find(c=>c.fam && c.fam.includes(n.famille)) || { k:"autre", ic:"reveil" }); }
+let NOTIF_FILTRE = { cat:"tout", lu:null };   // lu : "nonlu" | "tout" ; null = choisi à l'ouverture
+function majPastilleNotifs(){
+  const b = document.getElementById("btn-notifs"); if(!b) return;
+  const n = toutesNotifs().filter(x=>!x.lu).length;
+  let p = b.querySelector(".nb");
+  if(!n){ if(p) p.remove(); return; }
+  if(!p){ p = el("span","nb"); b.appendChild(p); }
+  p.textContent = n > 99 ? "99+" : n;
+}
+async function marquerNotifs(liste, lu){
+  liste = liste.filter(x=>!x.ancien);
+  const serveur = liste.filter(x=>!x.local).map(x=>x.id), loc = new Set(liste.filter(x=>x.local).map(x=>x.id));
+  liste.forEach(x=>{ x.lu = lu; });
+  if(loc.size){ const a = notifsLocales(); a.forEach(x=>{ if(loc.has(x.id)) x.lu = lu; }); notifsLocalesSauver(a); }
+  majPastilleNotifs();
+  if(serveur.length && syncOn) try{ await api("notif_lu", { ids:serveur, lu }); }catch(e){}
+}
+async function openNotifs(){
+  // à l'ouverture : les non lues s'il y en a, sinon tout
+  NOTIF_FILTRE = { cat:"tout", lu:null };
+  showScreen("notifs"); window.scrollTo(0, 0);
+  renderNotifs();
+  await chargerNotifs();
+  renderNotifs();
+}
+function renderNotifs(){
+  const box = document.getElementById("notifs-liste"); if(!box) return;
+  const tout = toutesNotifs();
+  const nonLus = tout.filter(n=>!n.lu);
+  if(!NOTIF_FILTRE.lu) NOTIF_FILTRE.lu = nonLus.length ? "nonlu" : "tout";
+  const ici = tout.filter(n=>(NOTIF_FILTRE.cat === "tout" || catDe(n).k === NOTIF_FILTRE.cat) && (NOTIF_FILTRE.lu === "tout" || !n.lu));
+  // en haut : non lues ou toutes
+  const seg = document.getElementById("notifs-seg");
+  seg.innerHTML = [["nonlu","Non lues"],["tout","Toutes"]].map(([k,t])=>`<button type="button" class="${NOTIF_FILTRE.lu === k ? "on" : ""}" data-lu="${k}">${t}</button>`).join("");
+  seg.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{ haptic(); NOTIF_FILTRE.lu = b.dataset.lu; renderNotifs(); }));
+  // dessous : une tuile par catégorie, avec ses non lues (Projets seulement s'il y en a)
+  const f = document.getElementById("notifs-filtres");
+  const cats = NOTIF_CAT.filter(c=>c.k !== "projets" || tout.some(n=>catDe(n).k === "projets"));
+  f.innerHTML = `<div class="nf-cats">${cats.map(c=>{
+      const nb = (c.k === "tout" ? nonLus : nonLus.filter(n=>catDe(n).k === c.k)).length;
+      return `<button type="button" class="nf-cat${NOTIF_FILTRE.cat === c.k ? " on" : ""}" data-cat="${c.k}"><span class="nf-ic nf-${c.k}">${icone(c.ic)}</span><span class="nf-cat-n">${esc(c.nom)}</span>${nb ? `<em>${nb > 99 ? "99+" : nb}</em>` : ""}</button>`; }).join("")}</div>`;
+  f.querySelectorAll(".nf-cat").forEach(b=>b.addEventListener("click",()=>{ haptic(); NOTIF_FILTRE.cat = b.dataset.cat; renderNotifs(); }));
+  const tl = document.getElementById("notifs-tout-lu");
+  const aLire = ici.filter(n=>!n.lu);
+  tl.hidden = !aLire.length;
+  tl.onclick = ()=>{ haptic(); marquerNotifs(aLire, true); renderNotifs(); };
+  box.innerHTML = "";
+  const voirToutes = ()=>{
+    const p = el("p","nf-fin");
+    p.innerHTML = `Tout le reste est lu · <button type="button">Voir toutes</button>`;
+    p.querySelector("button").addEventListener("click",()=>{ haptic(); NOTIF_FILTRE.lu = "tout"; renderNotifs(); });
+    box.appendChild(p);
+  };
+  if(!ici.length){
+    if(NOTIF_FILTRE.lu === "nonlu" && tout.length){
+      box.innerHTML = vide("cloche", "Tout est lu", "Rien de nouveau ici.");
+      voirToutes(); return;
+    }
+    box.innerHTML = vide("cloche", tout.length ? "Rien ici" : "Aucune notification pour l'instant",
+      tout.length ? "Choisis une autre catégorie pour voir les autres." : "Les cours publiés, les devoirs, les rappels et les changements de l'emploi du temps s'afficheront ici, même si tu as balayé la notification.");
+    return;
+  }
+  // groupées par jour ; les anciennes (retrouvées dans les classes) à part, à la fin
+  let jour = "", carte = null, separe = false;
+  ici.forEach(n=>{
+    const d = new Date(n.created_at), j = d.toDateString();
+    if(n.ancien && !separe){ separe = true; jour = ""; }
+    if(j !== jour){
+      jour = j;
+      const auj = new Date().toDateString(), hier = new Date(Date.now() - 86400000).toDateString();
+      const t = el("div","nf-jour"); t.textContent = j === auj ? "Aujourd'hui" : j === hier ? "Hier" : JOURS[d.getDay()] + " " + d.getDate() + " " + MOIS[d.getMonth()];
+      box.appendChild(t);
+      carte = el("div","nf-groupe"); box.appendChild(carte);
+    }
+    const c = catDe(n);
+    const r = el("button","nf-row" + (n.lu ? " lu" : "")); r.type = "button";
+    r.innerHTML = `<span class="nf-ic nf-${c.k}">${icone(c.ic)}</span><span class="nf-t"><b>${esc(n.title || "Révisioner")}</b><small>${esc(n.body || "")}</small></span><span class="nf-h">${hhmm(d)}</span>${n.lu ? "" : '<i class="nf-pt" aria-label="non lue"></i>'}`;
+    r.addEventListener("click",()=>{
+      haptic();
+      if(!n.lu) marquerNotifs([n], true);
+      const data = n.data || {};
+      if(data.type === "edt"){ openEDTAt(new Date(data.date || n.created_at)); return; }
+      if(data.type) ouvrirDepuisNotif(data); else renderNotifs();
+    });
+    // appui long : lue / non lue
+    if(!n.ancien) onLongPress(r, ()=>{ marquerNotifs([n], !n.lu); renderNotifs(); toast(n.lu ? "Marquée comme lue." : "Marquée comme non lue."); });
+    carte.appendChild(r);
+  });
+  if(NOTIF_FILTRE.lu === "nonlu" && tout.some(n=>n.lu)) voirToutes();
+}
 // ── Helpers de dates ──
 function sameDay(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
 // ══════════════════════════════════════════════════
@@ -5401,10 +5661,14 @@ function matiereDuCours(e){
   const choisie = e && e.jour && e.subjChoisi !== undefined ? e.subjChoisi : (n && n.subj);
   if(choisie){ const s = SUBJECTS.find(x=>x.id === choisie); if(s) return s; }
   if(e && e.jour) return null;
+  // la matière déjà choisie pour ce cours, un autre jour : elle vaut pour tous ses créneaux
+  const retenue = (USER_SETTINGS.coursMat || {})[cleCoursMat(e)];
+  if(retenue){ const s = SUBJECTS.find(x=>x.id === retenue); if(s) return s; }
   const m = String(e.title||"").match(/\b(?:ECUE|UE)\s*([0-9]+(?:\.[0-9]+)*)/i);
   if(!m) return matiereLangue(e);
   const cands = SUBJECTS.filter(x=>String(x.ecue||"").split(/\s/)[0] === m[1]);
-  if(cands.length < 2) return cands[0] || null;
+  if(!cands.length) return matiereLangue(e);
+  if(cands.length < 2) return cands[0];
   // même code pour plusieurs matières : on garde celle dont le nom colle le mieux
   const mots = t=>plat(t).split(/[^a-z0-9]+/).filter(w=>w.length > 3);
   const titre = new Set(mots(e.title));
@@ -5412,6 +5676,8 @@ function matiereDuCours(e){
   const best = cands.slice().sort((a,b)=>score(b) - score(a));
   return score(best[0]) > score(best[1]) ? best[0] : null;
 }
+// le nom du cours sans son type ni ses accents : « Anglais C TD » et « Anglais C » sont le même cours
+function cleCoursMat(e){ return plat(nomCourt(String(e.title || ""))).replace(/\b(cm|td|tp)\b/g, "").replace(/\s+/g, " ").trim(); }
 // « Anglais C », « Espagnol B1 »… : l'emploi du temps n'a pas le code de la matière.
 // On le relie à la matière de langue du semestre de ce cours (septembre à janvier : semestre impair, sinon pair).
 const LANGUE_RE = /\b(anglais|espagnol|allemand|italien|portugais|arabe|chinois|english|spanish|langues?|lv ?\d?)\b/;
@@ -5683,6 +5949,11 @@ function saveEvSheet(){
   let subj = document.getElementById("ev-subj").value;
   // la matière devinée n'est pas enregistrée en plus : elle se retrouve toute seule (un cours sans rien reste neutre)
   const note = document.getElementById("ev-note").value.trim();
+  // retenir la matière choisie pour ce cours : elle sera déjà remplie les autres jours
+  if(!evEditing.jour && evEditing.title){
+    const ck = cleCoursMat(evEditing), cm = USER_SETTINGS.coursMat || {};
+    if(ck && subj && cm[ck] !== subj){ USER_SETTINGS.coursMat = Object.assign({}, cm, { [ck]:subj }); saveContent(); }
+  }
   if(subj && !evEditing.jour && !type && !note){ const dv = matiereDuCours(Object.assign({}, evEditing)); if(dv && dv.id === subj && !(evNote(evEditing) || {}).subj) subj = ""; }
   // le prof : enregistré pour tous les créneaux de ce cours, seulement s'il a changé
   const champNom = document.getElementById("ev-prof-nom");
@@ -6310,6 +6581,9 @@ function changerIconeMatiere(m, apres){
 // Les emojis encore écrits dans les données passent par EMO_IC ; un emoji choisi à la main reste affiché tel quel.
 const UI_IC = {"graine": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M3.5 19.5h17v2h-17z\"/><ellipse fill=\"currentColor\" stroke=\"none\" opacity=\".22\" cx=\"12\" cy=\"16\" rx=\"3.2\" ry=\"2.3\"/><path d=\"M3.5 19.5h17\"/><ellipse cx=\"12\" cy=\"16\" rx=\"3.2\" ry=\"2.3\"/><path d=\"M12 13.7v-2.2c0-1.4 1-2.4 2.5-2.4\"/>", "pousse": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 14c-3.2 0-5.5-2.2-5.5-5.5 3.2 0 5.5 2.2 5.5 5.5zM12 11.5c0-3 2-5 5.2-5 0 3-2 5-5.2 5z\"/><path d=\"M3.5 20.5h17M12 20.5v-9M12 14c-3.2 0-5.5-2.2-5.5-5.5 3.2 0 5.5 2.2 5.5 5.5zM12 11.5c0-3 2-5 5.2-5 0 3-2 5-5.2 5z\"/>", "plante": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 16c-3.2 0-5.3-2-5.3-5 3.2 0 5.3 2 5.3 5zM12 12.5c0-3 2-5 5.2-5 0 3-2 5-5.2 5zM12 8.5c-2 0-3.3-1.3-3.3-3.3 2 0 3.3 1.3 3.3 3.3z\"/><path d=\"M3.5 20.5h17M12 20.5V5.5M12 16c-3.2 0-5.3-2-5.3-5 3.2 0 5.3 2 5.3 5zM12 12.5c0-3 2-5 5.2-5 0 3-2 5-5.2 5zM12 8.5c-2 0-3.3-1.3-3.3-3.3 2 0 3.3 1.3 3.3 3.3z\"/>", "arbuste": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M5.5 17.5a3 3 0 0 1 .8-5.9 4 4 0 0 1 7.5-1.6 3.3 3.3 0 0 1 5 2.9 2.4 2.4 0 0 1-.6 4.6z\"/><path d=\"M5.5 17.5a3 3 0 0 1 .8-5.9 4 4 0 0 1 7.5-1.6 3.3 3.3 0 0 1 5 2.9 2.4 2.4 0 0 1-.6 4.6zM3.5 21h17M9.5 17.5V21M14.5 17.5V21\"/>", "arbre": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 3a4.5 4.5 0 0 1 4.4 3.5 3.7 3.7 0 0 1 .6 7.3H7a3.7 3.7 0 0 1 .6-7.3A4.5 4.5 0 0 1 12 3z\"/><path d=\"M12 3a4.5 4.5 0 0 1 4.4 3.5 3.7 3.7 0 0 1 .6 7.3H7a3.7 3.7 0 0 1 .6-7.3A4.5 4.5 0 0 1 12 3zM12 21v-7.2M12 17.5l-2.5-2.2M12 16l2.3-2.2M8 21h8\"/>", "fleuri": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 3a4.5 4.5 0 0 1 4.4 3.5 3.7 3.7 0 0 1 .6 7.3H7a3.7 3.7 0 0 1 .6-7.3A4.5 4.5 0 0 1 12 3z\"/><path d=\"M12 3a4.5 4.5 0 0 1 4.4 3.5 3.7 3.7 0 0 1 .6 7.3H7a3.7 3.7 0 0 1 .6-7.3A4.5 4.5 0 0 1 12 3zM12 21v-7.2M8 21h8\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"9.6\" cy=\"9.2\" r=\"1.25\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"14.3\" cy=\"8.2\" r=\"1.25\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"12.6\" cy=\"11.6\" r=\"1.25\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"8.6\" cy=\"12\" r=\".9\"/>", "tetecoeur": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M5 11a7 7 0 1 1 11 5.7V21H9v-2.5H7a2 2 0 0 1-2-2v-2l-1.5-.6L5 11z\"/><path d=\"M5 11a7 7 0 1 1 11 5.7V21M9 21v-2.5H7a2 2 0 0 1-2-2v-2l-1.5-.6L5 11\"/><path fill=\"currentColor\" stroke=\"none\" d=\"M12.3 12.6s-3-1.9-3-3.8a1.6 1.6 0 0 1 3-.9 1.6 1.6 0 0 1 3 .9c0 1.9-3 3.8-3 3.8z\"/>", "ecole": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M4 10.5h16v10H4z\"/><path d=\"M2.5 11 12 4.5l9.5 6.5M4 10v10.5M20 10v10.5M3 20.5h18M10 20.5v-4.5h4v4.5\"/><circle cx=\"12\" cy=\"10.8\" r=\"1.8\"/><path d=\"M12 10v1l.7.5\"/>", "archives": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M4.5 8h15v11.5A1.5 1.5 0 0 1 18 21H6a1.5 1.5 0 0 1-1.5-1.5z\"/><rect x=\"3\" y=\"3.5\" width=\"18\" height=\"4.5\" rx=\"1.2\"/><path d=\"M4.5 8v11.5A1.5 1.5 0 0 0 6 21h12a1.5 1.5 0 0 0 1.5-1.5V8M9.5 12h5\"/>", "projet": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M5 4h12l-2.5 4L17 12H5z\"/><path d=\"M5 21V4h12l-2.5 4L17 12H5\"/>", "etapes": "<rect fill=\"currentColor\" stroke=\"none\" opacity=\".22\" x=\"4\" y=\"3.5\" width=\"16\" height=\"17.5\" rx=\"2.5\"/><rect x=\"4\" y=\"3.5\" width=\"16\" height=\"17.5\" rx=\"2.5\"/><path d=\"M7.5 8.5l1.3 1.3 2.2-2.4M13 9h3.5M7.5 14l1.3 1.3 2.2-2.4M13 14.5h3.5\"/>", "ampoule": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 3a6 6 0 0 1 3.5 10.9V16h-7v-2.1A6 6 0 0 1 12 3z\"/><path d=\"M12 3a6 6 0 0 1 3.5 10.9V16h-7v-2.1A6 6 0 0 1 12 3zM9 19h6M10 21.5h4M12 6.5a2.5 2.5 0 0 0-2.5 2.5\"/>", "dossier": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"/><path d=\"M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 11h18\"/>", "micro": "<rect fill=\"currentColor\" stroke=\"none\" opacity=\".22\" x=\"9\" y=\"2.5\" width=\"6\" height=\"11.5\" rx=\"3\"/><rect x=\"9\" y=\"2.5\" width=\"6\" height=\"11.5\" rx=\"3\"/><path d=\"M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5v4M8.5 21.5h7\"/>", "regle": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M3 15.5 15.5 3 21 8.5 8.5 21z\"/><path d=\"M3 15.5 15.5 3 21 8.5 8.5 21zM7 11.5l2 2M10 8.5l1.5 1.5M13 5.5l2 2M5.5 13l1.5 1.5M11.5 10l1.5 1.5\"/>", "calendrier": "<rect fill=\"currentColor\" stroke=\"none\" opacity=\".22\" x=\"3.5\" y=\"5\" width=\"17\" height=\"15.5\" rx=\"2.5\"/><rect x=\"3.5\" y=\"5\" width=\"17\" height=\"15.5\" rx=\"2.5\"/><path d=\"M3.5 10h17M8 3v4M16 3v4\"/><rect fill=\"currentColor\" stroke=\"none\" x=\"7\" y=\"13\" width=\"3\" height=\"3\" rx=\".7\"/>", "chiffres": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M5 13h3.5v7H5zM10.3 8h3.5v12h-3.5zM15.5 4H19v16h-3.5z\"/><path d=\"M5 13h3.5v7H5zM10.3 8h3.5v12h-3.5zM15.5 4H19v16h-3.5zM3 20.5h18\"/>", "lien": "<path d=\"M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1.2 1.2M14 10a4.5 4.5 0 0 0-6.4 0l-3 3A4.5 4.5 0 0 0 11 19.4l1.2-1.2\"/>", "canape": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M5.5 12V8.5A2.5 2.5 0 0 1 8 6h8a2.5 2.5 0 0 1 2.5 2.5V12z\"/><path d=\"M5.5 12V8.5A2.5 2.5 0 0 1 8 6h8a2.5 2.5 0 0 1 2.5 2.5V12M3 12.5a2 2 0 0 1 4 0V15h10v-2.5a2 2 0 0 1 4 0V18H3zM5 18v2M19 18v2\"/>", "cible": "<circle fill=\"currentColor\" stroke=\"none\" opacity=\".22\" cx=\"12\" cy=\"12\" r=\"9\"/><circle cx=\"12\" cy=\"12\" r=\"9\"/><circle cx=\"12\" cy=\"12\" r=\"5\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"12\" cy=\"12\" r=\"1.6\"/>", "adn": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M8 3c0 4.5 8 4.5 8 9s-8 4.5-8 9\"/><path d=\"M8 3c0 4.5 8 4.5 8 9s-8 4.5-8 9M16 3c0 4.5-8 4.5-8 9s8 4.5 8 9M9 6h6M9.5 9.5h5M9.5 14.5h5M9 18h6\"/>", "fleur": "<circle fill=\"currentColor\" stroke=\"none\" cx=\"12\" cy=\"10\" r=\"2\"/><path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 8a3 3 0 1 1 3-3 3 3 0 1 1 1 5.5 3 3 0 1 1-3 3.5 3 3 0 1 1-4-.5A3 3 0 1 1 8 7.5 3 3 0 0 1 12 8z\"/><path d=\"M12 7a2.7 2.7 0 1 1 2.6-3.3A2.7 2.7 0 1 1 16 9a2.7 2.7 0 1 1-2.2 4.4 2.7 2.7 0 1 1-4.5-.6A2.7 2.7 0 1 1 8.2 7 2.7 2.7 0 0 1 12 7zM12 14v7.5M12 18c-2 0-3.5-1.2-3.5-3\"/>", "reveil": "<circle fill=\"currentColor\" stroke=\"none\" opacity=\".22\" cx=\"12\" cy=\"13\" r=\"7.5\"/><circle cx=\"12\" cy=\"13\" r=\"7.5\"/><path d=\"M12 9.5V13l2.5 1.8M4 5.5 6.5 3M20 5.5 17.5 3\"/>", "page": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M6 3h8l4.5 4.5V21H6z\"/><path d=\"M6 3h8l4.5 4.5V21H6zM14 3v4.5h4.5M9 12h6M9 15.5h6\"/>", "semence": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M12 3.5c2.3 1.9 3.3 4 3.3 6a3.3 3.3 0 0 1-6.6 0c0-2 1-4.1 3.3-6z\"/><path d=\"M12 3.5c2.3 1.9 3.3 4 3.3 6a3.3 3.3 0 0 1-6.6 0c0-2 1-4.1 3.3-6zM12 7.2v4.6M3.5 20h17M12 15.8v.6M12 17.8v.4\"/>", "terreau": "<path fill=\"currentColor\" stroke=\"none\" opacity=\".22\" d=\"M6.8 8.5C6 12 5.5 15.5 5.5 18.2A2.8 2.8 0 0 0 8.3 21h7.4a2.8 2.8 0 0 0 2.8-2.8c0-2.7-.5-6.2-1.3-9.7z\"/><path fill=\"currentColor\" stroke=\"none\" d=\"M7.5 8.5c.8-1.8 2.6-2.8 4.5-2.8s3.7 1 4.5 2.8z\" opacity=\".55\"/><path d=\"M6.8 8.5C6 12 5.5 15.5 5.5 18.2A2.8 2.8 0 0 0 8.3 21h7.4a2.8 2.8 0 0 0 2.8-2.8c0-2.7-.5-6.2-1.3-9.7zM5.8 8.5h12.4M12 18.6v-3M12 16.6c-1.8 0-2.9-1-2.9-2.8 1.8 0 2.9 1 2.9 2.8zM12 15.6c0-1.6 1-2.6 2.6-2.6 0 1.6-1 2.6-2.6 2.6z\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"9.5\" cy=\"4.6\" r=\".8\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"13\" cy=\"3.6\" r=\".8\"/><circle fill=\"currentColor\" stroke=\"none\" cx=\"15.2\" cy=\"5.2\" r=\".7\"/>"};
 const EMO_IC = {"📋": "etapes", "💡": "ampoule", "🔍": "rech", "🧭": "boussole", "✍": "plume", "📂": "dossier", "📁": "dossier", "🗂": "archives", "🗣": "micro", "🤝": "com", "💬": "com", "📏": "regle", "🎓": "edu", "📅": "calendrier", "📊": "chiffres", "🏫": "ecole", "📚": "livre", "📖": "livre", "🔗": "lien", "🛋": "canape", "👶": "enf", "👥": "grp", "🧩": "puzzle", "🌀": "psy", "🧠": "psy", "💜": "tetecoeur", "🎯": "cible", "💼": "pro", "🔀": "debat", "🔄": "cycle", "🗺": "globe", "🌍": "globe", "🧬": "adn", "🌸": "fleur", "🌱": "pousse", "⏰": "reveil", "⏳": "reveil", "📄": "page", "✏": "plume", "🔬": "rech", "📐": "regle", "📬": "page", "📝": "plume"};
+// la cloche et les membres (page Notifications)
+UI_IC.cloche = '<path fill="currentColor" stroke="none" opacity=".22" d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0"/>';
+UI_IC.membres = '<circle fill="currentColor" stroke="none" opacity=".22" cx="9" cy="8" r="3.2"/><circle cx="9" cy="8" r="3.2"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0M16 5a3.2 3.2 0 0 1 0 6M17.5 14.5a5 5 0 0 1 3 5.5"/>';
 const SEM_IC = ["graine","graine","pousse","plante","arbuste","arbre","fleuri"];
 function cleIcone(x){ const k = String(x || "").replace(/\ufe0f/g, "").trim(); return (UI_IC[k] || MAT_IC[k]) ? k : EMO_IC[k] || null; }
 function icone(x){
@@ -7060,6 +7334,7 @@ const NOTIF_TYPES = [
   ["classe",  "Ma classe",            "Demandes pour entrer, demande acceptée",         true],
   ["rappels", "Rappels de devoirs",   "La veille à 18 h, et 3 jours avant un contrôle", true],
   ["semaine", "Ma semaine",           "Le dimanche à 18 h : ce qui t'attend",           false],
+  ["edt",     "Emploi du temps",      "Un cours annulé, déplacé, une salle changée",    true],
   ["projets", "CPE et psycho",        "Les étapes de tes projets, 7 jours avant et la veille", true]
 ];
 function notifOn(p, k, parDefaut){ return typeof p[k] === "boolean" ? p[k] : parDefaut; }
@@ -7209,6 +7484,7 @@ if("serviceWorker" in navigator){
 // Appelé une fois connecté au serveur : remet l'abonnement à jour, ouvre la page d'une notification touchée
 function apresConnexionServeur(){
   notifResync();
+  chargerNotifs().then(majPastilleNotifs);
   if(NOTIF_A_OUVRIR){ const d = NOTIF_A_OUVRIR; NOTIF_A_OUVRIR = null; ouvrirDepuisNotif(d); }
 }
 
@@ -7744,14 +8020,34 @@ addEventListener("scroll", ()=>{
   f.classList.add("range");
   clearTimeout(RANGE_T); RANGE_T = setTimeout(()=>f.classList.remove("range"), 900);
 }, { passive:true });
-// barre fine en haut d'un chapitre : où on en est dans la lecture
+// l'avancement dans le chapitre : un trait qui suit le bord arrondi du bas de l'en-tête
 function majLecture(){
   let b = document.getElementById("lecture-barre");
-  if(!b){ b = el("div","lecture-barre"); b.id = "lecture-barre"; b.innerHTML = "<i></i>"; document.body.appendChild(b); }
+  if(!b){
+    b = document.createElementNS("http://www.w3.org/2000/svg", "svg"); b.id = "lecture-barre"; b.setAttribute("class", "lecture-barre");
+    // les deux bouts se fondent dans les coins
+    b.innerHTML = '<defs><linearGradient id="lb-fondu" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="100" y2="0">'
+      + '<stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".16" stop-color="#fff" stop-opacity=".85"/>'
+      + '<stop offset=".84" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>'
+      + '<path class="lb-fond" pathLength="1"/><path class="lb-val" pathLength="1" stroke="url(#lb-fondu)"/>';
+    document.body.appendChild(b);
+  }
   const on = document.documentElement.getAttribute("data-screen") === "split" && curTab !== 2;
   b.classList.toggle("on", on); if(!on) return;
+  const tete = document.querySelector("#screen-split .split-head"); if(!tete) return;
+  const r = tete.getBoundingClientRect(), w = Math.round(r.width), hh = Math.round(r.bottom);
+  const R = parseFloat(getComputedStyle(tete).borderBottomLeftRadius) || 22, e = 1.25, H = 2 * R + 4;
+  if(b._cle !== w + "|" + hh + "|" + R){
+    b._cle = w + "|" + hh + "|" + R;
+    b.setAttribute("width", w); b.setAttribute("height", H); b.setAttribute("viewBox", `0 0 ${w} ${H}`);
+    b.style.left = r.left + "px"; b.style.top = (hh - H) + "px";
+    const y = H - e, d = `M ${e} ${H - R - 2} A ${R - e} ${R - e} 0 0 0 ${R} ${y} L ${w - R} ${y} A ${R - e} ${R - e} 0 0 0 ${w - e} ${H - R - 2}`;
+    b.querySelectorAll("path").forEach(p=>p.setAttribute("d", d));
+    b.querySelector("#lb-fondu").setAttribute("x2", w);
+  }
   const h = document.documentElement.scrollHeight - innerHeight;
-  b.firstChild.style.transform = "scaleX(" + (h > 40 ? Math.min(1, Math.max(0, scrollY / h)) : 0) + ")";
+  const v = h > 40 ? Math.min(1, Math.max(0, scrollY / h)) : 0;
+  b.querySelector(".lb-val").style.strokeDashoffset = String(1 - v);
 }
 addEventListener("scroll", ()=>requestAnimationFrame(majLecture), { passive:true });
 function majProgression(){
@@ -7878,6 +8174,7 @@ const P = {
   accueil:'<path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-5h4v5"/>',
   semestres:'<path d="M12 3l9 4.5-9 4.5-9-4.5z"/><path d="M3 12l9 4.5 9-4.5"/><path d="M3 16.5L12 21l9-4.5"/>',
   reprendre:'<path d="M7 3h10v18l-5-4-5 4z"/>',
+  cloche:'<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
   lien:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.2 1.2"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.2-1.2"/>',
   presse:'<rect x="6" y="4" width="12" height="17" rx="2.5"/><path d="M9 4.5V3h6v1.5"/><path d="M9.5 11h5M9.5 15h5"/>',
   examen:'<path d="M2.5 9L12 4.5 21.5 9 12 13.5z"/><path d="M6.5 11v5c2.5 2.5 8.5 2.5 11 0v-5"/><path d="M21.5 9v5"/>',
@@ -10925,7 +11222,7 @@ async function refreshPartage(){
   if(scr === "class" && curClass) openClass(curClass);
   else if(scr === "classes") openClasses();
 }
-document.addEventListener("visibilitychange",()=>{ if(!document.hidden) refreshPartage(); });
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ refreshPartage(); chargerNotifs().then(()=>{ majPastilleNotifs(); if(document.documentElement.getAttribute("data-screen") === "notifs") renderNotifs(); }); } });
 window.addEventListener("focus", refreshPartage);
 
 function ouvrirMesDevoirs(){
@@ -11080,6 +11377,8 @@ onSwipe(document.getElementById("screen-edt"), {
   onRight: ()=>{ haptic(); edtWeekOffset--; renderEDT(); },
 });
 // en vue Jour, openEDT doit viser le bon jour
+document.getElementById("btn-notifs").addEventListener("click",()=>{ haptic(); openNotifs(); });
+document.getElementById("btn-notifs-back").addEventListener("click",()=>{ haptic(); renderSemestres(); showScreen("semestres"); });
 document.getElementById("btn-search-back").addEventListener("click",()=>{
   if(rechercheDepuis === "split" && curSubj){ showScreen("split"); setTab(curTab); }
   else { renderSemestres(); showScreen("semestres"); }
@@ -11196,7 +11495,7 @@ async function api(action, extra, enPartant){
     out.projets = out.items.filter(estProjetItem);
     out.items = out.items.filter(it=>!estProjetItem(it));
   }
-  if(!r.ok) throw Object.assign(new Error(out.error||("http "+r.status)), { code: out.error });
+  if(!r.ok) throw Object.assign(new Error(out.error||("http "+r.status)), { code: out.error, attente: out.attente, restants: out.restants });
   return out;
 }
 
@@ -11370,7 +11669,7 @@ async function pushState(enPartant){
     PSYCHO_STEPS.forEach(s=>{ psy[s.id] = !!s.done; });
     const patch = {
       theme: document.documentElement.getAttribute("data-theme") || "girly",
-      srs: Object.assign({}, SRS, { __matieres: nomsMatieres(), __bilan: bilanMatieres(), __projets: projetsPourServeur(), __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP, __revises: REVISES, __vus: vusCharger(), __clsvus: clsVus(), __profs: PROFS, __notes: CHNOTES, __errexam: ERREXAM, __jours: joursCharger() }),
+      srs: Object.assign({}, SRS, { __matieres: nomsMatieres(), __bilan: bilanMatieres(), __projets: projetsPourServeur(), __edtnotes: EDTNOTES, __memo: MEMO, __devrep: DEVREP, __edturls: edtCalendars().map(c=>c.url).filter(Boolean), __revises: REVISES, __vus: vusCharger(), __clsvus: clsVus(), __profs: PROFS, __notes: CHNOTES, __errexam: ERREXAM, __jours: joursCharger() }),
       psycho: psy,
       settings: USER_SETTINGS
     };
@@ -11459,7 +11758,7 @@ function applyRemote(row){
     }
     if(Array.isArray(incoming.__jours)){ try{ const l = new Set(joursCharger()); incoming.__jours.forEach(j=>{ if(/^\d{4}-\d{2}-\d{2}$/.test(j)) l.add(j); }); joursSave([...l].sort()); }catch(e){} }
     delete incoming.__jours;
-    delete incoming.__matieres; delete incoming.__bilan; delete incoming.__projets; delete incoming.__edtnotes; delete incoming.__memo; delete incoming.__devrep; delete incoming.__revises; delete incoming.__vus; delete incoming.__profs; delete incoming.__notes; delete incoming.__errexam;
+    delete incoming.__matieres; delete incoming.__bilan; delete incoming.__projets; delete incoming.__edtnotes; delete incoming.__memo; delete incoming.__devrep; delete incoming.__edturls; delete incoming.__revises; delete incoming.__vus; delete incoming.__profs; delete incoming.__notes; delete incoming.__errexam;
     SRS = incoming;
     try{ localStorage.setItem(SRS_KEY, JSON.stringify(SRS)); }catch(e){}
   }
@@ -11516,7 +11815,9 @@ async function doLogin(){
   }catch(e){
     PSEUDO = null; CODE = null;
     if(e.code === "code_faux"){
-      msg.textContent = "Ce pseudo est déjà pris, et le code ne correspond pas.";
+      msg.textContent = "Ce pseudo est déjà pris, et le code ne correspond pas." + (e.restants ? " Encore " + e.restants + " essai" + (e.restants > 1 ? "s" : "") + " avant un blocage de 15 minutes." : "");
+    }else if(e.code === "bloque"){
+      msg.textContent = "Trop de codes faux : ce compte est bloqué " + (e.attente || 15) + " minute" + ((e.attente || 15) > 1 ? "s" : "") + ", par sécurité.";
     }else if(e.code === "code_court"){
       msg.textContent = "Choisis un code d'au moins 4 caractères.";
     }else{
@@ -11731,4 +12032,22 @@ function restaurerPage(o){
   loadEDT().then(()=>renderTodayCourses());
   // l'index des auteurs et des notions se prépare tranquillement, pour être prêt quand on ouvre un cours
   setTimeout(()=>{ if(SUBJECTS.length) indexEnFond(); }, 2500);
+})();
+
+// ── iPhone : après la fermeture du clavier, Safari laisse parfois la barre du bas
+// à mi-hauteur (là où était le clavier), jusqu'au prochain défilement. On la remet en place.
+(function(){
+  const recaler = ()=>{
+    const tb = document.getElementById("tabbar"); if(!tb) return;
+    window.scrollTo(window.scrollX, window.scrollY);          // Safari recalcule la zone visible
+    tb.style.transform = "translateZ(0)"; void tb.offsetHeight; tb.style.transform = "";
+  };
+  document.addEventListener("focusout", e=>{
+    if(e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) [60, 300, 700].forEach(ms=>setTimeout(recaler, ms));
+  });
+  if(window.visualViewport){
+    let h = visualViewport.height;
+    visualViewport.addEventListener("resize", ()=>{ if(visualViewport.height > h + 80) setTimeout(recaler, 50); h = visualViewport.height; });
+  }
+  document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) setTimeout(recaler, 120); });
 })();
