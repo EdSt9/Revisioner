@@ -1862,7 +1862,7 @@ function choisirCoursDevoir(c){
       openClass(c);
     });
     h.appendChild(b);
-    lim.after(h);
+    box.prepend(h);
   }
   if(!groupes.length){
     const v = el("div","fs-hint"); v.style.margin = "14px 4px";
