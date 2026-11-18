@@ -5191,7 +5191,10 @@ const NOTIF_CAT = [
   { k:"projets", nom:"Projets",  fam:["projets"], ic:"projet" }
 ];
 function catDe(n){ return (NOTIF_CAT.find(c=>c.fam && c.fam.includes(n.famille)) || { k:"autre", ic:"reveil" }); }
-let NOTIF_FILTRE = { cat:"tout", lu:null };   // lu : "nonlu" | "tout" ; null = choisi à l'ouverture
+// le dernier choix (Non lues / Toutes, catégorie) est gardé d'une ouverture à l'autre
+const NOTIF_FILTRE_CLE = "revision_notif_filtre_v1";
+let NOTIF_FILTRE = (()=>{ try{ const f = JSON.parse(localStorage.getItem(NOTIF_FILTRE_CLE) || "null"); if(f && f.cat && f.lu) return f; }catch(e){} return { cat:"tout", lu:null }; })();
+function notifFiltreSauver(){ try{ localStorage.setItem(NOTIF_FILTRE_CLE, JSON.stringify(NOTIF_FILTRE)); }catch(e){} }
 function majPastilleNotifs(){
   const b = document.getElementById("btn-notifs"); if(!b) return;
   const n = toutesNotifs().filter(x=>!x.lu).length;
@@ -5209,8 +5212,6 @@ async function marquerNotifs(liste, lu){
   if(serveur.length && syncOn) try{ await api("notif_lu", { ids:serveur, lu }); }catch(e){}
 }
 async function openNotifs(){
-  // à l'ouverture : les non lues s'il y en a, sinon tout
-  NOTIF_FILTRE = { cat:"tout", lu:null };
   showScreen("notifs"); window.scrollTo(0, 0);
   renderNotifs();
   await chargerNotifs();
@@ -5225,14 +5226,14 @@ function renderNotifs(){
   // en haut : non lues ou toutes
   const seg = document.getElementById("notifs-seg");
   seg.innerHTML = [["nonlu","Non lues"],["tout","Toutes"]].map(([k,t])=>`<button type="button" class="${NOTIF_FILTRE.lu === k ? "on" : ""}" data-lu="${k}">${t}</button>`).join("");
-  seg.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{ haptic(); NOTIF_FILTRE.lu = b.dataset.lu; renderNotifs(); }));
+  seg.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{ haptic(); NOTIF_FILTRE.lu = b.dataset.lu; notifFiltreSauver(); renderNotifs(); }));
   // dessous : une tuile par catégorie, avec ses non lues (Projets seulement s'il y en a)
   const f = document.getElementById("notifs-filtres");
   const cats = NOTIF_CAT.filter(c=>c.k !== "projets" || tout.some(n=>catDe(n).k === "projets"));
   f.innerHTML = `<div class="nf-cats">${cats.map(c=>{
       const nb = (c.k === "tout" ? nonLus : nonLus.filter(n=>catDe(n).k === c.k)).length;
       return `<button type="button" class="nf-cat${NOTIF_FILTRE.cat === c.k ? " on" : ""}" data-cat="${c.k}"><span class="nf-ic nf-${c.k}">${icone(c.ic)}</span><span class="nf-cat-n">${esc(c.nom)}</span>${nb ? `<em>${nb > 99 ? "99+" : nb}</em>` : ""}</button>`; }).join("")}</div>`;
-  f.querySelectorAll(".nf-cat").forEach(b=>b.addEventListener("click",()=>{ haptic(); NOTIF_FILTRE.cat = b.dataset.cat; renderNotifs(); }));
+  f.querySelectorAll(".nf-cat").forEach(b=>b.addEventListener("click",()=>{ haptic(); NOTIF_FILTRE.cat = b.dataset.cat; notifFiltreSauver(); renderNotifs(); }));
   const tl = document.getElementById("notifs-tout-lu");
   const aLire = ici.filter(n=>!n.lu);
   tl.hidden = !aLire.length;
@@ -5241,7 +5242,7 @@ function renderNotifs(){
   const voirToutes = ()=>{
     const p = el("p","nf-fin");
     p.innerHTML = `Tout le reste est lu · <button type="button">Voir toutes</button>`;
-    p.querySelector("button").addEventListener("click",()=>{ haptic(); NOTIF_FILTRE.lu = "tout"; renderNotifs(); });
+    p.querySelector("button").addEventListener("click",()=>{ haptic(); NOTIF_FILTRE.lu = "tout"; notifFiltreSauver(); renderNotifs(); });
     box.appendChild(p);
   };
   if(!ici.length){
