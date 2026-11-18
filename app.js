@@ -2605,7 +2605,7 @@ function majPastilleAudio(){
   if(!p){
     p = el("button","pomo-pill audio-pill"); p.id = "audio-pill"; p.type = "button";
     p.setAttribute("aria-label", "Écouter ce chapitre");
-    p.innerHTML = LEC_ICO.voix + "<span>Écouter</span>";
+    p.innerHTML = LEC_ICO.voix;
     p.addEventListener("click", ()=>{ if(p._glisse) return; const pn = document.querySelector("#screen-split .pane.active"); if(pn){ haptic(); lecteurStart(pn); } });
     document.body.appendChild(p);
     rendreDeplacable(p, "audio", "droite");
@@ -2668,6 +2668,7 @@ function lecteurStop(){
   LEC.blocs.forEach(b=>b.classList.remove("tts-on"));
   LEC.blocs = []; LEC.phrases = []; LEC.blocCourant = -1; LEC.racine = null;
   if(LEC.bar){ LEC.bar.remove(); LEC.bar = null; }
+  lecPleinFermer();
   document.body.classList.remove("lec-on");
 }
 function lecPlayPause(){
@@ -2736,25 +2737,31 @@ const LEC_ICO = {
   close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
   voix:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>'
 };
+// Le lecteur : une pilule (section précédente, pause entourée de la progression, suivante, vitesse, fermer).
+// Un appui sur la vitesse ou sur le fond de la pilule ouvre le lecteur complet.
 function lecBarre(){
   if(LEC.bar) LEC.bar.remove();
   const bar = el("div","lec-bar");
-  const b = (cls, html, label, fn)=>{
+  const b = (cls, html, label, fn, dans)=>{
     const x = el("button","lec-btn " + cls);
     x.type = "button"; x.innerHTML = html; x.setAttribute("aria-label", label);
     x.addEventListener("click", e=>{ e.stopPropagation(); haptic(); fn(); });
-    bar.appendChild(x); return x;
+    (dans || bar).appendChild(x); return x;
   };
-  b("lec-voix", LEC_ICO.voix, "Choisir la voix", lecChoixVoix);
   const unite = lecEstPdf() ? "Page" : "Section";
   b("lec-prev", LEC_ICO.prev, unite + " précédente", ()=>lecAller(-1));
-  b("lec-play", LEC_ICO.pause, "Pause", lecPlayPause);
+  const anneau = el("span","lec-anneau");
+  anneau.innerHTML = `<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" class="lec-anneau-fond"/><circle cx="24" cy="24" r="22" class="lec-anneau-val"/></svg>`;
+  bar.appendChild(anneau);
+  b("lec-play", LEC_ICO.pause, "Pause", lecPlayPause, anneau);
   b("lec-next", LEC_ICO.next, unite + " suivante", ()=>lecAller(1));
-  b("lec-speed", "", "Vitesse", lecVitesse);
+  b("lec-speed", "", "Vitesse et lecteur complet", lecPleinOuvrir);
   b("lec-close", LEC_ICO.close, "Arrêter la lecture", lecteurStop);
+  bar.addEventListener("click", ()=>{ haptic(); lecPleinOuvrir(); });
   document.body.appendChild(bar);
   LEC.bar = bar;
   lecMajBarre();
+  clearInterval(LEC.suivi); LEC.suivi = setInterval(()=>{ if(!LEC.bar){ clearInterval(LEC.suivi); return; } lecMajProgression(); }, 400);
   requestAnimationFrame(()=>bar.classList.add("show"));
 }
 function lecMajBarre(){
@@ -2763,7 +2770,96 @@ function lecMajBarre(){
   p.innerHTML = LEC.pause ? LEC_ICO.play : LEC_ICO.pause;
   p.setAttribute("aria-label", LEC.pause ? "Reprendre" : "Pause");
   LEC.bar.querySelector(".lec-speed").textContent = String(LEC.vitesse).replace(".", ",") + "×";
+  lecMajProgression();
 }
+// Où on en est : l'anneau de la pilule, et le lecteur complet s'il est ouvert
+function lecSecondes(n){ return n / (LEC_CPS_DEFAUT * (LEC.vitesse || 1)); }
+function lecDuree(sec){ const m = Math.round(sec / 60); return m < 1 ? "moins d'une minute" : m === 1 ? "1 min" : m + " min"; }
+function lecNomBloc(bi){
+  const b = LEC.blocs[bi]; if(!b) return "";
+  if(lecEstPdf()) return "Page " + (bi + 1);
+  const t = b.querySelector(".section-title, .recap-label");
+  return t ? t.textContent.replace(/\s+/g, " ").trim() : "Section " + (bi + 1);
+}
+function lecMajProgression(){
+  if(!LEC.bar || !LEC.phrases.length) return;
+  const n = LEC.phrases.length, i = Math.max(0, Math.min(n - 1, LEC.i || 0));
+  const v = LEC.bar.querySelector(".lec-anneau-val");
+  if(v) v.style.strokeDashoffset = String(138.2 * (1 - i / n));
+  const pl = document.getElementById("lec-plein");
+  if(!pl || !pl.classList.contains("open")) return;
+  const bi = LEC.phrases[i].b, nb = LEC.blocs.length;
+  const longueur = p => (p.toks || []).reduce((x, m)=>x + (m.dit || "").length + 1, 0);
+  let avant = 0, reste = 0;
+  LEC.phrases.forEach((p, k)=>{ if(k < i) avant += longueur(p); else reste += longueur(p); });
+  pl.querySelector(".lp-k").textContent = (lecEstPdf() ? "PAGE " : "SECTION ") + (bi + 1) + " SUR " + nb;
+  pl.querySelector(".lp-titre").textContent = lecNomBloc(bi);
+  const prog = pl.querySelector(".lp-prog");
+  if(prog.children.length !== nb) prog.innerHTML = "<i></i>".repeat(nb);
+  const debut = LEC.phrases.findIndex(p=>p.b === bi), fin = LEC.phrases.filter(p=>p.b === bi).length;
+  [...prog.children].forEach((x, k)=>{
+    x.style.setProperty("--p", k < bi ? "100%" : k > bi ? "0%" : Math.round(100 * (i - debut) / Math.max(1, fin)) + "%");
+  });
+  pl.querySelector(".lp-ecoule").textContent = lecDuree(lecSecondes(avant)).replace("moins d'une minute", "0 min") + " écoutées";
+  pl.querySelector(".lp-reste").textContent = "encore " + lecDuree(lecSecondes(reste));
+  pl.querySelector(".lp-play").innerHTML = LEC.pause ? LEC_ICO.play : LEC_ICO.pause;
+  pl.querySelectorAll(".lp-vit button").forEach(x=>x.classList.toggle("on", parseFloat(x.dataset.v) === LEC.vitesse));
+  const voix = lecVoixActuelle();
+  pl.querySelector(".lp-voix em").textContent = LEC.voixId === VOIX_SYSTEME || !voix ? "Voix de l'iPhone" : voix.name;
+}
+// Une phrase avant ou après
+function lecPhrase(sens){
+  if(!LEC.phrases.length) return;
+  LEC.i = Math.max(0, Math.min(LEC.phrases.length - 1, (LEC.i || 0) + sens));
+  LEC.depuis = 0; LEC.pause = false; LEC.toucheA = 0;
+  lecMajBarre(); lecRelancer();
+}
+// Le lecteur complet : la section lue, la progression section par section, les phrases, toutes les vitesses, la voix
+function lecPleinOuvrir(){
+  let pl = document.getElementById("lec-plein");
+  if(!pl){
+    pl = el("div","lec-plein"); pl.id = "lec-plein";
+    pl.innerHTML = `<div class="lp-voile"></div><div class="lp-feuille" role="dialog" aria-label="Lecteur">
+      <div class="lp-poignee"></div>
+      <div class="lp-k"></div><div class="lp-titre"></div>
+      <div class="lp-prog"></div><div class="lp-temps"><span class="lp-ecoule"></span><span class="lp-reste"></span></div>
+      <div class="lp-ctl">
+        <button type="button" class="lp-b" data-a="sec-">${LEC_ICO.prev}</button>
+        <button type="button" class="lp-b lp-ph" data-a="ph-">‹ phrase</button>
+        <button type="button" class="lp-b lp-play" data-a="play"></button>
+        <button type="button" class="lp-b lp-ph" data-a="ph+">phrase ›</button>
+        <button type="button" class="lp-b" data-a="sec+">${LEC_ICO.next}</button>
+      </div>
+      <div class="lp-k">VITESSE</div>
+      <div class="lp-vit">${LEC_VITESSES.map(v=>`<button type="button" data-v="${v}">${String(v).replace(".", ",")}×</button>`).join("")}</div>
+      <button type="button" class="lp-voix">${LEC_ICO.voix}<span>Voix</span><em></em><b>›</b></button>
+      <button type="button" class="lp-stop">Arrêter la lecture</button>
+    </div>`;
+    document.body.appendChild(pl);
+    pl.querySelector(".lp-voile").addEventListener("click", lecPleinFermer);
+    pl.querySelectorAll(".lp-ctl button").forEach(x=>x.addEventListener("click", ()=>{
+      haptic(); const a = x.dataset.a;
+      if(a === "play") lecPlayPause(); else if(a === "sec-") lecAller(-1); else if(a === "sec+") lecAller(1);
+      else lecPhrase(a === "ph+" ? 1 : -1);
+      lecMajProgression();
+    }));
+    pl.querySelectorAll(".lp-vit button").forEach(x=>x.addEventListener("click", ()=>{
+      haptic(); LEC.vitesse = parseFloat(x.dataset.v); lecEcrire("lec-vitesse", String(LEC.vitesse));
+      if(LEC.actif && !LEC.pause) lecRelancer();
+      lecMajBarre();
+    }));
+    pl.querySelector(".lp-voix").addEventListener("click", ()=>{ haptic(); lecPleinFermer(); lecChoixVoix(); });
+    pl.querySelector(".lp-stop").addEventListener("click", ()=>{ haptic(); lecPleinFermer(); lecteurStop(); });
+    // glisser vers le bas pour fermer
+    const f = pl.querySelector(".lp-feuille"); let y0 = null;
+    f.addEventListener("touchstart", e=>{ y0 = e.touches[0].clientY; }, { passive:true });
+    f.addEventListener("touchmove", e=>{ if(y0 === null) return; const d = e.touches[0].clientY - y0; if(d > 0) f.style.transform = `translateY(${d}px)`; }, { passive:true });
+    f.addEventListener("touchend", e=>{ const d = (e.changedTouches[0].clientY - (y0 ?? 0)); f.style.transform = ""; y0 = null; if(d > 80) lecPleinFermer(); });
+  }
+  pl.classList.add("open");
+  lecMajProgression();
+}
+function lecPleinFermer(){ const pl = document.getElementById("lec-plein"); if(pl) pl.classList.remove("open"); }
 // Le bouton posé en haut d'un chapitre.
 function lecteurBouton(root, icone){
   const x = el("button", icone ? "chap-share chap-ecoute" : "lec-start");
