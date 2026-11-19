@@ -3969,6 +3969,11 @@ function entreeDansEcran(cible){
 let ECRAN_AVANT = null;   // la page d'où l'on vient : visible derrière pendant le glisser
 function showScreen(id){
   lecteurStop();
+  // en quittant la page Notifications, ce qu'on y a vu passe en « lu »
+  if(id !== "notifs" && document.documentElement.getAttribute("data-screen") === "notifs" && NOTIFS_VUES.length){
+    const vues = NOTIFS_VUES; NOTIFS_VUES = [];
+    try{ marquerNotifs(vues, true); }catch(e){}
+  }
   try{ couleurPagesMatiere(id); const sc = document.getElementById("screen-" + id); teinteGlobale(sc && sc._teinte); }catch(e){}
   setTimeout(()=>{ try{ memoriserPage(); }catch(e){} }, 0);
   // arrivée sur un autre écran : les animations d'entrée jouent, puis on se calme.
@@ -5175,6 +5180,7 @@ function notifLocale(famille, title, body, data){
   majPastilleNotifs();
 }
 let NOTIFS_SERVEUR = null;   // dernière liste reçue du serveur
+var NOTIFS_VUES = [];        // les non lues affichées : elles passent en « lu » quand on quitte la page
 async function chargerNotifs(){
   if(!syncOn || !PSEUDO) return NOTIFS_SERVEUR || [];
   try{ NOTIFS_SERVEUR = (await api("notif_list")).items || []; }catch(e){}
@@ -5238,6 +5244,7 @@ function renderNotifs(){
   f.querySelectorAll(".nf-cat").forEach(b=>b.addEventListener("click",()=>{ haptic(); NOTIF_FILTRE.cat = b.dataset.cat; notifFiltreSauver(); renderNotifs(); }));
   const tl = document.getElementById("notifs-tout-lu");
   const aLire = ici.filter(n=>!n.lu);
+  NOTIFS_VUES = aLire.slice();
   tl.hidden = !aLire.length;
   tl.onclick = ()=>{ haptic(); marquerNotifs(aLire, true); renderNotifs(); };
   box.innerHTML = "";
@@ -5347,6 +5354,27 @@ function echeancesDu(date){
   }).map(echeanceEv);
 }
 // un jour de l'agenda : ses dates limites d'abord, puis ses cours
+// Les cours annulés repérés par le serveur (ses alertes « Annulé : … ») : ils restent visibles dans l'agenda, barrés
+function coursAnnulesDu(date){
+  let ns = [];
+  try{ ns = toutesNotifs(); }catch(e){ return []; }
+  const vus = new Set(), out = [];
+  ns.forEach(n=>{
+    if(n.famille !== "edt" || !n.data || !n.data.date) return;
+    const ancien = /^Cours annulé · /.test(n.title || "");
+    if(!ancien && !/^Annulé :/.test(n.body || "")) return;
+    const d = new Date(n.data.date);
+    if(isNaN(d) || !sameDay(d, date)) return;
+    const nom = String(n.title || "Cours").replace(/^Cours annulé · /, "");
+    const k = nom + "@" + d.getTime();
+    if(vus.has(k)) return; vus.add(k);
+    // revenu dans l'emploi du temps entre-temps : ce n'est plus une annulation
+    if(EDT.some(e=>e.start && e.start.getTime() === d.getTime() && nomCourt(e.title) === nom)) return;
+    const lieu = (String(n.body || "").match(/\(([^)]+)\)\.?$/) || String(n.body || "").match(/, ([^,]+)\.$/) || [])[1] || "";
+    out.push({ title:nom, start:d, end:null, place:lieu, annule:true, uid:"annule:" + k });
+  });
+  return out;
+}
 function joursOn(date){ return echeancesDu(date).concat(eventsOn(date)).sort((a,b)=>a.start - b.start); }
 // le jour que l'agenda montre : en vue Jour, ce jour-là ; en vue Semaine, le lundi de la semaine affichée.
 // Sur la semaine (ou le jour) en cours : rien de particulier (null).
@@ -5496,7 +5524,7 @@ function renderEDT(){
   if(edtMode === "day"){
     const d = new Date(today); d.setDate(today.getDate() + edtWeekOffset);
     label.textContent = JOURS[d.getDay()] + " " + d.getDate() + " " + MOIS[d.getMonth()];
-    const evs = joursOn(d);
+    const evs = joursOn(d).concat(coursAnnulesDu(d)).sort((a,b)=>a.start - b.start);
     if(!evs.length){
       const box = el("div");
       const next = EDT.find(e=>e.start >= new Date(d.getFullYear(),d.getMonth(),d.getDate()));
@@ -5542,7 +5570,7 @@ function renderEDT(){
   let total = 0;
   for(let i=0;i<7;i++){
     const d = new Date(start); d.setDate(start.getDate()+i);
-    const evs = joursOn(d);
+    const evs = joursOn(d).concat(coursAnnulesDu(d)).sort((a,b)=>a.start - b.start);
     if(!evs.length) continue;
     total += evs.length;
     const day = el("div","edt-day");
@@ -5747,6 +5775,15 @@ function lieuEtProf(e){
 
 // une carte de cours (cliquable pour l'annoter)
 function courseCard(e){
+  // un cours annulé : barré, avec l'étiquette « Annulé » (noire en clair, blanche en sombre)
+  if(e.annule){
+    const c = el("div","edt-course annule");
+    c.innerHTML = `<div class="edt-time"><span>${hhmm(e.start)}</span></div>
+      <div class="edt-info"><div class="edt-annule-tag"><span class="ev-badge annule">Annulé</span></div>
+        <div class="edt-title">${esc(e.title)}</div>${e.place ? `<div class="edt-place"><span>${esc(e.place)}</span></div>` : ""}</div>`;
+    c.addEventListener("click",()=>{ haptic(); toast("Ce cours a été annulé."); });
+    return c;
+  }
   const n = evNote(e);
   // un cours peut être marqué (contrôle / à rendre) ou simplement annoté
   const aut = autresDe(n);
@@ -7493,7 +7530,7 @@ if("serviceWorker" in navigator){
 // Appelé une fois connecté au serveur : remet l'abonnement à jour, ouvre la page d'une notification touchée
 function apresConnexionServeur(){
   notifResync();
-  chargerNotifs().then(()=>{ majPastilleNotifs(); if(document.documentElement.getAttribute("data-screen") === "notifs") renderNotifs(); });
+  chargerNotifs().then(()=>{ majPastilleNotifs(); const ici = document.documentElement.getAttribute("data-screen"); if(ici === "notifs") renderNotifs(); if(ici === "edt") renderEDT(); });
   if(NOTIF_A_OUVRIR){ const d = NOTIF_A_OUVRIR; NOTIF_A_OUVRIR = null; ouvrirDepuisNotif(d); }
 }
 
@@ -7770,8 +7807,10 @@ function setUEOpen(ue, v){
 function teinterEcran(scr, c){
   if(!scr) return;
   // une couleur claire sous un texte blanc : on l'assombrit un peu pour que le titre reste lisible
-  if(c && ["#d8a010","#8db31c","#c8742e","#e09a00","#e09a00","var(--c-y)","#65a30d","#22d3ee","#f472b6"].includes(c)) c = `color-mix(in srgb,${c} 80%,#000)`;
-  const props = { "--accent":c, "--accent-2":c && `color-mix(in srgb,${c} 62%,#fff)`, "--accent-soft":c && `color-mix(in srgb,${c} 14%,transparent)`,
+  const claire = c && ["#d8a010","#8db31c","#c8742e","#e09a00","var(--c-y)","#65a30d","#22d3ee","#f472b6","#0ea5e9","#14b87e","#12a9a0"].includes(c);
+  if(claire) c = `color-mix(in srgb,${c} 80%,#000)`;
+  // la 2e teinte (bas des dégradés, encadré « En 1 minute ») : pour une couleur claire, on ne l'éclaircit presque pas, sinon le texte blanc ne se lit plus
+  const props = { "--accent":c, "--accent-2":c && (claire ? `color-mix(in srgb,${c} 88%,#fff)` : `color-mix(in srgb,${c} 62%,#fff)`), "--accent-soft":c && `color-mix(in srgb,${c} 14%,transparent)`,
     "--accent-glow":c && `color-mix(in srgb,${c} 32%,transparent)` };
   Object.entries(props).forEach(([k,v])=>v ? scr.style.setProperty(k, v) : scr.style.removeProperty(k));
   scr._teinte = props;

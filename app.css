@@ -2670,3 +2670,13 @@ body.lec-on .audio-pill{display:none;}
 .nf-t small{font-size:13px;color:var(--text-soft);font-weight:500;line-height:1.4;white-space:pre-line;}
 .nf-h{font-size:11.5px;color:var(--text-mute);font-weight:700;white-space:nowrap;margin-top:2px;}
 .nf-pt{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:6px;}
+
+/* un cours annulé : barré et pâli, l'étiquette « Annulé » en noir (clair) ou en blanc (sombre) */
+:root{--ann-bg:#fff;--ann-tx:#16121f;}
+html[data-mode="sombre"]{--ann-bg:#16121f;--ann-tx:#fff;}
+@media(prefers-color-scheme:dark){html:not([data-mode="clair"]){--ann-bg:#16121f;--ann-tx:#fff;}}
+.edt-course.annule::before{background:var(--ann-tx) !important;opacity:.5;}
+.edt-course.annule .edt-time span,.edt-course.annule .edt-title{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--ann-tx);}
+.edt-course.annule .edt-time,.edt-course.annule .edt-title,.edt-course.annule .edt-place{opacity:.55;}
+.edt-annule-tag{margin-bottom:4px;}
+.ev-badge.annule{background:var(--ann-tx);color:var(--ann-bg);font-weight:800;}
