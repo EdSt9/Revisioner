@@ -1,0 +1,18 @@
+# Le parcours automatique de l'app, à chaque PR et à chaque fusion sur main.
+name: Parcours de l'app
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  parcours:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --no-save playwright@1.48.2
+      - run: npx playwright install --with-deps chromium
+      - run: node tests/parcours.js
