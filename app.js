@@ -7807,8 +7807,10 @@ function setUEOpen(ue, v){
 function teinterEcran(scr, c){
   if(!scr) return;
   // une couleur claire sous un texte blanc : on l'assombrit un peu pour que le titre reste lisible
-  if(c && ["#d8a010","#8db31c","#c8742e","#e09a00","#e09a00","var(--c-y)","#65a30d","#22d3ee","#f472b6"].includes(c)) c = `color-mix(in srgb,${c} 80%,#000)`;
-  const props = { "--accent":c, "--accent-2":c && `color-mix(in srgb,${c} 62%,#fff)`, "--accent-soft":c && `color-mix(in srgb,${c} 14%,transparent)`,
+  const claire = c && ["#d8a010","#8db31c","#c8742e","#e09a00","var(--c-y)","#65a30d","#22d3ee","#f472b6","#0ea5e9","#14b87e","#12a9a0"].includes(c);
+  if(claire) c = `color-mix(in srgb,${c} 80%,#000)`;
+  // la 2e teinte (bas des dégradés, encadré « En 1 minute ») : pour une couleur claire, on ne l'éclaircit presque pas, sinon le texte blanc ne se lit plus
+  const props = { "--accent":c, "--accent-2":c && (claire ? `color-mix(in srgb,${c} 88%,#fff)` : `color-mix(in srgb,${c} 62%,#fff)`), "--accent-soft":c && `color-mix(in srgb,${c} 14%,transparent)`,
     "--accent-glow":c && `color-mix(in srgb,${c} 32%,transparent)` };
   Object.entries(props).forEach(([k,v])=>v ? scr.style.setProperty(k, v) : scr.style.removeProperty(k));
   scr._teinte = props;
