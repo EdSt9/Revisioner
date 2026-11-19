@@ -2594,6 +2594,11 @@ button.mt-big{border:0;color:inherit;cursor:pointer;font:inherit;padding:0;}
 .hm-doux-l{background:color-mix(in srgb,#65a30d 15%,transparent);color:#5a920c;}
 .hm-doux-f{background:color-mix(in srgb,#c03fd0 14%,transparent);color:#c03fd0;}
 .hm-doux-s{background:color-mix(in srgb,#0ea5e9 14%,transparent);color:#0b95d4;}
+.hm-doux-p{background:color-mix(in srgb,#f472b6 15%,transparent);color:#db4f98;}
+.hm-doux-e{background:color-mix(in srgb,#e5484d 14%,transparent);color:#d93a40;}
+.hm-doux-n{background:color-mix(in srgb,#22d3ee 15%,transparent);color:#0aa3bd;}
+@media(prefers-color-scheme:dark){html:not([data-mode="clair"]) .hm-doux-p{color:#f9a8d4;} html:not([data-mode="clair"]) .hm-doux-n{color:#5ee0f2;} html:not([data-mode="clair"]) .hm-doux-e{color:#f07a7e;}}
+html[data-mode="sombre"] .hm-doux-p{color:#f9a8d4;} html[data-mode="sombre"] .hm-doux-n{color:#5ee0f2;} html[data-mode="sombre"] .hm-doux-e{color:#f07a7e;}
 @media(prefers-color-scheme:dark){html:not([data-mode="clair"]) .hm-doux-i{color:#8f8ff0;} html:not([data-mode="clair"]) .hm-doux-l{color:#86bf2a;}}
 html[data-mode="sombre"] .hm-doux-i{color:#8f8ff0;} html[data-mode="sombre"] .hm-doux-l{color:#86bf2a;}
 .cls-l-ic .ico{width:22px;height:22px;}
