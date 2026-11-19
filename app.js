@@ -6610,7 +6610,10 @@ function hmHash(t){ let h = 0; String(t).split("").forEach(c=>{ h = (h * 31 + c.
 // sans choix à la main : chaque matière du semestre prend une des 8 couleurs à tour de rôle, sans doublon tant qu'il y en a assez
 // l'ordre alterne les teintes (deux voisines ne se ressemblent pas) ; chaque semestre commence ailleurs dans la palette
 const HM_COUL_AUTO = ["b","o","g","f","y","i","c","r","l","s","t","v"];
+// des couleurs posées à la main là où le tirage donnait deux teintes trop proches dans un même semestre
+const MAT_COUL_DEF = { e231:"p", e221:"n", e222:"e", e232orient:"t" };
 function hmCouleurAuto(subj){
+  if(MAT_COUL_DEF[subj.id]) return MAT_COUL_DEF[subj.id];
   const sem = SEMESTRES[subj.id];
   const freres = SUBJECTS.filter(x=>SEMESTRES[x.id] === sem).map(x=>x.id).sort();
   const i = freres.indexOf(subj.id);
@@ -6623,8 +6626,10 @@ function hmCouleur(subj){
   return k && HM_HEX[k] ? k : hmCouleurAuto(subj);
 }
 const HM_HEX = { v:"var(--accent)", b:"var(--c-b)", c:"#12a9a0", g:"var(--c-g)", y:"var(--c-y)", o:"#f26b3a", r:"var(--c-r)", t:"#a8703f",
-  i:"#5b5bd6", l:"#65a30d", f:"#c03fd0", s:"#0ea5e9" };
-const COULEURS_CHOIX = ["v","i","b","s","c","g","l","y","o","r","f","t"];
+  i:"#5b5bd6", l:"#65a30d", f:"#c03fd0", s:"#0ea5e9",
+  // trois de plus, pour qu'aucune matière d'un même semestre ne se ressemble : rose clair, rouge, cyan clair
+  p:"#f472b6", e:"#e5484d", n:"#22d3ee" };
+const COULEURS_CHOIX = ["v","i","b","s","n","c","g","l","y","o","e","r","p","f","t"];
 // le semestre « en cours » : le plus avancé qui a déjà des chapitres
 function hmSemCourant(){
   let sem = 0;
@@ -7033,7 +7038,8 @@ const MT_GRAD = { v:"linear-gradient(160deg,color-mix(in srgb,var(--accent) 85%,
   b:"linear-gradient(160deg,#1f63d6,#3a86ff 50%,#7fb0ff)", g:"linear-gradient(160deg,#0b8a5d,#14b87e 50%,#5fd9a9)",
   y:"linear-gradient(160deg,#b85f00,#dc8a12 50%,#f0ad3c)", r:"linear-gradient(160deg,#d12a6b,#ff4d8d 50%,#ff8ab4)",
   c:"linear-gradient(160deg,#08857e,#12a9a0 50%,#5fd3cb)", o:"linear-gradient(160deg,#d24a1c,#f26b3a 50%,#ff9e74)", t:"linear-gradient(160deg,#7d4f27,#a8703f 50%,#cf9d6c)",
-  i:"linear-gradient(160deg,#3a38a8,#5b5bd6 50%,#8f8ff0)", l:"linear-gradient(160deg,#3f6a05,#5a920c 50%,#86bf2a)", f:"linear-gradient(160deg,#8e2299,#c03fd0 50%,#de7fe9)", s:"linear-gradient(160deg,#0677a8,#0ea5e9 50%,#5cc8f5)" };
+  i:"linear-gradient(160deg,#3a38a8,#5b5bd6 50%,#8f8ff0)", l:"linear-gradient(160deg,#3f6a05,#5a920c 50%,#86bf2a)", f:"linear-gradient(160deg,#8e2299,#c03fd0 50%,#de7fe9)", s:"linear-gradient(160deg,#0677a8,#0ea5e9 50%,#5cc8f5)",
+  p:"linear-gradient(160deg,#c2347f,#f472b6 50%,#f9a8d4)", e:"linear-gradient(160deg,#a8232a,#e5484d 50%,#f08a8d)", n:"linear-gradient(160deg,#0890a8,#22d3ee 50%,#7ae6f6)" };
 // les matières ouvertes en dernier (sur ce téléphone), pour l'accueil
 const RECENTES_KEY = "revision_recentes_v1";
 // gardées dans le compte (tous les appareils), avec une copie sur le téléphone
@@ -7764,7 +7770,7 @@ function setUEOpen(ue, v){
 function teinterEcran(scr, c){
   if(!scr) return;
   // une couleur claire sous un texte blanc : on l'assombrit un peu pour que le titre reste lisible
-  if(c && ["#d8a010","#8db31c","#c8742e","#e09a00","#e09a00","var(--c-y)","#65a30d"].includes(c)) c = `color-mix(in srgb,${c} 80%,#000)`;
+  if(c && ["#d8a010","#8db31c","#c8742e","#e09a00","#e09a00","var(--c-y)","#65a30d","#22d3ee","#f472b6"].includes(c)) c = `color-mix(in srgb,${c} 80%,#000)`;
   const props = { "--accent":c, "--accent-2":c && `color-mix(in srgb,${c} 62%,#fff)`, "--accent-soft":c && `color-mix(in srgb,${c} 14%,transparent)`,
     "--accent-glow":c && `color-mix(in srgb,${c} 32%,transparent)` };
   Object.entries(props).forEach(([k,v])=>v ? scr.style.setProperty(k, v) : scr.style.removeProperty(k));
