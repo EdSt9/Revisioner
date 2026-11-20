@@ -2681,7 +2681,7 @@ html[data-mode="sombre"]{--ann-bg:#16121f;--ann-tx:#fff;}
 .edt-annule-tag{margin-bottom:4px;}
 .ev-badge.annule{background:var(--ann-tx);color:var(--ann-bg);font-weight:800;}
 
-/* Deux couleurs en plus : « En retard » (orange vif) et « Modifié » (turquoise) — voir la légende */
+/* Deux couleurs en plus : « En retard » (orange vif) et « Modifié » (turquoise) */
 :root{--late:#d9531e;--late-soft:rgba(217,83,30,.13);--chg:#0f9488;--chg-soft:rgba(15,148,136,.13);}
 html[data-mode="sombre"]{--late:#ff8a4c;--late-soft:rgba(255,138,76,.16);--chg:#2dd4bf;--chg-soft:rgba(45,212,191,.15);}
 @media(prefers-color-scheme:dark){html:not([data-mode="clair"]){--late:#ff8a4c;--late-soft:rgba(255,138,76,.16);--chg:#2dd4bf;--chg-soft:rgba(45,212,191,.15);}}
@@ -2692,12 +2692,6 @@ html[data-mode="sombre"]{--late:#ff8a4c;--late-soft:rgba(255,138,76,.16);--chg:#
 .dv-carte.retard .dv-j small{color:var(--late);opacity:.8;}
 .dv-carte.retard .av-txt small i{color:var(--late);}
 .dv-carte.retard{--c:var(--late);}
-/* la légende */
-.lg-lien{display:block;margin:18px auto 6px;border:0;background:none;font:inherit;font-size:13px;font-weight:700;color:var(--text-mute);padding:8px 12px;cursor:pointer;}
-.lg-sous{margin:-4px 2px 10px;font-size:13px;font-weight:600;color:var(--text-mute);}
-.lg-row{display:flex;align-items:center;gap:12px;padding:8px 2px;font-size:14px;font-weight:600;color:var(--text-soft);}
-.lg-row .lg-pill{display:inline-block;box-sizing:border-box;width:96px;text-align:center;flex-shrink:0;margin:0;font-size:12.5px;padding:5px 8px;border-radius:9px;}
-.lg-row .lg-pill.annule{background:var(--ann-tx);color:var(--ann-bg);}
 .edt-course.flagged.devoir.en-retard::before{background:var(--late);}
 
 /* « S'entraîner » dans la page matière : les exercices ont la même forme que les lignes de CM et de TD */

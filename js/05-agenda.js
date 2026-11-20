@@ -625,7 +625,6 @@ function renderEDT(){
       </div>`;
     evs.forEach(e=>day.appendChild(courseCard(e)));
     body.appendChild(day);
-    lienLegende(body);
     return;
   }
 
@@ -671,7 +670,6 @@ function renderEDT(){
       body.appendChild(box);
     }
   }
-  if(total) lienLegende(body);
 }
 
 // ── Sélecteur de chapitre ──
@@ -855,30 +853,6 @@ function coursModifie(e){
   const nom = net(e.title);
   return ns.some(n=>n.famille === "edt" && n.data && n.data.date && /^(Déplacé|Nouvelle salle|Cours ajouté)/.test(n.body || "")
     && new Date(n.data.date).getTime() === e.start.getTime() && net(n.title) === nom);
-}
-// La légende des couleurs de l'agenda et des devoirs (un lien en bas de ces deux pages)
-const LEGENDE = [
-  ["fait", "Fait", "Ce que tu as coché"],
-  ["devoir", "À rendre", "Un devoir à rendre"],
-  ["controle", "Contrôle", "Un contrôle"],
-  ["note", "Note", "Une note sur un cours"],
-  ["annule", "Annulé", "Un cours annulé, barré dans l'agenda"],
-  ["retard", "En retard", "Un rendu pas coché après sa date"],
-  ["modifie", "Modifié", "Un cours déplacé, ou son horaire ou sa salle changés"]
-];
-function ouvrirLegende(){
-  document.querySelectorAll("#pick-sheet .pick-actions, #pick-sheet .fp-retour").forEach(n=>n.remove());
-  document.getElementById("pick-title").textContent = "Légende";
-  const box = document.getElementById("pick-list");
-  box.innerHTML = `<p class="lg-sous">Les couleurs de l'agenda et des devoirs</p>` +
-    LEGENDE.map(([k, nom, txt])=>`<div class="lg-row"><span class="ev-badge lg-pill ${k}">${nom}</span><span>${txt}</span></div>`).join("");
-  document.getElementById("pick-sheet").classList.add("open");
-}
-function lienLegende(parent){
-  if(!parent) return;
-  const b = el("button","lg-lien"); b.type = "button"; b.textContent = "Légende des couleurs";
-  b.addEventListener("click",()=>{ haptic(); ouvrirLegende(); });
-  parent.appendChild(b);
 }
 function courseCard(e){
   // un cours annulé : barré, avec l'étiquette « Annulé » (noire en clair, blanche en sombre)

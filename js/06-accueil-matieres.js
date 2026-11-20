@@ -188,7 +188,7 @@ function renderKnowBlock(){
       c.appendChild(row);
     });
   }
-  if(!alerts.length && retards.length){ lienLegende(box); return; }
+  if(!alerts.length && retards.length) return;
   if(!alerts.length){
     box.innerHTML = vide("calendrier", "Rien à venir", "Pose un devoir, un contrôle ou une note sur un cours de ton emploi du temps, ou touche le + en haut. Il apparaîtra ici.");
     return;
@@ -231,7 +231,6 @@ function renderKnowBlock(){
     row.addEventListener("click",()=>{ haptic(); if(sjD && (cle === "controle" || cle === "devoir")) openControle(e); else openEDTAt(e.start); });
     card.appendChild(row);
   });
-  lienLegende(box);
 }
 
 // Fait / pas fait : sur l'annotation du cours (ou du jour), gardé et synchronisé avec elle
