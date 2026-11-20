@@ -135,6 +135,19 @@ function typeDevoir(N){
   const t = N.type || ((!N.note && autresDe(N)[0]) ? autresDe(N)[0].type : "");
   return t === "controle" ? "controle" : t === "devoir" ? "devoir" : "note";
 }
+// Les rendus pas cochés dont la date est passée (60 jours au plus) : ils restent, en tête, « En retard »
+function devoirsEnRetard(){
+  const auj = new Date(); auj.setHours(0,0,0,0);
+  const depuis = auj.getTime() - 60 * 86400000;
+  const jours = Object.keys(EDTNOTES).filter(k=>k.startsWith("jour|")).map(echeanceEv);
+  return EDT.concat(jours).filter(e=>{
+    if(!e || !e.start) return false;
+    const n = evNote(e); if(!n || n.done) return false;
+    const t = n.type || ((!n.note && autresDe(n)[0]) ? autresDe(n)[0].type : "");
+    const jourE = new Date(e.start); jourE.setHours(0,0,0,0);
+    return t === "devoir" && jourE.getTime() < auj.getTime() && jourE.getTime() >= depuis;
+  }).sort((a,b)=>a.start - b.start);
+}
 function renderKnowBlock(){
   const box = document.getElementById("home-know");
   if(!box) return;
@@ -145,6 +158,7 @@ function renderKnowBlock(){
   // Les nouveautés ne sont plus ici : une pastille sur Mes semestres les signale.
   // tout ce qui arrive. Déplié : tout. Plié : seulement le titre et sa flèche.
   const alerts = pendingAlerts(true, true);
+  const retards = devoirsEnRetard();
   majTuileDevoirs(alerts);
   { const st = document.getElementById("hd-stats");
     if(st){
@@ -155,6 +169,26 @@ function renderKnowBlock(){
       const jp = pro ? hmJoursAvant(pro.start) : null;
       st.innerHTML = `<div><b>${nc}</b><small>contrôle${nc > 1 ? "s" : ""}</small></div><div><b>${nr}</b><small>rendu${nr > 1 ? "s" : ""}</small></div><div><small>prochain</small><b>${pro ? (jp <= 0 ? "auj." : "J-" + jp) : "–"}</b></div>`;
     } }
+  // en retard : en tête, jusqu'à ce qu'on les coche
+  if(retards.length){
+    const t = el("div","av-semaine"); t.textContent = "En retard"; box.appendChild(t);
+    const c = el("div","av-carte"); box.appendChild(c);
+    retards.forEach(e=>{
+      const nn = evNote(e) || {};
+      const j = Math.round((new Date().setHours(0,0,0,0) - new Date(e.start).setHours(0,0,0,0)) / 86400000);
+      const lignes = String(nn.note || (autresDe(nn)[0] || {}).note || "").trim().split("\n").map(x=>x.trim()).filter(Boolean);
+      if(e.titreNote) lignes.shift();
+      const apercu = (lignes[0] || "").replace(/(?:https?:\/\/|www\.)[^\s<>"']+/gi, u=>libelleUrl(u).split("/")[0]);
+      const row = el("div","av-row dv-carte retard"); row.setAttribute("role","button"); row.tabIndex = 0;
+      row.innerHTML = `<span class="dv-j">J+${j}<small>${HM_JOURS[new Date(e.start).getDay()]}</small></span>` +
+        `<span class="av-txt"><b>${esc(nomCourt(e.title))}</b><small><i>En retard</i>${apercu ? " · " + esc(apercu) : ""}</small></span>` +
+        `<button type="button" class="av-fait" aria-pressed="false" aria-label="Marquer comme fait">${COCHE_SVG}</button><span class="av-fl">›</span>`;
+      row.querySelector(".av-fait").addEventListener("click", ev=>{ ev.stopPropagation(); haptic(); marquerFait(evKey(e), true); renderKnowBlock(); });
+      row.addEventListener("click",()=>{ haptic(); const sjD = matiereDeNote(e, nn); if(sjD) openControle(e); else openEDTAt(e.start); });
+      c.appendChild(row);
+    });
+  }
+  if(!alerts.length && retards.length){ lienLegende(box); return; }
   if(!alerts.length){
     box.innerHTML = vide("calendrier", "Rien à venir", "Pose un devoir, un contrôle ou une note sur un cours de ton emploi du temps, ou touche le + en haut. Il apparaîtra ici.");
     return;
@@ -197,6 +231,7 @@ function renderKnowBlock(){
     row.addEventListener("click",()=>{ haptic(); if(sjD && (cle === "controle" || cle === "devoir")) openControle(e); else openEDTAt(e.start); });
     card.appendChild(row);
   });
+  lienLegende(box);
 }
 
 // Fait / pas fait : sur l'annotation du cours (ou du jour), gardé et synchronisé avec elle

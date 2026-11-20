@@ -423,6 +423,20 @@ async function envoyerRappels(force: boolean, aBlanc: boolean) {
       envoyes++;
     }
 
+    // Le lendemain d'un rendu pas coché : un seul rappel (l'app le garde « En retard » jusqu'à ce qu'il soit coché)
+    const hier = plusJours(ici.iso, -1);
+    const retard = tout.filter((e) => e.date === hier && e.type === "devoir");
+    if (retard.length) {
+      const seul = retard.length === 1 ? retard[0] : null;
+      await envoyer(u.pseudo, "rappels", {
+        title: seul ? seul.nom : `${retard.length} rendus en retard`,
+        body: [seul ? "À rendre hier, pas encore coché." : retard.map((e) => e.nom).join(", ") + " : à rendre hier, pas encore cochés.",
+          "Si c'est fait, coche-le ; sinon, c'est le moment."].join("\n"),
+        tag: `rappel:retard:${hier}`, data: dataDe(retard),
+      });
+      envoyes++;
+    }
+
     const controles = tout.filter((e) => e.date === dansTrois && e.type === "controle");
     if (controles.length) {
       const seul = controles.length === 1 ? controles[0] : null;
