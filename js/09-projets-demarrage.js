@@ -886,9 +886,9 @@ document.getElementById("btn-session-back").addEventListener("click",()=>{
     return;
   }
   clearInterval(timerInt); if(sessionFil){ (FIL_RETOUR || renderFilPsycho)(); } else if(globalSession){ renderSemestres(); showScreen("semestres"); } else if(retourSession){ quitterSession(); } else { showScreen("split"); } });
-document.getElementById("btn-qcmchoix-back").addEventListener("click",()=>{ haptic(); setTab(2); showScreen("split"); });
-document.getElementById("btn-auteurs-back").addEventListener("click",()=>{ setTab(2); showScreen("split"); });
-document.getElementById("btn-dev-back").addEventListener("click",()=>{ setTab(2); showScreen("split"); });
+document.getElementById("btn-qcmchoix-back").addEventListener("click",()=>{ haptic(); retourEntrainement(); });
+document.getElementById("btn-auteurs-back").addEventListener("click",()=>{ retourEntrainement(); });
+document.getElementById("btn-dev-back").addEventListener("click",()=>{ retourEntrainement(); });
 document.getElementById("btn-plan-back").addEventListener("click",()=>{ showScreen("edt"); });
 // recherche
 document.getElementById("btn-search").addEventListener("click",()=>openSearch());

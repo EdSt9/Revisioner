@@ -2680,3 +2680,29 @@ html[data-mode="sombre"]{--ann-bg:#16121f;--ann-tx:#fff;}
 .edt-course.annule .edt-time,.edt-course.annule .edt-title,.edt-course.annule .edt-place{opacity:.55;}
 .edt-annule-tag{margin-bottom:4px;}
 .ev-badge.annule{background:var(--ann-tx);color:var(--ann-bg);font-weight:800;}
+
+/* Deux couleurs en plus : « En retard » (orange vif) et « Modifié » (turquoise) */
+:root{--late:#d9531e;--late-soft:rgba(217,83,30,.13);--chg:#0f9488;--chg-soft:rgba(15,148,136,.13);}
+html[data-mode="sombre"]{--late:#ff8a4c;--late-soft:rgba(255,138,76,.16);--chg:#2dd4bf;--chg-soft:rgba(45,212,191,.15);}
+@media(prefers-color-scheme:dark){html:not([data-mode="clair"]){--late:#ff8a4c;--late-soft:rgba(255,138,76,.16);--chg:#2dd4bf;--chg-soft:rgba(45,212,191,.15);}}
+.ev-badge.modifie{background:var(--chg-soft);color:var(--chg);}
+.ev-badge.retard{background:var(--late-soft);color:var(--late);}
+.ev-badge.fait{background:var(--ok-soft);color:var(--ok);}
+.dv-carte.retard .dv-j{background:var(--late-soft);color:var(--late);}
+.dv-carte.retard .dv-j small{color:var(--late);opacity:.8;}
+.dv-carte.retard .av-txt small i{color:var(--late);}
+.dv-carte.retard{--c:var(--late);}
+.edt-course.flagged.devoir.en-retard::before{background:var(--late);}
+
+/* « S'entraîner » dans la page matière : les exercices ont la même forme que les lignes de CM et de TD */
+#mt-liste .train-intro{margin:2px 4px 12px;}
+#mt-liste .mode-grid{display:block;margin:0;padding:0;}
+#mt-liste .mode-card{display:flex;align-items:center;gap:12px;padding:14px;width:100%;text-align:left;border:none;font:inherit;color:inherit;
+  margin:0 0 10px;background:var(--hm-carte);border-radius:26px;box-shadow:var(--hm-ombre);min-height:0;}
+#mt-liste .mode-card:active{transform:scale(.985);}
+#mt-liste .mode-icon{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;flex-shrink:0;margin:0;
+  background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);}
+#mt-liste .mode-info{flex:1;min-width:0;}
+#mt-liste .mode-name{font-size:15px;font-weight:800;line-height:1.3;}
+#mt-liste .mode-desc{font-size:12.5px;color:var(--text-soft);font-weight:600;margin-top:3px;}
+#mt-liste .mode-erreurs .mode-icon{background:var(--ko-soft);color:var(--ko);}

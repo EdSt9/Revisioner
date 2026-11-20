@@ -1054,7 +1054,7 @@ function lancerQCMChapitre(label){
 var retourSession = null;
 function quitterSession(){
   const f = retourSession;
-  if(f) f(); else { setTab(2); showScreen("split"); }
+  if(f) f(); else retourEntrainement();
 }
 
 // ── La liste des QCM : le grand, chaque CM, chaque TD, les auteurs ──
@@ -1159,8 +1159,16 @@ function renderChoix(m){
   window.scrollTo(0,0);
 }
 
-function renderTrainPane(){
-  const pane=document.getElementById("pane-2"); pane.innerHTML="";
+// La liste des exercices. Sans cible : l'onglet Réviser d'un chapitre ; avec : l'onglet « S'entraîner »
+// de la page matière, posé dans la page comme la liste des CM et des TD.
+var ENT_DEPUIS_MATIERE = false;
+function retourEntrainement(){
+  if(ENT_DEPUIS_MATIERE && curSubj){ ouvrirMatiere(curSubj.id, "ent"); return; }
+  setTab(2); showScreen("split");
+}
+function renderTrainPane(cible){
+  ENT_DEPUIS_MATIERE = !!cible;
+  const pane = cible || document.getElementById("pane-2"); pane.innerHTML="";
   const hasTrain=peutCreer(curSubj)||lexique(curSubj).length||(curSubj.fc&&curSubj.fc.length)||(curSubj.qcm&&curSubj.qcm.length)||(curSubj.oq&&curSubj.oq.length)||(curSubj.tr&&curSubj.tr.length)||(curSubj.auteurs&&curSubj.auteurs.length);
   if(!hasTrain){ pane.innerHTML = vide("entrainer", "Rien à réviser pour l'instant", isCiva() ? "Les QCM et les fiches arriveront avec les cours de cette matière." : "Les QCM et les fiches arrivent par tes classes : quand quelqu'un y partage les exercices d'une matière, ils s'ajoutent ici."); return; }
   // Combien de cartes sont à revoir aujourd'hui ?

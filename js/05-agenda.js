@@ -844,6 +844,16 @@ function lieuEtProf(e){
 }
 
 // une carte de cours (cliquable pour l'annoter)
+// Un cours que le serveur a vu changer (déplacé, nouvelle salle, ajouté) : étiquette « Modifié » turquoise
+function coursModifie(e){
+  if(!e || e.jour || e.annule || !e.start) return false;
+  let ns = []; try{ ns = toutesNotifs(); }catch(err){ return false; }
+  // le serveur retire « CM » / « TD » et le code du nom : on compare sans
+  const net = t=>plat(nomCourt(String(t || ""))).replace(/\b(cm|td|tp)\b/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+  const nom = net(e.title);
+  return ns.some(n=>n.famille === "edt" && n.data && n.data.date && /^(Déplacé|Nouvelle salle|Cours ajouté)/.test(n.body || "")
+    && new Date(n.data.date).getTime() === e.start.getTime() && net(n.title) === nom);
+}
 function courseCard(e){
   // un cours annulé : barré, avec l'étiquette « Annulé » (noire en clair, blanche en sombre)
   if(e.annule){
@@ -865,9 +875,14 @@ function courseCard(e){
   if(kind) c.classList.add("a-mat");
   // fait : l'étiquette elle-même passe au vert, avec la coche (plus besoin d'une étiquette « Fait » à côté)
   const fait = !!(n && n.done && kind);
+  // un rendu pas coché dont le jour est passé : « En retard » (orange vif) à la place de « À rendre »
+  const hier = new Date(); hier.setHours(0,0,0,0);
+  const enRetard = kind === "devoir" && !fait && new Date(e.start).setHours(0,0,0,0) < hier.getTime();
+  if(enRetard) c.classList.add("en-retard");
   const badge = (kind
-    ? `<span class="ev-badge ${kind}${fait ? " fait" : ""}">${fait ? "✓ " : ""}${kind==="controle"?"Contrôle":kind==="devoir"?"À rendre":"Note"}</span>` : "") +
+    ? `<span class="ev-badge ${enRetard ? "retard" : kind}${fait ? " fait" : ""}">${fait ? "✓ " : ""}${enRetard ? "En retard" : kind==="controle"?"Contrôle":kind==="devoir"?"À rendre":"Note"}</span>` : "") +
     aut.filter(a=>(a.type || "note") !== kind).map(a=>`<span class="ev-badge ${a.type || "note"}">${TAG_DEVOIR[a.type || ""]}</span>`).join("") +
+    (coursModifie(e) ? `<span class="ev-badge modifie">Modifié</span>` : "") +
     (n && (n.modifie || aut.some(a=>a.modifie)) ? `<span class="ev-badge modifie">Modifié</span>` : "");
   const texte = n && n.note ? (e.titreNote ? String(n.note).trim().split("\n").slice(1).join("\n").trim() : n.note) : "";
   const note = (texte ? `<div class="edt-note">${noteAvecLiens(texte)}</div>` : "") +
