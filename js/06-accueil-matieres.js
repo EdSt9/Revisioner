@@ -1130,11 +1130,12 @@ function renderMatiere(){
     b.classList.toggle("on", b.dataset.o === MT_ONGLET);
     b.addEventListener("click",()=>{
       haptic();
-      if(b.dataset.o === "ent"){ openSubject(m.id); setTab(2); return; }
       MT_ONGLET = b.dataset.o; renderMatiere();
     });
   });
   const liste = document.getElementById("mt-liste");
+  // S'entraîner : les exercices dans la page, comme les CM et les TD
+  if(MT_ONGLET === "ent"){ liste.innerHTML = ""; curSubj = m; renderTrainPane(liste); return; }
   const chs = m[MT_ONGLET] || [];
   if(!chs.length){
     liste.innerHTML = `<div class="hm-card hm-vide"><span class="hm-ic hm-doux-${c}">${ICO(MT_ONGLET)}</span>Aucun ${MT_ONGLET.toUpperCase()} pour l'instant.</div>`;

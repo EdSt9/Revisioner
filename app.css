@@ -2699,3 +2699,16 @@ html[data-mode="sombre"]{--late:#ff8a4c;--late-soft:rgba(255,138,76,.16);--chg:#
 .lg-row .lg-pill{display:inline-block;box-sizing:border-box;width:96px;text-align:center;flex-shrink:0;margin:0;font-size:12.5px;padding:5px 8px;border-radius:9px;}
 .lg-row .lg-pill.annule{background:var(--ann-tx);color:var(--ann-bg);}
 .edt-course.flagged.devoir.en-retard::before{background:var(--late);}
+
+/* « S'entraîner » dans la page matière : les exercices ont la même forme que les lignes de CM et de TD */
+#mt-liste .train-intro{margin:2px 4px 12px;}
+#mt-liste .mode-grid{display:block;margin:0;padding:0;}
+#mt-liste .mode-card{display:flex;align-items:center;gap:12px;padding:14px;width:100%;text-align:left;border:none;font:inherit;color:inherit;
+  margin:0 0 10px;background:var(--hm-carte);border-radius:26px;box-shadow:var(--hm-ombre);min-height:0;}
+#mt-liste .mode-card:active{transform:scale(.985);}
+#mt-liste .mode-icon{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;flex-shrink:0;margin:0;
+  background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);}
+#mt-liste .mode-info{flex:1;min-width:0;}
+#mt-liste .mode-name{font-size:15px;font-weight:800;line-height:1.3;}
+#mt-liste .mode-desc{font-size:12.5px;color:var(--text-soft);font-weight:600;margin-top:3px;}
+#mt-liste .mode-erreurs .mode-icon{background:var(--ko-soft);color:var(--ko);}
