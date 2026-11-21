@@ -648,7 +648,10 @@ function showResults(){
   } else if(aRevoir.length && curMode === "qcm") sous += aRevoir.length > 1 ? " Elles iront dans « Mes erreurs »." : " Elle ira dans « Mes erreurs ».";
   wrap.className = "qz-end";
   const etoile = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17.1 6.4 20l1.1-6.2L2.9 9.4l6.3-.9z"/></svg>';
-  const nomSerie = sessionFil ? "Fil rouge" : globalSession ? "Révision du jour" : (curSubj ? curSubj.title : "");
+  // une liste coupée en séries : on dit laquelle, et on propose d'enchaîner sur la suivante
+  const iSerie = (!sessionFil && !globalSession && !sessionMix && curSubj) ? numSerie(sessionScope) : 0;
+  const nSeries = iSerie ? scopesDe(curSubj, curMode, scopeSansSerie(sessionScope)).length : 0;
+  const nomSerie = sessionFil ? "Fil rouge" : globalSession ? "Révision du jour" : (curSubj ? curSubj.title + (iSerie ? " · série\u00a0" + iSerie + "/" + nSeries : "") : "");
   const doux = (!globalSession && !sessionFil && sessionScope === "erreurs") ? sous : !n ? "" : ok === n ? "Tu as tout bon. Cette série est validée." : "Les questions ratées reviendront plus tard, sans pression.";
   wrap.innerHTML = `<div class="qz-medal">${etoile}</div>
     <h2>${titre}${n && ok / n >= .5 ? " !" : ""}</h2><p>${esc(doux)}</p>
@@ -667,9 +670,19 @@ function showResults(){
     prim("Retour à l'accueil", ()=>{ renderSemestres(); showScreen("semestres"); });
     if(restant > 0) sec("Continuer", startGlobalSession);
   } else {
+    if(iSerie && iSerie < nSeries){
+      const suivante = scopeSansSerie(sessionScope) + "§" + (iSerie + 1), mode = curMode, ici = sessionScope;
+      prim("Série suivante", ()=>{ choisirScope(suivante); startSession(mode); });
+      row.lastChild.innerHTML = `Série suivante <small>${iSerie + 1}/${nSeries}</small> ›`;
+      sec("Terminer", ()=>quitterSession());
+      const l = el("button","qz-lien"); l.type = "button"; l.textContent = "Recommencer cette série";
+      l.addEventListener("click",()=>{ haptic(); choisirScope(ici); startSession(mode); });
+      row.appendChild(l);
+    } else {
     prim("Terminer", ()=>quitterSession());
     if(sessionMix){ const sj = SUBJECTS.find(x=>x.id === sessionMix), chs = MIX_CHS; sec("Recommencer", ()=>startRevisionMatiere(sj, chs)); }
     else sec("Recommencer", ()=>startSession(curMode));
+    }
   }
   wrap.appendChild(row);
   body.appendChild(wrap);

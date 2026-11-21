@@ -2024,6 +2024,8 @@ html.tabbar-on[data-screen="sites"] .page-head .back-btn{visibility:hidden;}
 .qz-bilan .t2{font-size:13px;color:var(--text-mute);font-weight:600;display:block;margin-top:2px;}
 .qz-end .results-detail{text-align:left;margin-top:18px;}
 .qz-end .hm-cta{margin-top:20px;}
+.qz-end .hm-cta small{font-weight:700;opacity:.8;font-size:14px;}
+.qz-lien{display:block;margin:14px auto 0;background:none;border:none;font:inherit;font-weight:700;font-size:14.5px;color:var(--text-soft);cursor:pointer;padding:6px 10px;}
 .qz-end .qz-sec{width:100%;margin-top:10px;height:50px;border-radius:17px;border:none;background:color-mix(in srgb,var(--text) 6%,transparent);color:var(--text);font:inherit;font-weight:800;font-size:15px;cursor:pointer;}
 .qz-conf{position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden;}
 .qz-conf i{position:absolute;top:-14px;width:8px;height:14px;border-radius:2px;animation:qzFall 2.6s cubic-bezier(.3,.6,.5,1) forwards;}
