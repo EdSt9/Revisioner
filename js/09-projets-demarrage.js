@@ -1466,7 +1466,7 @@ async function doLogin(){
   };
   addEventListener("touchstart", e=>{
     const t = e.touches[0]; if(e.touches.length > 1 || t.clientX > 22) return;
-    if(e.target && e.target.closest && e.target.closest("#somm-flot, .sheet-overlay.open, input, textarea")) return;
+    if(e.target && e.target.closest && e.target.closest("#somm-flot, .sheet-overlay.open, .img-voile, input, textarea")) return;
     if(!boutonRetour()) return;
     x0 = t.clientX; y0 = t.clientY; dx = 0; actif = false; scr = document.querySelector(".screen.active");
   }, { passive:true });

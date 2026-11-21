@@ -665,6 +665,78 @@ function ouvrirImage(im){
   const fermer = ()=>{ v.classList.remove("on"); setTimeout(()=>v.remove(), 250); };
   v.addEventListener("click", e=>{ if(e.target === v || e.target.closest(".img-fermer")) fermer(); });
   document.body.appendChild(v); requestAnimationFrame(()=>v.classList.add("on"));
+  zoomerImage(v.querySelector(".img-zoom"));
+}
+// Zoom à deux doigts, déplacement à un doigt, double appui pour zoomer ou revenir.
+// Le zoom du navigateur est coupé pour toute l'app (viewport), donc on le refait ici.
+function zoomerImage(boite){
+  const img = boite.querySelector("img");
+  let s = 1, tx = 0, ty = 0, geste = null, dernierAppui = 0, dernierToucher = 0;
+  const pt = t=>{ const r = boite.getBoundingClientRect(); return { x:t.clientX - r.left, y:t.clientY - r.top }; };
+  const borne = ()=>{
+    const W = img.offsetWidth * s, H = img.offsetHeight * s, CW = boite.clientWidth, CH = boite.clientHeight;
+    const bx = img.offsetLeft, by = img.offsetTop;
+    tx = W <= CW ? CW/2 - bx - W/2 : Math.min(-bx, Math.max(CW - bx - W, tx));
+    ty = H <= CH ? CH/2 - by - H/2 : Math.min(-by, Math.max(CH - by - H, ty));
+  };
+  const appliquer = anim=>{
+    if(s <= 1.01){ s = 1; tx = 0; ty = 0; } else borne();
+    img.style.transition = anim ? "transform .25s ease" : "none";
+    img.style.transform = s === 1 ? "" : `translate(${tx}px,${ty}px) scale(${s})`;
+    boite.classList.toggle("zoome", s > 1);
+  };
+  // le point de l'image (non zoomée) sous un point de l'écran
+  const sous = p=>({ x:(p.x - img.offsetLeft - tx) / s, y:(p.y - img.offsetTop - ty) / s });
+  boite.addEventListener("touchstart", e=>{
+    dernierToucher = Date.now();
+    if(e.touches.length === 2){
+      const a = pt(e.touches[0]), b = pt(e.touches[1]);
+      const m = { x:(a.x + b.x)/2, y:(a.y + b.y)/2 };
+      geste = { type:"pince", d:Math.hypot(a.x - b.x, a.y - b.y), s0:s, u:sous(m) };
+    } else if(e.touches.length === 1){
+      const p = pt(e.touches[0]);
+      geste = { type:"glisse", x:p.x, y:p.y, tx0:tx, ty0:ty };
+    }
+  }, { passive:true });
+  boite.addEventListener("touchmove", e=>{
+    if(!geste) return;
+    if(geste.type === "pince" && e.touches.length === 2){
+      e.preventDefault();
+      const a = pt(e.touches[0]), b = pt(e.touches[1]);
+      const m = { x:(a.x + b.x)/2, y:(a.y + b.y)/2 };
+      s = Math.min(5, Math.max(1, geste.s0 * Math.hypot(a.x - b.x, a.y - b.y) / geste.d));
+      tx = m.x - img.offsetLeft - s * geste.u.x; ty = m.y - img.offsetTop - s * geste.u.y;
+      appliquer(false);
+    } else if(geste.type === "glisse" && e.touches.length === 1 && s > 1){
+      e.preventDefault();
+      const p = pt(e.touches[0]);
+      tx = geste.tx0 + p.x - geste.x; ty = geste.ty0 + p.y - geste.y;
+      appliquer(false);
+    }
+  }, { passive:false });
+  boite.addEventListener("touchend", e=>{
+    if(e.touches.length === 1){ const p = pt(e.touches[0]); geste = { type:"glisse", x:p.x, y:p.y, tx0:tx, ty0:ty }; return; }
+    if(e.touches.length) return;
+    const g = geste; geste = null;
+    if(g && g.type === "glisse" && e.changedTouches.length){
+      const p = pt(e.changedTouches[0]);
+      if(Math.hypot(p.x - g.x, p.y - g.y) < 10){
+        const t = Date.now();
+        if(t - dernierAppui < 300){
+          dernierAppui = 0;
+          if(s > 1){ s = 1; } else { const u = sous(p); s = 2.5; tx = p.x - img.offsetLeft - s * u.x; ty = p.y - img.offsetTop - s * u.y; }
+          appliquer(true);
+        } else dernierAppui = t;
+      }
+    }
+  });
+  // à la souris : double clic
+  img.addEventListener("dblclick", e=>{
+    if(Date.now() - dernierToucher < 1000) return;   // déjà traité au doigt
+    const p = pt(e);
+    if(s > 1) s = 1; else { const u = sous(p); s = 2.5; tx = p.x - img.offsetLeft - s * u.x; ty = p.y - img.offsetTop - s * u.y; }
+    appliquer(true);
+  });
 }
 function lexiqueCalcule(subj){
   const vus = new Set(), out = [];
